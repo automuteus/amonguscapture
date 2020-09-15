@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace AmongcordClient
+namespace AmongUsCapture
 {
     class Program
     {

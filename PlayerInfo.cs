@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace AmongcordClient
+namespace AmongUsCapture
 {
     [System.Runtime.InteropServices.StructLayout(LayoutKind.Explicit)]
     public struct PlayerInfo

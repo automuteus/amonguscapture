@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# IDE0056: Use index operator
+csharp_style_prefer_index_operator = false:suggestion

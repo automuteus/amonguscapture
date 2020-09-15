@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30204.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmongcordClient", "AmongcordClient.csproj", "{C11346B2-0546-4A32-A013-F3991E5E3745}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{722FFCBB-3DC3-43BC-9030-2283185461F1}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C11346B2-0546-4A32-A013-F3991E5E3745}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C11346B2-0546-4A32-A013-F3991E5E3745}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C11346B2-0546-4A32-A013-F3991E5E3745}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C11346B2-0546-4A32-A013-F3991E5E3745}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {21E89E0C-A7FD-4003-8F58-E3EF2C0A6DA8}
+	EndGlobalSection
+EndGlobal

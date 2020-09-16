@@ -17,5 +17,25 @@ namespace AmongUsCapture
         [System.Runtime.InteropServices.FieldOffset(40)] public byte IsImpostor;
         [System.Runtime.InteropServices.FieldOffset(41)] public byte IsDead;
         [System.Runtime.InteropServices.FieldOffset(44)] public IntPtr _object;
+
+        public bool GetIsDead()
+        {
+            return this.IsDead > 0;
+        }
+
+        public string GetPlayerName()
+        {
+            return ProcessMemory.ReadString((IntPtr)this.PlayerName);
+        }
+
+        public PlayerColor GetPlayerColor()
+        {
+            return (PlayerColor)this.ColorId;
+        }
+
+        public bool GetIsDisconnected()
+        {
+            return this.Disconnected > 0;
+        }
     }
 }

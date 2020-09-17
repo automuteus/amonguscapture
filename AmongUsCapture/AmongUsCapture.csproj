@@ -11,4 +11,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="SocketIOClient" Version="2.0.2.6" />
+  </ItemGroup>
+
 </Project>

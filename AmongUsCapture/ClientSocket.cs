@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using SocketIOClient;
 
@@ -7,9 +9,11 @@ namespace AmongUsCapture
     class ClientSocket
     { 
         private SocketIO socket;
+        private string guildID;
 
-        public void Connect(string url, string guildID)
+        public void Connect(string url, string paramGuildID)
         {
+            guildID = paramGuildID;
             socket = new SocketIO(url);
             /*socket.On("hi", response =>
             {
@@ -23,6 +27,17 @@ namespace AmongUsCapture
 
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
+
+            while(true)
+            {
+                string[] command = Console.ReadLine().Split();
+                if (command.Length > 1 && command[0] == "setid")
+                {
+                    guildID = command[1];
+                    File.WriteAllText("guildid.txt", guildID);
+                    socket.EmitAsync("guildID", guildID);
+                }
+            }
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)

@@ -8,21 +8,21 @@ namespace AmongUsCapture
     { 
         private SocketIO socket;
 
-        public async Task Run(string url, string guildID)
+        public void Connect(string url, string guildID)
         {
-            GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
-            GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
-
-            this.socket = new SocketIO(url);
-            socket.On("hi", response =>
+            socket = new SocketIO(url);
+            /*socket.On("hi", response =>
             {
                 string text = response.GetValue<string>();
-            });
+            });*/
             socket.OnConnected += async (sender, e) =>
             {
                 await socket.EmitAsync("guildID", guildID);
             };
-            await socket.ConnectAsync();
+            socket.ConnectAsync().GetAwaiter().GetResult();
+
+            GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
+            GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)

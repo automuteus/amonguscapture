@@ -18,9 +18,12 @@ namespace AmongUsCapture
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
             ClientSocket socket = new ClientSocket();
-            Task.Factory.StartNew(() => socket.Run("http://localhost:8123", "754465589958803548")); // run socket loop in background
+
+            socket.Connect("http://localhost:8123", "754465589958803548"); //synchronously force the socket to connect, and also broadcast the guildID
+
+            Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
+
             if (debugGui)
             {
                 Application.Run(new MainForm());

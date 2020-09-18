@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
@@ -10,7 +9,6 @@ namespace AmongUsCapture
     {
         public void Run()
         {
-            AllocConsole();
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
 
@@ -43,9 +41,5 @@ namespace AmongUsCapture
                 Console.WriteLine(e.Name + ": " + e.Action);
             }
         }
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();
     }
 }

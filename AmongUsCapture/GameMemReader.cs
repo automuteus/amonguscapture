@@ -65,6 +65,8 @@ namespace AmongUsCapture
                                 modulesLeft--;
                             }
                         }
+
+                        Console.WriteLine($"({GameAssemblyPtr}) ({UnityPlayerPtr})");
                     }
                 }
 

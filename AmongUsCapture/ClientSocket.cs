@@ -27,12 +27,12 @@ namespace AmongUsCapture
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
         {
-            socket.EmitAsync("state", JsonSerializer.Serialize(e.NewState)).GetAwaiter().GetResult();
+            socket.EmitAsync("state", JsonSerializer.Serialize(e.NewState)); // could possibly use continueWith() w/ callback if result is needed
         }
 
         private void PlayerChangedHandler(object sender, PlayerChangedEventArgs e)
         {
-            socket.EmitAsync("player", JsonSerializer.Serialize(e)).GetAwaiter().GetResult();
+            socket.EmitAsync("player", JsonSerializer.Serialize(e));
         }
     }
 }

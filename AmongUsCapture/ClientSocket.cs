@@ -11,7 +11,7 @@ namespace AmongUsCapture
         private SocketIO socket;
         private string guildID;
 
-        public void Connect(string url, string paramGuildID)
+        public async Task Connect(string url, string paramGuildID)
         {
             guildID = paramGuildID;
             socket = new SocketIO(url);
@@ -23,7 +23,7 @@ namespace AmongUsCapture
             {
                 await socket.EmitAsync("guildID", guildID);
             };
-            socket.ConnectAsync().GetAwaiter().GetResult();
+            await socket.ConnectAsync();
 
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;

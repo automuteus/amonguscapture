@@ -33,7 +33,7 @@ namespace AmongUsCapture
                 guildID = File.ReadAllText("guildid.txt");
             }
 
-            socket.Connect("http://localhost:8123", guildID); //synchronously force the socket to connect, and also broadcast the guildID
+            Task.Factory.StartNew(() => socket.Connect("http://localhost:8123", guildID)); //synchronously force the socket to connect, and also broadcast the guildID
 
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
 

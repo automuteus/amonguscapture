@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AmongUsCapture
@@ -16,6 +17,7 @@ namespace AmongUsCapture
     class GameMemReader
     {
         private static GameMemReader instance = new GameMemReader();
+        private bool shouldForceUpdate = false;
 
         public static GameMemReader getInstance()
         {
@@ -49,22 +51,36 @@ namespace AmongUsCapture
                     {
                         Console.WriteLine("Connected to Among Us process ({0})", ProcessMemory.process.Id);
 
-                        int modulesLeft = 2;
-                        foreach (ProcessMemory.Module module in ProcessMemory.modules)
+                        int modulesLeft;
+
+                        while(true)
                         {
-                            if (modulesLeft == 0)
-                                break;
-                            else if (module.Name.Equals("GameAssembly.dll", StringComparison.OrdinalIgnoreCase))
+                            modulesLeft = 2;
+                            foreach (ProcessMemory.Module module in ProcessMemory.modules)
                             {
-                                GameAssemblyPtr = module.BaseAddress;
-                                modulesLeft--;
+                                if (modulesLeft == 0)
+                                    break;
+                                else if (module.Name.Equals("GameAssembly.dll", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    GameAssemblyPtr = module.BaseAddress;
+                                    modulesLeft--;
+                                }
+                                else if (module.Name.Equals("UnityPlayer.dll", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    UnityPlayerPtr = module.BaseAddress;
+                                    modulesLeft--;
+                                }
                             }
-                            else if (module.Name.Equals("UnityPlayer.dll", StringComparison.OrdinalIgnoreCase))
+
+                            if (UnityPlayerPtr == IntPtr.Zero || GameAssemblyPtr == IntPtr.Zero) // either one or both hasn't been found yet
                             {
-                                UnityPlayerPtr = module.BaseAddress;
-                                modulesLeft--;
+                                Task.Delay(500); // delay and try again
+                            } else
+                            {
+                                break; // we have found all modules
                             }
                         }
+                        
 
                         Console.WriteLine($"({GameAssemblyPtr}) ({UnityPlayerPtr})");
                     }
@@ -172,9 +188,28 @@ namespace AmongUsCapture
 
                 oldPlayerInfos.Clear();
 
+                bool emitAll = false;
+                if (shouldForceUpdate)
+                {
+                    shouldForceUpdate = false;
+                    emitAll = true;
+                }
+
                 foreach (KeyValuePair<string, PlayerInfo> kvp in newPlayerInfos) // do this instead of assignment so they don't point to the same object
                 {
-                    oldPlayerInfos[kvp.Key] = kvp.Value;
+                    PlayerInfo pi = kvp.Value;
+                    oldPlayerInfos[kvp.Key] = pi;
+                    if (emitAll)
+                    {
+                        PlayerChanged.Invoke(this, new PlayerChangedEventArgs()
+                        {
+                            Action = PlayerAction.ForceUpdated,
+                            Name = kvp.Key,
+                            IsDead = pi.GetIsDead(),
+                            Disconnected = pi.GetIsDisconnected(),
+                            Color = pi.GetPlayerColor()
+                        });
+                    }
                 }
 
                 //foreach (KeyValuePair<string, PlayerInfo> kvp in oldPlayerInfos)
@@ -191,6 +226,11 @@ namespace AmongUsCapture
         {
             return false;
         }
+
+        public void ForceUpdate()
+        {
+            this.shouldForceUpdate = true;
+        }
     }
 
     public class GameStateChangedEventArgs : EventArgs
@@ -203,7 +243,8 @@ namespace AmongUsCapture
         Joined,
         Left,
         Died,
-        ChangedColor
+        ChangedColor,
+        ForceUpdated
     }
 
     public enum PlayerColor

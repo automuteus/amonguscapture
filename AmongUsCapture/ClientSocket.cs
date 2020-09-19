@@ -9,35 +9,42 @@ namespace AmongUsCapture
     class ClientSocket
     { 
         private SocketIO socket;
-        private string guildID;
+        private string GuildID;
 
-        public async Task Connect(string url, string paramGuildID)
+        public void Connect(string url, string paramGuildID)
         {
-            guildID = paramGuildID;
+            GuildID = paramGuildID;
             socket = new SocketIO(url);
             /*socket.On("hi", response =>
             {
                 string text = response.GetValue<string>();
             });*/
-            socket.OnConnected += async (sender, e) =>
+            socket.OnConnected += (sender, e) =>
             {
-                await socket.EmitAsync("guildID", guildID);
+                GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
+                GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
+                UpdateGuildID(paramGuildID, false);
             };
-            await socket.ConnectAsync();
 
-            GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
-            GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
+            socket.ConnectAsync();
 
             while(true)
             {
                 string[] command = Console.ReadLine().Split();
                 if (command.Length > 1 && command[0] == "setid")
                 {
-                    guildID = command[1];
-                    File.WriteAllText("guildid.txt", guildID);
-                    socket.EmitAsync("guildID", guildID);
+                    UpdateGuildID(command[1]);
                 }
             }
+        }
+
+        private void UpdateGuildID(string newGuildId, bool toFile = true)
+        {
+            GuildID = newGuildId;
+            if (toFile) File.WriteAllText("guildid.txt", GuildID);
+            socket.EmitAsync("guildID", GuildID).ContinueWith((t) => {
+                GameMemReader.getInstance().ForceUpdate();
+            }); ;
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)

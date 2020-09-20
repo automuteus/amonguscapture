@@ -66,12 +66,17 @@ namespace AmongUsCapture
         }
         public static T Read<T>(IntPtr address, params int[] offsets) where T : unmanaged
         {
+            return ReadWithDefault<T>(address, default, offsets);
+        }
+
+        public static T ReadWithDefault<T>(IntPtr address, T defaultParam, params int[] offsets) where T : unmanaged
+        {
             if (process == null || address == IntPtr.Zero)
-                return default;
+                return defaultParam;
 
             int last = OffsetAddress(ref address, offsets);
             if (address == IntPtr.Zero)
-                return default;
+                return defaultParam;
 
             unsafe
             {

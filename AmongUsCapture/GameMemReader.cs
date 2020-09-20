@@ -125,6 +125,7 @@ namespace AmongUsCapture
                 {
                     IntPtr playerAddr = ProcessMemory.Read<IntPtr>(playerAddrPtr);
                     PlayerInfo pi = ProcessMemory.Read<PlayerInfo>(playerAddr);
+                    if (pi.PlayerName == 0) { continue; }
                     string playerName = pi.GetPlayerName();
 
                     newPlayerInfos[playerName] = pi; // add to new playerinfos for comparison later

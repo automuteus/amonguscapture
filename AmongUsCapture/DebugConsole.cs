@@ -12,21 +12,21 @@ namespace AmongUsCapture
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
 
-            while (true)
-            {
-                string command = Console.ReadLine();
-                Console.WriteLine($"Received command: {command}");
-                if (command == "list")
-                {
-                    Console.WriteLine("Player List:");
-                    foreach (KeyValuePair<string, PlayerInfo> kvp in GameMemReader.getInstance().oldPlayerInfos) // thread safety ??
-                    {
-                        string playerName = kvp.Key;
-                        PlayerInfo pi = kvp.Value;
-                        Console.WriteLine(kvp.Key);
-                    }
-                }
-            }
+            //while (true)
+            //{
+            //    string command = Console.ReadLine();
+            //    Console.WriteLine($"Received command: {command}");
+            //    if (command == "list")
+            //    {
+            //        Console.WriteLine("Player List:");
+            //        foreach (KeyValuePair<string, PlayerInfo> kvp in GameMemReader.getInstance().oldPlayerInfos) // thread safety ??
+            //        {
+            //            string playerName = kvp.Key;
+            //            PlayerInfo pi = kvp.Value;
+            //            Console.WriteLine(kvp.Key);
+            //        }
+            //    }
+            //}
 
             Thread.Sleep(Timeout.Infinite);
         }

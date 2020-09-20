@@ -12,12 +12,14 @@ namespace AmongUsCapture
     {
         LOBBY,
         TASKS,
-        DISCUSSION
+        DISCUSSION,
+        MENU
     }
     class GameMemReader
     {
         private static GameMemReader instance = new GameMemReader();
         private bool shouldForceUpdate = false;
+        private bool shouldTransmitState = false;
 
         public static GameMemReader getInstance()
         {
@@ -26,8 +28,6 @@ namespace AmongUsCapture
         public event EventHandler<GameStateChangedEventArgs> GameStateChanged;
 
         public event EventHandler<PlayerChangedEventArgs> PlayerChanged;
-
-        private bool muteAfterExile = true;
 
         public Dictionary<string, PlayerInfo> oldPlayerInfos = new Dictionary<string, PlayerInfo>(10); // Important: this is making the assumption that player names are unique. They are, but for better tracking of players and to eliminate any ambiguity the keys of this probably need to be the players' network IDs instead
         public Dictionary<string, PlayerInfo> newPlayerInfos = new Dictionary<string, PlayerInfo>(10); // container for new player infos. Also has capacity 10 already assigned so no internal resizing of the data structure is needed
@@ -74,6 +74,7 @@ namespace AmongUsCapture
 
                             if (UnityPlayerPtr == IntPtr.Zero || GameAssemblyPtr == IntPtr.Zero) // either one or both hasn't been found yet
                             {
+                                Console.WriteLine("Still looking for modules...");
                                 Task.Delay(500); // delay and try again
                             } else
                             {
@@ -87,27 +88,40 @@ namespace AmongUsCapture
                 }
 
                 GameState state;
-                bool inGame = ProcessMemory.Read<bool>(UnityPlayerPtr, 0x127B310, 0xF4, 0x18, 0xA8);
-                bool inMeeting = ProcessMemory.Read<bool>(UnityPlayerPtr, 0x12A7A14, 0x64, 0x54, 0x18);
-                int meetingHudState = ProcessMemory.Read<int>(GameAssemblyPtr, 0xDA58D0, 0x5C, 0, 0x84);
+                int meetingHudState = ProcessMemory.Read<int>(GameAssemblyPtr, 0xDA58D0, 0x5C, 0, 0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
+                int gameState = ProcessMemory.Read<int>(GameAssemblyPtr, 0xDA5ACC, 0x5C, 0, 0x64); // 0 = NotJoined, 1 = Joined, 2 = Started, 3 = Ended (during "defeat" or "victory" screen only)
 
-
-                if (!inGame || (inMeeting && meetingHudState > 2 && ExileEndsGame()))
+                if (gameState == 0)
+                {
+                    state = GameState.MENU;
+                }
+                else if (gameState == 1 || gameState == 3)
                 {
                     state = GameState.LOBBY;
                 }
-                else if (inMeeting && (muteAfterExile || meetingHudState < 4))
+                else if (meetingHudState < 4)
                 {
                     state = GameState.DISCUSSION;
-                }
-                else
+                } else
                 {
                     state = GameState.TASKS;
                 }
 
-                if (state != oldState)
+                if (this.shouldTransmitState)
                 {
+                    shouldTransmitState = false;
                     GameStateChanged.Invoke(this, new GameStateChangedEventArgs() { NewState = state });
+                } else if (state != oldState)
+                {
+                    if (oldState == GameState.DISCUSSION && state == GameState.TASKS) // send delayed
+                    {
+                        Task.Delay(7000).ContinueWith((task) => {
+                            this.ForceTransmitState();
+                        });
+                    } else
+                    {
+                        GameStateChanged.Invoke(this, new GameStateChangedEventArgs() { NewState = state });
+                    }
                 }
 
                 oldState = state;
@@ -223,14 +237,14 @@ namespace AmongUsCapture
             }
         }
 
-        private static bool ExileEndsGame()
-        {
-            return false;
-        }
-
         public void ForceUpdate()
         {
             this.shouldForceUpdate = true;
+        }
+
+        public void ForceTransmitState()
+        {
+            this.shouldTransmitState = true;
         }
     }
 

@@ -44,6 +44,7 @@ namespace AmongUsCapture
             if (toFile) File.WriteAllText("guildid.txt", GuildID);
             socket.EmitAsync("guildID", GuildID).ContinueWith((t) => {
                 GameMemReader.getInstance().ForceUpdate();
+                GameMemReader.getInstance().ForceTransmitState();
             }); ;
         }
 

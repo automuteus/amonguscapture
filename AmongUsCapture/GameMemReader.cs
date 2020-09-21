@@ -67,7 +67,7 @@ namespace AmongUsCapture
 
                             if (!foundModule)
                             {
-                                Console.WriteLine("Still looking for modules...");
+                                Console.WriteLine("Still looking for modules..."); // TODO: This still isn't functional, we need to re-hook to reload module addresses
                                 Thread.Sleep(500); // delay and try again
                             } else
                             {
@@ -115,13 +115,14 @@ namespace AmongUsCapture
                 // check if exile causes end
                 if (oldState == GameState.DISCUSSION && state == GameState.TASKS)
                 {
-                    byte exiledPlayerId = ProcessMemory.Read<byte>(GameAssemblyPtr, 0xDA58D0, 0x5C, 0, 0x94, 0x08);
+                    byte exiledPlayerId = ProcessMemory.ReadWithDefault<byte>(GameAssemblyPtr, 255, 0xDA58D0, 0x5C, 0, 0x94, 0x08);
+                    Console.WriteLine($"Player with id {exiledPlayerId} was exiled.");
                     int impostorCount = 0, innocentCount = 0;
 
                     for (int i = 0; i < playerCount; i++)
                     {
-                        IntPtr playerAddr = ProcessMemory.Read<IntPtr>(playerAddrPtr);
-                        PlayerInfo pi = ProcessMemory.Read<PlayerInfo>(playerAddr);
+                        PlayerInfo pi = ProcessMemory.Read<PlayerInfo>(playerAddrPtr, 0, 0);
+                        playerAddrPtr += 4;
 
                         // skip invalid, dead and exiled players
                         if (pi.PlayerName == 0 || pi.PlayerId == exiledPlayerId || pi.IsDead == 1) { continue; }
@@ -158,10 +159,12 @@ namespace AmongUsCapture
 
                 newPlayerInfos.Clear();
 
+                playerAddrPtr = allPlayers + 0x10;
+
                 for (int i = 0; i < playerCount; i++)
                 {
-                    IntPtr playerAddr = ProcessMemory.Read<IntPtr>(playerAddrPtr);
-                    PlayerInfo pi = ProcessMemory.Read<PlayerInfo>(playerAddr);
+                    PlayerInfo pi = ProcessMemory.Read<PlayerInfo>(playerAddrPtr, 0, 0);
+                    playerAddrPtr += 4;
                     if (pi.PlayerName == 0) { continue; }
                     string playerName = pi.GetPlayerName();
 
@@ -203,8 +206,6 @@ namespace AmongUsCapture
                             });
                         }
                     }
-
-                    playerAddrPtr += 4;
                 }
 
                 foreach (KeyValuePair<string, PlayerInfo> kvp in oldPlayerInfos)

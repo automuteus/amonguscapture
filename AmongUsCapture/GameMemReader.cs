@@ -33,7 +33,6 @@ namespace AmongUsCapture
         public Dictionary<string, PlayerInfo> newPlayerInfos = new Dictionary<string, PlayerInfo>(10); // container for new player infos. Also has capacity 10 already assigned so no internal resizing of the data structure is needed
 
         private IntPtr GameAssemblyPtr = IntPtr.Zero;
-        private IntPtr UnityPlayerPtr = IntPtr.Zero;
         private GameState oldState = GameState.LOBBY;
 
         public void RunLoop()
@@ -51,28 +50,21 @@ namespace AmongUsCapture
                     {
                         Console.WriteLine("Connected to Among Us process ({0})", ProcessMemory.process.Id);
 
-                        int modulesLeft;
+                        bool foundModule = false;
 
                         while(true)
                         {
-                            modulesLeft = 2;
                             foreach (ProcessMemory.Module module in ProcessMemory.modules)
                             {
-                                if (modulesLeft == 0)
-                                    break;
-                                else if (module.Name.Equals("GameAssembly.dll", StringComparison.OrdinalIgnoreCase))
+                                if (module.Name.Equals("GameAssembly.dll", StringComparison.OrdinalIgnoreCase))
                                 {
                                     GameAssemblyPtr = module.BaseAddress;
-                                    modulesLeft--;
-                                }
-                                else if (module.Name.Equals("UnityPlayer.dll", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    UnityPlayerPtr = module.BaseAddress;
-                                    modulesLeft--;
+                                    foundModule = true;
+                                    break;
                                 }
                             }
 
-                            if (UnityPlayerPtr == IntPtr.Zero || GameAssemblyPtr == IntPtr.Zero) // either one or both hasn't been found yet
+                            if (!foundModule)
                             {
                                 Console.WriteLine("Still looking for modules...");
                                 Task.Delay(500); // delay and try again
@@ -83,7 +75,7 @@ namespace AmongUsCapture
                         }
                         
 
-                        Console.WriteLine($"({GameAssemblyPtr}) ({UnityPlayerPtr})");
+                        Console.WriteLine($"({GameAssemblyPtr})");
                     }
                 }
 

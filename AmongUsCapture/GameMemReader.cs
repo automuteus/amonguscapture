@@ -34,6 +34,7 @@ namespace AmongUsCapture
 
         private IntPtr GameAssemblyPtr = IntPtr.Zero;
         private GameState oldState = GameState.LOBBY;
+        private bool exileCausesEnd = false;
 
         public void RunLoop()
         {
@@ -67,7 +68,7 @@ namespace AmongUsCapture
                             if (!foundModule)
                             {
                                 Console.WriteLine("Still looking for modules...");
-                                Task.Delay(500); // delay and try again
+                                Thread.Sleep(500); // delay and try again
                             } else
                             {
                                 break; // we have found all modules
@@ -86,8 +87,14 @@ namespace AmongUsCapture
                 if (gameState == 0)
                 {
                     state = GameState.MENU;
+                    exileCausesEnd = false;
                 }
                 else if (gameState == 1 || gameState == 3)
+                {
+                    state = GameState.LOBBY;
+                    exileCausesEnd = false;
+                }
+                else if (exileCausesEnd)
                 {
                     state = GameState.LOBBY;
                 }
@@ -97,6 +104,37 @@ namespace AmongUsCapture
                 } else
                 {
                     state = GameState.TASKS;
+                }
+
+                IntPtr allPlayersPtr = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, 0xDA5A60, 0x5C, 0, 0x24);
+                IntPtr allPlayers = ProcessMemory.Read<IntPtr>(allPlayersPtr, 0x08);
+                int playerCount = ProcessMemory.Read<int>(allPlayersPtr, 0x0C);
+
+                IntPtr playerAddrPtr = allPlayers + 0x10;
+
+                // check if exile causes end
+                if (oldState == GameState.DISCUSSION && state == GameState.TASKS)
+                {
+                    byte exiledPlayerId = ProcessMemory.Read<byte>(GameAssemblyPtr, 0xDA58D0, 0x5C, 0, 0x94, 0x08);
+                    int impostorCount = 0, innocentCount = 0;
+
+                    for (int i = 0; i < playerCount; i++)
+                    {
+                        IntPtr playerAddr = ProcessMemory.Read<IntPtr>(playerAddrPtr);
+                        PlayerInfo pi = ProcessMemory.Read<PlayerInfo>(playerAddr);
+
+                        // skip invalid, dead and exiled players
+                        if (pi.PlayerName == 0 || pi.PlayerId == exiledPlayerId || pi.IsDead == 1) { continue; }
+
+                        if (pi.IsImpostor == 1) { impostorCount++; }
+                        else { innocentCount++; }
+                    }
+
+                    if (impostorCount == 0 || impostorCount >= innocentCount)
+                    {
+                        exileCausesEnd = true;
+                        state = GameState.LOBBY;
+                    }
                 }
 
                 if (this.shouldTransmitState)
@@ -117,13 +155,6 @@ namespace AmongUsCapture
                 }
 
                 oldState = state;
-
-
-                IntPtr allPlayersPtr = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, 0xDA5A60, 0x5C, 0, 0x24);
-                IntPtr allPlayers = ProcessMemory.Read<IntPtr>(allPlayersPtr, 0x08);
-                int playerCount = ProcessMemory.Read<int>(allPlayersPtr, 0x0C);
-
-                IntPtr playerAddrPtr = allPlayers + 0x10;
 
                 newPlayerInfos.Clear();
 

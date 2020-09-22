@@ -26,14 +26,15 @@ namespace AmongUsCapture
             Application.SetCompatibleTextRenderingDefault(false);
             ClientSocket socket = new ClientSocket();
 
-            string guildID = "754465589958803548";
+            string guildIDPath = "guildid.txt";
+            string hostPath = "host.txt";
+            
+            //TODO this should fail if the ID is not present but I'm not changing that
+            //TODO make proper properties file
+            string guildID = File.Exists(guildIDPath) ? File.ReadAllText(guildIDPath) : "754465589958803548";
+            string host = File.Exists(hostPath) ? File.ReadAllText(hostPath) : "http://localhost:8123";
 
-            if (File.Exists("guildid.txt"))
-            {
-                guildID = File.ReadAllText("guildid.txt");
-            }
-
-            Task.Factory.StartNew(() => socket.Connect("http://localhost:8123", guildID)); //synchronously force the socket to connect, and also broadcast the guildID
+            Task.Factory.StartNew(() => socket.Connect(host, guildID)); //synchronously force the socket to connect, and also broadcast the guildID
 
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
 

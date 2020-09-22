@@ -26,8 +26,12 @@ namespace AmongUsCapture
             Application.SetCompatibleTextRenderingDefault(false);
             ClientSocket socket = new ClientSocket();
 
-            Task.Factory.StartNew(() => socket.Connect("http://localhost:8123")); //synchronously force the socket to connect, and also broadcast the guildID
+            string hostPath = "host.txt";
+          
+            //TODO make proper properties file
+            string host = File.Exists(hostPath) ? File.ReadAllText(hostPath) : "http://localhost:8123";
 
+            Task.Factory.StartNew(() => socket.Connect(host)); //synchronously force the socket to connect
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
 
             if (debugGui)

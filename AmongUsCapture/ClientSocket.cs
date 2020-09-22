@@ -9,11 +9,10 @@ namespace AmongUsCapture
     class ClientSocket
     { 
         private SocketIO socket;
-        private string GuildID;
+        private string ConnectCode;
 
-        public void Connect(string url, string paramGuildID)
+        public void Connect(string url)
         {
-            GuildID = paramGuildID;
             socket = new SocketIO(url);
             /*socket.On("hi", response =>
             {
@@ -23,7 +22,6 @@ namespace AmongUsCapture
             {
                 GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
-                UpdateGuildID(paramGuildID, false);
             };
 
             socket.ConnectAsync();
@@ -31,21 +29,20 @@ namespace AmongUsCapture
             while(true)
             {
                 string[] command = Console.ReadLine().Split();
-                if (command.Length > 1 && command[0] == "setid")
+                if (command.Length > 1 && command[0] == "connect")
                 {
-                    UpdateGuildID(command[1]);
+                    SendConnectCode(command[1]);
                 }
             }
         }
 
-        private void UpdateGuildID(string newGuildId, bool toFile = true)
+        private void SendConnectCode(string connectCode)
         {
-            GuildID = newGuildId;
-            if (toFile) File.WriteAllText("guildid.txt", GuildID);
-            socket.EmitAsync("guildID", GuildID).ContinueWith((t) => {
+            ConnectCode = connectCode;
+            socket.EmitAsync("connect", ConnectCode).ContinueWith((t) => {
                 GameMemReader.getInstance().ForceUpdate();
                 GameMemReader.getInstance().ForceTransmitState();
-            }); ;
+            });
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)

@@ -26,14 +26,7 @@ namespace AmongUsCapture
             Application.SetCompatibleTextRenderingDefault(false);
             ClientSocket socket = new ClientSocket();
 
-            string guildID = "754465589958803548";
-
-            if (File.Exists("guildid.txt"))
-            {
-                guildID = File.ReadAllText("guildid.txt");
-            }
-
-            Task.Factory.StartNew(() => socket.Connect("http://localhost:8123", guildID)); //synchronously force the socket to connect, and also broadcast the guildID
+            Task.Factory.StartNew(() => socket.Connect("http://localhost:8123")); //synchronously force the socket to connect, and also broadcast the guildID
 
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
 

@@ -81,7 +81,10 @@ namespace AmongUsCapture
                 }
 
                 GameState state;
-                int meetingHudState = ProcessMemory.ReadWithDefault<int>(GameAssemblyPtr, 4, 0xDA58D0, 0x5C, 0, 0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
+                //int meetingHudState = /*meetingHud_cachePtr == 0 ? 4 : */ProcessMemory.ReadWithDefault<int>(GameAssemblyPtr, 4, 0xDA58D0, 0x5C, 0, 0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
+                IntPtr meetingHud = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, 0xDA58D0, 0x5C, 0);
+                uint meetingHud_cachePtr = meetingHud == IntPtr.Zero ? 0 : ProcessMemory.Read<uint>(meetingHud, 0x8);
+                int meetingHudState = meetingHud_cachePtr == 0 ? 4 : ProcessMemory.ReadWithDefault<int>(meetingHud, 4, 0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
                 int gameState = ProcessMemory.Read<int>(GameAssemblyPtr, 0xDA5ACC, 0x5C, 0, 0x64); // 0 = NotJoined, 1 = Joined, 2 = Started, 3 = Ended (during "defeat" or "victory" screen only)
 
                 if (gameState == 0)
@@ -116,7 +119,6 @@ namespace AmongUsCapture
                 if (oldState == GameState.DISCUSSION && state == GameState.TASKS)
                 {
                     byte exiledPlayerId = ProcessMemory.ReadWithDefault<byte>(GameAssemblyPtr, 255, 0xDA58D0, 0x5C, 0, 0x94, 0x08);
-                    Console.WriteLine($"Player with id {exiledPlayerId} was exiled.");
                     int impostorCount = 0, innocentCount = 0;
 
                     for (int i = 0; i < playerCount; i++)
@@ -124,8 +126,20 @@ namespace AmongUsCapture
                         PlayerInfo pi = ProcessMemory.Read<PlayerInfo>(playerAddrPtr, 0, 0);
                         playerAddrPtr += 4;
 
+                        if (pi.PlayerId == exiledPlayerId)
+                        {
+                            PlayerChanged.Invoke(this, new PlayerChangedEventArgs()
+                            {
+                                Action = PlayerAction.Exiled,
+                                Name = pi.GetPlayerName(),
+                                IsDead = pi.GetIsDead(),
+                                Disconnected = pi.GetIsDisconnected(),
+                                Color = pi.GetPlayerColor()
+                            });
+                        }
+
                         // skip invalid, dead and exiled players
-                        if (pi.PlayerName == 0 || pi.PlayerId == exiledPlayerId || pi.IsDead == 1) { continue; }
+                        if (pi.PlayerName == 0 || pi.PlayerId == exiledPlayerId || pi.IsDead == 1 || pi.Disconnected == 1) { continue; }
 
                         if (pi.IsImpostor == 1) { impostorCount++; }
                         else { innocentCount++; }
@@ -144,15 +158,7 @@ namespace AmongUsCapture
                     GameStateChanged.Invoke(this, new GameStateChangedEventArgs() { NewState = state });
                 } else if (state != oldState)
                 {
-                    if (oldState == GameState.DISCUSSION && state == GameState.TASKS) // send delayed
-                    {
-                        Task.Delay(7000).ContinueWith((task) => {
-                            this.ForceTransmitState();
-                        });
-                    } else
-                    {
-                        GameStateChanged.Invoke(this, new GameStateChangedEventArgs() { NewState = state });
-                    }
+                    GameStateChanged.Invoke(this, new GameStateChangedEventArgs() { NewState = state });
                 }
 
                 oldState = state;
@@ -198,7 +204,19 @@ namespace AmongUsCapture
                         {
                             PlayerChanged.Invoke(this, new PlayerChangedEventArgs()
                             {
-                                Action = PlayerAction.ChangedColor,
+                                Action = PlayerAction.Disconnected,
+                                Name = playerName,
+                                IsDead = pi.GetIsDead(),
+                                Disconnected = pi.GetIsDisconnected(),
+                                Color = pi.GetPlayerColor()
+                            });
+                        }
+
+                        if(oldPlayerInfo.GetIsDisconnected() != pi.GetIsDisconnected())
+                        {
+                            PlayerChanged.Invoke(this, new PlayerChangedEventArgs()
+                            {
+                                Action = PlayerAction.Disconnected,
                                 Name = playerName,
                                 IsDead = pi.GetIsDead(),
                                 Disconnected = pi.GetIsDisconnected(),
@@ -283,7 +301,9 @@ namespace AmongUsCapture
         Left,
         Died,
         ChangedColor,
-        ForceUpdated
+        ForceUpdated,
+        Disconnected,
+        Exiled
     }
 
     public enum PlayerColor

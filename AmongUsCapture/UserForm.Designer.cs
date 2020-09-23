@@ -104,6 +104,7 @@
             // 
             // SubmitButton
             // 
+            this.SubmitButton.Enabled = false;
             this.SubmitButton.Location = new System.Drawing.Point(77, 66);
             this.SubmitButton.Name = "SubmitButton";
             this.SubmitButton.Size = new System.Drawing.Size(75, 23);
@@ -125,6 +126,7 @@
             // 
             this.ConnectCodeBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ConnectCodeBox.Location = new System.Drawing.Point(113, 22);
+            this.ConnectCodeBox.MaxLength = 6;
             this.ConnectCodeBox.Name = "ConnectCodeBox";
             this.ConnectCodeBox.Size = new System.Drawing.Size(100, 23);
             this.ConnectCodeBox.TabIndex = 0;

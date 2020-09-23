@@ -19,6 +19,15 @@ namespace AmongUsCapture
             InitializeComponent();
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
+            ConnectCodeBox.TextChanged += ConnectCodeBox_TextChanged;
+        }
+
+        private void ConnectCodeBox_TextChanged(object sender, EventArgs e)
+        {
+            if (ConnectCodeBox.TextLength == 6 && ConnectCodeBox.Enabled)
+            {
+                SubmitButton.Enabled = true;
+            }
         }
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)

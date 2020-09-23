@@ -52,6 +52,7 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
@@ -99,7 +100,7 @@
             this.URLTextBox.Name = "URLTextBox";
             this.URLTextBox.PlaceholderText = "http://localhost:8123";
             this.URLTextBox.Size = new System.Drawing.Size(185, 23);
-            this.URLTextBox.TabIndex = 4;
+            this.URLTextBox.TabIndex = 1;
             // 
             // groupBox2
             // 
@@ -131,7 +132,7 @@
             this.SubmitButton.Location = new System.Drawing.Point(127, 85);
             this.SubmitButton.Name = "SubmitButton";
             this.SubmitButton.Size = new System.Drawing.Size(79, 26);
-            this.SubmitButton.TabIndex = 2;
+            this.SubmitButton.TabIndex = 3;
             this.SubmitButton.Text = "Submit";
             this.SubmitButton.UseVisualStyleBackColor = true;
             this.SubmitButton.Click += new System.EventHandler(this.SubmitButton_Click);
@@ -152,7 +153,7 @@
             this.ConnectCodeBox.Mask = ">AAAAAA";
             this.ConnectCodeBox.Name = "ConnectCodeBox";
             this.ConnectCodeBox.Size = new System.Drawing.Size(100, 26);
-            this.ConnectCodeBox.TabIndex = 0;
+            this.ConnectCodeBox.TabIndex = 2;
             this.ConnectCodeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // groupBox1
@@ -177,6 +178,7 @@
             this.ConsoleTextBox.ReadOnly = true;
             this.ConsoleTextBox.Size = new System.Drawing.Size(587, 454);
             this.ConsoleTextBox.TabIndex = 0;
+            this.ConsoleTextBox.TabStop = false;
             this.ConsoleTextBox.Text = "";
             // 
             // UserForm

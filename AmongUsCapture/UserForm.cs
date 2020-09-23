@@ -22,18 +22,9 @@ namespace AmongUsCapture
             InitializeComponent();
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
-            ConnectCodeBox.TextChanged += ConnectCodeBox_TextChanged;
 
             // Submit on Enter
-            this.AcceptButton = SubmitButton;
-        }
-
-        private void ConnectCodeBox_TextChanged(object sender, EventArgs e)
-        {
-            if (ConnectCodeBox.Enabled && ConnectCodeBox.TextLength == 6 && !ConnectCodeBox.Text.Contains(" "))
-            {
-                SubmitButton.Enabled = true;
-            }
+            this.AcceptButton = ConnectButton;
         }
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
@@ -61,7 +52,7 @@ namespace AmongUsCapture
         private void SubmitButton_Click(object sender, EventArgs e)
         {
             ConnectCodeBox.Enabled = false;
-            SubmitButton.Enabled = false;
+            ConnectButton.Enabled = false;
             URLTextBox.Enabled = false;
 
             var url = "http://localhost:8123";
@@ -82,7 +73,7 @@ namespace AmongUsCapture
             {
                 MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK);
                 ConnectCodeBox.Enabled = true;
-                SubmitButton.Enabled = true;
+                ConnectButton.Enabled = true;
                 URLTextBox.Enabled = true;
                 return;
             }
@@ -93,6 +84,11 @@ namespace AmongUsCapture
             _ = clientSocket.SendConnectCode(ConnectCodeBox.Text);
 
             _ = Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
+        }
+
+        private void ConnectCodeBox_TextChanged(object sender, EventArgs e)
+        {
+            ConnectButton.Enabled = (ConnectCodeBox.Enabled && ConnectCodeBox.Text.Length == 6 && !ConnectCodeBox.Text.Contains(" "));
         }
     }
 }

@@ -34,7 +34,7 @@
             this.URLTextBox = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.CurrentState = new System.Windows.Forms.Label();
-            this.SubmitButton = new System.Windows.Forms.Button();
+            this.ConnectButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.ConnectCodeBox = new System.Windows.Forms.MaskedTextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -73,7 +73,7 @@
             this.UserSettings.Controls.Add(this.label2);
             this.UserSettings.Controls.Add(this.URLTextBox);
             this.UserSettings.Controls.Add(this.groupBox2);
-            this.UserSettings.Controls.Add(this.SubmitButton);
+            this.UserSettings.Controls.Add(this.ConnectButton);
             this.UserSettings.Controls.Add(this.label1);
             this.UserSettings.Controls.Add(this.ConnectCodeBox);
             this.UserSettings.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -126,16 +126,16 @@
             this.CurrentState.Text = "Loading...";
             this.CurrentState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // SubmitButton
+            // ConnectButton
             // 
-            this.SubmitButton.Enabled = false;
-            this.SubmitButton.Location = new System.Drawing.Point(127, 85);
-            this.SubmitButton.Name = "SubmitButton";
-            this.SubmitButton.Size = new System.Drawing.Size(79, 26);
-            this.SubmitButton.TabIndex = 3;
-            this.SubmitButton.Text = "Submit";
-            this.SubmitButton.UseVisualStyleBackColor = true;
-            this.SubmitButton.Click += new System.EventHandler(this.SubmitButton_Click);
+            this.ConnectButton.Enabled = false;
+            this.ConnectButton.Location = new System.Drawing.Point(127, 85);
+            this.ConnectButton.Name = "ConnectButton";
+            this.ConnectButton.Size = new System.Drawing.Size(79, 26);
+            this.ConnectButton.TabIndex = 3;
+            this.ConnectButton.Text = "Connect";
+            this.ConnectButton.UseVisualStyleBackColor = true;
+            this.ConnectButton.Click += new System.EventHandler(this.SubmitButton_Click);
             // 
             // label1
             // 
@@ -155,6 +155,7 @@
             this.ConnectCodeBox.Size = new System.Drawing.Size(100, 26);
             this.ConnectCodeBox.TabIndex = 2;
             this.ConnectCodeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ConnectCodeBox.TextChanged += new System.EventHandler(this.ConnectCodeBox_TextChanged);
             // 
             // groupBox1
             // 
@@ -209,7 +210,7 @@
         private System.Windows.Forms.GroupBox UserSettings;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RichTextBox ConsoleTextBox;
-        private System.Windows.Forms.Button SubmitButton;
+        private System.Windows.Forms.Button ConnectButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.MaskedTextBox ConnectCodeBox;
         private System.Windows.Forms.GroupBox groupBox2;

@@ -147,11 +147,14 @@ namespace AmongUsCapture
             // 
             // ConsoleTextBox
             // 
+            this.ConsoleTextBox.BackColor = System.Drawing.Color.Black;
             this.ConsoleTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ConsoleTextBox.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.ConsoleTextBox.ForeColor = System.Drawing.Color.White;
             this.ConsoleTextBox.Location = new System.Drawing.Point(3, 19);
             this.ConsoleTextBox.Name = "ConsoleTextBox";
             this.ConsoleTextBox.ReadOnly = true;
-            this.ConsoleTextBox.Size = new System.Drawing.Size(540, 454);
+            this.ConsoleTextBox.Size = new System.Drawing.Size(587, 454);
             this.ConsoleTextBox.TabIndex = 0;
             this.ConsoleTextBox.Text = "";
             // 

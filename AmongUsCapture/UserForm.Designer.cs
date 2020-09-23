@@ -1,4 +1,4 @@
-﻿namespace AmongUsCapture
+namespace AmongUsCapture
 {
     partial class UserForm
     {
@@ -49,6 +49,7 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
@@ -60,7 +61,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer1.Size = new System.Drawing.Size(824, 476);
-            this.splitContainer1.SplitterDistance = 274;
+            this.splitContainer1.SplitterDistance = 227;
             this.splitContainer1.TabIndex = 0;
             this.splitContainer1.Text = "splitContainer1";
             // 
@@ -74,17 +75,18 @@
             this.UserSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.UserSettings.Location = new System.Drawing.Point(0, 0);
             this.UserSettings.Name = "UserSettings";
-            this.UserSettings.Size = new System.Drawing.Size(274, 476);
+            this.UserSettings.Size = new System.Drawing.Size(227, 476);
             this.UserSettings.TabIndex = 0;
             this.UserSettings.TabStop = false;
             this.UserSettings.Text = "Settings";
             // 
             // groupBox2
             // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox2.Controls.Add(this.CurrentState);
-            this.groupBox2.Location = new System.Drawing.Point(6, 414);
+            this.groupBox2.Location = new System.Drawing.Point(21, 414);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(200, 56);
+            this.groupBox2.Size = new System.Drawing.Size(185, 56);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Current State";
@@ -105,9 +107,9 @@
             // SubmitButton
             // 
             this.SubmitButton.Enabled = false;
-            this.SubmitButton.Location = new System.Drawing.Point(77, 66);
+            this.SubmitButton.Location = new System.Drawing.Point(127, 85);
             this.SubmitButton.Name = "SubmitButton";
-            this.SubmitButton.Size = new System.Drawing.Size(75, 23);
+            this.SubmitButton.Size = new System.Drawing.Size(79, 26);
             this.SubmitButton.TabIndex = 2;
             this.SubmitButton.Text = "Submit";
             this.SubmitButton.UseVisualStyleBackColor = true;
@@ -116,11 +118,11 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(21, 25);
+            this.label1.Location = new System.Drawing.Point(21, 67);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(86, 15);
+            this.label1.Size = new System.Drawing.Size(83, 15);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Connect Code:";
+            this.label1.Text = "Connect Code";
             // 
             // ConnectCodeBox
             // 
@@ -128,7 +130,7 @@
             this.ConnectCodeBox.Location = new System.Drawing.Point(113, 22);
             this.ConnectCodeBox.MaxLength = 6;
             this.ConnectCodeBox.Name = "ConnectCodeBox";
-            this.ConnectCodeBox.Size = new System.Drawing.Size(100, 23);
+            this.ConnectCodeBox.Size = new System.Drawing.Size(100, 26);
             this.ConnectCodeBox.TabIndex = 0;
             this.ConnectCodeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -138,7 +140,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(546, 476);
+            this.groupBox1.Size = new System.Drawing.Size(593, 476);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Console Output";

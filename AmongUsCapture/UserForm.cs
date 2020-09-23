@@ -45,7 +45,7 @@ namespace AmongUsCapture
 
         private void UserForm_Load(object sender, EventArgs e)
         {
-
+            URLTextBox.Text = Config.GetInstance().GetOrDefault("url", "");
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
@@ -86,6 +86,10 @@ namespace AmongUsCapture
                 URLTextBox.Enabled = true;
                 return;
             }
+
+            // We could connect to the URL -> save it
+            Config.GetInstance().Set("url", url);
+
             _ = clientSocket.SendConnectCode(ConnectCodeBox.Text);
 
             _ = Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background

@@ -36,7 +36,7 @@ namespace AmongUsCapture
 
             if (debugGui)
             {
-                Application.Run(new MainForm());
+                Application.Run(new UserForm(socket));
             } else
             {
                 (new DebugConsole()).Run();

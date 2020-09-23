@@ -1,3 +1,4 @@
+using AmongUsCapture.ConsoleTypes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,6 +12,7 @@ namespace AmongUsCapture
     static class Program
     {
         private static bool debugGui = true;
+        public static ConsoleInterface conInterface = null;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -30,11 +32,13 @@ namespace AmongUsCapture
           
             //TODO make proper properties file
             string host = File.Exists(hostPath) ? File.ReadAllText(hostPath) : "http://localhost:8123";
-
+            var form = new UserForm(socket);
+            conInterface = new FormConsole(form); //Create the Form Console interface. 
             Task.Factory.StartNew(() => socket.Connect(host)); //synchronously force the socket to connect
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
             //(new DebugConsole(debugGui)).Run();
-            Application.Run(new UserForm(socket));
+            
+            Application.Run(form);
             
         }
 

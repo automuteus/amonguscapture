@@ -49,7 +49,7 @@ namespace AmongUsCapture
                     }
                     else
                     {
-                        Console.WriteLine("Connected to Among Us process ({0})", ProcessMemory.process.Id);
+                        Program.conInterface.WriteLine($"Connected to Among Us process ({ProcessMemory.process.Id})");
 
                         bool foundModule = false;
 
@@ -67,7 +67,7 @@ namespace AmongUsCapture
 
                             if (!foundModule)
                             {
-                                Console.WriteLine("Still looking for modules..."); // TODO: This still isn't functional, we need to re-hook to reload module addresses
+                                Program.conInterface.WriteLine("Still looking for modules..."); // TODO: This still isn't functional, we need to re-hook to reload module addresses
                                 Thread.Sleep(500); // delay and try again
                             } else
                             {

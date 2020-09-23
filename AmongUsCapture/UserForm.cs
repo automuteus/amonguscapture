@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AmongUsCapture.ConsoleTypes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,13 +12,13 @@ namespace AmongUsCapture
     public partial class UserForm : Form
     {
         ClientSocket clientSocket;
+
         public UserForm(ClientSocket sock)
         {
             clientSocket = sock;
             InitializeComponent();
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
-            ConnectCodeBox.TextChanged += ConnectCodeBox_TextChanged;
             if(DarkTheme())
             {
                 EnableDarkTheme();
@@ -72,20 +73,10 @@ namespace AmongUsCapture
 
         }
 
-        private void ConnectCodeBox_TextChanged(object sender, EventArgs e)
-        {
-        }
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
-            this.ConsoleTextBox.BeginInvoke((MethodInvoker)delegate {
-                ConsoleTextBox.AppendText(e.Name + ": " + e.Action+"\n");
-            });
-        }
-
-        private void UserForm_Load(object sender, EventArgs e)
-        {
-
+            WriteLineToConsole(e.Name + ": " + e.Action);
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
@@ -93,9 +84,8 @@ namespace AmongUsCapture
             this.CurrentState.BeginInvoke((MethodInvoker)delegate {
                 CurrentState.Text = e.NewState.ToString();
             });
-            this.ConsoleTextBox.BeginInvoke((MethodInvoker)delegate {
-                ConsoleTextBox.AppendText("State changed to " + e.NewState+"\n");
-            });
+
+            WriteLineToConsole("State changed to " + e.NewState);
         }
 
         private void SubmitButton_Click(object sender, EventArgs e)
@@ -106,6 +96,13 @@ namespace AmongUsCapture
                 ConnectCodeBox.Enabled = false;
                 SubmitButton.Enabled = false;
             }
+        }
+
+        public void WriteLineToConsole(String line)
+        {
+            ConsoleTextBox.BeginInvoke((MethodInvoker)delegate {
+                ConsoleTextBox.AppendText(line + "\n");
+            });
         }
     }
 }

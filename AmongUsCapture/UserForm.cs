@@ -100,9 +100,13 @@ namespace AmongUsCapture
 
         public void WriteLineToConsole(String line)
         {
-            ConsoleTextBox.BeginInvoke((MethodInvoker)delegate {
-                ConsoleTextBox.AppendText(line + "\n");
-            });
+            if(!(ConsoleTextBox is null))
+            {
+                ConsoleTextBox.BeginInvoke((MethodInvoker)delegate {
+                    ConsoleTextBox.AppendText(line + "\n");
+                });
+            }
+            
         }
     }
 }

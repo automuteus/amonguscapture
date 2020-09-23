@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -20,6 +20,9 @@ namespace AmongUsCapture
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
             ConnectCodeBox.TextChanged += ConnectCodeBox_TextChanged;
+
+            // Submit on Enter
+            this.AcceptButton = SubmitButton;
         }
 
         private void ConnectCodeBox_TextChanged(object sender, EventArgs e)

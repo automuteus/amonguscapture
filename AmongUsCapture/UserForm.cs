@@ -28,12 +28,12 @@ namespace AmongUsCapture
 
             // Submit on Enter
             this.AcceptButton = ConnectButton;
-        
-            if(DarkTheme())
+
+            if (DarkTheme())
             {
                 EnableDarkTheme();
             }
-            
+
         }
         private bool DarkTheme()
         {
@@ -82,13 +82,31 @@ namespace AmongUsCapture
 
             ConnectButton.BackColor = BluePurpleAccent;
             ConnectButton.ForeColor = White;
-            
+
 
             BackColor = DarkGrey;
             ForeColor = White;
 
         }
 
+        private void ConnectCodeBox_Enter(object sender, EventArgs e)
+        {
+            this.BeginInvoke((MethodInvoker)delegate ()
+            {
+                ConnectCodeBox.Select(0, 0);
+            });
+        }
+        private void ConnectCodeBox_Click(object sender, EventArgs e)
+        {
+            if (ConnectCodeBox.Enabled)
+            {
+                this.BeginInvoke((MethodInvoker)delegate ()
+                {
+                    ConnectCodeBox.Select(0, 0);
+                });
+            }
+
+        }
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
@@ -111,7 +129,7 @@ namespace AmongUsCapture
 
         private void SubmitButton_Click(object sender, EventArgs e)
         {
-        
+
             ConnectCodeBox.Enabled = false;
             ConnectButton.Enabled = false;
             URLTextBox.Enabled = false;
@@ -130,7 +148,8 @@ namespace AmongUsCapture
             try
             {
                 await clientSocket.Connect(url);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK);
                 ConnectCodeBox.Enabled = true;
@@ -151,7 +170,7 @@ namespace AmongUsCapture
         {
             ConnectButton.Enabled = (ConnectCodeBox.Enabled && ConnectCodeBox.Text.Length == 6 && !ConnectCodeBox.Text.Contains(" "));
         }
-        
+
         public void WriteLineToConsole(String line)
         {
             if (!(ConsoleTextBox is null))

@@ -7,6 +7,13 @@ namespace AmongUsCapture
 {
     class DebugConsole
     {
+        private bool debugGui;
+
+        public DebugConsole(bool debugGui)
+        {
+            this.debugGui = debugGui;
+        }
+
         public void Run()
         {
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
@@ -33,14 +40,23 @@ namespace AmongUsCapture
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
         {
-            Console.WriteLine("State changed to " + e.NewState);
+            if(!debugGui)
+            {
+                Console.WriteLine("State changed to " + e.NewState);
+            }
+            
         }
 
         private void PlayerChangedHandler(object sender, PlayerChangedEventArgs e)
         {
             if (e.Name.Length != 0) // for some reason, sometimes there's events with players without a name
             {
-                Console.WriteLine(e.Name + ": " + e.Action);
+                if (!debugGui)
+                {
+                    Console.WriteLine(e.Name + ": " + e.Action);
+                }
+
+
             }
         }
     }

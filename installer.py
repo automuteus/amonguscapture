@@ -1,54 +1,81 @@
-#gui and os 
+# GUI and os #
 import tkinter as tk
 import os, sys
 from os import path
 
-#for .net check and install
+# For .net check and install #
 import subprocess
 
-# async so GUI doesn't hold up the program
-import asyncio
-
+# For the downloading and processing of files (request is depricated) #
 import tempfile
 from urllib.request import urlopen
 from zipfile import ZipFile
+import json as JSON
+
+# Creat path if not exists #
 if not path.exists("amongus-bot"):
     os.mkdir("amongus-bot")
     os.mkdir("amongus-bot/amonguscapture") 
 
+# Declerations #
 guildId = ""
 botToken = ""
 net = ""
 
+# If local or built #
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+    
+# Handle quit #
 def cancel():
     sys.exit()
 
+# Accept .net install #
 def next():
     global net
     net.destroy()
 
+# Main downloading portion #
 def download():
     global guildId
     global botToken
-    #capture zip
-    zipurl = 'https://github.com/denverquane/amonguscapture/releases/download/v2.0-prerelease/amonguscapture.zip'
-    zipresp = urlopen(zipurl)
+    downloadBaseURL = ''
+    
+    # among us capture #
+    jsonURL = 'https://api.github.com/repos/denverquane/amonguscapture/releases'
+    json = urlopen(jsonURL)
+    json = JSON.loads(str(json.read())[2:-1].replace("\r", " ").replace("\n", " "))
+    
+    captureURL = json[0]["assets"][0]["browser_download_url"]
+    
+    captureResponse = urlopen(captureURL)
     tempzip = open(tempfile.gettempdir() + "tempfile.zip", "wb")
-    tempzip.write(zipresp.read())
+    tempzip.write(captureResponse.read())
     tempzip.close()
+    
     zf = ZipFile(tempfile.gettempdir() + "tempfile.zip")
     zf.extractall(path = './amongus-bot/amonguscapture')
     zf.close()
-
-    #amongusdiscord.exe
-    url = 'https://github.com/denverquane/amongusdiscord/releases/download/v2.0-prerelease/amongusdiscord.exe'
-    resp = urlopen(url)
+    
+    # among us discord #
+    jsonURL = 'https://api.github.com/repos/denverquane/amongusdiscord/releases'
+    json2 = urlopen(jsonURL)
+    json2 = JSON.loads(json2.read().decode().replace("\r", "").replace("\n", ""))
+    
+    discordURL = json2[0]["assets"][0]["browser_download_url"]
+    exeResponse = urlopen(discordURL)
     exe = open("./amongus-bot/amongusdiscord.exe", "wb")
-    exe.write(resp.read())
+    exe.write(exeResponse.read())
     exe.close()
     
+    # .net 3.1 check #
     result = subprocess.run(['dotnet', '--version'], stdout=subprocess.PIPE)
     if "3.1." not in str(result.stdout):
+        # Download .net SDK #
         if not path.exists("amongus-bot/dependencies"):
             os.mkdir("amongus-bot/dependencies") 
         url = 'https://download.visualstudio.microsoft.com/download/pr/9706378b-f244-48a6-8cec-68a19a8b1678/1f90fd18eb892cbb0bf75d9cff377ccb/dotnet-sdk-3.1.402-win-x64.exe'
@@ -58,7 +85,8 @@ def download():
         exe.close()
         master1.destroy()
         net = tk.Tk()
-        net.iconbitmap(sys._MEIPASS + '\icon.ico')
+        
+        net.iconbitmap(resource_path('icon.ico'))
         tk.Label(net, 
                  text="You will now be prompter to install .net core.").grid(row=0)
         tk.Label(net, 
@@ -77,11 +105,10 @@ def download():
         master1.destroy()
         guildId = open('./amongus-bot/amonguscapture/guildid.txt', 'w')
         botToken = open('./amongus-bot/final.txt', 'w')
-    
-
-#downloading GUI
+        
+# Downloading notification
 master1 = tk.Tk()
-master1.iconbitmap(sys._MEIPASS + '\icon.ico')
+master1.iconbitmap(resource_path('icon.ico'))
 tk.Label(master1, 
          text="Downloading, please wait.").grid(row=0)
 tk.Button(master1, 
@@ -100,7 +127,7 @@ def updateText():
     guildId.close()
     master.destroy()
     master2 = tk.Tk()
-    master2.iconbitmap(sys._MEIPASS + '\icon.ico')
+    master2.iconbitmap(resource_path('icon.ico'))
     tk.Label(master2, 
              text="Installation successful.").grid(row=0)
     tk.Button(master2, 
@@ -108,7 +135,7 @@ def updateText():
               command=cancel).grid(row=1)
     
 master = tk.Tk()
-master.iconbitmap(sys._MEIPASS + '\icon.ico')
+master.iconbitmap(resource_path('icon.ico'))
 tk.Label(master, 
          text="Bot Token").grid(row=0)
 tk.Label(master, 
@@ -133,5 +160,3 @@ tk.Button(master,
                                                        pady=4)
 
 tk.mainloop()
-
-

@@ -1,3 +1,4 @@
+using AmongUsCapture.ConsoleTypes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,6 +11,7 @@ namespace AmongUsCapture
     static class Program
     {
         private static bool debugGui = true;
+        public static ConsoleInterface conInterface = null;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -23,9 +25,11 @@ namespace AmongUsCapture
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
+            var form = new UserForm();
+            conInterface = new FormConsole(form); //Create the Form Console interface. 
             //(new DebugConsole(debugGui)).Run();
-            Application.Run(new UserForm());
+            
+            Application.Run(form);
             
         }
 

@@ -30,29 +30,29 @@
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.UserSettings = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.URLTextBox = new System.Windows.Forms.TextBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.CurrentState = new System.Windows.Forms.Label();
+            this.ConnectCodeGB = new System.Windows.Forms.GroupBox();
             this.ConnectButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
             this.ConnectCodeBox = new System.Windows.Forms.MaskedTextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.UrlGB = new System.Windows.Forms.GroupBox();
+            this.URLTextBox = new System.Windows.Forms.TextBox();
+            this.CurrentStateGroupBox = new System.Windows.Forms.GroupBox();
+            this.CurrentState = new System.Windows.Forms.Label();
+            this.ConsoleGroupBox = new System.Windows.Forms.GroupBox();
             this.ConsoleTextBox = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.UserSettings.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.ConnectCodeGB.SuspendLayout();
+            this.UrlGB.SuspendLayout();
+            this.CurrentStateGroupBox.SuspendLayout();
+            this.ConsoleGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
@@ -62,56 +62,97 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
+            this.splitContainer1.Panel2.Controls.Add(this.ConsoleGroupBox);
             this.splitContainer1.Size = new System.Drawing.Size(824, 476);
-            this.splitContainer1.SplitterDistance = 227;
+            this.splitContainer1.SplitterDistance = 274;
             this.splitContainer1.TabIndex = 0;
             this.splitContainer1.Text = "splitContainer1";
             // 
             // UserSettings
             // 
-            this.UserSettings.Controls.Add(this.label2);
-            this.UserSettings.Controls.Add(this.URLTextBox);
-            this.UserSettings.Controls.Add(this.groupBox2);
-            this.UserSettings.Controls.Add(this.ConnectButton);
-            this.UserSettings.Controls.Add(this.label1);
-            this.UserSettings.Controls.Add(this.ConnectCodeBox);
+            this.UserSettings.Controls.Add(this.ConnectCodeGB);
+            this.UserSettings.Controls.Add(this.UrlGB);
+            this.UserSettings.Controls.Add(this.CurrentStateGroupBox);
             this.UserSettings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.UserSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.UserSettings.Location = new System.Drawing.Point(0, 0);
             this.UserSettings.Name = "UserSettings";
-            this.UserSettings.Size = new System.Drawing.Size(227, 476);
+            this.UserSettings.Size = new System.Drawing.Size(274, 476);
             this.UserSettings.TabIndex = 0;
             this.UserSettings.TabStop = false;
             this.UserSettings.Text = "Settings";
             // 
-            // label2
+            // ConnectCodeGB
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(21, 23);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(28, 15);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "URL";
+            this.ConnectCodeGB.Controls.Add(this.ConnectButton);
+            this.ConnectCodeGB.Controls.Add(this.ConnectCodeBox);
+            this.ConnectCodeGB.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ConnectCodeGB.Location = new System.Drawing.Point(3, 74);
+            this.ConnectCodeGB.Name = "ConnectCodeGB";
+            this.ConnectCodeGB.Size = new System.Drawing.Size(268, 61);
+            this.ConnectCodeGB.TabIndex = 2;
+            this.ConnectCodeGB.TabStop = false;
+            this.ConnectCodeGB.Text = "Connect Code";
+            // 
+            // ConnectButton
+            // 
+            this.ConnectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ConnectButton.BackColor = System.Drawing.SystemColors.Control;
+            this.ConnectButton.Enabled = false;
+            this.ConnectButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
+            this.ConnectButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.ConnectButton.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.ConnectButton.Location = new System.Drawing.Point(183, 22);
+            this.ConnectButton.Name = "ConnectButton";
+            this.ConnectButton.Size = new System.Drawing.Size(75, 23);
+            this.ConnectButton.TabIndex = 2;
+            this.ConnectButton.Text = "Connect";
+            this.ConnectButton.UseVisualStyleBackColor = true;
+            this.ConnectButton.Click += new System.EventHandler(this.SubmitButton_Click);
+            // 
+            // ConnectCodeBox
+            // 
+            this.ConnectCodeBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ConnectCodeBox.Font = new System.Drawing.Font("Cascadia Code", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.ConnectCodeBox.Location = new System.Drawing.Point(9, 22);
+            this.ConnectCodeBox.Mask = ">AAAAAA";
+            this.ConnectCodeBox.Name = "ConnectCodeBox";
+            this.ConnectCodeBox.Size = new System.Drawing.Size(100, 23);
+            this.ConnectCodeBox.TabIndex = 1;
+            this.ConnectCodeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ConnectCodeBox.TextChanged += new System.EventHandler(this.ConnectCodeBox_TextChanged);
+            // 
+            // UrlGB
+            // 
+            this.UrlGB.Controls.Add(this.URLTextBox);
+            this.UrlGB.Dock = System.Windows.Forms.DockStyle.Top;
+            this.UrlGB.Location = new System.Drawing.Point(3, 19);
+            this.UrlGB.Name = "UrlGB";
+            this.UrlGB.Padding = new System.Windows.Forms.Padding(10, 3, 10, 3);
+            this.UrlGB.Size = new System.Drawing.Size(268, 55);
+            this.UrlGB.TabIndex = 1;
+            this.UrlGB.TabStop = false;
+            this.UrlGB.Text = "URL";
             // 
             // URLTextBox
             // 
-            this.URLTextBox.Location = new System.Drawing.Point(21, 41);
+            this.URLTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.URLTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.URLTextBox.Location = new System.Drawing.Point(10, 19);
             this.URLTextBox.Name = "URLTextBox";
             this.URLTextBox.PlaceholderText = "http://localhost:8123";
-            this.URLTextBox.Size = new System.Drawing.Size(185, 23);
-            this.URLTextBox.TabIndex = 1;
+            this.URLTextBox.Size = new System.Drawing.Size(248, 23);
+            this.URLTextBox.TabIndex = 0;
             // 
-            // groupBox2
+            // CurrentStateGroupBox
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBox2.Controls.Add(this.CurrentState);
-            this.groupBox2.Location = new System.Drawing.Point(21, 414);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(185, 56);
-            this.groupBox2.TabIndex = 3;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Current State";
+            this.CurrentStateGroupBox.Controls.Add(this.CurrentState);
+            this.CurrentStateGroupBox.Location = new System.Drawing.Point(6, 414);
+            this.CurrentStateGroupBox.Name = "CurrentStateGroupBox";
+            this.CurrentStateGroupBox.Size = new System.Drawing.Size(262, 56);
+            this.CurrentStateGroupBox.TabIndex = 3;
+            this.CurrentStateGroupBox.TabStop = false;
+            this.CurrentStateGroupBox.Text = "Current State";
             // 
             // CurrentState
             // 
@@ -126,58 +167,28 @@
             this.CurrentState.Text = "Loading...";
             this.CurrentState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // ConnectButton
+            // ConsoleGroupBox
             // 
-            this.ConnectButton.Enabled = false;
-            this.ConnectButton.Location = new System.Drawing.Point(127, 85);
-            this.ConnectButton.Name = "ConnectButton";
-            this.ConnectButton.Size = new System.Drawing.Size(79, 26);
-            this.ConnectButton.TabIndex = 3;
-            this.ConnectButton.Text = "Connect";
-            this.ConnectButton.UseVisualStyleBackColor = true;
-            this.ConnectButton.Click += new System.EventHandler(this.SubmitButton_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(21, 67);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(83, 15);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Connect Code";
-            // 
-            // ConnectCodeBox
-            // 
-            this.ConnectCodeBox.Font = new System.Drawing.Font("Cascadia Mono", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.ConnectCodeBox.Location = new System.Drawing.Point(21, 85);
-            this.ConnectCodeBox.Mask = ">AAAAAA";
-            this.ConnectCodeBox.Name = "ConnectCodeBox";
-            this.ConnectCodeBox.Size = new System.Drawing.Size(100, 26);
-            this.ConnectCodeBox.TabIndex = 2;
-            this.ConnectCodeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.ConnectCodeBox.TextChanged += new System.EventHandler(this.ConnectCodeBox_TextChanged);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.ConsoleTextBox);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(593, 476);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Console Output";
+            this.ConsoleGroupBox.Controls.Add(this.ConsoleTextBox);
+            this.ConsoleGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ConsoleGroupBox.Location = new System.Drawing.Point(0, 0);
+            this.ConsoleGroupBox.Name = "ConsoleGroupBox";
+            this.ConsoleGroupBox.Size = new System.Drawing.Size(546, 476);
+            this.ConsoleGroupBox.TabIndex = 0;
+            this.ConsoleGroupBox.TabStop = false;
+            this.ConsoleGroupBox.Text = "Console Output";
             // 
             // ConsoleTextBox
             // 
-            this.ConsoleTextBox.BackColor = System.Drawing.Color.Black;
+            this.ConsoleTextBox.AutoWordSelection = true;
+            this.ConsoleTextBox.BackColor = System.Drawing.Color.White;
+            this.ConsoleTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ConsoleTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ConsoleTextBox.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.ConsoleTextBox.ForeColor = System.Drawing.Color.White;
             this.ConsoleTextBox.Location = new System.Drawing.Point(3, 19);
             this.ConsoleTextBox.Name = "ConsoleTextBox";
             this.ConsoleTextBox.ReadOnly = true;
-            this.ConsoleTextBox.Size = new System.Drawing.Size(587, 454);
+            this.ConsoleTextBox.Size = new System.Drawing.Size(540, 454);
             this.ConsoleTextBox.TabIndex = 0;
             this.ConsoleTextBox.TabStop = false;
             this.ConsoleTextBox.Text = "";
@@ -190,16 +201,18 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "UserForm";
             this.Text = "Among Us Capture";
-            this.Load += new System.EventHandler(this.UserForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.UserSettings.ResumeLayout(false);
-            this.UserSettings.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
+            this.ConnectCodeGB.ResumeLayout(false);
+            this.ConnectCodeGB.PerformLayout();
+            this.UrlGB.ResumeLayout(false);
+            this.UrlGB.PerformLayout();
+            this.CurrentStateGroupBox.ResumeLayout(false);
+            this.CurrentStateGroupBox.PerformLayout();
+            this.ConsoleGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -208,14 +221,14 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.GroupBox UserSettings;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox ConsoleGroupBox;
         private System.Windows.Forms.RichTextBox ConsoleTextBox;
         private System.Windows.Forms.Button ConnectButton;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.MaskedTextBox ConnectCodeBox;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox CurrentStateGroupBox;
         private System.Windows.Forms.Label CurrentState;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.GroupBox ConnectCodeGB;
+        private System.Windows.Forms.GroupBox UrlGB;
         private System.Windows.Forms.TextBox URLTextBox;
     }
 }

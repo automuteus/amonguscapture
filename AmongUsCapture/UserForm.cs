@@ -1,3 +1,4 @@
+using AmongUsCapture.ConsoleTypes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,24 +15,84 @@ namespace AmongUsCapture
     public partial class UserForm : Form
     {
         ClientSocket clientSocket;
-        public static RichTextBox ConsoleOutPut = null;
+
         public UserForm()
         {
             clientSocket = new ClientSocket();
-            ConsoleOutPut = ConsoleTextBox;
             InitializeComponent();
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
 
+            // Load URL
+            URLTextBox.Text = Config.GetInstance().GetOrDefault("url", "");
+
             // Submit on Enter
             this.AcceptButton = ConnectButton;
+        
+            if(DarkTheme())
+            {
+                EnableDarkTheme();
+            }
+            
         }
+        private bool DarkTheme()
+        {
+            bool is_dark_mode = false;
+            try
+            {
+                var v = Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "AppsUseLightTheme", "1");
+                if (v != null && v.ToString() == "0")
+                    is_dark_mode = true;
+            }
+            catch { }
+            return is_dark_mode;
+        }
+        private void EnableDarkTheme()
+        {
+            var BluePurpleAccent = Color.FromArgb(114, 137, 218);
+            var White = Color.White;
+            var AlmostWhite = Color.FromArgb(153, 170, 181);
+            var LighterGrey = Color.FromArgb(44, 47, 51);
+            var DarkGrey = Color.FromArgb(35, 39, 42);
+
+            ConsoleTextBox.BackColor = LighterGrey;
+            ConsoleTextBox.ForeColor = White;
+
+            ConsoleGroupBox.BackColor = DarkGrey;
+            ConsoleGroupBox.ForeColor = White;
+
+            UserSettings.BackColor = DarkGrey;
+            UserSettings.ForeColor = White;
+
+            CurrentStateGroupBox.BackColor = LighterGrey;
+            CurrentStateGroupBox.ForeColor = White;
+
+            ConnectCodeGB.BackColor = LighterGrey;
+            ConnectCodeGB.ForeColor = White;
+
+            ConnectCodeBox.BackColor = DarkGrey;
+            ConnectCodeBox.ForeColor = White;
+
+            UrlGB.BackColor = LighterGrey;
+            UrlGB.ForeColor = White;
+
+            URLTextBox.BackColor = DarkGrey;
+            URLTextBox.ForeColor = White;
+
+
+            ConnectButton.BackColor = BluePurpleAccent;
+            ConnectButton.ForeColor = White;
+            
+
+            BackColor = DarkGrey;
+            ForeColor = White;
+
+        }
+
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
-            this.ConsoleTextBox.BeginInvoke((MethodInvoker)delegate {
-                ConsoleTextBox.AppendText(e.Name + ": " + e.Action+"\n");
-            });
+            WriteLineToConsole(e.Name + ": " + e.Action);
         }
 
         private void UserForm_Load(object sender, EventArgs e)
@@ -44,13 +105,13 @@ namespace AmongUsCapture
             this.CurrentState.BeginInvoke((MethodInvoker)delegate {
                 CurrentState.Text = e.NewState.ToString();
             });
-            this.ConsoleTextBox.BeginInvoke((MethodInvoker)delegate {
-                ConsoleTextBox.AppendText("State changed to " + e.NewState+"\n");
-            });
+
+            WriteLineToConsole("State changed to " + e.NewState);
         }
 
         private void SubmitButton_Click(object sender, EventArgs e)
         {
+        
             ConnectCodeBox.Enabled = false;
             ConnectButton.Enabled = false;
             URLTextBox.Enabled = false;
@@ -89,6 +150,17 @@ namespace AmongUsCapture
         private void ConnectCodeBox_TextChanged(object sender, EventArgs e)
         {
             ConnectButton.Enabled = (ConnectCodeBox.Enabled && ConnectCodeBox.Text.Length == 6 && !ConnectCodeBox.Text.Contains(" "));
+        }
+        
+        public void WriteLineToConsole(String line)
+        {
+            if (!(ConsoleTextBox is null))
+            {
+                ConsoleTextBox.BeginInvoke((MethodInvoker)delegate {
+                    ConsoleTextBox.AppendText(line + "\n");
+                });
+            }
+
         }
     }
 }

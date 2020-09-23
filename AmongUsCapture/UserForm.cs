@@ -30,7 +30,7 @@ namespace AmongUsCapture
 
         private void ConnectCodeBox_TextChanged(object sender, EventArgs e)
         {
-            if (ConnectCodeBox.TextLength == 6 && ConnectCodeBox.Enabled)
+            if (ConnectCodeBox.Enabled && ConnectCodeBox.TextLength == 6 && !ConnectCodeBox.Text.Contains(" "))
             {
                 SubmitButton.Enabled = true;
             }
@@ -62,21 +62,12 @@ namespace AmongUsCapture
         {
             ConnectCodeBox.Enabled = false;
             SubmitButton.Enabled = false;
+            URLTextBox.Enabled = false;
 
             var url = "http://localhost:8123";
-            // Validate URL
             if (URLTextBox.Text != "")
             {
                 url = URLTextBox.Text;
-            }
-
-            try
-            {
-                new Uri(url);
-            } catch (UriFormatException _)
-            {
-                // TODO: Invalid URL entered
-                return;
             }
 
             doConnect(url);
@@ -84,7 +75,17 @@ namespace AmongUsCapture
 
         private async void doConnect(string url)
         {
-            await clientSocket.Connect(url);
+            try
+            {
+                await clientSocket.Connect(url);
+            } catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK);
+                ConnectCodeBox.Enabled = true;
+                SubmitButton.Enabled = true;
+                URLTextBox.Enabled = true;
+                return;
+            }
             _ = clientSocket.SendConnectCode(ConnectCodeBox.Text);
 
             _ = Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background

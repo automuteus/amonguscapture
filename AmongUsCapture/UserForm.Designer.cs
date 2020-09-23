@@ -31,12 +31,12 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.UserSettings = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.CurrentState = new System.Windows.Forms.Label();
             this.SubmitButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.ConnectCodeBox = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.ConsoleTextBox = new System.Windows.Forms.RichTextBox();
-            this.CurrentState = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -89,6 +89,19 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Current State";
             // 
+            // CurrentState
+            // 
+            this.CurrentState.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CurrentState.AutoSize = true;
+            this.CurrentState.Location = new System.Drawing.Point(38, 28);
+            this.CurrentState.Name = "CurrentState";
+            this.CurrentState.Size = new System.Drawing.Size(59, 15);
+            this.CurrentState.TabIndex = 0;
+            this.CurrentState.Text = "Loading...";
+            this.CurrentState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // SubmitButton
             // 
             this.SubmitButton.Location = new System.Drawing.Point(77, 66);
@@ -138,19 +151,6 @@
             this.ConsoleTextBox.TabIndex = 0;
             this.ConsoleTextBox.Text = "";
             // 
-            // CurrentState
-            // 
-            this.CurrentState.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.CurrentState.AutoSize = true;
-            this.CurrentState.Location = new System.Drawing.Point(38, 28);
-            this.CurrentState.Name = "CurrentState";
-            this.CurrentState.Size = new System.Drawing.Size(59, 15);
-            this.CurrentState.TabIndex = 0;
-            this.CurrentState.Text = "Loading...";
-            this.CurrentState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // UserForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -158,7 +158,7 @@
             this.ClientSize = new System.Drawing.Size(824, 476);
             this.Controls.Add(this.splitContainer1);
             this.Name = "UserForm";
-            this.Text = "AmongCord Capture";
+            this.Text = "Among Us Capture";
             this.Load += new System.EventHandler(this.UserForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);

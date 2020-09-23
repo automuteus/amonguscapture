@@ -6,7 +6,7 @@ using SocketIOClient;
 
 namespace AmongUsCapture
 {
-    class ClientSocket
+    public class ClientSocket
     { 
         private SocketIO socket;
         private string ConnectCode;
@@ -25,18 +25,9 @@ namespace AmongUsCapture
             };
 
             socket.ConnectAsync();
-
-            while(true)
-            {
-                string[] command = Console.ReadLine().Split();
-                if (command.Length > 1 && command[0] == "connect")
-                {
-                    SendConnectCode(command[1]);
-                }
-            }
         }
 
-        private void SendConnectCode(string connectCode)
+        public void SendConnectCode(string connectCode)
         {
             ConnectCode = connectCode;
             socket.EmitAsync("connect", ConnectCode).ContinueWith((t) => {
@@ -52,7 +43,7 @@ namespace AmongUsCapture
 
         private void PlayerChangedHandler(object sender, PlayerChangedEventArgs e)
         {
-            socket.EmitAsync("player", JsonSerializer.Serialize(e));
+            socket.EmitAsync("player", JsonSerializer.Serialize(e)); //Makes code wait for socket to emit before closing thread.
         }
     }
 }

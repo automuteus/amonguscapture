@@ -10,7 +10,7 @@ namespace AmongUsCapture
 {
     static class Program
     {
-        private static bool debugGui = false;
+        private static bool debugGui = true;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -33,14 +33,9 @@ namespace AmongUsCapture
 
             Task.Factory.StartNew(() => socket.Connect(host)); //synchronously force the socket to connect
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
-
-            if (debugGui)
-            {
-                Application.Run(new MainForm());
-            } else
-            {
-                (new DebugConsole()).Run();
-            }
+            //(new DebugConsole(debugGui)).Run();
+            Application.Run(new UserForm(socket));
+            
         }
 
 

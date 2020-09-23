@@ -128,7 +128,7 @@ namespace AmongUsCapture
 
                         if (pi.PlayerId == exiledPlayerId)
                         {
-                            PlayerChanged.Invoke(this, new PlayerChangedEventArgs()
+                            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs()
                             {
                                 Action = PlayerAction.Exiled,
                                 Name = pi.GetPlayerName(),
@@ -158,7 +158,7 @@ namespace AmongUsCapture
                     GameStateChanged.Invoke(this, new GameStateChangedEventArgs() { NewState = state });
                 } else if (state != oldState)
                 {
-                    GameStateChanged.Invoke(this, new GameStateChangedEventArgs() { NewState = state });
+                    GameStateChanged?.Invoke(this, new GameStateChangedEventArgs() { NewState = state });
                 }
 
                 oldState = state;
@@ -178,7 +178,7 @@ namespace AmongUsCapture
 
                     if (!oldPlayerInfos.ContainsKey(playerName)) // player wasn't here before, they just joined
                     {
-                        PlayerChanged.Invoke(this, new PlayerChangedEventArgs()
+                        PlayerChanged?.Invoke(this, new PlayerChangedEventArgs()
                         {
                             Action = PlayerAction.Joined,
                             Name = playerName,
@@ -202,7 +202,7 @@ namespace AmongUsCapture
 
                         if(oldPlayerInfo.ColorId != pi.ColorId)
                         {
-                            PlayerChanged.Invoke(this, new PlayerChangedEventArgs()
+                            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs()
                             {
                                 Action = PlayerAction.Disconnected,
                                 Name = playerName,
@@ -214,7 +214,7 @@ namespace AmongUsCapture
 
                         if(oldPlayerInfo.GetIsDisconnected() != pi.GetIsDisconnected())
                         {
-                            PlayerChanged.Invoke(this, new PlayerChangedEventArgs()
+                            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs()
                             {
                                 Action = PlayerAction.Disconnected,
                                 Name = playerName,
@@ -232,7 +232,7 @@ namespace AmongUsCapture
                     string playerName = kvp.Key;
                     if (!newPlayerInfos.ContainsKey(playerName)) // player was here before, isn't now, so they left
                     {
-                        PlayerChanged.Invoke(this, new PlayerChangedEventArgs()
+                        PlayerChanged?.Invoke(this, new PlayerChangedEventArgs()
                         {
                             Action = PlayerAction.Left,
                             Name = playerName,
@@ -258,7 +258,7 @@ namespace AmongUsCapture
                     oldPlayerInfos[kvp.Key] = pi;
                     if (emitAll)
                     {
-                        PlayerChanged.Invoke(this, new PlayerChangedEventArgs()
+                        PlayerChanged?.Invoke(this, new PlayerChangedEventArgs()
                         {
                             Action = PlayerAction.ForceUpdated,
                             Name = kvp.Key,

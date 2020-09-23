@@ -34,7 +34,7 @@ namespace AmongUsCapture
             this.CurrentState = new System.Windows.Forms.Label();
             this.SubmitButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.ConnectCodeBox = new System.Windows.Forms.TextBox();
+            this.ConnectCodeBox = new System.Windows.Forms.MaskedTextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.ConsoleTextBox = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -126,9 +126,9 @@ namespace AmongUsCapture
             // 
             // ConnectCodeBox
             // 
-            this.ConnectCodeBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.ConnectCodeBox.Location = new System.Drawing.Point(113, 22);
-            this.ConnectCodeBox.MaxLength = 6;
+            this.ConnectCodeBox.Font = new System.Drawing.Font("Cascadia Mono", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.ConnectCodeBox.Location = new System.Drawing.Point(21, 85);
+            this.ConnectCodeBox.Mask = ">AAAAAA";
             this.ConnectCodeBox.Name = "ConnectCodeBox";
             this.ConnectCodeBox.Size = new System.Drawing.Size(100, 26);
             this.ConnectCodeBox.TabIndex = 0;
@@ -185,7 +185,7 @@ namespace AmongUsCapture
         private System.Windows.Forms.RichTextBox ConsoleTextBox;
         private System.Windows.Forms.Button SubmitButton;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox ConnectCodeBox;
+        private System.Windows.Forms.MaskedTextBox ConnectCodeBox;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label CurrentState;
     }

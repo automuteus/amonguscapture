@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AmongUsCapture
@@ -24,17 +23,9 @@ namespace AmongUsCapture
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            ClientSocket socket = new ClientSocket();
 
-            string hostPath = "host.txt";
-          
-            //TODO make proper properties file
-            string host = File.Exists(hostPath) ? File.ReadAllText(hostPath) : "http://localhost:8123";
-
-            Task.Factory.StartNew(() => socket.Connect(host)); //synchronously force the socket to connect
-            Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
             //(new DebugConsole(debugGui)).Run();
-            Application.Run(new UserForm(socket));
+            Application.Run(new UserForm());
             
         }
 

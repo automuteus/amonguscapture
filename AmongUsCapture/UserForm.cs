@@ -5,6 +5,9 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading.Tasks;
+using System.Security.Policy;
+using SocketIOClient;
 
 namespace AmongUsCapture
 {
@@ -12,9 +15,9 @@ namespace AmongUsCapture
     {
         ClientSocket clientSocket;
         public static RichTextBox ConsoleOutPut = null;
-        public UserForm(ClientSocket sock)
+        public UserForm()
         {
-            clientSocket = sock;
+            clientSocket = new ClientSocket();
             ConsoleOutPut = ConsoleTextBox;
             InitializeComponent();
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
@@ -57,9 +60,34 @@ namespace AmongUsCapture
 
         private void SubmitButton_Click(object sender, EventArgs e)
         {
-            clientSocket.SendConnectCode(ConnectCodeBox.Text);
             ConnectCodeBox.Enabled = false;
             SubmitButton.Enabled = false;
+
+            var url = "http://localhost:8123";
+            // Validate URL
+            if (URLTextBox.Text != "")
+            {
+                url = URLTextBox.Text;
+            }
+
+            try
+            {
+                new Uri(url);
+            } catch (UriFormatException _)
+            {
+                // TODO: Invalid URL entered
+                return;
+            }
+
+            doConnect(url);
+        }
+
+        private async void doConnect(string url)
+        {
+            await clientSocket.Connect(url);
+            _ = clientSocket.SendConnectCode(ConnectCodeBox.Text);
+
+            _ = Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
         }
     }
 }

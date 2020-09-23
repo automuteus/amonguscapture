@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using SocketIOClient;
@@ -11,7 +12,7 @@ namespace AmongUsCapture
         private SocketIO socket;
         private string ConnectCode;
 
-        public void Connect(string url)
+        public async Task Connect(string url)
         {
             socket = new SocketIO(url);
             /*socket.On("hi", response =>
@@ -24,16 +25,15 @@ namespace AmongUsCapture
                 GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
             };
 
-            socket.ConnectAsync();
+            await socket.ConnectAsync();
         }
 
-        public void SendConnectCode(string connectCode)
+        public async Task SendConnectCode(string connectCode)
         {
             ConnectCode = connectCode;
-            socket.EmitAsync("connect", ConnectCode).ContinueWith((t) => {
-                GameMemReader.getInstance().ForceUpdate();
-                GameMemReader.getInstance().ForceTransmitState();
-            });
+            await socket.EmitAsync("connect", ConnectCode);
+            GameMemReader.getInstance().ForceUpdate();
+            GameMemReader.getInstance().ForceTransmitState();
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)

@@ -1,4 +1,4 @@
-namespace AmongUsCapture
+﻿namespace AmongUsCapture
 {
     partial class UserForm
     {
@@ -30,6 +30,8 @@ namespace AmongUsCapture
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.UserSettings = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.URLTextBox = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.CurrentState = new System.Windows.Forms.Label();
             this.SubmitButton = new System.Windows.Forms.Button();
@@ -67,6 +69,8 @@ namespace AmongUsCapture
             // 
             // UserSettings
             // 
+            this.UserSettings.Controls.Add(this.label2);
+            this.UserSettings.Controls.Add(this.URLTextBox);
             this.UserSettings.Controls.Add(this.groupBox2);
             this.UserSettings.Controls.Add(this.SubmitButton);
             this.UserSettings.Controls.Add(this.label1);
@@ -79,6 +83,23 @@ namespace AmongUsCapture
             this.UserSettings.TabIndex = 0;
             this.UserSettings.TabStop = false;
             this.UserSettings.Text = "Settings";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(21, 23);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(28, 15);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "URL";
+            // 
+            // URLTextBox
+            // 
+            this.URLTextBox.Location = new System.Drawing.Point(21, 41);
+            this.URLTextBox.Name = "URLTextBox";
+            this.URLTextBox.PlaceholderText = "http://localhost:8123";
+            this.URLTextBox.Size = new System.Drawing.Size(185, 23);
+            this.URLTextBox.TabIndex = 4;
             // 
             // groupBox2
             // 
@@ -191,5 +212,7 @@ namespace AmongUsCapture
         private System.Windows.Forms.MaskedTextBox ConnectCodeBox;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label CurrentState;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox URLTextBox;
     }
 }

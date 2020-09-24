@@ -21,6 +21,12 @@ namespace AmongUsCapture
         private bool shouldForceUpdate = false;
         private bool shouldTransmitState = false;
 
+        private int AmongUsClientOffset = 0x1468840;
+        private int GameDataOffset = 0x1468864;
+        private int MeetingHudOffset = 0x14686A0;
+        private int GameStartManagerOffset = 0x0;
+        private int HudManagerOffset = 0x13EEB44;
+
         public static GameMemReader getInstance()
         {
             return instance;
@@ -82,16 +88,16 @@ namespace AmongUsCapture
                         
 
                         Console.WriteLine($"({GameAssemblyPtr})");
-                        prevChatBubsVersion = ProcessMemory.Read<int>(GameAssemblyPtr, 0xD0B25C, 0x5C, 0, 0x28, 0xC, 0x14, 0x10);
+                        prevChatBubsVersion = ProcessMemory.Read<int>(GameAssemblyPtr, HudManagerOffset, 0x5C, 0, 0x28, 0xC, 0x14, 0x10);
                     }
                 }
 
                 GameState state;
                 //int meetingHudState = /*meetingHud_cachePtr == 0 ? 4 : */ProcessMemory.ReadWithDefault<int>(GameAssemblyPtr, 4, 0xDA58D0, 0x5C, 0, 0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
-                IntPtr meetingHud = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, 0xDA58D0, 0x5C, 0);
+                IntPtr meetingHud = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, MeetingHudOffset, 0x5C, 0);
                 uint meetingHud_cachePtr = meetingHud == IntPtr.Zero ? 0 : ProcessMemory.Read<uint>(meetingHud, 0x8);
                 int meetingHudState = meetingHud_cachePtr == 0 ? 4 : ProcessMemory.ReadWithDefault<int>(meetingHud, 4, 0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
-                int gameState = ProcessMemory.Read<int>(GameAssemblyPtr, 0xDA5ACC, 0x5C, 0, 0x64); // 0 = NotJoined, 1 = Joined, 2 = Started, 3 = Ended (during "defeat" or "victory" screen only)
+                int gameState = ProcessMemory.Read<int>(GameAssemblyPtr, AmongUsClientOffset, 0x5C, 0, 0x64); // 0 = NotJoined, 1 = Joined, 2 = Started, 3 = Ended (during "defeat" or "victory" screen only)
 
                 if (gameState == 0)
                 {
@@ -115,7 +121,7 @@ namespace AmongUsCapture
                     state = GameState.TASKS;
                 }
 
-                IntPtr allPlayersPtr = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, 0xDA5A60, 0x5C, 0, 0x24);
+                IntPtr allPlayersPtr = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, GameDataOffset, 0x5C, 0, 0x24);
                 IntPtr allPlayers = ProcessMemory.Read<IntPtr>(allPlayersPtr, 0x08);
                 int playerCount = ProcessMemory.Read<int>(allPlayersPtr, 0x0C);
 
@@ -124,7 +130,7 @@ namespace AmongUsCapture
                 // check if exile causes end
                 if (oldState == GameState.DISCUSSION && state == GameState.TASKS)
                 {
-                    byte exiledPlayerId = ProcessMemory.ReadWithDefault<byte>(GameAssemblyPtr, 255, 0xDA58D0, 0x5C, 0, 0x94, 0x08);
+                    byte exiledPlayerId = ProcessMemory.ReadWithDefault<byte>(GameAssemblyPtr, 255, MeetingHudOffset, 0x5C, 0, 0x94, 0x08);
                     int impostorCount = 0, innocentCount = 0;
 
                     for (int i = 0; i < playerCount; i++)
@@ -275,7 +281,7 @@ namespace AmongUsCapture
                     }
                 }
 
-                IntPtr chatBubblesPtr = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, 0xD0B25C, 0x5C, 0, 0x28, 0xC, 0x14);
+                IntPtr chatBubblesPtr = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, HudManagerOffset, 0x5C, 0, 0x28, 0xC, 0x14);
                 int poolSize = 20; // = ProcessMemory.Read<int>(GameAssemblyPtr, 0xD0B25C, 0x5C, 0, 0x28, 0xC, 0xC)
                 int numChatBubbles = ProcessMemory.Read<int>(chatBubblesPtr, 0xC);
                 int chatBubsVersion = ProcessMemory.Read<int>(chatBubblesPtr, 0x10);

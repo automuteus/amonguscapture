@@ -27,6 +27,14 @@ namespace AmongUsCapture
             
         }
 
+        private void OnLoad(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                WriteLineToConsole(i.ToString());
+            }
+        }
+
         private void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
         {
             WriteLineToConsole($"[CHAT] {e.Sender}: {e.Message}");
@@ -105,6 +113,16 @@ namespace AmongUsCapture
             }
         }
 
+        private void ConsoleTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (AutoScrollMenuItem.Checked)
+            {
+                ConsoleTextBox.SelectionStart = ConsoleTextBox.Text.Length;
+                ConsoleTextBox.ScrollToCaret();
+            }
+        }
+
+
         public void WriteLineToConsole(String line)
         {
             if(!(ConsoleTextBox is null))
@@ -115,5 +133,7 @@ namespace AmongUsCapture
             }
             
         }
+
+
     }
 }

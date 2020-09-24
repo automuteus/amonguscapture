@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.UserSettings = new System.Windows.Forms.GroupBox();
             this.ConnectCodeGB = new System.Windows.Forms.GroupBox();
@@ -37,6 +38,9 @@
             this.CurrentState = new System.Windows.Forms.Label();
             this.ConsoleGroupBox = new System.Windows.Forms.GroupBox();
             this.ConsoleTextBox = new System.Windows.Forms.RichTextBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.AutoScrollMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -45,6 +49,7 @@
             this.ConnectCodeGB.SuspendLayout();
             this.CurrentStateGroupBox.SuspendLayout();
             this.ConsoleGroupBox.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -141,6 +146,7 @@
             // ConsoleGroupBox
             // 
             this.ConsoleGroupBox.Controls.Add(this.ConsoleTextBox);
+            this.ConsoleGroupBox.Controls.Add(this.checkBox1);
             this.ConsoleGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ConsoleGroupBox.Location = new System.Drawing.Point(0, 0);
             this.ConsoleGroupBox.Name = "ConsoleGroupBox";
@@ -152,8 +158,8 @@
             // ConsoleTextBox
             // 
             this.ConsoleTextBox.AutoWordSelection = true;
-            this.ConsoleTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.ConsoleTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ConsoleTextBox.ContextMenuStrip = this.contextMenuStrip1;
             this.ConsoleTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ConsoleTextBox.Location = new System.Drawing.Point(3, 19);
             this.ConsoleTextBox.Name = "ConsoleTextBox";
@@ -161,6 +167,35 @@
             this.ConsoleTextBox.Size = new System.Drawing.Size(540, 454);
             this.ConsoleTextBox.TabIndex = 0;
             this.ConsoleTextBox.Text = "";
+            this.ConsoleTextBox.TextChanged += new System.EventHandler(this.ConsoleTextBox_TextChanged);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.AutoScrollMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(130, 26);
+            // 
+            // AutoScrollMenuItem
+            // 
+            this.AutoScrollMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.AutoScrollMenuItem.Checked = true;
+            this.AutoScrollMenuItem.CheckOnClick = true;
+            this.AutoScrollMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AutoScrollMenuItem.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.AutoScrollMenuItem.Name = "AutoScrollMenuItem";
+            this.AutoScrollMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.AutoScrollMenuItem.Text = "AutoScroll";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(250, 315);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(83, 19);
+            this.checkBox1.TabIndex = 2;
+            this.checkBox1.Text = "checkBox1";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // UserForm
             // 
@@ -170,6 +205,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "UserForm";
             this.Text = "Among Us Capture";
+            this.Load += new System.EventHandler(this.OnLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -180,6 +216,8 @@
             this.CurrentStateGroupBox.ResumeLayout(false);
             this.CurrentStateGroupBox.PerformLayout();
             this.ConsoleGroupBox.ResumeLayout(false);
+            this.ConsoleGroupBox.PerformLayout();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -189,11 +227,14 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.GroupBox UserSettings;
         private System.Windows.Forms.GroupBox ConsoleGroupBox;
-        private System.Windows.Forms.RichTextBox ConsoleTextBox;
         private System.Windows.Forms.Button SubmitButton;
         private System.Windows.Forms.TextBox ConnectCodeBox;
         private System.Windows.Forms.GroupBox CurrentStateGroupBox;
         private System.Windows.Forms.Label CurrentState;
         private System.Windows.Forms.GroupBox ConnectCodeGB;
+        private System.Windows.Forms.RichTextBox ConsoleTextBox;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem AutoScrollMenuItem;
     }
 }

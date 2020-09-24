@@ -25,7 +25,10 @@ namespace AmongUsCapture
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            var form = new UserForm();
+
+            var sock = new ClientSocket();
+
+            var form = new UserForm(sock);
             conInterface = new FormConsole(form); //Create the Form Console interface. 
             //(new DebugConsole(debugGui)).Run();
             

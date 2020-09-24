@@ -16,9 +16,9 @@ namespace AmongUsCapture
     {
         ClientSocket clientSocket;
 
-        public UserForm()
+        public UserForm(ClientSocket clientSocket)
         {
-            clientSocket = new ClientSocket();
+            this.clientSocket = clientSocket;
             InitializeComponent();
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;

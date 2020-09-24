@@ -11,7 +11,7 @@ namespace AmongUsCapture
 {
     static class Program
     {
-        private static bool debugGui = false;
+        private static bool debugGui = true;
         public static ConsoleInterface conInterface = null;
         /// <summary>
         ///  The main entry point for the application.

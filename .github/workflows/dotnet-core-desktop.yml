@@ -56,7 +56,7 @@ jobs:
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
     env:
-      Solution_Name: AmongUsCapture.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
+      Solution_Name: AmongUsCapture\AmongUsCapture.csproj                         # Replace with your solution name, i.e. MyWpfApp.sln.
       PublishProfile64Bit: PublishProfiles/FolderProfile.pubxml
       PublishProfile32Bit: PublishProfiles/FolderProfile1.pubxml
 

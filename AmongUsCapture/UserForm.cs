@@ -105,8 +105,8 @@ namespace AmongUsCapture
             if(ConnectCodeBox.TextLength == 6)
             {
                 clientSocket.SendConnectCode(ConnectCodeBox.Text);
-                ConnectCodeBox.Enabled = false;
-                SubmitButton.Enabled = false;
+                //ConnectCodeBox.Enabled = false;
+                //SubmitButton.Enabled = false;
             }
         }
 

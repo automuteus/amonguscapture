@@ -32,8 +32,9 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.UserSettings = new System.Windows.Forms.GroupBox();
             this.ConnectCodeGB = new System.Windows.Forms.GroupBox();
-            this.SubmitButton = new System.Windows.Forms.Button();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.ConnectCodeBox = new System.Windows.Forms.TextBox();
+            this.SubmitButton = new System.Windows.Forms.Button();
             this.CurrentStateGroupBox = new System.Windows.Forms.GroupBox();
             this.CurrentState = new System.Windows.Forms.Label();
             this.ConsoleGroupBox = new System.Windows.Forms.GroupBox();
@@ -47,6 +48,7 @@
             this.splitContainer1.SuspendLayout();
             this.UserSettings.SuspendLayout();
             this.ConnectCodeGB.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.CurrentStateGroupBox.SuspendLayout();
             this.ConsoleGroupBox.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -85,43 +87,69 @@
             // 
             // ConnectCodeGB
             // 
-            this.ConnectCodeGB.Controls.Add(this.SubmitButton);
-            this.ConnectCodeGB.Controls.Add(this.ConnectCodeBox);
+            this.ConnectCodeGB.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ConnectCodeGB.Controls.Add(this.tableLayoutPanel1);
             this.ConnectCodeGB.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ConnectCodeGB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ConnectCodeGB.Location = new System.Drawing.Point(3, 19);
             this.ConnectCodeGB.Name = "ConnectCodeGB";
-            this.ConnectCodeGB.Size = new System.Drawing.Size(268, 61);
+            this.ConnectCodeGB.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.ConnectCodeGB.Size = new System.Drawing.Size(268, 63);
             this.ConnectCodeGB.TabIndex = 4;
             this.ConnectCodeGB.TabStop = false;
             this.ConnectCodeGB.Text = "Connect Code";
             // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.ConnectCodeBox, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.SubmitButton, 1, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 19);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(8);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(3);
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(262, 41);
+            this.tableLayoutPanel1.TabIndex = 3;
+            // 
+            // ConnectCodeBox
+            // 
+            this.ConnectCodeBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ConnectCodeBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ConnectCodeBox.Location = new System.Drawing.Point(6, 6);
+            this.ConnectCodeBox.MaxLength = 6;
+            this.ConnectCodeBox.Name = "ConnectCodeBox";
+            this.ConnectCodeBox.Size = new System.Drawing.Size(122, 23);
+            this.ConnectCodeBox.TabIndex = 0;
+            this.ConnectCodeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // SubmitButton
             // 
+            this.SubmitButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SubmitButton.AutoSize = true;
+            this.SubmitButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.SubmitButton.BackColor = System.Drawing.SystemColors.Control;
             this.SubmitButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
             this.SubmitButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.SubmitButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.SubmitButton.Location = new System.Drawing.Point(187, 22);
+            this.SubmitButton.Location = new System.Drawing.Point(134, 6);
             this.SubmitButton.Name = "SubmitButton";
-            this.SubmitButton.Size = new System.Drawing.Size(75, 23);
+            this.SubmitButton.Size = new System.Drawing.Size(122, 25);
             this.SubmitButton.TabIndex = 2;
             this.SubmitButton.Text = "Submit";
             this.SubmitButton.UseVisualStyleBackColor = true;
             this.SubmitButton.Click += new System.EventHandler(this.SubmitButton_Click);
             // 
-            // ConnectCodeBox
-            // 
-            this.ConnectCodeBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.ConnectCodeBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ConnectCodeBox.Location = new System.Drawing.Point(9, 22);
-            this.ConnectCodeBox.MaxLength = 6;
-            this.ConnectCodeBox.Name = "ConnectCodeBox";
-            this.ConnectCodeBox.Size = new System.Drawing.Size(100, 23);
-            this.ConnectCodeBox.TabIndex = 0;
-            this.ConnectCodeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // CurrentStateGroupBox
             // 
+            this.CurrentStateGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.CurrentStateGroupBox.Controls.Add(this.CurrentState);
             this.CurrentStateGroupBox.Location = new System.Drawing.Point(6, 414);
             this.CurrentStateGroupBox.Name = "CurrentStateGroupBox";
@@ -161,6 +189,7 @@
             this.ConsoleTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ConsoleTextBox.ContextMenuStrip = this.contextMenuStrip1;
             this.ConsoleTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ConsoleTextBox.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ConsoleTextBox.Location = new System.Drawing.Point(3, 19);
             this.ConsoleTextBox.Name = "ConsoleTextBox";
             this.ConsoleTextBox.ReadOnly = true;
@@ -213,6 +242,8 @@
             this.UserSettings.ResumeLayout(false);
             this.ConnectCodeGB.ResumeLayout(false);
             this.ConnectCodeGB.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.CurrentStateGroupBox.ResumeLayout(false);
             this.CurrentStateGroupBox.PerformLayout();
             this.ConsoleGroupBox.ResumeLayout(false);
@@ -236,5 +267,6 @@
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem AutoScrollMenuItem;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }

@@ -6,7 +6,6 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using System.Threading.Tasks;
 using System.Security.Policy;
 using SocketIOClient;
 
@@ -151,7 +150,6 @@ namespace AmongUsCapture
                 Config.GetInstance().Set("url", url);
 
                 clientSocket.SendConnectCode(ConnectCodeBox.Text);
-                Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
             };
 
             try

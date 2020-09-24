@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace AmongUsCapture
 {
@@ -27,6 +28,7 @@ namespace AmongUsCapture
             Application.SetCompatibleTextRenderingDefault(false);
 
             var sock = new ClientSocket();
+            Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
 
             var form = new UserForm(sock);
             conInterface = new FormConsole(form); //Create the Form Console interface. 

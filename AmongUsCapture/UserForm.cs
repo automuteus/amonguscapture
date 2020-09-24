@@ -161,8 +161,7 @@ namespace AmongUsCapture
             // We could connect to the URL -> save it
             Config.GetInstance().Set("url", url);
 
-            _ = clientSocket.SendConnectCode(ConnectCodeBox.Text);
-
+            clientSocket.SendConnectCode(ConnectCodeBox.Text);
             _ = Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
         }
 

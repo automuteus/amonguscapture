@@ -28,13 +28,15 @@ namespace AmongUsCapture
             await socket.ConnectAsync();
         }
 
-        public async Task SendConnectCode(string connectCode)
+        public void SendConnectCode(string connectCode)
         {
             ConnectCode = connectCode;
-            await socket.EmitAsync("connect", ConnectCode);
-            GameMemReader.getInstance().ForceUpdate();
-            GameMemReader.getInstance().ForceTransmitState();
-            Program.conInterface.WriteLine($"Connection code ({connectCode}) sent to server.");
+            socket.EmitAsync("connect", ConnectCode).ContinueWith((_) =>
+            {
+                GameMemReader.getInstance().ForceUpdate();
+                GameMemReader.getInstance().ForceTransmitState();
+                Program.conInterface.WriteLine($"Connection code ({connectCode}) sent to server.");
+            });
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)

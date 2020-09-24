@@ -1,8 +1,9 @@
 ﻿language: csharp
 os: windows
 solution: AmongUsCapture.sln
-
 mono: none
-dotnet: 2.1.502
+
 script:
- - dotnet restore
+    - choco install dotnetcore-sdk
+    - dotnet --version
+    - dotnet restore

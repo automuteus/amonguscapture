@@ -29,10 +29,7 @@ namespace AmongUsCapture
 
         private void OnLoad(object sender, EventArgs e)
         {
-            for (int i = 0; i < 100; i++)
-            {
-                WriteLineToConsole(i.ToString());
-            }
+            //TestFillConsole(100);
         }
 
         private void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
@@ -122,6 +119,13 @@ namespace AmongUsCapture
             }
         }
 
+        private void TestFillConsole(int entries) //Helper test method to see if filling console works.
+        {
+            for (int i = 0; i < entries; i++)
+            {
+                WriteLineToConsole(i.ToString());
+            }
+        }
 
         public void WriteLineToConsole(String line)
         {

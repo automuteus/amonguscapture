@@ -1,9 +1,20 @@
-﻿language: csharp
+language: csharp
 os: windows
 solution: AmongUsCapture.sln
 mono: none
-
 script:
-    - choco install dotnetcore-sdk
-    - dotnet --version
-    - dotnet restore
+- choco install dotnetcore-sdk
+- dotnet --version
+- dotnet restore
+- msbuild publish AmongUsCapture.sln -p:PublishProfile=FolderProfile
+- msbuild publish AmongUsCapture.sln -p:PublishProfile=FolderProfile1
+deploy:
+  provider: releases
+  api_key:
+    secure: QaiKgEYf+0s72UYwbFbiF/yz2xU+BnH9qoTffQAbFO5g0k6duaS1VKCyk3KVbCepjKAuj48pYZcWF0VJ/p5YKsl8LXzhp8+nReRpD4196yo//R1KDGs1k9vKht1XKR9lpaM2GGsja2VRSgIHArVM57zWV2TgbMOzzjdu4sysjpdoeqMoW96ez1GVfliTycdCUyHxjYs9a0D3UXWA4xM/28chLQJs7sUn0+RMglyy/KYKNyiANmRPzcUqYAsG9g+6603asNA1v63ISyfTrU1Mkh1bY4gnxpdEdX9YdHc1jKyMKhy3ClbY4IsC8NyfukmnXM+Vi+AYUjmSm3zCeohisa1DcCbdcK+ct/ANsQjVO9CDko9Ie8EKBP68WTp7r4AjeLE7BANxDvA8N7uEbAia2VSsZEXoDXxVcDmxwqPwcNMnjD9NxH1wPZf7u8Eu3Ergz+qNDziJKy/xSewRwxYdbD9pHCZrJRzUvT6nn1b4Eyt9EuP8sLcBTHnP+AMzA+oVyY++mooI2i65jYPeghJDfrjRRA/aPY2UHvrgEf0Jkw41gciFT7H7Y/O07vLsQMOywYJnUSBQ01MGIj0FVcwA4v1a60dccReegyYxl02FJq89rfY8ovlQbQE1w3joVqBsgDK49skbU1TQFxbtEqJdpw7kqEOyFn/SEjo8tIc3ZLY=
+  file: 
+    - "AmongUsCapture\bin\Release\netcoreapp3.1\publish\publish32bit\AmongUsCapture.exe"
+    - "AmongUsCapture\bin\Release\netcoreapp3.1\publish\publish64bit\AmongUsCapture.exe"
+  on:
+    repo: CarbonNeuron/amonguscapture
+  skip_cleanup: 'true'

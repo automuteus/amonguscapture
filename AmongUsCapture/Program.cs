@@ -25,10 +25,12 @@ namespace AmongUsCapture
             Application.SetCompatibleTextRenderingDefault(false);
 
             var sock = new ClientSocket();
-            Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
 
             var form = new UserForm(sock);
             conInterface = new FormConsole(form); //Create the Form Console interface. 
+
+            Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background; Needs to happen after conInterface is set
+
             //(new DebugConsole(debugGui)).Run();
             
             Application.Run(form);

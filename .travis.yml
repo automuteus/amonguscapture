@@ -3,11 +3,12 @@ os: windows
 solution: AmongUsCapture.sln
 mono: none
 script:
-- choco install dotnetcore-sdk
-- dotnet --version
-- dotnet restore
-- msbuild publish AmongUsCapture.sln -p:PublishProfile=FolderProfile
-- msbuild publish AmongUsCapture.sln -p:PublishProfile=FolderProfile1
+  - choco install dotnetcore-sdk
+  - dotnet --version
+  - dotnet restore
+  - msbuild publish AmongUsCapture.sln -p:PublishProfile=FolderProfile
+  - msbuild publish AmongUsCapture.sln -p:PublishProfile=FolderProfile1
+
 deploy:
   provider: releases
   api_key:

@@ -11,7 +11,8 @@ namespace AmongUsCapture
 {
     static class Program
     {
-        private static bool debugGui = true;
+        private static bool doConsole = false;
+
         public static ConsoleInterface conInterface = null;
         /// <summary>
         ///  The main entry point for the application.
@@ -19,7 +20,7 @@ namespace AmongUsCapture
         [STAThread]
         static void Main()
         {
-            if(!debugGui)
+            if(doConsole)
             {
                 AllocConsole(); // needs to be the first call in the program to prevent weird bugs
             }

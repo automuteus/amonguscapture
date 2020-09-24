@@ -143,11 +143,20 @@ namespace AmongUsCapture
             doConnect(url);
         }
 
-        private async void doConnect(string url)
+        private void doConnect(string url)
         {
+            clientSocket.OnConnected += (sender, e) =>
+            {
+                // We could connect to the URL -> save it
+                Config.GetInstance().Set("url", url);
+
+                clientSocket.SendConnectCode(ConnectCodeBox.Text);
+                Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
+            };
+
             try
             {
-                await clientSocket.Connect(url);
+                clientSocket.Connect(url);
             }
             catch (Exception e)
             {
@@ -157,12 +166,6 @@ namespace AmongUsCapture
                 URLTextBox.Enabled = true;
                 return;
             }
-
-            // We could connect to the URL -> save it
-            Config.GetInstance().Set("url", url);
-
-            clientSocket.SendConnectCode(ConnectCodeBox.Text);
-            _ = Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
         }
 
         private void ConnectCodeBox_TextChanged(object sender, EventArgs e)

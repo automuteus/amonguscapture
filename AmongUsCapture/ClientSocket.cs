@@ -9,10 +9,12 @@ namespace AmongUsCapture
 {
     public class ClientSocket
     { 
+        public event EventHandler OnConnected;
+
         private SocketIO socket;
         private string ConnectCode;
 
-        public async Task Connect(string url)
+        public void Connect(string url)
         {
             socket = new SocketIO(url);
             /*socket.On("hi", response =>
@@ -23,9 +25,10 @@ namespace AmongUsCapture
             {
                 GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
+                this.OnConnected(this, new EventArgs());
             };
 
-            await socket.ConnectAsync();
+            socket.ConnectAsync();
         }
 
         public void SendConnectCode(string connectCode)

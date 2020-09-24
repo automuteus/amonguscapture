@@ -113,14 +113,16 @@
             // ConnectCodeBox
             // 
             this.ConnectCodeBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ConnectCodeBox.Font = new System.Drawing.Font("Cascadia Code", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.ConnectCodeBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ConnectCodeBox.Location = new System.Drawing.Point(9, 22);
             this.ConnectCodeBox.Mask = ">AAAAAA";
             this.ConnectCodeBox.Name = "ConnectCodeBox";
-            this.ConnectCodeBox.Size = new System.Drawing.Size(100, 23);
+            this.ConnectCodeBox.Size = new System.Drawing.Size(100, 22);
             this.ConnectCodeBox.TabIndex = 1;
             this.ConnectCodeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ConnectCodeBox.Click += new System.EventHandler(this.ConnectCodeBox_Click);
             this.ConnectCodeBox.TextChanged += new System.EventHandler(this.ConnectCodeBox_TextChanged);
+            this.ConnectCodeBox.Enter += new System.EventHandler(this.ConnectCodeBox_Enter);
             // 
             // UrlGB
             // 

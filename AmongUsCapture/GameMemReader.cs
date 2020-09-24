@@ -29,12 +29,17 @@ namespace AmongUsCapture
 
         public event EventHandler<PlayerChangedEventArgs> PlayerChanged;
 
+        public event EventHandler<ChatMessageEventArgs> ChatMessageAdded;
+
+
         public Dictionary<string, PlayerInfo> oldPlayerInfos = new Dictionary<string, PlayerInfo>(10); // Important: this is making the assumption that player names are unique. They are, but for better tracking of players and to eliminate any ambiguity the keys of this probably need to be the players' network IDs instead
         public Dictionary<string, PlayerInfo> newPlayerInfos = new Dictionary<string, PlayerInfo>(10); // container for new player infos. Also has capacity 10 already assigned so no internal resizing of the data structure is needed
 
         private IntPtr GameAssemblyPtr = IntPtr.Zero;
         private GameState oldState = GameState.LOBBY;
         private bool exileCausesEnd = false;
+
+        private int prevChatBubsVersion;
 
         public void RunLoop()
         {
@@ -77,6 +82,7 @@ namespace AmongUsCapture
                         
 
                         Console.WriteLine($"({GameAssemblyPtr})");
+                        prevChatBubsVersion = ProcessMemory.Read<int>(GameAssemblyPtr, 0xD0B25C, 0x5C, 0, 0x28, 0xC, 0x14, 0x10);
                     }
                 }
 
@@ -155,7 +161,7 @@ namespace AmongUsCapture
                 if (this.shouldTransmitState)
                 {
                     shouldTransmitState = false;
-                    GameStateChanged.Invoke(this, new GameStateChangedEventArgs() { NewState = state });
+                    GameStateChanged?.Invoke(this, new GameStateChangedEventArgs() { NewState = state });
                 } else if (state != oldState)
                 {
                     GameStateChanged?.Invoke(this, new GameStateChangedEventArgs() { NewState = state });
@@ -190,7 +196,7 @@ namespace AmongUsCapture
                         PlayerInfo oldPlayerInfo = oldPlayerInfos[playerName];
                         if (!oldPlayerInfo.GetIsDead() && pi.GetIsDead()) // player just died
                         {
-                            PlayerChanged.Invoke(this, new PlayerChangedEventArgs()
+                            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs()
                             {
                                 Action = PlayerAction.Died,
                                 Name = playerName,
@@ -204,7 +210,7 @@ namespace AmongUsCapture
                         {
                             PlayerChanged?.Invoke(this, new PlayerChangedEventArgs()
                             {
-                                Action = PlayerAction.Disconnected,
+                                Action = PlayerAction.ChangedColor,
                                 Name = playerName,
                                 IsDead = pi.GetIsDead(),
                                 Disconnected = pi.GetIsDisconnected(),
@@ -212,7 +218,7 @@ namespace AmongUsCapture
                             });
                         }
 
-                        if(oldPlayerInfo.GetIsDisconnected() != pi.GetIsDisconnected())
+                        if(!oldPlayerInfo.GetIsDisconnected() && pi.GetIsDisconnected())
                         {
                             PlayerChanged?.Invoke(this, new PlayerChangedEventArgs()
                             {
@@ -269,11 +275,58 @@ namespace AmongUsCapture
                     }
                 }
 
-                //foreach (KeyValuePair<string, PlayerInfo> kvp in oldPlayerInfos)
-                //{
-                //    PlayerInfo pi = kvp.Value;
-                //    Console.WriteLine($"Player ID {pi.PlayerId}; Name: {ProcessMemory.ReadString((IntPtr)pi.PlayerName)}; Color: {pi.ColorId}; Dead: " + ((pi.IsDead > 0) ? "yes" : "no"));
-                //}
+                IntPtr chatBubblesPtr = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, 0xD0B25C, 0x5C, 0, 0x28, 0xC, 0x14);
+                int poolSize = 20; // = ProcessMemory.Read<int>(GameAssemblyPtr, 0xD0B25C, 0x5C, 0, 0x28, 0xC, 0xC)
+                int numChatBubbles = ProcessMemory.Read<int>(chatBubblesPtr, 0xC);
+                int chatBubsVersion = ProcessMemory.Read<int>(chatBubblesPtr, 0x10);
+                IntPtr chatBubblesAddr = ProcessMemory.Read<IntPtr>(chatBubblesPtr, 0x8) + 0x10;
+                IntPtr[] chatBubblePtrs = ProcessMemory.ReadArray(chatBubblesAddr, numChatBubbles);
+
+                int newMsgs = 0;
+
+                if (chatBubsVersion > prevChatBubsVersion) // new message has been sent
+                {
+                    if (chatBubsVersion > poolSize) // increments are twofold (push to and pop from pool)
+                    {
+                        if (prevChatBubsVersion > poolSize)
+                        {
+                            newMsgs = (chatBubsVersion - prevChatBubsVersion) >> 1;
+                        }
+                        else
+                        {
+                            newMsgs = (poolSize - prevChatBubsVersion) + ((chatBubsVersion - poolSize) >> 1);
+                        }
+                    }
+                    else // single increments
+                    {
+                        newMsgs = chatBubsVersion - prevChatBubsVersion;
+                    }
+                }
+                else if (chatBubsVersion < prevChatBubsVersion) // reset
+                {
+                    if (chatBubsVersion > poolSize) // increments are twofold (push to and pop from pool)
+                    {
+                        newMsgs = poolSize + ((chatBubsVersion - poolSize) >> 1);
+                    }
+                    else // single increments
+                    {
+                        newMsgs = chatBubsVersion;
+                    }
+                }
+
+                prevChatBubsVersion = chatBubsVersion;
+
+                for (int i = numChatBubbles - newMsgs; i < numChatBubbles; i++)
+                {
+                    string msgText = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(chatBubblePtrs[i], 0x20, 0x28));
+                    if (msgText.Length == 0) continue;
+                    string msgSender = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(chatBubblePtrs[i], 0x1C, 0x28));
+                    ChatMessageAdded?.Invoke(this, new ChatMessageEventArgs()
+                    {
+                        Sender = msgSender,
+                        Message = msgText
+                    });
+                }
 
                 Thread.Sleep(250);
             }
@@ -329,5 +382,11 @@ namespace AmongUsCapture
         public bool IsDead { get; set; }
         public bool Disconnected { get; set; }
         public PlayerColor Color { get; set; }
+    }
+
+    public class ChatMessageEventArgs : EventArgs
+    {
+        public string Sender { get; set; }
+        public string Message { get; set; }
     }
 }

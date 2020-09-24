@@ -19,12 +19,19 @@ namespace AmongUsCapture
             InitializeComponent();
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
+            GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
             if(DarkTheme())
             {
                 EnableDarkTheme();
             }
             
         }
+
+        private void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
+        {
+            WriteLineToConsole($"[CHAT] {e.Sender}: {e.Message}");
+        }
+
         private bool DarkTheme()
         {
             bool is_dark_mode = false;

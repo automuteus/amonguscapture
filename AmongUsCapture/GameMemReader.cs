@@ -282,7 +282,9 @@ namespace AmongUsCapture
                 }
 
                 IntPtr chatBubblesPtr = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, HudManagerOffset, 0x5C, 0, 0x28, 0xC, 0x14);
+
                 int poolSize = 20; // = ProcessMemory.Read<int>(GameAssemblyPtr, 0xD0B25C, 0x5C, 0, 0x28, 0xC, 0xC)
+
                 int numChatBubbles = ProcessMemory.Read<int>(chatBubblesPtr, 0xC);
                 int chatBubsVersion = ProcessMemory.Read<int>(chatBubblesPtr, 0x10);
                 IntPtr chatBubblesAddr = ProcessMemory.Read<IntPtr>(chatBubblesPtr, 0x8) + 0x10;
@@ -333,6 +335,9 @@ namespace AmongUsCapture
                         Message = msgText
                     });
                 }
+
+                //string gameCode = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(GameAssemblyPtr, GameStartManagerOffset, 0x5c, 0, 0x20, 0x28));
+                //Console.WriteLine(gameCode);
 
                 Thread.Sleep(250);
             }

@@ -27,6 +27,11 @@ namespace AmongUsCapture
             
         }
 
+        private void OnLoad(object sender, EventArgs e)
+        {
+            //TestFillConsole(100);
+        }
+
         private void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
         {
             WriteLineToConsole($"[CHAT] {e.Sender}: {e.Message}");
@@ -100,8 +105,25 @@ namespace AmongUsCapture
             if(ConnectCodeBox.TextLength == 6)
             {
                 clientSocket.SendConnectCode(ConnectCodeBox.Text);
-                ConnectCodeBox.Enabled = false;
-                SubmitButton.Enabled = false;
+                //ConnectCodeBox.Enabled = false;
+                //SubmitButton.Enabled = false;
+            }
+        }
+
+        private void ConsoleTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (AutoScrollMenuItem.Checked)
+            {
+                ConsoleTextBox.SelectionStart = ConsoleTextBox.Text.Length;
+                ConsoleTextBox.ScrollToCaret();
+            }
+        }
+
+        private void TestFillConsole(int entries) //Helper test method to see if filling console works.
+        {
+            for (int i = 0; i < entries; i++)
+            {
+                WriteLineToConsole(i.ToString());
             }
         }
 
@@ -115,5 +137,7 @@ namespace AmongUsCapture
             }
             
         }
+
+
     }
 }

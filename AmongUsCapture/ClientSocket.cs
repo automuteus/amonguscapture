@@ -24,8 +24,10 @@ namespace AmongUsCapture
                 GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
             };
 
+
             socket.ConnectAsync();
         }
+
 
         public void SendConnectCode(string connectCode)
         {

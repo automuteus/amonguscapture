@@ -39,7 +39,7 @@ namespace AmongUsCapture
             //(new DebugConsole(debugGui)).Run();
             
             Application.Run(form);
-            
+            //test
         }
 
 

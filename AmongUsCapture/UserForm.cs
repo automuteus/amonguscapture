@@ -1,17 +1,12 @@
-﻿using AmongUsCapture.ConsoleTypes;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using System;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace AmongUsCapture
 {
     public partial class UserForm : Form
     {
-        ClientSocket clientSocket;
+        private ClientSocket clientSocket;
 
         public UserForm(ClientSocket sock)
         {
@@ -20,11 +15,10 @@ namespace AmongUsCapture
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
-            if(DarkTheme())
+            if (DarkTheme())
             {
                 EnableDarkTheme();
             }
-            
         }
 
         private void OnLoad(object sender, EventArgs e)
@@ -49,6 +43,7 @@ namespace AmongUsCapture
             catch { }
             return is_dark_mode;
         }
+
         private void EnableDarkTheme()
         {
             var BluePurpleAccent = Color.FromArgb(114, 137, 218);
@@ -75,34 +70,31 @@ namespace AmongUsCapture
             ConnectCodeBox.BackColor = DarkGrey;
             ConnectCodeBox.ForeColor = White;
 
-
             SubmitButton.BackColor = BluePurpleAccent;
             SubmitButton.ForeColor = White;
-            
 
             BackColor = DarkGrey;
             ForeColor = White;
-
         }
-
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
-            WriteLineToConsole(e.Name + ": " + e.Action);
+            Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
         {
-            this.CurrentState.BeginInvoke((MethodInvoker)delegate {
+            this.CurrentState.BeginInvoke((MethodInvoker)delegate
+            {
                 CurrentState.Text = e.NewState.ToString();
             });
 
-            WriteLineToConsole("State changed to " + e.NewState);
+            Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
         }
 
         private void SubmitButton_Click(object sender, EventArgs e)
         {
-            if(ConnectCodeBox.TextLength == 6)
+            if (ConnectCodeBox.TextLength == 6)
             {
                 clientSocket.SendConnectCode(ConnectCodeBox.Text);
                 //ConnectCodeBox.Enabled = false;
@@ -127,17 +119,41 @@ namespace AmongUsCapture
             }
         }
 
+        public void WriteConsoleLineFormatted(String moduleName, Color moduleColor, String message)
+        {
+            //Outputs a message like this: [{ModuleName}]: {Message}
+            var normalColor = DarkTheme() ? Color.White : Color.Black;
+            this.AppendColoredTextToConsole("[", normalColor, false);
+            this.AppendColoredTextToConsole(moduleName, moduleColor, false);
+            this.AppendColoredTextToConsole($"]: {message}", normalColor, true);
+        }
+
+        public void AppendColoredTextToConsole(String line, Color color, bool addNewLine = false)
+        {
+            if (!(ConsoleTextBox is null))
+            {
+                ConsoleTextBox.BeginInvoke((MethodInvoker)delegate
+                {
+                    ConsoleTextBox.SuspendLayout();
+                    ConsoleTextBox.SelectionColor = color;
+                    ConsoleTextBox.AppendText(addNewLine
+                        ? $"{line}{Environment.NewLine}"
+                        : line);
+                    ConsoleTextBox.ScrollToCaret();
+                    ConsoleTextBox.ResumeLayout();
+                });
+            }
+        }
+
         public void WriteLineToConsole(String line)
         {
-            if(!(ConsoleTextBox is null))
+            if (!(ConsoleTextBox is null))
             {
-                ConsoleTextBox.BeginInvoke((MethodInvoker)delegate {
+                ConsoleTextBox.BeginInvoke((MethodInvoker)delegate
+                {
                     ConsoleTextBox.AppendText(line + "\n");
                 });
             }
-            
         }
-
-
     }
 }

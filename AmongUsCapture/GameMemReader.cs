@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
@@ -64,7 +65,7 @@ namespace AmongUsCapture
                     }
                     else
                     {
-                        Program.conInterface.WriteLine($"Connected to Among Us process ({ProcessMemory.process.Id})");
+                        Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, $"Connected to Among Us process ({ProcessMemory.process.Id})");
 
                         bool foundModule = false;
 
@@ -82,7 +83,7 @@ namespace AmongUsCapture
 
                             if (!foundModule)
                             {
-                                Program.conInterface.WriteLine("Still looking for modules...");
+                                Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "Still looking for modules...");
                                 Thread.Sleep(500); // delay and try again
                                 ProcessMemory.LoadModules();
                             }
@@ -92,7 +93,6 @@ namespace AmongUsCapture
                             }
                         }
 
-                        Console.WriteLine($"({GameAssemblyPtr})");
                         prevChatBubsVersion = ProcessMemory.Read<int>(GameAssemblyPtr, HudManagerOffset, 0x5C, 0, 0x28, 0xC, 0x14, 0x10);
                     }
                 }

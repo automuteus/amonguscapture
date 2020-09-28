@@ -25,7 +25,7 @@ namespace AmongUsCapture
 
         private void OnLoad(object sender, EventArgs e)
         {
-            TestFillConsole(100);
+            //TestFillConsole(100);
         }
 
         private void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
@@ -81,7 +81,7 @@ namespace AmongUsCapture
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
-            Program.conInterface.WriteTextFormatted($"[§6PlayerChange§f] §a{e.Name}§f: §b{e.Action}§f");
+            Program.conInterface.WriteTextFormatted($"[§6PlayerChange§f] {PlayerColorToColorCode(e.Color)}{e.Name}§f: §f{e.Action}§f");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
         }
 
@@ -180,6 +180,38 @@ namespace AmongUsCapture
                 });
             }
         }
+        private string PlayerColorToColorCode(PlayerColor pColor)
+        {
+            //Red = 0,
+            //Blue = 1,
+            //Green = 2,
+            //Pink = 3,
+            //Orange = 4,
+            //Yellow = 5,
+            //Black = 6,
+            //White = 7,
+            //Purple = 8,
+            //Brown = 9,
+            //Cyan = 10,
+            //Lime = 11
+            string OutputCode = "";
+            switch (pColor)
+            {
+                case PlayerColor.Red: OutputCode = "§c"; break;
+                case PlayerColor.Blue: OutputCode = "§1"; break;
+                case PlayerColor.Green: OutputCode = "§2"; break;
+                case PlayerColor.Pink: OutputCode = "§d"; break;
+                case PlayerColor.Orange: OutputCode = "§o"; break;
+                case PlayerColor.Yellow: OutputCode = "§e"; break;
+                case PlayerColor.Black: OutputCode = "§0"; break;
+                case PlayerColor.White: OutputCode = "§f"; break;
+                case PlayerColor.Purple: OutputCode = "§5"; break;
+                case PlayerColor.Brown: OutputCode = "§n"; break;
+                case PlayerColor.Cyan: OutputCode = "§b"; break;
+                case PlayerColor.Lime: OutputCode = "§a"; break;
+            }
+            return OutputCode;
+        }
 
         public void WriteLineFormatted(string str, bool acceptnewlines = true)
         {
@@ -206,11 +238,11 @@ namespace AmongUsCapture
                                 switch (parts[i][0])
                                 {
                                     case '0': charColor = Color.Gray; break; //Should be Black but Black is non-readable on a black background
-                                    case '1': charColor = Color.DarkBlue; break;
-                                    case '2': charColor = Color.DarkGreen; break;
+                                    case '1': charColor = Color.RoyalBlue; break;
+                                    case '2': charColor = Color.Green; break;
                                     case '3': charColor = Color.DarkCyan; break;
                                     case '4': charColor = Color.DarkRed; break;
-                                    case '5': charColor = Color.DarkMagenta; break;
+                                    case '5': charColor = Color.MediumPurple; break;
                                     case '6': charColor = Color.DarkKhaki; break;
                                     case '7': charColor = Color.Gray; break;
                                     case '8': charColor = Color.DarkGray; break;
@@ -222,7 +254,7 @@ namespace AmongUsCapture
                                     case 'e': charColor = Color.Yellow; break;
                                     case 'f': charColor = Color.White; break;
                                     case 'o': charColor = Color.Orange; break;
-                                    case 'n': charColor = Color.Brown; break;
+                                    case 'n': charColor = Color.SaddleBrown; break;
                                     case 'r': charColor = Color.Gray; break;
                                 }
 

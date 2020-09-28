@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
@@ -24,7 +25,7 @@ namespace AmongUsCapture
 
         private void OnLoad(object sender, EventArgs e)
         {
-            //TestFillConsole(100);
+            TestFillConsole(100);
         }
 
         private void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
@@ -115,9 +116,31 @@ namespace AmongUsCapture
 
         private void TestFillConsole(int entries) //Helper test method to see if filling console works.
         {
-            for (int i = 0; i < entries; i++)
+            List<String> colors = new List<string>
             {
-                WriteLineToConsole(i.ToString());
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "a",
+                "b",
+                "c",
+                "d",
+                "e",
+                "f",
+                "o",
+                "n",
+                "r"
+            };
+            foreach (var color in colors)
+            {
+                this.WriteLineFormatted($"{color} = §{color}{color}");
             }
         }
 
@@ -160,51 +183,62 @@ namespace AmongUsCapture
 
         public void WriteLineFormatted(string str, bool acceptnewlines = true)
         {
-            if (!String.IsNullOrEmpty(str))
+            if (!(ConsoleTextBox is null))
             {
-                if (!acceptnewlines)
+                ConsoleTextBox.BeginInvoke((MethodInvoker)delegate
                 {
-                    str = str.Replace('\n', ' ');
-                }
-                string[] parts = str.Split(new char[] { '§' });
-                if (parts[0].Length > 0)
-                {
-                    AppendColoredTextToConsole(parts[0], Color.White, false);
-                }
-                for (int i = 1; i < parts.Length; i++)
-                {
-                    Color charColor = Color.White;
-                    if (parts[i].Length > 0)
+                    if (!String.IsNullOrEmpty(str))
                     {
-                        switch (parts[i][0])
+                        if (!acceptnewlines)
                         {
-                            case '0': charColor = Color.Gray; break; //Should be Black but Black is non-readable on a black background
-                            case '1': charColor = Color.DarkBlue; break;
-                            case '2': charColor = Color.DarkGreen; break;
-                            case '3': charColor = Color.DarkCyan; break;
-                            case '4': charColor = Color.DarkRed; break;
-                            case '5': charColor = Color.DarkMagenta; break;
-                            case '6': charColor = Color.DarkKhaki; break;
-                            case '7': charColor = Color.Gray; break;
-                            case '8': charColor = Color.DarkGray; break;
-                            case '9': charColor = Color.Blue; break;
-                            case 'a': charColor = Color.Green; break;
-                            case 'b': charColor = Color.Cyan; break;
-                            case 'c': charColor = Color.Red; break;
-                            case 'd': charColor = Color.Magenta; break;
-                            case 'e': charColor = Color.Yellow; break;
-                            case 'f': charColor = Color.White; break;
-                            case 'r': charColor = Color.Gray; break;
+                            str = str.Replace('\n', ' ');
                         }
-
-                        if (parts[i].Length > 1)
+                        string[] parts = str.Split(new char[] { '§' });
+                        if (parts[0].Length > 0)
                         {
-                            AppendColoredTextToConsole(parts[i].Substring(1, parts[i].Length - 1), charColor, false);
+                            AppendColoredTextToConsole(parts[0], Color.White, false);
+                        }
+                        for (int i = 1; i < parts.Length; i++)
+                        {
+                            Color charColor = Color.White;
+                            if (parts[i].Length > 0)
+                            {
+                                switch (parts[i][0])
+                                {
+                                    case '0': charColor = Color.Gray; break; //Should be Black but Black is non-readable on a black background
+                                    case '1': charColor = Color.DarkBlue; break;
+                                    case '2': charColor = Color.DarkGreen; break;
+                                    case '3': charColor = Color.DarkCyan; break;
+                                    case '4': charColor = Color.DarkRed; break;
+                                    case '5': charColor = Color.DarkMagenta; break;
+                                    case '6': charColor = Color.DarkKhaki; break;
+                                    case '7': charColor = Color.Gray; break;
+                                    case '8': charColor = Color.DarkGray; break;
+                                    case '9': charColor = Color.LightBlue; break;
+                                    case 'a': charColor = Color.Lime; break;
+                                    case 'b': charColor = Color.Cyan; break;
+                                    case 'c': charColor = Color.Red; break;
+                                    case 'd': charColor = Color.Magenta; break;
+                                    case 'e': charColor = Color.Yellow; break;
+                                    case 'f': charColor = Color.White; break;
+                                    case 'o': charColor = Color.Orange; break;
+                                    case 'n': charColor = Color.Brown; break;
+                                    case 'r': charColor = Color.Gray; break;
+                                }
+
+                                if (parts[i].Length > 1)
+                                {
+                                    AppendColoredTextToConsole(parts[i].Substring(1, parts[i].Length - 1), charColor, false);
+                                }
+                            }
                         }
                     }
-                }
+                    AppendColoredTextToConsole("", Color.White, true);
+                });
+                
             }
-            AppendColoredTextToConsole("", Color.White, true);
+                
         }
     }
+
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace AmongUsCapture
@@ -79,7 +80,8 @@ namespace AmongUsCapture
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
-            Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
+            Program.conInterface.WriteTextFormatted($"[§6PlayerChange§f] §a{e.Name}§f: §b{e.Action}§f");
+            //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
@@ -88,8 +90,8 @@ namespace AmongUsCapture
             {
                 CurrentState.Text = e.NewState.ToString();
             });
-
-            Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
+            Program.conInterface.WriteTextFormatted($"[§aGameMemReader§f] State changed to §b{e.NewState}§f");
+            //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
         }
 
         private void SubmitButton_Click(object sender, EventArgs e)
@@ -154,6 +156,55 @@ namespace AmongUsCapture
                     ConsoleTextBox.AppendText(line + "\n");
                 });
             }
+        }
+
+        public void WriteLineFormatted(string str, bool acceptnewlines = true)
+        {
+            if (!String.IsNullOrEmpty(str))
+            {
+                if (!acceptnewlines)
+                {
+                    str = str.Replace('\n', ' ');
+                }
+                string[] parts = str.Split(new char[] { '§' });
+                if (parts[0].Length > 0)
+                {
+                    AppendColoredTextToConsole(parts[0], Color.White, false);
+                }
+                for (int i = 1; i < parts.Length; i++)
+                {
+                    Color charColor = Color.White;
+                    if (parts[i].Length > 0)
+                    {
+                        switch (parts[i][0])
+                        {
+                            case '0': charColor = Color.Gray; break; //Should be Black but Black is non-readable on a black background
+                            case '1': charColor = Color.DarkBlue; break;
+                            case '2': charColor = Color.DarkGreen; break;
+                            case '3': charColor = Color.DarkCyan; break;
+                            case '4': charColor = Color.DarkRed; break;
+                            case '5': charColor = Color.DarkMagenta; break;
+                            case '6': charColor = Color.DarkKhaki; break;
+                            case '7': charColor = Color.Gray; break;
+                            case '8': charColor = Color.DarkGray; break;
+                            case '9': charColor = Color.Blue; break;
+                            case 'a': charColor = Color.Green; break;
+                            case 'b': charColor = Color.Cyan; break;
+                            case 'c': charColor = Color.Red; break;
+                            case 'd': charColor = Color.Magenta; break;
+                            case 'e': charColor = Color.Yellow; break;
+                            case 'f': charColor = Color.White; break;
+                            case 'r': charColor = Color.Gray; break;
+                        }
+
+                        if (parts[i].Length > 1)
+                        {
+                            AppendColoredTextToConsole(parts[i].Substring(1, parts[i].Length - 1), charColor, false);
+                        }
+                    }
+                }
+            }
+            AppendColoredTextToConsole("", Color.White, true);
         }
     }
 }

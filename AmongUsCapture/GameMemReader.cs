@@ -61,7 +61,7 @@ namespace AmongUsCapture
                     }
                     else
                     {
-                        Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, $"Connected to Among Us process ({ProcessMemory.process.Id})");
+                        Program.conInterface.WriteTextFormatted($"[§aGameMemReader§f] Connected to Among Us process (§c{ProcessMemory.process.Id}§f)");
 
                         bool foundModule = false;
 
@@ -79,7 +79,8 @@ namespace AmongUsCapture
 
                             if (!foundModule)
                             {
-                                Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "Still looking for modules..."); // TODO: This still isn't functional, we need to re-hook to reload module addresses
+                                Program.conInterface.WriteTextFormatted($"[§aGameMemReader§f] Still looking for modules...");
+                                //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "Still looking for modules..."); // TODO: This still isn't functional, we need to re-hook to reload module addresses
                                 Thread.Sleep(500); // delay and try again
                             } else
                             {

@@ -18,14 +18,16 @@ namespace AmongUsCapture
     class GameMemReader
     {
         private static GameMemReader instance = new GameMemReader();
-        private bool shouldForceUpdate = false;
-        private bool shouldTransmitState = false;
+        private bool shouldForceUpdatePlayers = false;
+        private bool shouldForceTransmitState = false;
+        private bool shouldTransmitLobby = false;
 
         private int AmongUsClientOffset = 0x1468840;
         private int GameDataOffset = 0x1468864;
         private int MeetingHudOffset = 0x14686A0;
-        private int GameStartManagerOffset = 0x0;
+        private int GameStartManagerOffset = 0x13FB424;
         private int HudManagerOffset = 0x13EEB44;
+        private int ServerManagerOffset = 0x13F14E4;
 
         public static GameMemReader getInstance()
         {
@@ -36,6 +38,8 @@ namespace AmongUsCapture
         public event EventHandler<PlayerChangedEventArgs> PlayerChanged;
 
         public event EventHandler<ChatMessageEventArgs> ChatMessageAdded;
+
+        public event EventHandler<LobbyEventArgs> JoinedLobby;
 
 
         public Dictionary<string, PlayerInfo> oldPlayerInfos = new Dictionary<string, PlayerInfo>(10); // Important: this is making the assumption that player names are unique. They are, but for better tracking of players and to eliminate any ambiguity the keys of this probably need to be the players' network IDs instead
@@ -122,6 +126,11 @@ namespace AmongUsCapture
                     state = GameState.TASKS;
                 }
 
+                if (oldState != GameState.LOBBY && state == GameState.LOBBY) // we have just entered the lobby from somewhere
+                {
+                    shouldTransmitLobby = true;
+                }
+
                 IntPtr allPlayersPtr = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, GameDataOffset, 0x5C, 0, 0x24);
                 IntPtr allPlayers = ProcessMemory.Read<IntPtr>(allPlayersPtr, 0x08);
                 int playerCount = ProcessMemory.Read<int>(allPlayersPtr, 0x0C);
@@ -165,9 +174,9 @@ namespace AmongUsCapture
                     }
                 }
 
-                if (this.shouldTransmitState)
+                if (this.shouldForceTransmitState)
                 {
-                    shouldTransmitState = false;
+                    shouldForceTransmitState = false;
                     GameStateChanged?.Invoke(this, new GameStateChangedEventArgs() { NewState = state });
                 } else if (state != oldState)
                 {
@@ -186,6 +195,7 @@ namespace AmongUsCapture
                     playerAddrPtr += 4;
                     if (pi.PlayerName == 0) { continue; }
                     string playerName = pi.GetPlayerName();
+                    if(playerName.Length == 0) { continue; }
 
                     newPlayerInfos[playerName] = pi; // add to new playerinfos for comparison later
 
@@ -259,9 +269,9 @@ namespace AmongUsCapture
                 oldPlayerInfos.Clear();
 
                 bool emitAll = false;
-                if (shouldForceUpdate)
+                if (shouldForceUpdatePlayers)
                 {
-                    shouldForceUpdate = false;
+                    shouldForceUpdatePlayers = false;
                     emitAll = true;
                 }
 
@@ -337,21 +347,35 @@ namespace AmongUsCapture
                     });
                 }
 
-                string gameCode = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(GameAssemblyPtr, GameStartManagerOffset, 0x5c, 0, 0x20, 0x28));
-                Console.WriteLine(gameCode);
+                if (shouldTransmitLobby)
+                {
+                    string gameCode = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(GameAssemblyPtr, GameStartManagerOffset, 0x5c, 0, 0x20, 0x28));
+                    string[] split;
+                    if (gameCode != null && gameCode.Length > 0 && (split = gameCode.Split('\n')).Length == 2)
+                    {
+                        PlayRegion region = (PlayRegion)((4 - (ProcessMemory.Read<int>(GameAssemblyPtr, ServerManagerOffset, 0x5c, 0, 0x10, 0x8, 0x8) & 0b11)) % 3); // do NOT ask
+                        JoinedLobby(this, new LobbyEventArgs()
+                        {
+                            LobbyCode = gameCode,
+                            Region = region
+                        });
+                        shouldTransmitLobby = false;
+                    }
+                }
+
 
                 Thread.Sleep(250);
             }
         }
 
-        public void ForceUpdate()
+        public void ForceUpdatePlayers()
         {
-            this.shouldForceUpdate = true;
+            this.shouldForceUpdatePlayers = true;
         }
 
         public void ForceTransmitState()
         {
-            this.shouldTransmitState = true;
+            this.shouldForceTransmitState = true;
         }
     }
 
@@ -387,6 +411,13 @@ namespace AmongUsCapture
         Lime = 11
     }
 
+    public enum PlayRegion
+    {
+        NorthAmerica = 0,
+        Asia = 1,
+        Europe = 2
+    }
+
     public class PlayerChangedEventArgs : EventArgs
     {
         public PlayerAction Action { get; set; }
@@ -400,5 +431,11 @@ namespace AmongUsCapture
     {
         public string Sender { get; set; }
         public string Message { get; set; }
+    }
+
+    public class LobbyEventArgs : EventArgs
+    {
+        public string LobbyCode { get; set; }
+        public PlayRegion Region { get; set; }
     }
 }

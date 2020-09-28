@@ -38,7 +38,7 @@ namespace AmongUsCapture
         {
             ConnectCode = connectCode;
             socket.EmitAsync("connect", ConnectCode).ContinueWith((t) => {
-                GameMemReader.getInstance().ForceUpdate();
+                GameMemReader.getInstance().ForceUpdatePlayers();
                 GameMemReader.getInstance().ForceTransmitState();
             });
             Program.conInterface.WriteLine($"Connection code ({connectCode}) sent to server.");

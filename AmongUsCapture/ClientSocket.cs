@@ -23,7 +23,12 @@ namespace AmongUsCapture
                 GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
             };
-
+            
+            socket.OnDisconnected += (sender, e) =>
+            {
+                GameMemReader.getInstance().GameStateChanged -= GameStateChangedHandler;
+                GameMemReader.getInstance().PlayerChanged -= PlayerChangedHandler;
+            };
 
             socket.ConnectAsync();
         }

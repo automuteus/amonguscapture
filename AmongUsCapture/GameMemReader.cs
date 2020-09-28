@@ -78,14 +78,15 @@ namespace AmongUsCapture
 
                             if (!foundModule)
                             {
-                                Program.conInterface.WriteLine("Still looking for modules..."); // TODO: This still isn't functional, we need to re-hook to reload module addresses
+                                Program.conInterface.WriteLine("Still looking for modules...");
                                 Thread.Sleep(500); // delay and try again
-                            } else
+                                ProcessMemory.LoadModules();
+                            }
+                            else
                             {
                                 break; // we have found all modules
                             }
                         }
-                        
 
                         Console.WriteLine($"({GameAssemblyPtr})");
                         prevChatBubsVersion = ProcessMemory.Read<int>(GameAssemblyPtr, HudManagerOffset, 0x5C, 0, 0x28, 0xC, 0x14, 0x10);
@@ -336,8 +337,8 @@ namespace AmongUsCapture
                     });
                 }
 
-                //string gameCode = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(GameAssemblyPtr, GameStartManagerOffset, 0x5c, 0, 0x20, 0x28));
-                //Console.WriteLine(gameCode);
+                string gameCode = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(GameAssemblyPtr, GameStartManagerOffset, 0x5c, 0, 0x20, 0x28));
+                Console.WriteLine(gameCode);
 
                 Thread.Sleep(250);
             }

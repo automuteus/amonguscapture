@@ -30,7 +30,9 @@ namespace AmongUsCapture
 
         private void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
         {
-            WriteLineToConsole($"[CHAT] {e.Sender}: {e.Message}");
+
+            Program.conInterface.WriteTextFormatted($"[§6CHAT§f] {PlayerColorToColorCode(e.Color)}{e.Sender}§f: §f{e.Message}§f");
+            //WriteLineToConsole($"[CHAT] {e.Sender}: {e.Message}");
         }
 
         private bool DarkTheme()

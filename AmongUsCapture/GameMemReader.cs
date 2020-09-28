@@ -328,10 +328,12 @@ namespace AmongUsCapture
                     string msgText = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(chatBubblePtrs[i], 0x20, 0x28));
                     if (msgText.Length == 0) continue;
                     string msgSender = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(chatBubblePtrs[i], 0x1C, 0x28));
+                    PlayerInfo oldPlayerInfo = oldPlayerInfos[msgSender];
                     ChatMessageAdded?.Invoke(this, new ChatMessageEventArgs()
                     {
                         Sender = msgSender,
-                        Message = msgText
+                        Message = msgText,
+                        Color = oldPlayerInfo.GetPlayerColor()
                     });
                 }
 
@@ -397,6 +399,7 @@ namespace AmongUsCapture
     public class ChatMessageEventArgs : EventArgs
     {
         public string Sender { get; set; }
+        public PlayerColor Color {get; set;}
         public string Message { get; set; }
     }
 }

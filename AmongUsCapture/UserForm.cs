@@ -17,10 +17,21 @@ namespace AmongUsCapture
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
+            GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
+
             if (DarkTheme())
             {
                 EnableDarkTheme();
             }
+        }
+
+        private void OnJoinedLobby(object sender, LobbyEventArgs e)
+        {
+            GameCodeBox.BeginInvoke((MethodInvoker)delegate
+            {
+                GameCodeBox.Text = e.LobbyCode;
+            });
+            
         }
 
         private void OnLoad(object sender, EventArgs e)

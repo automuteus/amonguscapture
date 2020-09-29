@@ -66,7 +66,7 @@ namespace AmongUsCapture
                     }
                     else
                     {
-                        Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"Connected to Among Us process ({Color.Red.ToTextColor()}{ProcessMemory.process.Id}{Color.White.ToTextColor()})");
+                        Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"Connected to Among Us process ({Color.Red.ToTextColor()}{ProcessMemory.process.Id}{UserForm.NormalTextColor.ToTextColor()})");
                         //Program.conInterface.WriteTextFormatted($"[§aGameMemReader§f] Connected to Among Us process (§c{ProcessMemory.process.Id}§f)");
 
                         bool foundModule = false;

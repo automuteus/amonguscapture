@@ -46,7 +46,7 @@ namespace AmongUsCapture
             });
 
             //Program.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connection code (§c{connectCode}§f) sent to server.");
-            Program.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Connection code ({Color.Red.ToTextColor()}{connectCode}{Color.White.ToTextColor()}) sent to server.");
+            Program.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Connection code ({Color.Red.ToTextColor()}{connectCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)

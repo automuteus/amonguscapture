@@ -10,7 +10,7 @@ namespace AmongUsCapture
     public partial class UserForm : Form
     {
         private ClientSocket clientSocket;
-        private Color NormalTextColor = Color.Black;
+        public static Color NormalTextColor = Color.Black;
 
         public UserForm(ClientSocket sock)
         {
@@ -35,7 +35,7 @@ namespace AmongUsCapture
         {
 
             //Program.conInterface.WriteTextFormatted($"[§6CHAT§f] {PlayerColorToColorCode(e.Color)}{e.Sender}§f: §f{e.Message}§f");
-            Program.conInterface.WriteModuleTextColored("CHAT", Color.DarkKhaki, $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Sender}{Color.White.ToTextColor()}: {e.Message}");
+            Program.conInterface.WriteModuleTextColored("CHAT", Color.DarkKhaki, $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Sender}{NormalTextColor.ToTextColor()}: {e.Message}");
             //WriteLineToConsole($"[CHAT] {e.Sender}: {e.Message}");
         }
 
@@ -97,7 +97,7 @@ namespace AmongUsCapture
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
             //Program.conInterface.WriteTextFormatted($"[§6PlayerChange§f] {PlayerColorToColorCode(e.Color)}{e.Name}§f: §f{e.Action}§f");
-            Program.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{Color.White.ToTextColor()}: {e.Action}");
+            Program.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
@@ -162,7 +162,7 @@ namespace AmongUsCapture
         public void WriteConsoleLineFormatted(String moduleName, Color moduleColor, String message)
         {
             //Outputs a message like this: [{ModuleName}]: {Message}
-            this.WriteColoredText($"[{moduleColor.ToTextColor()}{moduleName}{Color.White.ToTextColor()}]: {message}");
+            this.WriteColoredText($"[{moduleColor.ToTextColor()}{moduleName}{NormalTextColor.ToTextColor()}]: {message}");
         }
 
         public void WriteColoredText(String ColoredText)

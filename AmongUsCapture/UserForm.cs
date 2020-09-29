@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using TextColorLibrary;
@@ -11,7 +12,28 @@ namespace AmongUsCapture
     {
         private ClientSocket clientSocket;
         public static Color NormalTextColor = Color.Black;
+        private Color Rainbow(float progress)
+        {
+            float div = (Math.Abs(progress % 1) * 6);
+            int ascending = (int)((div % 1) * 255);
+            int descending = 255 - ascending;
 
+            switch ((int)div)
+            {
+                case 0:
+                    return Color.FromArgb(255, 255, ascending, 0);
+                case 1:
+                    return Color.FromArgb(255, descending, 255, 0);
+                case 2:
+                    return Color.FromArgb(255, 0, 255, ascending);
+                case 3:
+                    return Color.FromArgb(255, 0, descending, 255);
+                case 4:
+                    return Color.FromArgb(255, ascending, 0, 255);
+                default: // case 5:
+                    return Color.FromArgb(255, 255, 0, descending);
+            }
+        }
         public UserForm(ClientSocket sock)
         {
             clientSocket = sock;
@@ -28,7 +50,17 @@ namespace AmongUsCapture
 
         private void OnLoad(object sender, EventArgs e)
         {
-            //TestFillConsole(100);
+            TestFillConsole(25);
+        }
+
+        private string getRainbowText(string nonRainbow)
+        {
+            string OutputString = "";
+            for (int i = 0; i < nonRainbow.Length; i++)
+            {
+                OutputString += Rainbow((float)i / nonRainbow.Length).ToTextColor() + nonRainbow[i];
+            }
+            return OutputString;
         }
 
         private void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
@@ -131,32 +163,11 @@ namespace AmongUsCapture
 
         private void TestFillConsole(int entries) //Helper test method to see if filling console works.
         {
-            List<String> colors = new List<string>
-            {
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "a",
-                "b",
-                "c",
-                "d",
-                "e",
-                "f",
-                "o",
-                "n",
-                "r"
-            };
-            foreach (var color in colors)
-            {
-                this.WriteLineFormatted($"{color} = §{color}{color}");
-            }
+            //for (int i = 0; i < entries; i++)
+            //{
+            //    this.WriteConsoleLineFormatted("Rainbow", Rainbow((float)i / entries), getRainbowText("Wow! " + Rainbow((float)i / entries).ToString()));
+            //};
+            //this.WriteColoredText(getRainbowText("This is a Pre-Release from Carbon's branch."));
         }
 
         public void WriteConsoleLineFormatted(String moduleName, Color moduleColor, String message)

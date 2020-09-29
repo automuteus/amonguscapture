@@ -22,18 +22,24 @@ namespace AmongUsCapture
             {
                 GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
+                GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;
             };
-
+            
+            socket.OnDisconnected += (sender, e) =>
+            {
+                GameMemReader.getInstance().GameStateChanged -= GameStateChangedHandler;
+                GameMemReader.getInstance().PlayerChanged -= PlayerChangedHandler;
+                GameMemReader.getInstance().JoinedLobby -= JoinedLobbyHandler;
+            };
 
             socket.ConnectAsync();
         }
-
 
         public void SendConnectCode(string connectCode)
         {
             ConnectCode = connectCode;
             socket.EmitAsync("connect", ConnectCode).ContinueWith((t) => {
-                GameMemReader.getInstance().ForceUpdate();
+                GameMemReader.getInstance().ForceUpdatePlayers();
                 GameMemReader.getInstance().ForceTransmitState();
             });
             Program.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connection code (§c{connectCode}§f) sent to server.");
@@ -49,5 +55,11 @@ namespace AmongUsCapture
         {
             socket.EmitAsync("player", JsonSerializer.Serialize(e)); //Makes code wait for socket to emit before closing thread.
         }
+
+        private void JoinedLobbyHandler(object sender, LobbyEventArgs e)
+        {
+            socket.EmitAsync("lobby", JsonSerializer.Serialize(e));
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace AmongUsCapture
+namespace AmongUsCapture
 {
     partial class UserForm
     {

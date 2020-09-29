@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using TextColorLibrary;
 
 namespace AmongUsCapture
 {
     public partial class UserForm : Form
     {
         private ClientSocket clientSocket;
+        private Color NormalTextColor = Color.Black;
 
         public UserForm(ClientSocket sock)
         {
@@ -21,6 +23,7 @@ namespace AmongUsCapture
             {
                 EnableDarkTheme();
             }
+            NormalTextColor = DarkTheme() ? Color.White : Color.Black;
         }
 
         private void OnLoad(object sender, EventArgs e)
@@ -31,7 +34,8 @@ namespace AmongUsCapture
         private void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
         {
 
-            Program.conInterface.WriteTextFormatted($"[§6CHAT§f] {PlayerColorToColorCode(e.Color)}{e.Sender}§f: §f{e.Message}§f");
+            //Program.conInterface.WriteTextFormatted($"[§6CHAT§f] {PlayerColorToColorCode(e.Color)}{e.Sender}§f: §f{e.Message}§f");
+            Program.conInterface.WriteModuleTextColored("CHAT", Color.DarkKhaki, $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Sender}{Color.White.ToTextColor()}: {e.Message}");
             //WriteLineToConsole($"[CHAT] {e.Sender}: {e.Message}");
         }
 
@@ -92,8 +96,8 @@ namespace AmongUsCapture
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
-            Program.conInterface.WriteTextFormatted($"[§6PlayerChange§f] {PlayerColorToColorCode(e.Color)}{e.Name}§f: §f{e.Action}§f");
-            //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
+            //Program.conInterface.WriteTextFormatted($"[§6PlayerChange§f] {PlayerColorToColorCode(e.Color)}{e.Name}§f: §f{e.Action}§f");
+            Program.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{Color.White.ToTextColor()}: {e.Action}");
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
@@ -102,8 +106,8 @@ namespace AmongUsCapture
             {
                 CurrentState.Text = e.NewState.ToString();
             });
-            Program.conInterface.WriteTextFormatted($"[§aGameMemReader§f] State changed to §b{e.NewState}§f");
-            //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
+            //Program.conInterface.WriteTextFormatted($"[§aGameMemReader§f] State changed to §b{e.NewState}§f");
+            Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"State changed to {Color.Cyan.ToTextColor()}{e.NewState}");
         }
 
         private void SubmitButton_Click(object sender, EventArgs e)
@@ -158,10 +162,16 @@ namespace AmongUsCapture
         public void WriteConsoleLineFormatted(String moduleName, Color moduleColor, String message)
         {
             //Outputs a message like this: [{ModuleName}]: {Message}
-            var normalColor = DarkTheme() ? Color.White : Color.Black;
-            this.AppendColoredTextToConsole("[", normalColor, false);
-            this.AppendColoredTextToConsole(moduleName, moduleColor, false);
-            this.AppendColoredTextToConsole($"]: {message}", normalColor, true);
+            this.WriteColoredText($"[{moduleColor.ToTextColor()}{moduleName}{Color.White.ToTextColor()}]: {message}");
+        }
+
+        public void WriteColoredText(String ColoredText)
+        {
+            foreach (var part in TextColor.toParts(ColoredText))
+            {
+                this.AppendColoredTextToConsole(part.text, part.textColor, false);
+            }
+            this.AppendColoredTextToConsole("", Color.White, true);
         }
 
         public void AppendColoredTextToConsole(String line, Color color, bool addNewLine = false)
@@ -190,6 +200,27 @@ namespace AmongUsCapture
                     ConsoleTextBox.AppendText(line + "\n");
                 });
             }
+        }
+
+        private Color PlayerColorToColorOBJ(PlayerColor pColor)
+        {
+            Color OutputCode = Color.White;
+            switch (pColor)
+            {
+                case PlayerColor.Red: OutputCode = Color.Red; break;
+                case PlayerColor.Blue: OutputCode = Color.RoyalBlue; break;
+                case PlayerColor.Green: OutputCode = Color.Green; break;
+                case PlayerColor.Pink: OutputCode = Color.Magenta; break;
+                case PlayerColor.Orange: OutputCode = Color.Orange; break;
+                case PlayerColor.Yellow: OutputCode = Color.Yellow; break;
+                case PlayerColor.Black: OutputCode = Color.Gray; break;
+                case PlayerColor.White: OutputCode = Color.White; break;
+                case PlayerColor.Purple: OutputCode = Color.MediumPurple; break;
+                case PlayerColor.Brown: OutputCode = Color.SaddleBrown; break;
+                case PlayerColor.Cyan: OutputCode = Color.Cyan; break;
+                case PlayerColor.Lime: OutputCode = Color.Lime; break;
+            }
+            return OutputCode;
         }
         private string PlayerColorToColorCode(PlayerColor pColor)
         {

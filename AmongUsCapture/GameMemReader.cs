@@ -65,7 +65,7 @@ namespace AmongUsCapture
                     }
                     else
                     {
-                        Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, $"Connected to Among Us process ({ProcessMemory.process.Id})");
+                        Program.conInterface.WriteTextFormatted($"[§aGameMemReader§f] Connected to Among Us process (§c{ProcessMemory.process.Id}§f)");
 
                         bool foundModule = false;
 
@@ -83,7 +83,8 @@ namespace AmongUsCapture
 
                             if (!foundModule)
                             {
-                                Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "Still looking for modules...");
+                                Program.conInterface.WriteTextFormatted($"[§aGameMemReader§f] Still looking for modules...");
+                                //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "Still looking for modules..."); // TODO: This still isn't functional, we need to re-hook to reload module addresses
                                 Thread.Sleep(500); // delay and try again
                                 ProcessMemory.LoadModules();
                             }
@@ -340,10 +341,12 @@ namespace AmongUsCapture
                     string msgText = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(chatBubblePtrs[i], 0x20, 0x28));
                     if (msgText.Length == 0) continue;
                     string msgSender = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(chatBubblePtrs[i], 0x1C, 0x28));
+                    PlayerInfo oldPlayerInfo = oldPlayerInfos[msgSender];
                     ChatMessageAdded?.Invoke(this, new ChatMessageEventArgs()
                     {
                         Sender = msgSender,
-                        Message = msgText
+                        Message = msgText,
+                        Color = oldPlayerInfo.GetPlayerColor()
                     });
                 }
 
@@ -430,6 +433,7 @@ namespace AmongUsCapture
     public class ChatMessageEventArgs : EventArgs
     {
         public string Sender { get; set; }
+        public PlayerColor Color {get; set;}
         public string Message { get; set; }
     }
 

@@ -16,5 +16,10 @@ namespace AmongUsCapture.ConsoleTypes
         {
             Console.WriteLine($"[{ModuleName}]: {text}");
         }
+
+        public void WriteTextFormatted(string text, bool acceptNewLines = true)
+        {
+            Console.WriteLine(text);
+        }
     }
 }

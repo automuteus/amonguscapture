@@ -21,5 +21,10 @@ namespace AmongUsCapture.ConsoleTypes
         {
             form.WriteConsoleLineFormatted(ModuleName, moduleColor, text);
         }
+
+        public void WriteTextFormatted(string text, bool acceptNewLines = true)
+        {
+            form.WriteLineFormatted(text, acceptNewLines);
+        }
     }
 }

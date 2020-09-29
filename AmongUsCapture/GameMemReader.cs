@@ -47,7 +47,7 @@ namespace AmongUsCapture
         public Dictionary<string, PlayerInfo> newPlayerInfos = new Dictionary<string, PlayerInfo>(10); // container for new player infos. Also has capacity 10 already assigned so no internal resizing of the data structure is needed
 
         private IntPtr GameAssemblyPtr = IntPtr.Zero;
-        private GameState oldState = GameState.LOBBY;
+        private GameState oldState = GameState.MENU;
         private bool exileCausesEnd = false;
 
         private int prevChatBubsVersion;
@@ -357,9 +357,10 @@ namespace AmongUsCapture
                     if (gameCode != null && gameCode.Length > 0 && (split = gameCode.Split('\n')).Length == 2)
                     {
                         PlayRegion region = (PlayRegion)((4 - (ProcessMemory.Read<int>(GameAssemblyPtr, ServerManagerOffset, 0x5c, 0, 0x10, 0x8, 0x8) & 0b11)) % 3); // do NOT ask
+                        string GamecodeWithoutCode = gameCode.Substring(4);
                         JoinedLobby?.Invoke(this, new LobbyEventArgs()
                         {
-                            LobbyCode = gameCode,
+                            LobbyCode = GamecodeWithoutCode,
                             Region = region
                         });
                         shouldTransmitLobby = false;

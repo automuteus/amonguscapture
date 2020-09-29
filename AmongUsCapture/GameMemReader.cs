@@ -354,7 +354,7 @@ namespace AmongUsCapture
                     if (gameCode != null && gameCode.Length > 0 && (split = gameCode.Split('\n')).Length == 2)
                     {
                         PlayRegion region = (PlayRegion)((4 - (ProcessMemory.Read<int>(GameAssemblyPtr, ServerManagerOffset, 0x5c, 0, 0x10, 0x8, 0x8) & 0b11)) % 3); // do NOT ask
-                        JoinedLobby(this, new LobbyEventArgs()
+                        JoinedLobby?.Invoke(this, new LobbyEventArgs()
                         {
                             LobbyCode = gameCode,
                             Region = region

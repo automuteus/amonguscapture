@@ -77,6 +77,15 @@ namespace AmongUsCapture
             SubmitButton.BackColor = BluePurpleAccent;
             SubmitButton.ForeColor = White;
 
+            GameCodeBox.BackColor = DarkGrey;
+            GameCodeBox.ForeColor = White;
+
+            GameCodeGB.BackColor = LighterGrey;
+            GameCodeGB.ForeColor = White;
+
+            GameCodeCopyButton.BackColor = BluePurpleAccent;
+            GameCodeCopyButton.ForeColor = White;
+
             BackColor = DarkGrey;
             ForeColor = White;
         }
@@ -273,6 +282,16 @@ namespace AmongUsCapture
             }
                 
         }
+
+        private void CopyButton_Click(object sender, EventArgs e)
+        {
+            if(!(this.GameCodeBox.Text is null || this.GameCodeBox.Text == ""))
+            {
+                System.Windows.Forms.Clipboard.SetText(this.GameCodeBox.Text);
+            } 
+           
+        }
+
     }
 
 }

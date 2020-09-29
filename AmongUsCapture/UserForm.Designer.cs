@@ -31,12 +31,17 @@
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.UserSettings = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.CurrentStateGroupBox = new System.Windows.Forms.GroupBox();
+            this.CurrentState = new System.Windows.Forms.Label();
+            this.GameCodeGB = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.GameCodeBox = new System.Windows.Forms.TextBox();
+            this.GameCodeCopyButton = new System.Windows.Forms.Button();
             this.ConnectCodeGB = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.ConnectCodeBox = new System.Windows.Forms.TextBox();
             this.SubmitButton = new System.Windows.Forms.Button();
-            this.CurrentStateGroupBox = new System.Windows.Forms.GroupBox();
-            this.CurrentState = new System.Windows.Forms.Label();
             this.ConsoleGroupBox = new System.Windows.Forms.GroupBox();
             this.ConsoleTextBox = new System.Windows.Forms.RichTextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -47,9 +52,12 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.UserSettings.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.CurrentStateGroupBox.SuspendLayout();
+            this.GameCodeGB.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
             this.ConnectCodeGB.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.CurrentStateGroupBox.SuspendLayout();
             this.ConsoleGroupBox.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -74,8 +82,8 @@
             // 
             // UserSettings
             // 
+            this.UserSettings.Controls.Add(this.tableLayoutPanel2);
             this.UserSettings.Controls.Add(this.ConnectCodeGB);
-            this.UserSettings.Controls.Add(this.CurrentStateGroupBox);
             this.UserSettings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.UserSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.UserSettings.Location = new System.Drawing.Point(0, 0);
@@ -84,6 +92,100 @@
             this.UserSettings.TabIndex = 0;
             this.UserSettings.TabStop = false;
             this.UserSettings.Text = "Settings";
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.AutoSize = true;
+            this.tableLayoutPanel2.ColumnCount = 1;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Controls.Add(this.CurrentStateGroupBox, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.GameCodeGB, 0, 0);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 349);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 2;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(268, 124);
+            this.tableLayoutPanel2.TabIndex = 5;
+            // 
+            // CurrentStateGroupBox
+            // 
+            this.CurrentStateGroupBox.Controls.Add(this.CurrentState);
+            this.CurrentStateGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CurrentStateGroupBox.Location = new System.Drawing.Point(3, 65);
+            this.CurrentStateGroupBox.Name = "CurrentStateGroupBox";
+            this.CurrentStateGroupBox.Size = new System.Drawing.Size(262, 56);
+            this.CurrentStateGroupBox.TabIndex = 3;
+            this.CurrentStateGroupBox.TabStop = false;
+            this.CurrentStateGroupBox.Text = "Current State";
+            // 
+            // CurrentState
+            // 
+            this.CurrentState.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CurrentState.AutoSize = true;
+            this.CurrentState.Location = new System.Drawing.Point(38, 28);
+            this.CurrentState.Name = "CurrentState";
+            this.CurrentState.Size = new System.Drawing.Size(59, 15);
+            this.CurrentState.TabIndex = 0;
+            this.CurrentState.Text = "Loading...";
+            this.CurrentState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // GameCodeGB
+            // 
+            this.GameCodeGB.AutoSize = true;
+            this.GameCodeGB.Controls.Add(this.tableLayoutPanel3);
+            this.GameCodeGB.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GameCodeGB.Location = new System.Drawing.Point(3, 3);
+            this.GameCodeGB.Name = "GameCodeGB";
+            this.GameCodeGB.Size = new System.Drawing.Size(262, 56);
+            this.GameCodeGB.TabIndex = 4;
+            this.GameCodeGB.TabStop = false;
+            this.GameCodeGB.Text = "GameCode";
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel3.Controls.Add(this.GameCodeBox, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.GameCodeCopyButton, 1, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 19);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 1;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(256, 34);
+            this.tableLayoutPanel3.TabIndex = 6;
+            // 
+            // GameCodeBox
+            // 
+            this.GameCodeBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GameCodeBox.Location = new System.Drawing.Point(3, 3);
+            this.GameCodeBox.MaxLength = 6;
+            this.GameCodeBox.Name = "GameCodeBox";
+            this.GameCodeBox.PlaceholderText = "No Game Found";
+            this.GameCodeBox.ReadOnly = true;
+            this.GameCodeBox.Size = new System.Drawing.Size(150, 23);
+            this.GameCodeBox.TabIndex = 0;
+            this.GameCodeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // GameCodeCopyButton
+            // 
+            this.GameCodeCopyButton.AutoSize = true;
+            this.GameCodeCopyButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.GameCodeCopyButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GameCodeCopyButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
+            this.GameCodeCopyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GameCodeCopyButton.Location = new System.Drawing.Point(159, 3);
+            this.GameCodeCopyButton.Name = "GameCodeCopyButton";
+            this.GameCodeCopyButton.Size = new System.Drawing.Size(94, 28);
+            this.GameCodeCopyButton.TabIndex = 1;
+            this.GameCodeCopyButton.Text = "Copy";
+            this.GameCodeCopyButton.UseVisualStyleBackColor = true;
+            this.GameCodeCopyButton.Click += new System.EventHandler(this.CopyButton_Click);
             // 
             // ConnectCodeGB
             // 
@@ -146,30 +248,6 @@
             this.SubmitButton.Text = "Submit";
             this.SubmitButton.UseVisualStyleBackColor = true;
             this.SubmitButton.Click += new System.EventHandler(this.SubmitButton_Click);
-            // 
-            // CurrentStateGroupBox
-            // 
-            this.CurrentStateGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.CurrentStateGroupBox.Controls.Add(this.CurrentState);
-            this.CurrentStateGroupBox.Location = new System.Drawing.Point(6, 414);
-            this.CurrentStateGroupBox.Name = "CurrentStateGroupBox";
-            this.CurrentStateGroupBox.Size = new System.Drawing.Size(262, 56);
-            this.CurrentStateGroupBox.TabIndex = 3;
-            this.CurrentStateGroupBox.TabStop = false;
-            this.CurrentStateGroupBox.Text = "Current State";
-            // 
-            // CurrentState
-            // 
-            this.CurrentState.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.CurrentState.AutoSize = true;
-            this.CurrentState.Location = new System.Drawing.Point(38, 28);
-            this.CurrentState.Name = "CurrentState";
-            this.CurrentState.Size = new System.Drawing.Size(59, 15);
-            this.CurrentState.TabIndex = 0;
-            this.CurrentState.Text = "Loading...";
-            this.CurrentState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ConsoleGroupBox
             // 
@@ -240,12 +318,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.UserSettings.ResumeLayout(false);
+            this.UserSettings.PerformLayout();
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
+            this.CurrentStateGroupBox.ResumeLayout(false);
+            this.CurrentStateGroupBox.PerformLayout();
+            this.GameCodeGB.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
             this.ConnectCodeGB.ResumeLayout(false);
             this.ConnectCodeGB.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.CurrentStateGroupBox.ResumeLayout(false);
-            this.CurrentStateGroupBox.PerformLayout();
             this.ConsoleGroupBox.ResumeLayout(false);
             this.ConsoleGroupBox.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
@@ -268,5 +352,10 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem AutoScrollMenuItem;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.GroupBox GameCodeGB;
+        private System.Windows.Forms.Button GameCodeCopyButton;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.TextBox GameCodeBox;
     }
 }

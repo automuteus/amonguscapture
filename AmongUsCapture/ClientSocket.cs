@@ -13,6 +13,7 @@ namespace AmongUsCapture
 
         public void Connect(string url)
         {
+            Program.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connecting to §1{url}§f...");
             socket = new SocketIO(url);
             /*socket.On("hi", response =>
             {
@@ -20,9 +21,19 @@ namespace AmongUsCapture
             });*/
             socket.OnConnected += (sender, e) =>
             {
+                Program.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connected successfully!");
                 GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
+                GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;
                 this.OnConnected(this, new EventArgs());
+            };
+            
+            socket.OnDisconnected += (sender, e) =>
+            {
+                Program.conInterface.WriteTextFormatted($"[§bClientSocket§f] Lost connection!");
+                GameMemReader.getInstance().GameStateChanged -= GameStateChangedHandler;
+                GameMemReader.getInstance().PlayerChanged -= PlayerChangedHandler;
+                GameMemReader.getInstance().JoinedLobby -= JoinedLobbyHandler;
             };
 
             socket.ConnectAsync();
@@ -33,10 +44,10 @@ namespace AmongUsCapture
             ConnectCode = connectCode;
             socket.EmitAsync("connect", ConnectCode).ContinueWith((_) =>
             {
-                GameMemReader.getInstance().ForceUpdate();
+                GameMemReader.getInstance().ForceUpdatePlayers();
                 GameMemReader.getInstance().ForceTransmitState();
-                Program.conInterface.WriteLine($"Connection code ({connectCode}) sent to server.");
             });
+            Program.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connection code (§c{connectCode}§f) sent to server.");
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
@@ -48,5 +59,11 @@ namespace AmongUsCapture
         {
             socket.EmitAsync("player", JsonSerializer.Serialize(e)); //Makes code wait for socket to emit before closing thread.
         }
+
+        private void JoinedLobbyHandler(object sender, LobbyEventArgs e)
+        {
+            socket.EmitAsync("lobby", JsonSerializer.Serialize(e));
+        }
+
     }
 }

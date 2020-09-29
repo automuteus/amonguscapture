@@ -27,36 +27,7 @@ namespace AmongUsCapture
                         WinAPI.IsWow64Process(process.Handle, out flag);
                         is64Bit = Environment.Is64BitOperatingSystem && !flag;
 
-                        modules = new List<Module>();
-                        IntPtr[] buffer = new IntPtr[1024];
-                        uint cb = (uint)(IntPtr.Size * buffer.Length);
-                        if (WinAPI.EnumProcessModulesEx(process.Handle, buffer, cb, out uint totalModules, 3u))
-                        {
-                            uint moduleSize = totalModules / (uint)IntPtr.Size;
-                            StringBuilder stringBuilder = new StringBuilder(260);
-                            for (uint count = 0;  count < moduleSize; count++)
-                            {
-                                stringBuilder.Clear();
-                                if (WinAPI.GetModuleFileNameEx(process.Handle, buffer[count], stringBuilder, (uint)stringBuilder.Capacity) == 0u)
-                                    break;
-                                string fileName = stringBuilder.ToString();
-                                stringBuilder.Clear();
-                                if (WinAPI.GetModuleBaseName(process.Handle, buffer[count], stringBuilder, (uint)stringBuilder.Capacity) == 0u)
-                                    break;
-                                string moduleName = stringBuilder.ToString();
-                                ModuleInfo moduleInfo = default;
-                                if (!WinAPI.GetModuleInformation(process.Handle, buffer[count], out moduleInfo, (uint)Marshal.SizeOf(moduleInfo)))
-                                    break;
-                                modules.Add(new Module
-                                {
-                                    FileName = fileName,
-                                    BaseAddress = moduleInfo.BaseAddress,
-                                    EntryPointAddress = moduleInfo.EntryPoint,
-                                    MemorySize = moduleInfo.ModuleSize,
-                                    Name = moduleName
-                                });
-                            }
-                        }
+                        LoadModules();
 
                         IsHooked = true;
                     }
@@ -64,6 +35,41 @@ namespace AmongUsCapture
             }
             return IsHooked;
         }
+
+        public static void LoadModules()
+        {
+            modules = new List<Module>();
+            IntPtr[] buffer = new IntPtr[1024];
+            uint cb = (uint)(IntPtr.Size * buffer.Length);
+            if (WinAPI.EnumProcessModulesEx(process.Handle, buffer, cb, out uint totalModules, 3u))
+            {
+                uint moduleSize = totalModules / (uint)IntPtr.Size;
+                StringBuilder stringBuilder = new StringBuilder(260);
+                for (uint count = 0; count < moduleSize; count++)
+                {
+                    stringBuilder.Clear();
+                    if (WinAPI.GetModuleFileNameEx(process.Handle, buffer[count], stringBuilder, (uint)stringBuilder.Capacity) == 0u)
+                        break;
+                    string fileName = stringBuilder.ToString();
+                    stringBuilder.Clear();
+                    if (WinAPI.GetModuleBaseName(process.Handle, buffer[count], stringBuilder, (uint)stringBuilder.Capacity) == 0u)
+                        break;
+                    string moduleName = stringBuilder.ToString();
+                    ModuleInfo moduleInfo = default;
+                    if (!WinAPI.GetModuleInformation(process.Handle, buffer[count], out moduleInfo, (uint)Marshal.SizeOf(moduleInfo)))
+                        break;
+                    modules.Add(new Module
+                    {
+                        FileName = fileName,
+                        BaseAddress = moduleInfo.BaseAddress,
+                        EntryPointAddress = moduleInfo.EntryPoint,
+                        MemorySize = moduleInfo.ModuleSize,
+                        Name = moduleName
+                    });
+                }
+            }
+        }
+
         public static T Read<T>(IntPtr address, params int[] offsets) where T : unmanaged
         {
             return ReadWithDefault<T>(address, default, offsets);
@@ -97,6 +103,17 @@ namespace AmongUsCapture
             int stringLength = Read<int>(address + 0x8);
             byte[] rawString = Read(address + 0xC, stringLength << 1);
             return System.Text.Encoding.Unicode.GetString(rawString);
+        }
+
+        public static IntPtr[] ReadArray(IntPtr address, int size)
+        {
+            byte[] bytes = Read(address, size * 4);
+            IntPtr[] ints = new IntPtr[size];
+            for (int i = 0; i < size; i++)
+            {
+                ints[i] = (IntPtr) BitConverter.ToUInt32(bytes, i * 4);
+            }
+            return ints;
         }
 
         private static byte[] Read(IntPtr address, int numBytes)

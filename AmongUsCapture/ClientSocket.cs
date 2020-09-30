@@ -3,6 +3,8 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using SocketIOClient;
+using System.Drawing;
+using TextColorLibrary;
 
 namespace AmongUsCapture
 {
@@ -42,7 +44,7 @@ namespace AmongUsCapture
                 GameMemReader.getInstance().ForceUpdatePlayers();
                 GameMemReader.getInstance().ForceTransmitState();
             });
-            Program.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connection code (§c{connectCode}§f) sent to server.");
+            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Connection code ({Color.Red.ToTextColor()}{connectCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", System.Drawing.Color.Aqua, $"Connection code ({connectCode}) sent to server.");
         }
 

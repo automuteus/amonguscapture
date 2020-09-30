@@ -24,6 +24,10 @@
     </PackageReference>
     <PackageReference Include="SocketIOClient" Version="2.0.2.6" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TextColorLibrary\" />
+  </ItemGroup>
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>

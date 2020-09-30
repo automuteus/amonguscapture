@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TextColorLibrary;
 
 namespace AmongUsCapture
 {
@@ -47,7 +48,7 @@ namespace AmongUsCapture
         public Dictionary<string, PlayerInfo> newPlayerInfos = new Dictionary<string, PlayerInfo>(10); // container for new player infos. Also has capacity 10 already assigned so no internal resizing of the data structure is needed
 
         private IntPtr GameAssemblyPtr = IntPtr.Zero;
-        private GameState oldState = GameState.LOBBY;
+        private GameState oldState = GameState.MENU;
         private bool exileCausesEnd = false;
 
         private int prevChatBubsVersion;
@@ -65,7 +66,7 @@ namespace AmongUsCapture
                     }
                     else
                     {
-                        Settings.conInterface.WriteTextFormatted($"[§aGameMemReader§f] Connected to Among Us process (§c{ProcessMemory.process.Id}§f)");
+                        Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"Connected to Among Us process ({Color.Red.ToTextColor()}{ProcessMemory.process.Id}{UserForm.NormalTextColor.ToTextColor()})");
 
                         bool foundModule = false;
 
@@ -83,7 +84,7 @@ namespace AmongUsCapture
 
                             if (!foundModule)
                             {
-                                Settings.conInterface.WriteTextFormatted($"[§aGameMemReader§f] Still looking for modules...");
+                                Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, "Still looking for modules...");
                                 //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "Still looking for modules..."); // TODO: This still isn't functional, we need to re-hook to reload module addresses
                                 Thread.Sleep(500); // delay and try again
                                 ProcessMemory.LoadModules();
@@ -359,7 +360,7 @@ namespace AmongUsCapture
                         PlayRegion region = (PlayRegion)((4 - (ProcessMemory.Read<int>(GameAssemblyPtr, ServerManagerOffset, 0x5c, 0, 0x10, 0x8, 0x8) & 0b11)) % 3); // do NOT ask
                         JoinedLobby?.Invoke(this, new LobbyEventArgs()
                         {
-                            LobbyCode = gameCode,
+                            LobbyCode = split[1],
                             Region = region
                         });
                         shouldTransmitLobby = false;

@@ -5,10 +5,12 @@ using System.Text;
 
 namespace AmongUsCapture
 {
-    interface ConsoleInterface
+    public interface ConsoleInterface
     {
         public void WriteLine(string s);
         public void WriteModuleTextColored(string ModuleName, Color moduleColor, string text);
         public void WriteTextFormatted(string text, bool acceptNewLines = true);
+
+        public void WriteColoredText(string ColoredText);
     }
 }

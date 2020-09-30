@@ -12,6 +12,12 @@ namespace AmongUsCapture.ConsoleTypes
         {
             form = userForm;
         }
+
+        public void WriteColoredText(string ColoredText)
+        {
+            form.WriteColoredText(ColoredText);
+        }
+
         public void WriteLine(string str)
         {
             form.WriteLineToConsole(str);

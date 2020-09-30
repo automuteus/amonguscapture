@@ -9,8 +9,6 @@ namespace AmongUsCapture
     static class Program
     {
         private static bool doConsole = false;
-
-        public static ConsoleInterface conInterface = null;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -24,17 +22,15 @@ namespace AmongUsCapture
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            ClientSocket socket = new ClientSocket();
+            var form = new UserForm(socket);
+            Settings.conInterface = new FormConsole(form); //Create the Form Console interface. 
+            Task.Factory.StartNew(() => socket.Connect(Settings.PersistentSettings.host)); //synchronously force the socket to connect
+            Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
 
-            var sock = new ClientSocket();
-
-            var form = new UserForm(sock);
-            conInterface = new FormConsole(form); //Create the Form Console interface. 
-
-            Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background; Needs to happen after conInterface is set
-
-            //(new DebugConsole(debugGui)).Run();
-            
+            //AllocConsole();
             Application.Run(form);
+            
             //test
         }
 

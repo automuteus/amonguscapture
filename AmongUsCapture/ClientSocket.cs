@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text.Json;
 using SocketIOClient;
+using System.Drawing;
+using TextColorLibrary;
 
 namespace AmongUsCapture
 {
@@ -13,7 +15,8 @@ namespace AmongUsCapture
 
         public void Connect(string url)
         {
-            Program.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connecting to §1{url}§f...");
+            //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connecting to §1{url}§f...");
+            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Connecting to {url}...");
             socket = new SocketIO(url);
             /*socket.On("hi", response =>
             {
@@ -21,7 +24,8 @@ namespace AmongUsCapture
             });*/
             socket.OnConnected += (sender, e) =>
             {
-                Program.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connected successfully!");
+                //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connected successfully!");
+                Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, "Connected successfully!");
                 GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
                 GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;
@@ -30,7 +34,8 @@ namespace AmongUsCapture
             
             socket.OnDisconnected += (sender, e) =>
             {
-                Program.conInterface.WriteTextFormatted($"[§bClientSocket§f] Lost connection!");
+                //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Lost connection!");
+                Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"{Color.Red.ToTextColor()}Connection lost!");
                 GameMemReader.getInstance().GameStateChanged -= GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged -= PlayerChangedHandler;
                 GameMemReader.getInstance().JoinedLobby -= JoinedLobbyHandler;
@@ -47,7 +52,8 @@ namespace AmongUsCapture
                 GameMemReader.getInstance().ForceUpdatePlayers();
                 GameMemReader.getInstance().ForceTransmitState();
             });
-            Program.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connection code (§c{connectCode}§f) sent to server.");
+            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Connection code ({Color.Red.ToTextColor()}{connectCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
+            //Program.conInterface.WriteModuleTextColored("GameMemReader", System.Drawing.Color.Aqua, $"Connection code ({connectCode}) sent to server.");
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)

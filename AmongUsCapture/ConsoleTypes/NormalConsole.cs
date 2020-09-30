@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using TextColorLibrary;
 
 namespace AmongUsCapture.ConsoleTypes
 {
     public class NormalConsole : ConsoleInterface
     {
+        public void WriteColoredText(string ColoredText)
+        {
+            Console.WriteLine(TextColor.StripColor(ColoredText));
+        }
+
         public void WriteLine(string str)
         {
             Console.WriteLine(str);

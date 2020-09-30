@@ -12,8 +12,6 @@ namespace AmongUsCapture
     static class Program
     {
         private static bool doConsole = false;
-
-        public static ConsoleInterface conInterface = null;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -29,12 +27,11 @@ namespace AmongUsCapture
             Application.SetCompatibleTextRenderingDefault(false);
             ClientSocket socket = new ClientSocket();
             var form = new UserForm(socket);
-            conInterface = new FormConsole(form); //Create the Form Console interface. 
+            Settings.conInterface = new FormConsole(form); //Create the Form Console interface. 
             Task.Factory.StartNew(() => socket.Connect(Settings.PersistentSettings.host)); //synchronously force the socket to connect
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
 
-            AllocConsole();
-            Console.WriteLine(Settings.StorageLocation);
+            //AllocConsole();
             Application.Run(form);
             
             //test

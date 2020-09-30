@@ -31,7 +31,7 @@ namespace AmongUsCapture
         private void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
         {
 
-            Program.conInterface.WriteTextFormatted($"[§6CHAT§f] {PlayerColorToColorCode(e.Color)}{e.Sender}§f: §f{e.Message}§f");
+            Settings.conInterface.WriteTextFormatted($"[§6CHAT§f] {PlayerColorToColorCode(e.Color)}{e.Sender}§f: §f{e.Message}§f");
             //WriteLineToConsole($"[CHAT] {e.Sender}: {e.Message}");
         }
 
@@ -92,7 +92,7 @@ namespace AmongUsCapture
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
-            Program.conInterface.WriteTextFormatted($"[§6PlayerChange§f] {PlayerColorToColorCode(e.Color)}{e.Name}§f: §f{e.Action}§f");
+            Settings.conInterface.WriteTextFormatted($"[§6PlayerChange§f] {PlayerColorToColorCode(e.Color)}{e.Name}§f: §f{e.Action}§f");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
         }
 
@@ -102,7 +102,7 @@ namespace AmongUsCapture
             {
                 CurrentState.Text = e.NewState.ToString();
             });
-            Program.conInterface.WriteTextFormatted($"[§aGameMemReader§f] State changed to §b{e.NewState}§f");
+            Settings.conInterface.WriteTextFormatted($"[§aGameMemReader§f] State changed to §b{e.NewState}§f");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
         }
 

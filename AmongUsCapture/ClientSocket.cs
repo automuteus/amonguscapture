@@ -42,7 +42,7 @@ namespace AmongUsCapture
                 GameMemReader.getInstance().ForceUpdatePlayers();
                 GameMemReader.getInstance().ForceTransmitState();
             });
-            Program.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connection code (§c{connectCode}§f) sent to server.");
+            Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connection code (§c{connectCode}§f) sent to server.");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", System.Drawing.Color.Aqua, $"Connection code ({connectCode}) sent to server.");
         }
 

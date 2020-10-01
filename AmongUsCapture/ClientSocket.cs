@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 using SocketIOClient;
 using System.Drawing;
 using TextColorLibrary;
@@ -9,7 +7,7 @@ using TextColorLibrary;
 namespace AmongUsCapture
 {
     public class ClientSocket
-    { 
+    {
         private SocketIO socket;
         private string ConnectCode;
 
@@ -39,13 +37,28 @@ namespace AmongUsCapture
 
         public void SendConnectCode(string connectCode)
         {
+            SendConnectCode(connectCode, null);
+        }
+
+        public void SendConnectCode(string connectCode, EventHandler callback)
+        {
             ConnectCode = connectCode;
             socket.EmitAsync("connect", ConnectCode).ContinueWith((t) => {
                 GameMemReader.getInstance().ForceUpdatePlayers();
                 GameMemReader.getInstance().ForceTransmitState();
+                if (callback != null)
+                {
+                    callback.Invoke(this, new EventArgs());
+                }
             });
             Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Connection code ({Color.Red.ToTextColor()}{connectCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", System.Drawing.Color.Aqua, $"Connection code ({connectCode}) sent to server.");
+        }
+
+        public void SendRoomCode(string roomCode)
+        {
+            socket.EmitAsync("roomcode", roomCode);
+            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Room code ({Color.Yellow.ToTextColor()}{roomCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)

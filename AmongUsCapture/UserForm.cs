@@ -155,7 +155,13 @@ namespace AmongUsCapture
         {
             if (ConnectCodeBox.TextLength == 6)
             {
-                clientSocket.SendConnectCode(ConnectCodeBox.Text);
+                clientSocket.SendConnectCode(ConnectCodeBox.Text, (sender, e) =>
+                {
+                    if (GameCodeBox.Text != "") // Send the game code _after_ the connect code
+                    {
+                        clientSocket.SendRoomCode(GameCodeBox.Text);
+                    }
+                });
                 //ConnectCodeBox.Enabled = false;
                 //SubmitButton.Enabled = false;
             }

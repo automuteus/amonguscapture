@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AmongUsCapture": {
+      "commandName": "Project",
+      "commandLineArgs": "aucapture://connect?data=eyJIb3N0IjoiaHR0cDovL2xvY2FsaG9zdDo4MTIzIiwiQ29ubmVjdENvZGUiOiIzMkQ1NTYwRCJ9"
+    }
+  }
+}

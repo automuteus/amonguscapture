@@ -13,28 +13,49 @@ namespace AmongUsCapture
         private SocketIO socket;
         private string ConnectCode;
 
-        public void Connect(string url)
+        public void Init()
         {
-            socket = new SocketIO(url);
-            /*socket.On("hi", response =>
-            {
-                string text = response.GetValue<string>();
-            });*/
+            socket = new SocketIO();
+
+            IPCadapter.getInstance().OnToken += OnTokenHandler;
+
             socket.OnConnected += (sender, e) =>
             {
                 GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
                 GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;
             };
-            
+
             socket.OnDisconnected += (sender, e) =>
             {
                 GameMemReader.getInstance().GameStateChanged -= GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged -= PlayerChangedHandler;
                 GameMemReader.getInstance().JoinedLobby -= JoinedLobbyHandler;
             };
+        }
 
-            socket.ConnectAsync();
+        private void OnTokenHandler(object sender, StartToken token)
+        {
+            if (socket.Connected)
+            {
+                socket.DisconnectAsync().ContinueWith((t) =>
+                {
+                    this.Connect(token.Host, token.ConnectCode);
+                });
+            } else
+            {
+                this.Connect(token.Host, token.ConnectCode);
+            }
+        }
+
+        public void Connect(string url, string connectCode)
+        {
+            socket = new SocketIO(url);
+
+            socket.ConnectAsync().ContinueWith(t =>
+            {
+                SendConnectCode(connectCode);
+            });
         }
 
         public void SendConnectCode(string connectCode)

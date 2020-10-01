@@ -10,13 +10,17 @@ namespace AmongUsCapture
     class IPCadapter
     {
         private static IPCadapter instance = new IPCadapter();
-        public event EventHandler<TokenReceivedArgs> OnToken;
+        public event EventHandler<StartToken> OnToken;
         public static IPCadapter getInstance()
         {
             return instance;
         }
-        public void runloop()
+        public void RunLoop(string initialURI)
         {
+            if(initialURI != null)
+            {
+                OnToken?.Invoke(this, StartToken.FromString(initialURI));
+            }
             while (true)
             {
                 NamedPipeServerStream pipeServer = new NamedPipeServerStream("AmongUsCapturePipe", PipeDirection.InOut, 1);
@@ -27,24 +31,12 @@ namespace AmongUsCapture
                 { 
                     //Read the request from the client. Once the client has
                     // written to the pipe its security token will be available.
-
                     StreamString ss = new StreamString(pipeServer);
 
-                    // Verify our identity to the connected client using a
-                    // string that the client anticipates.
-
-                    ss.WriteString("Ready for token.");
-                    string Base64String = ss.ReadString();
-                    Console.WriteLine("Got data: "+Base64String);
-                    byte[] data = System.Convert.FromBase64String(Base64String);
-                    string Decoded = System.Text.UTF8Encoding.UTF8.GetString(data);
-                    TokenJson jsonToken = JsonConvert.DeserializeObject<TokenJson>(Decoded);
-                    TokenReceivedArgs thing = new TokenReceivedArgs();
-                    thing.SigBytes = jsonToken.SigBytes;
-                    thing.token = jsonToken.token;
-                    Console.WriteLine($@"Decoded message as {JsonConvert.SerializeObject(jsonToken, Formatting.Indented)}");
-                    OnToken?.Invoke(this, thing);
-
+                    string rawToken = ss.ReadString();
+                    StartToken startToken = StartToken.FromString(rawToken);
+                    Console.WriteLine($@"Decoded message as {JsonConvert.SerializeObject(startToken, Formatting.Indented)}");
+                    OnToken?.Invoke(this, startToken);
                 }
                 // Catch the IOException that is raised if the pipe is broken
                 // or disconnected.
@@ -54,7 +46,6 @@ namespace AmongUsCapture
                 }
                 pipeServer.Close();
             }
-
         }
     }
     public class StreamString
@@ -96,15 +87,25 @@ namespace AmongUsCapture
             return outBuffer.Length + 2;
         }
     }
-    public class TokenReceivedArgs : EventArgs
+    public class StartToken : EventArgs
     {
-        public string token { get; set; }
-        public byte[] SigBytes { get; set; }
-    }
-    public class TokenJson
-    {
-        public string token { get; set; }
-        public byte[] SigBytes { get; set; }
+        public string Host { get; set; }
+        public string ConnectCode { get; set; }
+
+        public static StartToken FromString(string rawToken)
+        {
+            try
+            {
+                byte[] data = Convert.FromBase64String(rawToken);
+                string Decoded = Encoding.UTF8.GetString(data);
+                return JsonConvert.DeserializeObject<StartToken>(Decoded);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return new StartToken();
+            }
+        }
     }
 
 }

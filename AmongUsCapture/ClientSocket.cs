@@ -50,12 +50,18 @@ namespace AmongUsCapture
 
         public void Connect(string url, string connectCode)
         {
-            socket = new SocketIO(url);
-
-            socket.ConnectAsync().ContinueWith(t =>
+            try
             {
-                SendConnectCode(connectCode);
-            });
+                socket.ServerUri = new Uri(url);
+                socket.ConnectAsync().ContinueWith(t =>
+                {
+                    SendConnectCode(connectCode);
+                });
+            } catch (ArgumentNullException) {
+                Console.WriteLine("Invalid bot host, not connecting");
+            } catch (UriFormatException) {
+                Console.WriteLine("Invalid bot host, not connecting");
+            }
         }
 
         public void SendConnectCode(string connectCode)

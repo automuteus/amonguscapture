@@ -3,7 +3,7 @@
 
 Capture of the local Among Us executable state.
 
-Requires .Net Core 3.1.402, this is installed automatically by the Python installer.py script, alternatively you can download it directly from [Microsoft](https://download.visualstudio.microsoft.com/download/pr/9706378b-f244-48a6-8cec-68a19a8b1678/1f90fd18eb892cbb0bf75d9cff377ccb/dotnet-sdk-3.1.402-win-x64.exe)
+Requires .Net Core 3.1.8 Desktop Runtime, this is installed automatically by the Python installer.py script, alternatively you can download it directly from [Microsoft](https://dotnet.microsoft.com/download/dotnet-core/3.1). Please chose either the x64 or x86 version according to your operating system version. If in doubt, try the x64 version first.
 
 ***
 

@@ -33,6 +33,9 @@ namespace AmongUsCapture
                 GameMemReader.getInstance().PlayerChanged -= PlayerChangedHandler;
                 GameMemReader.getInstance().JoinedLobby -= JoinedLobbyHandler;
             };
+            
+            // Get code from Discord bot
+            socket.On("code", (code) => SendConnectCode(code.GetValue<string>()));
 
             socket.ConnectAsync();
         }

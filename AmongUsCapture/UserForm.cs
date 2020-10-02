@@ -11,6 +11,7 @@ namespace AmongUsCapture
     public partial class UserForm : Form
     {
         private ClientSocket clientSocket;
+        private LobbyEventArgs lastJoinedLobby;
         public static Color NormalTextColor = Color.Black;
         private Color Rainbow(float progress)
         {
@@ -56,7 +57,7 @@ namespace AmongUsCapture
             {
                 GameCodeBox.Text = e.LobbyCode;
             });
-            
+            lastJoinedLobby = e;
         }
 
         private void OnLoad(object sender, EventArgs e)
@@ -157,9 +158,9 @@ namespace AmongUsCapture
             {
                 clientSocket.SendConnectCode(ConnectCodeBox.Text, (sender, e) =>
                 {
-                    if (GameCodeBox.Text != "") // Send the game code _after_ the connect code
+                    if (lastJoinedLobby != null) // Send the game code _after_ the connect code
                     {
-                        clientSocket.SendRoomCode(GameCodeBox.Text);
+                        clientSocket.SendRoomCode(lastJoinedLobby);
                     }
                 });
                 //ConnectCodeBox.Enabled = false;

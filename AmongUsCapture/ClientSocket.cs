@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json;
 using SocketIOClient;
 using System.Drawing;
@@ -55,10 +55,10 @@ namespace AmongUsCapture
             //Program.conInterface.WriteModuleTextColored("GameMemReader", System.Drawing.Color.Aqua, $"Connection code ({connectCode}) sent to server.");
         }
 
-        public void SendRoomCode(string roomCode)
+        public void SendRoomCode(LobbyEventArgs args)
         {
-            socket.EmitAsync("roomcode", roomCode);
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Room code ({Color.Yellow.ToTextColor()}{roomCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
+            socket.EmitAsync("lobby", JsonSerializer.Serialize(args));
+            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Room code ({Color.Yellow.ToTextColor()}{args.LobbyCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)

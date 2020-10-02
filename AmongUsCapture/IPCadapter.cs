@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.IO.Pipes;
+using System.Linq;
 using System.Text;
+using System.Web;
 using Newtonsoft.Json;
 
 namespace AmongUsCapture
@@ -96,9 +99,10 @@ namespace AmongUsCapture
         {
             try
             {
-                byte[] data = Convert.FromBase64String(rawToken);
-                string Decoded = Encoding.UTF8.GetString(data);
-                return JsonConvert.DeserializeObject<StartToken>(Decoded);
+                Uri uri = new Uri(rawToken);
+                NameValueCollection nvc = HttpUtility.ParseQueryString(uri.Query);
+                bool insecure = (nvc["insecure"] != null && nvc["insecure"] != "false") || uri.Query == "?insecure";
+                return new StartToken() { Host = (insecure ? "http://" : "https://") + uri.Authority, ConnectCode = uri.AbsolutePath.Substring(1) };
             }
             catch (Exception e)
             {

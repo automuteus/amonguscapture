@@ -12,8 +12,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
-using System.Collections.Specialized;
-using System.Web;
 
 namespace AmongUsCapture
 {
@@ -45,7 +43,7 @@ namespace AmongUsCapture
             Settings.conInterface = new FormConsole(form); //Create the Form Console interface. 
             Task.Factory.StartNew(() => socket.Init()).Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
-            Task.Factory.StartNew(() => IPCadapter.getInstance().RunLoop(uriRes == URIStartResult.PARSE ? extractDataFromURI(args[0]) : null)); // Run listener for tokens
+            Task.Factory.StartNew(() => IPCadapter.getInstance().RunLoop(uriRes == URIStartResult.PARSE ? args[0] : null)); // Run listener for tokens
 
             //AllocConsole();
             Application.Run(form);
@@ -74,7 +72,7 @@ namespace AmongUsCapture
                     var pipeClient = new NamedPipeClientStream(".", "AmongUsCapturePipe", PipeDirection.InOut, PipeOptions.None, TokenImpersonationLevel.Impersonation);
                     pipeClient.Connect();
                     var ss = new StreamString(pipeClient);
-                    ss.WriteString(extractDataFromURI(args[0]));
+                    ss.WriteString(args[0]);
                     pipeClient.Close();
                 }
                 return URIStartResult.CLOSE;
@@ -110,13 +108,6 @@ namespace AmongUsCapture
                     commandKey.SetValue("", "\"" + applicationLocation + "\" \"%1\"");
                 }
             }
-        }
-
-        private static string extractDataFromURI(string uri)
-        {
-            string queryString = new Uri(uri).Query;
-            NameValueCollection queryDictionary = HttpUtility.ParseQueryString(queryString);
-            return queryDictionary["data"];
         }
 
         [DllImport("kernel32.dll", SetLastError = true)]

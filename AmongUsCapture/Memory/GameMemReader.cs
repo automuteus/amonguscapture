@@ -1,8 +1,10 @@
-﻿using System;
+﻿using AmongUsCapture;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -21,6 +23,8 @@ namespace AmongUsCapture
     class GameMemReader
     {
         private static GameMemReader instance = new GameMemReader();
+
+        private ProcessMemoryBase _processMemoryReader;
         private bool shouldForceUpdatePlayers = false;
         private bool shouldForceTransmitState = false;
         private bool shouldTransmitLobby = false;
@@ -47,26 +51,43 @@ namespace AmongUsCapture
 
         private int prevChatBubsVersion;
 
+        protected GameMemReader()
+        {
+            
+            if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                _processMemoryReader = new ProcessMemoryWindows();
+            }
+            else if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                throw new NotImplementedException();
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public void RunLoop()
         {
             while (true)
             {
-                if (!ProcessMemory.IsHooked)
+                if (!_processMemoryReader.IsHooked)
                 {
-                    if (!ProcessMemory.HookProcess("Among Us"))
+                    if (!_processMemoryReader.HookProcess("Among Us"))
                     {
                         Thread.Sleep(1000);
                         continue;
                     }
                     else
                     {
-                        Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"Connected to Among Us process ({Color.Red.ToTextColor()}{ProcessMemory.process.Id}{UserForm.NormalTextColor.ToTextColor()})");
+                        Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"Connected to Among Us process ({Color.Red.ToTextColor()}{_processMemoryReader.process.Id}{UserForm.NormalTextColor.ToTextColor()})");
 
                         bool foundModule = false;
 
                         while(true)
                         {
-                            foreach (ProcessMemory.Module module in ProcessMemory.modules)
+                            foreach (ProcessMemoryBase.Module module in _processMemoryReader.modules)
                             {
                                 if (module.Name.Equals("GameAssembly.dll", StringComparison.OrdinalIgnoreCase))
                                 {
@@ -81,7 +102,7 @@ namespace AmongUsCapture
                                 Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, "Still looking for modules...");
                                 //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "Still looking for modules..."); // TODO: This still isn't functional, we need to re-hook to reload module addresses
                                 Thread.Sleep(500); // delay and try again
-                                ProcessMemory.LoadModules();
+                                _processMemoryReader.LoadModules();
                             }
                             else
                             {
@@ -89,16 +110,16 @@ namespace AmongUsCapture
                             }
                         }
 
-                        prevChatBubsVersion = ProcessMemory.Read<int>(GameAssemblyPtr, _gameOffsets.HudManagerOffset, 0x5C, 0, 0x28, 0xC, 0x14, 0x10);
+                        prevChatBubsVersion = _processMemoryReader.Read<int>(GameAssemblyPtr, _gameOffsets.HudManagerOffset, 0x5C, 0, 0x28, 0xC, 0x14, 0x10);
                     }
                 }
 
                 GameState state;
-                //int meetingHudState = /*meetingHud_cachePtr == 0 ? 4 : */ProcessMemory.ReadWithDefault<int>(GameAssemblyPtr, 4, 0xDA58D0, 0x5C, 0, 0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
-                IntPtr meetingHud = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, _gameOffsets.MeetingHudOffset, 0x5C, 0);
-                uint meetingHud_cachePtr = meetingHud == IntPtr.Zero ? 0 : ProcessMemory.Read<uint>(meetingHud, 0x8);
-                int meetingHudState = meetingHud_cachePtr == 0 ? 4 : ProcessMemory.ReadWithDefault<int>(meetingHud, 4, 0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
-                int gameState = ProcessMemory.Read<int>(GameAssemblyPtr, _gameOffsets.AmongUsClientOffset, 0x5C, 0, 0x64); // 0 = NotJoined, 1 = Joined, 2 = Started, 3 = Ended (during "defeat" or "victory" screen only)
+                //int meetingHudState = /*meetingHud_cachePtr == 0 ? 4 : */ProcessMemoryBase.ReadWithDefault<int>(GameAssemblyPtr, 4, 0xDA58D0, 0x5C, 0, 0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
+                IntPtr meetingHud = _processMemoryReader.Read<IntPtr>(GameAssemblyPtr, _gameOffsets.MeetingHudOffset, 0x5C, 0);
+                uint meetingHud_cachePtr = meetingHud == IntPtr.Zero ? 0 : _processMemoryReader.Read<uint>(meetingHud, 0x8);
+                int meetingHudState = meetingHud_cachePtr == 0 ? 4 : _processMemoryReader.ReadWithDefault<int>(meetingHud, 4, 0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
+                int gameState = _processMemoryReader.Read<int>(GameAssemblyPtr, _gameOffsets.AmongUsClientOffset, 0x5C, 0, 0x64); // 0 = NotJoined, 1 = Joined, 2 = Started, 3 = Ended (during "defeat" or "victory" screen only)
 
                 switch (gameState)
                 {
@@ -130,21 +151,21 @@ namespace AmongUsCapture
                 }
 
 
-                IntPtr allPlayersPtr = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, _gameOffsets.GameDataOffset, 0x5C, 0, 0x24);
-                IntPtr allPlayers = ProcessMemory.Read<IntPtr>(allPlayersPtr, 0x08);
-                int playerCount = ProcessMemory.Read<int>(allPlayersPtr, 0x0C);
+                IntPtr allPlayersPtr = _processMemoryReader.Read<IntPtr>(GameAssemblyPtr, _gameOffsets.GameDataOffset, 0x5C, 0, 0x24);
+                IntPtr allPlayers = _processMemoryReader.Read<IntPtr>(allPlayersPtr, 0x08);
+                int playerCount = _processMemoryReader.Read<int>(allPlayersPtr, 0x0C);
 
                 IntPtr playerAddrPtr = allPlayers + 0x10;
 
                 // check if exile causes end
                 if (oldState == GameState.DISCUSSION && state == GameState.TASKS)
                 {
-                    byte exiledPlayerId = ProcessMemory.ReadWithDefault<byte>(GameAssemblyPtr, 255, _gameOffsets.MeetingHudOffset, 0x5C, 0, 0x94, 0x08);
+                    byte exiledPlayerId = _processMemoryReader.ReadWithDefault<byte>(GameAssemblyPtr, 255, _gameOffsets.MeetingHudOffset, 0x5C, 0, 0x94, 0x08);
                     int impostorCount = 0, innocentCount = 0;
 
                     for (int i = 0; i < playerCount; i++)
                     {
-                        PlayerInfo pi = ProcessMemory.Read<PlayerInfo>(playerAddrPtr, 0, 0);
+                        PlayerInfo pi = _processMemoryReader.Read<PlayerInfo>(playerAddrPtr, 0, 0);
                         playerAddrPtr += 4;
 
                         if (pi.PlayerId == exiledPlayerId)
@@ -187,7 +208,7 @@ namespace AmongUsCapture
 
                 for (int i = 0; i < playerCount; i++)
                 {
-                    PlayerInfo pi = ProcessMemory.Read<PlayerInfo>(playerAddrPtr, 0, 0);
+                    PlayerInfo pi = _processMemoryReader.Read<PlayerInfo>(playerAddrPtr, 0, 0);
                     playerAddrPtr += 4;
                     if (pi.PlayerName == 0) { continue; }
                     string playerName = pi.GetPlayerName();
@@ -288,14 +309,14 @@ namespace AmongUsCapture
                     }
                 }
 
-                IntPtr chatBubblesPtr = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, _gameOffsets.HudManagerOffset, 0x5C, 0, 0x28, 0xC, 0x14);
+                IntPtr chatBubblesPtr = _processMemoryReader.Read<IntPtr>(GameAssemblyPtr, _gameOffsets.HudManagerOffset, 0x5C, 0, 0x28, 0xC, 0x14);
 
                 int poolSize = 20; // = ProcessMemory.Read<int>(GameAssemblyPtr, 0xD0B25C, 0x5C, 0, 0x28, 0xC, 0xC)
 
-                int numChatBubbles = ProcessMemory.Read<int>(chatBubblesPtr, 0xC);
-                int chatBubsVersion = ProcessMemory.Read<int>(chatBubblesPtr, 0x10);
-                IntPtr chatBubblesAddr = ProcessMemory.Read<IntPtr>(chatBubblesPtr, 0x8) + 0x10;
-                IntPtr[] chatBubblePtrs = ProcessMemory.ReadArray(chatBubblesAddr, numChatBubbles);
+                int numChatBubbles = _processMemoryReader.Read<int>(chatBubblesPtr, 0xC);
+                int chatBubsVersion = _processMemoryReader.Read<int>(chatBubblesPtr, 0x10);
+                IntPtr chatBubblesAddr = _processMemoryReader.Read<IntPtr>(chatBubblesPtr, 0x8) + 0x10;
+                IntPtr[] chatBubblePtrs = _processMemoryReader.ReadArray(chatBubblesAddr, numChatBubbles);
 
                 int newMsgs = 0;
 
@@ -333,9 +354,9 @@ namespace AmongUsCapture
 
                 for (int i = numChatBubbles - newMsgs; i < numChatBubbles; i++)
                 {
-                    string msgText = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(chatBubblePtrs[i], 0x20, 0x28));
+                    string msgText = _processMemoryReader.ReadString(_processMemoryReader.Read<IntPtr>(chatBubblePtrs[i], 0x20, 0x28));
                     if (msgText.Length == 0) continue;
-                    string msgSender = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(chatBubblePtrs[i], 0x1C, 0x28));
+                    string msgSender = _processMemoryReader.ReadString(_processMemoryReader.Read<IntPtr>(chatBubblePtrs[i], 0x1C, 0x28));
                     PlayerInfo oldPlayerInfo = oldPlayerInfos[msgSender];
                     ChatMessageAdded?.Invoke(this, new ChatMessageEventArgs()
                     {
@@ -347,11 +368,11 @@ namespace AmongUsCapture
 
                 if (shouldTransmitLobby)
                 {
-                    string gameCode = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(GameAssemblyPtr, _gameOffsets.GameStartManagerOffset, 0x5c, 0, 0x20, 0x28));
+                    string gameCode = _processMemoryReader.ReadString(_processMemoryReader.Read<IntPtr>(GameAssemblyPtr, _gameOffsets.GameStartManagerOffset, 0x5c, 0, 0x20, 0x28));
                     string[] split;
                     if (gameCode != null && gameCode.Length > 0 && (split = gameCode.Split('\n')).Length == 2)
                     {
-                        PlayRegion region = (PlayRegion)((4 - (ProcessMemory.Read<int>(GameAssemblyPtr, _gameOffsets.ServerManagerOffset, 0x5c, 0, 0x10, 0x8, 0x8) & 0b11)) % 3); // do NOT ask
+                        PlayRegion region = (PlayRegion)((4 - (_processMemoryReader.Read<int>(GameAssemblyPtr, _gameOffsets.ServerManagerOffset, 0x5c, 0, 0x10, 0x8, 0x8) & 0b11)) % 3); // do NOT ask
                         JoinedLobby?.Invoke(this, new LobbyEventArgs()
                         {
                             LobbyCode = split[1],
@@ -374,6 +395,11 @@ namespace AmongUsCapture
         public void ForceTransmitState()
         {
             this.shouldForceTransmitState = true;
+        }
+
+        public string GetStringFromMemory(IntPtr address)
+        {
+            return _processMemoryReader.ReadString(address);
         }
     }
 

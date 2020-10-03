@@ -51,7 +51,7 @@ namespace AmongUsCapture
         {
             while (true)
             {
-                Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Red, UserForm.getRainbowText("We don't support cracked version. Pay the $5 to sloth!"));
+                Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Red, UserForm.getRainbowText("We don't support cracked versions. Pay the $5 to the sloth!"));
                 Thread.Sleep(1000);
             }
         }

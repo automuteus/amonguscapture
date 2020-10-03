@@ -118,7 +118,7 @@ namespace AmongUsCapture
             if (process == null || address == IntPtr.Zero)
                 return buffer;
 
-            WinAPI.ReadProcessMemoryBase(process.Handle, address, buffer, numBytes, out int bytesRead);
+            WinAPI.ReadProcessMemory(process.Handle, address, buffer, numBytes, out int bytesRead);
             return buffer;
         }
         private int OffsetAddress(ref IntPtr address, params int[] offsets)
@@ -126,7 +126,7 @@ namespace AmongUsCapture
             byte[] buffer = new byte[is64Bit ? 8 : 4];
             for (int i = 0; i < offsets.Length - 1; i++)
             {
-                WinAPI.ReadProcessMemoryBase(process.Handle, address + offsets[i], buffer, buffer.Length, out int bytesRead);
+                WinAPI.ReadProcessMemory(process.Handle, address + offsets[i], buffer, buffer.Length, out int bytesRead);
                 if (is64Bit)
                     address = (IntPtr)BitConverter.ToUInt64(buffer, 0);
                 else
@@ -139,7 +139,7 @@ namespace AmongUsCapture
         private static class WinAPI
         {
             [DllImport("kernel32.dll", SetLastError = true)]
-            public static extern bool ReadProcessMemoryBase(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, out int lpNumberOfBytesRead);
+            public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer, int dwSize, out int lpNumberOfBytesRead);
             [DllImport("kernel32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool IsWow64Process(IntPtr hProcess, [MarshalAs(UnmanagedType.Bool)] out bool wow64Process);

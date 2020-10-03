@@ -15,7 +15,8 @@ namespace AmongUsCapture
         LOBBY,
         TASKS,
         DISCUSSION,
-        MENU
+        MENU,
+        UNKNOWN
     }
     class GameMemReader
     {
@@ -41,7 +42,7 @@ namespace AmongUsCapture
         public Dictionary<string, PlayerInfo> newPlayerInfos = new Dictionary<string, PlayerInfo>(10); // container for new player infos. Also has capacity 10 already assigned so no internal resizing of the data structure is needed
 
         private IntPtr GameAssemblyPtr = IntPtr.Zero;
-        private GameState oldState = GameState.MENU;
+        private GameState oldState = GameState.UNKNOWN;
         private bool exileCausesEnd = false;
 
         private int prevChatBubsVersion;
@@ -99,32 +100,35 @@ namespace AmongUsCapture
                 int meetingHudState = meetingHud_cachePtr == 0 ? 4 : ProcessMemory.ReadWithDefault<int>(meetingHud, 4, 0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
                 int gameState = ProcessMemory.Read<int>(GameAssemblyPtr, _gameOffsets.AmongUsClientOffset, 0x5C, 0, 0x64); // 0 = NotJoined, 1 = Joined, 2 = Started, 3 = Ended (during "defeat" or "victory" screen only)
 
-                if (gameState == 0)
+                switch (gameState)
                 {
-                    state = GameState.MENU;
-                    exileCausesEnd = false;
-                }
-                else if (gameState == 1 || gameState == 3)
-                {
-                    state = GameState.LOBBY;
-                    exileCausesEnd = false;
-                }
-                else if (exileCausesEnd)
-                {
-                    state = GameState.LOBBY;
-                }
-                else if (meetingHudState < 4)
-                {
-                    state = GameState.DISCUSSION;
-                } else
-                {
-                    state = GameState.TASKS;
+                    case 0:
+                        state = GameState.MENU;
+                        exileCausesEnd = false;
+                        break;
+                    case 1:
+                    case 3:
+                        state = GameState.LOBBY;
+                        exileCausesEnd = false;
+                        break;
+                    default:
+                    {
+                        if (exileCausesEnd)
+                        {
+                            state = GameState.LOBBY;
+                        }
+                        else if (meetingHudState < 4)
+                        {
+                            state = GameState.DISCUSSION;
+                        } else
+                        {
+                            state = GameState.TASKS;
+                        }
+
+                        break;
+                    }
                 }
 
-                if (oldState != GameState.LOBBY && state == GameState.LOBBY) // we have just entered the lobby from somewhere
-                {
-                    shouldTransmitLobby = true;
-                }
 
                 IntPtr allPlayersPtr = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, _gameOffsets.GameDataOffset, 0x5C, 0, 0x24);
                 IntPtr allPlayers = ProcessMemory.Read<IntPtr>(allPlayersPtr, 0x08);
@@ -169,11 +173,7 @@ namespace AmongUsCapture
                     }
                 }
 
-                if (this.shouldForceTransmitState)
-                {
-                    shouldForceTransmitState = false;
-                    GameStateChanged?.Invoke(this, new GameStateChangedEventArgs() { NewState = state });
-                } else if (state != oldState)
+                if (state != oldState || shouldForceTransmitState)
                 {
                     GameStateChanged?.Invoke(this, new GameStateChangedEventArgs() { NewState = state });
                 }

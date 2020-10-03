@@ -11,6 +11,7 @@ namespace AmongUsCapture
     public partial class UserForm : Form
     {
         private ClientSocket clientSocket;
+        private LobbyEventArgs lastJoinedLobby;
         public static Color NormalTextColor = Color.Black;
         private Color Rainbow(float progress)
         {
@@ -62,7 +63,7 @@ namespace AmongUsCapture
             {
                 GameCodeBox.Text = e.LobbyCode;
             });
-            
+            lastJoinedLobby = e;
         }
 
         private void OnLoad(object sender, EventArgs e)
@@ -209,10 +210,15 @@ namespace AmongUsCapture
         {
             clientSocket.OnConnected += (sender, e) =>
             {
-                // We could connect to the URL -> save it
                 Settings.PersistentSettings.host = url;
 
-                clientSocket.SendConnectCode(ConnectCodeBox.Text);
+                clientSocket.SendConnectCode(ConnectCodeBox.Text, (sender, e) =>
+                {
+                    if (lastJoinedLobby != null) // Send the game code _after_ the connect code
+                    {
+                        clientSocket.SendRoomCode(lastJoinedLobby);
+                    }
+                });
             };
 
             try

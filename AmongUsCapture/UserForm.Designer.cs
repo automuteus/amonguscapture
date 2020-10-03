@@ -147,7 +147,7 @@ namespace AmongUsCapture
             this.GameCodeGB.Size = new System.Drawing.Size(262, 56);
             this.GameCodeGB.TabIndex = 4;
             this.GameCodeGB.TabStop = false;
-            this.GameCodeGB.Text = "GameCode";
+            this.GameCodeGB.Text = "RoomCode";
             // 
             // tableLayoutPanel3
             // 

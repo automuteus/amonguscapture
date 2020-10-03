@@ -35,14 +35,20 @@ namespace AmongUsCapture
                     return Color.FromArgb(255, 255, 0, descending);
             }
         }
-        public UserForm(ClientSocket sock)
+        public UserForm(ClientSocket clientSocket)
         {
-            clientSocket = sock;
+            this.clientSocket = clientSocket;
             InitializeComponent();
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
             GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
+
+            // Load URL
+            URLTextBox.Text = Settings.PersistentSettings.host;
+
+            // Connect on Enter
+            this.AcceptButton = ConnectButton;
 
             if (DarkTheme())
             {
@@ -120,8 +126,16 @@ namespace AmongUsCapture
             ConnectCodeBox.BackColor = DarkGrey;
             ConnectCodeBox.ForeColor = White;
 
-            SubmitButton.BackColor = BluePurpleAccent;
-            SubmitButton.ForeColor = White;
+            UrlGB.BackColor = LighterGrey;
+            UrlGB.ForeColor = White;
+
+            URLTextBox.BackColor = DarkGrey;
+            URLTextBox.ForeColor = White;
+
+
+            ConnectButton.BackColor = BluePurpleAccent;
+            ConnectButton.ForeColor = White;
+
 
             GameCodeBox.BackColor = DarkGrey;
             GameCodeBox.ForeColor = White;
@@ -136,10 +150,34 @@ namespace AmongUsCapture
             ForeColor = White;
         }
 
+        private void ConnectCodeBox_Enter(object sender, EventArgs e)
+        {
+            this.BeginInvoke((MethodInvoker)delegate ()
+            {
+                ConnectCodeBox.Select(0, 0);
+            });
+        }
+        private void ConnectCodeBox_Click(object sender, EventArgs e)
+        {
+            if (ConnectCodeBox.Enabled)
+            {
+                this.BeginInvoke((MethodInvoker)delegate ()
+                {
+                    ConnectCodeBox.Select(0, 0);
+                });
+            }
+
+        }
+
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
             Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
+        }
+
+        private void UserForm_Load(object sender, EventArgs e)
+        {
+            URLTextBox.Text = Settings.PersistentSettings.host;
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
@@ -152,10 +190,28 @@ namespace AmongUsCapture
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
         }
 
-        private void SubmitButton_Click(object sender, EventArgs e)
+        private void ConnectButton_Click(object sender, EventArgs e)
         {
-            if (ConnectCodeBox.TextLength == 6)
+
+            ConnectCodeBox.Enabled = false;
+            ConnectButton.Enabled = false;
+            URLTextBox.Enabled = false;
+
+            var url = "http://localhost:8123";
+            if (URLTextBox.Text != "")
             {
+                url = URLTextBox.Text;
+            }
+
+            doConnect(url);
+        }
+
+        private void doConnect(string url)
+        {
+            clientSocket.OnConnected += (sender, e) =>
+            {
+                Settings.PersistentSettings.host = url;
+
                 clientSocket.SendConnectCode(ConnectCodeBox.Text, (sender, e) =>
                 {
                     if (lastJoinedLobby != null) // Send the game code _after_ the connect code
@@ -163,9 +219,25 @@ namespace AmongUsCapture
                         clientSocket.SendRoomCode(lastJoinedLobby);
                     }
                 });
-                //ConnectCodeBox.Enabled = false;
-                //SubmitButton.Enabled = false;
+            };
+
+            try
+            {
+                clientSocket.Connect(url);
             }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK);
+                ConnectCodeBox.Enabled = true;
+                ConnectButton.Enabled = true;
+                URLTextBox.Enabled = true;
+                return;
+            }
+        }
+
+        private void ConnectCodeBox_TextChanged(object sender, EventArgs e)
+        {
+            ConnectButton.Enabled = (ConnectCodeBox.Enabled && ConnectCodeBox.Text.Length == 6 && !ConnectCodeBox.Text.Contains(" "));
         }
 
         private void ConsoleTextBox_TextChanged(object sender, EventArgs e)
@@ -227,6 +299,7 @@ namespace AmongUsCapture
                     ConsoleTextBox.AppendText(line + "\n");
                 });
             }
+            
         }
 
         private Color PlayerColorToColorOBJ(PlayerColor pColor)

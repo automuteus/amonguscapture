@@ -6,13 +6,9 @@ using System.Text;
 
 namespace AmongUsCapture
 {
-    public static class ProcessMemory
+    public class ProcessMemoryWindows : ProcessMemoryBase
     {
-        private static bool is64Bit;
-        public static Process process;
-        public static List<Module> modules;
-        public static bool IsHooked { get; private set; } = false;
-        public static bool HookProcess(string name)
+        public override bool HookProcess(string name)
         {
             IsHooked = process != null && !process.HasExited;
             if (!IsHooked)
@@ -36,7 +32,7 @@ namespace AmongUsCapture
             return IsHooked;
         }
 
-        public static void LoadModules()
+        public override void LoadModules()
         {
             modules = new List<Module>();
             IntPtr[] buffer = new IntPtr[1024];
@@ -70,12 +66,12 @@ namespace AmongUsCapture
             }
         }
 
-        public static T Read<T>(IntPtr address, params int[] offsets) where T : unmanaged
+        public override T Read<T>(IntPtr address, params int[] offsets)
         {
             return ReadWithDefault<T>(address, default, offsets);
         }
 
-        public static T ReadWithDefault<T>(IntPtr address, T defaultParam, params int[] offsets) where T : unmanaged
+        public override T ReadWithDefault<T>(IntPtr address, T defaultParam, params int[] offsets)
         {
             if (process == null || address == IntPtr.Zero)
                 return defaultParam;
@@ -96,7 +92,7 @@ namespace AmongUsCapture
             }
         }
 
-        public static string ReadString(IntPtr address)
+        public override string ReadString(IntPtr address)
         {
             if (process == null || address == IntPtr.Zero)
                 return default;
@@ -105,7 +101,7 @@ namespace AmongUsCapture
             return System.Text.Encoding.Unicode.GetString(rawString);
         }
 
-        public static IntPtr[] ReadArray(IntPtr address, int size)
+        public override IntPtr[] ReadArray(IntPtr address, int size)
         {
             byte[] bytes = Read(address, size * 4);
             IntPtr[] ints = new IntPtr[size];
@@ -116,7 +112,7 @@ namespace AmongUsCapture
             return ints;
         }
 
-        private static byte[] Read(IntPtr address, int numBytes)
+        private byte[] Read(IntPtr address, int numBytes)
         {
             byte[] buffer = new byte[numBytes];
             if (process == null || address == IntPtr.Zero)
@@ -125,7 +121,7 @@ namespace AmongUsCapture
             WinAPI.ReadProcessMemory(process.Handle, address, buffer, numBytes, out int bytesRead);
             return buffer;
         }
-        private static int OffsetAddress(ref IntPtr address, params int[] offsets)
+        private int OffsetAddress(ref IntPtr address, params int[] offsets)
         {
             byte[] buffer = new byte[is64Bit ? 8 : 4];
             for (int i = 0; i < offsets.Length - 1; i++)
@@ -157,26 +153,6 @@ namespace AmongUsCapture
             [DllImport("psapi.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
             public static extern bool GetModuleInformation(IntPtr hProcess, IntPtr hModule, out ModuleInfo lpmodinfo, uint cb);
-        }
-        public class Module
-        {
-            public IntPtr BaseAddress { get; set; }
-            public IntPtr EntryPointAddress { get; set; }
-            public string FileName { get; set; }
-            public uint MemorySize { get; set; }
-            public string Name { get; set; }
-            public FileVersionInfo FileVersionInfo { get { return FileVersionInfo.GetVersionInfo(FileName); } }
-            public override string ToString()
-            {
-                return Name ?? base.ToString();
-            }
-        }
-        [StructLayout(LayoutKind.Sequential)]
-        private struct ModuleInfo
-        {
-            public IntPtr BaseAddress;
-            public uint ModuleSize;
-            public IntPtr EntryPoint;
         }
     }
 }

@@ -1,8 +1,7 @@
 {
   "profiles": {
     "AmongUsCapture": {
-      "commandName": "Project",
-      "commandLineArgs": "aucapture://localhost:8123/ABCDEFGH"
+      "commandName": "Project"
     }
   }
 }

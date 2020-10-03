@@ -130,3 +130,5 @@ $RECYCLE.BIN/
 .DS_Store
 
 _NCrunch*
+
+.dtbcache.v2

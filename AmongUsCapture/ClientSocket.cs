@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 using SocketIOClient;
 using System.Drawing;
 using TextColorLibrary;
@@ -10,11 +8,15 @@ namespace AmongUsCapture
 {
     public class ClientSocket
     { 
+        public event EventHandler OnConnected;
+
         private SocketIO socket;
         private string ConnectCode;
 
         public void Connect(string url)
         {
+            //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connecting to §1{url}§f...");
+            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Connecting to {url}...");
             socket = new SocketIO(url);
             /*socket.On("hi", response =>
             {
@@ -22,13 +24,18 @@ namespace AmongUsCapture
             });*/
             socket.OnConnected += (sender, e) =>
             {
+                //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connected successfully!");
+                Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, "Connected successfully!");
                 GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
                 GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;
+                this.OnConnected(this, new EventArgs());
             };
             
             socket.OnDisconnected += (sender, e) =>
             {
+                //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Lost connection!");
+                Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"{Color.Red.ToTextColor()}Connection lost!");
                 GameMemReader.getInstance().GameStateChanged -= GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged -= PlayerChangedHandler;
                 GameMemReader.getInstance().JoinedLobby -= JoinedLobbyHandler;
@@ -40,7 +47,8 @@ namespace AmongUsCapture
         public void SendConnectCode(string connectCode)
         {
             ConnectCode = connectCode;
-            socket.EmitAsync("connect", ConnectCode).ContinueWith((t) => {
+            socket.EmitAsync("connect", ConnectCode).ContinueWith((_) =>
+            {
                 GameMemReader.getInstance().ForceUpdatePlayers();
                 GameMemReader.getInstance().ForceTransmitState();
             });

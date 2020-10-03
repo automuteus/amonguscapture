@@ -176,6 +176,7 @@ namespace AmongUsCapture
                 if (state != oldState || shouldForceTransmitState)
                 {
                     GameStateChanged?.Invoke(this, new GameStateChangedEventArgs() { NewState = state });
+                    shouldForceTransmitState = false;
                 }
 
                 oldState = state;

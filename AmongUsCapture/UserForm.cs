@@ -13,7 +13,7 @@ namespace AmongUsCapture
         private ClientSocket clientSocket;
         private LobbyEventArgs lastJoinedLobby;
         public static Color NormalTextColor = Color.Black;
-        private Color Rainbow(float progress)
+        public static Color Rainbow(float progress)
         {
             float div = (Math.Abs(progress % 1) * 6);
             int ascending = (int)((div % 1) * 255);
@@ -71,7 +71,7 @@ namespace AmongUsCapture
             TestFillConsole(25);
         }
 
-        private string getRainbowText(string nonRainbow)
+        public static string getRainbowText(string nonRainbow)
         {
             string OutputString = "";
             for (int i = 0; i < nonRainbow.Length; i++)

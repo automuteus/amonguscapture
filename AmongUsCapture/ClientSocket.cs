@@ -16,7 +16,7 @@ namespace AmongUsCapture
         public void Connect(string url)
         {
             //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connecting to §1{url}§f...");
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Connecting to {url}...");
+            //Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Connecting to {url}...");
             socket = new SocketIO(url);
             /*socket.On("hi", response =>
             {
@@ -25,7 +25,7 @@ namespace AmongUsCapture
             socket.OnConnected += (sender, e) =>
             {
                 //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connected successfully!");
-                Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, "Connected successfully!");
+                //Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, "Connected successfully!");
                 GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
                 GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AmongUsCapture
 {
-    public class ProcessMemoryWindows : ProcessMemoryBase
+    public class ProcessMemoryWindows : ProcessMemory
     {
         public override bool HookProcess(string name)
         {

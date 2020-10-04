@@ -6,8 +6,28 @@ using System.Runtime.InteropServices;
 
 namespace AmongUsCapture
 {
-    public abstract class ProcessMemoryBase
+    public abstract class ProcessMemory
     {
+        private static ProcessMemory instance;
+        public static ProcessMemory getInstance()
+        {
+            if (instance == null)
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    instance = new ProcessMemoryWindows();
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    throw new NotImplementedException();
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+            }
+            return instance;
+        }
         protected bool is64Bit;
         public Process process;
         public List<Module> modules;

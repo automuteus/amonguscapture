@@ -22,6 +22,7 @@
     <PackageReference Include="Costura.Fody" Version="5.0.0-alpha0281">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="NamedPipeServerStream.NetFrameworkVersion" Version="1.0.2" />
     <PackageReference Include="SocketIOClient" Version="2.0.2.6" />
   </ItemGroup>
 

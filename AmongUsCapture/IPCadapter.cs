@@ -26,7 +26,11 @@ namespace AmongUsCapture
             }
             while (true)
             {
-                NamedPipeServerStream pipeServer = new NamedPipeServerStream("AmongUsCapturePipe", PipeDirection.InOut, 1);
+                PipeSecurity ps = new PipeSecurity();
+
+                ps.AddAccessRule(new PipeAccessRule("Users", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
+                
+                NamedPipeServerStream pipeServer = NamedPipeServerStreamConstructors.New("AmongUsCapturePipe", PipeDirection.InOut, 1, pipeSecurity: ps);
 
                 pipeServer.WaitForConnection();
                 Console.WriteLine("Client connected");

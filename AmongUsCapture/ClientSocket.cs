@@ -2,6 +2,7 @@ using System;
 using System.Text.Json;
 using SocketIOClient;
 using System.Drawing;
+using MetroFramework;
 using TextColorLibrary;
 
 namespace AmongUsCapture
@@ -25,15 +26,18 @@ namespace AmongUsCapture
             socket.OnConnected += (sender, e) =>
             {
                 //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connected successfully!");
+                Settings.form.setColor(MetroColorStyle.Green);
                 Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, "Connected successfully!");
                 GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
                 GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;
-                this.OnConnected(this, new EventArgs());
+                var OnOnConnected = this.OnConnected;
+                if (OnOnConnected != null) OnOnConnected(this, new EventArgs());
             };
             
             socket.OnDisconnected += (sender, e) =>
             {
+                Settings.form.setColor(MetroColorStyle.Red);
                 //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Lost connection!");
                 Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"{Color.Red.ToTextColor()}Connection lost!");
                 GameMemReader.getInstance().GameStateChanged -= GameStateChangedHandler;

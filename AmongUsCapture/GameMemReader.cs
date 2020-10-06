@@ -46,11 +46,11 @@ namespace AmongUsCapture
         private bool exileCausesEnd = false;
 
         private int prevChatBubsVersion;
-
         public void RunLoop()
         {
             while (true)
             {
+
                 if (!ProcessMemory.IsHooked)
                 {
                     if (!ProcessMemory.HookProcess("Among Us"))

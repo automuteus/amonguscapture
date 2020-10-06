@@ -46,11 +46,14 @@ namespace AmongUsCapture
         private bool exileCausesEnd = false;
 
         private int prevChatBubsVersion;
-
+        private int counter = 0;
         public void RunLoop()
         {
             while (true)
             {
+
+                Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"{counter}");
+                counter++;
                 if (!ProcessMemory.IsHooked)
                 {
                     if (!ProcessMemory.HookProcess("Among Us"))

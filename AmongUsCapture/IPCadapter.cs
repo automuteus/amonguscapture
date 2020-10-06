@@ -23,7 +23,7 @@ namespace AmongUsCapture
         {
             if(initialURI != null)
             {
-                OnToken?.Invoke(this, StartToken.FromString(initialURI));
+                OnToken?.Invoke(this, JsonConvert.DeserializeObject<StartToken>(Base64Decode(initialURI.Substring($"{Program.UriScheme}://".Length).TrimEnd('/'))));
             }
             while (true)
             {

@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 
 namespace AmongUsCapture
 {
+
     class IPCadapter
     {
         private static IPCadapter instance = new IPCadapter();
@@ -26,11 +27,11 @@ namespace AmongUsCapture
             }
             while (true)
             {
-                PipeSecurity ps = new PipeSecurity();
+                //PipeSecurity ps = new PipeSecurity();
 
-                ps.AddAccessRule(new PipeAccessRule("Users", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
+                //ps.AddAccessRule(new PipeAccessRule("Users", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
                 
-                NamedPipeServerStream pipeServer = NamedPipeServerStreamConstructors.New("AmongUsCapturePipe", PipeDirection.InOut, 1, pipeSecurity: ps);
+                NamedPipeServerStream pipeServer = NamedPipeServerStreamConstructors.New("AmongUsCapturePipe", PipeDirection.InOut, 1);
 
                 pipeServer.WaitForConnection();
                 Console.WriteLine("Client connected");
@@ -41,7 +42,8 @@ namespace AmongUsCapture
                     StreamString ss = new StreamString(pipeServer);
 
                     string rawToken = ss.ReadString();
-                    StartToken startToken = StartToken.FromString(rawToken);
+                    Console.WriteLine($"Got data: {rawToken}");
+                    StartToken startToken = JsonConvert.DeserializeObject<StartToken>(Base64Decode(rawToken.Substring($"{Program.UriScheme}://".Length).TrimEnd('/')));
                     Console.WriteLine($@"Decoded message as {JsonConvert.SerializeObject(startToken, Formatting.Indented)}");
                     OnToken?.Invoke(this, startToken);
                 }
@@ -53,6 +55,16 @@ namespace AmongUsCapture
                 }
                 pipeServer.Close();
             }
+        }
+        public static string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+        public static string Base64Decode(string base64EncodedData)
+        {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
     }
     public class StreamString

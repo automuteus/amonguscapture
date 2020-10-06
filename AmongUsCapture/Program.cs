@@ -12,13 +12,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 
 namespace AmongUsCapture
 {
     static class Program
     {
-        const string UriScheme = "aucapture";
+        public const string UriScheme = "aucapture";
         const string FriendlyName = "AmongUs Capture";
+        private const bool GenerateExample = false;
         private static Mutex mutex = null;
         private static bool doConsole = true;
         /// <summary>
@@ -45,6 +47,12 @@ namespace AmongUsCapture
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
             Task.Factory.StartNew(() => IPCadapter.getInstance().RunLoop(uriRes == URIStartResult.PARSE ? args[0] : null)); // Run listener for tokens
 
+            if (GenerateExample)
+            {
+                var TestStartToken = new StartToken {Host = "http://127.0.0.1", ConnectCode = "LOLAAA"};
+                Console.Write(UriScheme + "://"+IPCadapter.Base64Encode(JsonConvert.SerializeObject(TestStartToken, Formatting.Indented)));
+            }
+            
             //AllocConsole();
             Application.Run(form);
             

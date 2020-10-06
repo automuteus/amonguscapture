@@ -76,12 +76,12 @@ namespace AmongUsCapture
             //TestFillConsole(1000);
         }
 
-        private string getRainbowText(string nonRainbow)
+        private string getRainbowText(string nonRainbow, int shift = 0)
         {
             string OutputString = "";
             for (int i = 0; i < nonRainbow.Length; i++)
             {
-                OutputString += Rainbow((float)i / nonRainbow.Length).ToTextColor() + nonRainbow[i];
+                OutputString += Rainbow((float)((i+shift)% nonRainbow.Length) / nonRainbow.Length).ToTextColor() + nonRainbow[i];
             }
             return OutputString;
         }
@@ -269,8 +269,9 @@ namespace AmongUsCapture
         private void TestFillConsole(int entries) //Helper test method to see if filling console works.
         {
             for (int i = 0; i < entries; i++)
-            { 
-                Settings.conInterface.WriteModuleTextColored("Rainbow", Rainbow((float)i / entries), getRainbowText("Wow! " + Rainbow((float)i / entries).ToString()));
+            {
+                var nonString = "Wow! Look at this pretty text!";
+                Settings.conInterface.WriteModuleTextColored("Rainbow", Rainbow((float)i / entries), getRainbowText(nonString, i));
             };
             //this.WriteColoredText(getRainbowText("This is a Pre-Release from Carbon's branch."));
         }

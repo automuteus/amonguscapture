@@ -6,12 +6,14 @@ using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Forms;
+using MetroFramework;
+using MetroFramework.Forms;
 using TextColorLibrary;
 using Timer = System.Threading.Timer;
 
 namespace AmongUsCapture
 {
-    public partial class UserForm : Form
+    public partial class UserForm : MetroForm
     {
         private ClientSocket clientSocket;
         private LobbyEventArgs lastJoinedLobby;
@@ -58,6 +60,12 @@ namespace AmongUsCapture
             if (DarkTheme())
             {
                 EnableDarkTheme();
+            }
+            else
+            {
+                this.metroStyleExtender1.SetApplyMetroTheme(ConsoleTextBox, false);
+                ConsoleTextBox.ResetBackColor();
+                ConsoleTextBox.ResetForeColor();
             }
             NormalTextColor = DarkTheme() ? Color.White : Color.Black;
         }
@@ -112,47 +120,51 @@ namespace AmongUsCapture
             var AlmostWhite = Color.FromArgb(153, 170, 181);
             var LighterGrey = Color.FromArgb(44, 47, 51);
             var DarkGrey = Color.FromArgb(35, 39, 42);
+            this.Theme = MetroThemeStyle.Dark;
+            this.metroStyleManager1.Theme = MetroThemeStyle.Dark;
+            this.metroStyleExtender1.StyleManager.Theme = MetroThemeStyle.Dark;
+            //this.metroStyleExtender1.SetApplyMetroTheme(ConsoleTextBox, true);
+            
+            //ConsoleTextBox.BackColor = LighterGrey;
+            //ConsoleTextBox.ForeColor = White;
 
-            ConsoleTextBox.BackColor = LighterGrey;
-            ConsoleTextBox.ForeColor = White;
+            //ConsoleGroupBox.BackColor = DarkGrey;
+            //ConsoleGroupBox.ForeColor = White;
 
-            ConsoleGroupBox.BackColor = DarkGrey;
-            ConsoleGroupBox.ForeColor = White;
+            //UserSettings.BackColor = DarkGrey;
+            //UserSettings.ForeColor = White;
 
-            UserSettings.BackColor = DarkGrey;
-            UserSettings.ForeColor = White;
+            //CurrentStateGroupBox.BackColor = LighterGrey;
+            //CurrentStateGroupBox.ForeColor = White;
 
-            CurrentStateGroupBox.BackColor = LighterGrey;
-            CurrentStateGroupBox.ForeColor = White;
+            //ConnectCodeGB.BackColor = LighterGrey;
+            //ConnectCodeGB.ForeColor = White;
 
-            ConnectCodeGB.BackColor = LighterGrey;
-            ConnectCodeGB.ForeColor = White;
+            //ConnectCodeBox.BackColor = DarkGrey;
+            //ConnectCodeBox.ForeColor = White;
 
-            ConnectCodeBox.BackColor = DarkGrey;
-            ConnectCodeBox.ForeColor = White;
+            //UrlGB.BackColor = LighterGrey;
+            //UrlGB.ForeColor = White;
 
-            UrlGB.BackColor = LighterGrey;
-            UrlGB.ForeColor = White;
-
-            URLTextBox.BackColor = DarkGrey;
-            URLTextBox.ForeColor = White;
+            //URLTextBox.BackColor = DarkGrey;
+            //URLTextBox.ForeColor = White;
 
 
-            ConnectButton.BackColor = BluePurpleAccent;
-            ConnectButton.ForeColor = White;
+            //ConnectButton.BackColor = BluePurpleAccent;
+            //ConnectButton.ForeColor = White;
 
 
-            GameCodeBox.BackColor = DarkGrey;
-            GameCodeBox.ForeColor = White;
+            //GameCodeBox.BackColor = DarkGrey;
+            //GameCodeBox.ForeColor = White;
 
-            GameCodeGB.BackColor = LighterGrey;
-            GameCodeGB.ForeColor = White;
+            //GameCodeGB.BackColor = LighterGrey;
+            //GameCodeGB.ForeColor = White;
 
-            GameCodeCopyButton.BackColor = BluePurpleAccent;
-            GameCodeCopyButton.ForeColor = White;
+            //GameCodeCopyButton.BackColor = BluePurpleAccent;
+            //GameCodeCopyButton.ForeColor = White;
 
-            BackColor = DarkGrey;
-            ForeColor = White;
+            //BackColor = DarkGrey;
+            //ForeColor = White;
         }
 
         private void ConnectCodeBox_Enter(object sender, EventArgs e)
@@ -173,6 +185,7 @@ namespace AmongUsCapture
             }
 
         }
+
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
@@ -211,10 +224,22 @@ namespace AmongUsCapture
             doConnect(url);
         }
 
+        public void setColor(MetroColorStyle color)
+        {
+            this.BeginInvoke((MethodInvoker)delegate
+            {
+                this.Style = color;
+                this.metroStyleExtender1.Style = color;
+                this.metroStyleManager1.Style = color;
+                this.metroStyleManager1.Style = color;
+            });
+        }
+
         private void doConnect(string url)
         {
             clientSocket.OnConnected += (sender, e) =>
             {
+                
                 Settings.PersistentSettings.host = url;
 
                 clientSocket.SendConnectCode(ConnectCodeBox.Text, (sender, e) =>
@@ -279,7 +304,7 @@ namespace AmongUsCapture
         public void WriteConsoleLineFormatted(String moduleName, Color moduleColor, String message)
         {
             //Outputs a message like this: [{ModuleName}]: {Message}
-            this.WriteColoredText($"[{moduleColor.ToTextColor()}{moduleName}{NormalTextColor.ToTextColor()}]: {message}");
+            this.WriteColoredText($"{NormalTextColor.ToTextColor()}[{moduleColor.ToTextColor()}{moduleName}{NormalTextColor.ToTextColor()}]: {message}");
         }
 
         public void WriteColoredText(String ColoredText)
@@ -305,6 +330,7 @@ namespace AmongUsCapture
                 {
                     lock (locker)
                     {
+                        ConsoleTextBox.SelectionStart = ConsoleTextBox.Text.Length;
                         ConsoleTextBox.SuspendLayout();
                         ConsoleTextBox.SelectionColor = color;
                         ConsoleTextBox.SelectedText = addNewLine ? $"{line}{Environment.NewLine}" : line;
@@ -323,6 +349,7 @@ namespace AmongUsCapture
                 {
                     ConsoleTextBox.BeginInvoke((MethodInvoker)delegate
                     {
+                        ConsoleTextBox.SelectionStart = ConsoleTextBox.Text.Length;
                         ConsoleTextBox.AppendText(line + "\n");
                     });
                 }

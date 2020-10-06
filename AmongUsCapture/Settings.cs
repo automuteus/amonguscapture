@@ -9,6 +9,8 @@ namespace AmongUsCapture
         public static string StorageLocation = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "\\AmongUsCapture");
 
         public static ConsoleInterface conInterface;
+
+        public static UserForm form;
         //Global persistent settings that are saved to a json file. Limited Types
         public static IPersistentSettings PersistentSettings = new ConfigurationBuilder<IPersistentSettings>().UseJsonFile(Path.Join(StorageLocation, "Settings.json")).Build();
         public static IGameOffsets GameOffsets = new ConfigurationBuilder<IGameOffsets>().UseJsonFile(Path.Join(StorageLocation, "GameOffsets.json")).Build();

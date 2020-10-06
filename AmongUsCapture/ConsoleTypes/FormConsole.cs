@@ -8,7 +8,7 @@ namespace AmongUsCapture.ConsoleTypes
 {
     public class FormConsole : ConsoleInterface
     {
-        private TextWriter logFile;
+        private StreamWriter logFile;
         private UserForm form = null;
         private static object locker = new Object();
         public FormConsole(UserForm userForm)

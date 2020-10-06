@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows.Forms;
 using TextColorLibrary;
+using Timer = System.Threading.Timer;
 
 namespace AmongUsCapture
 {
@@ -14,6 +17,7 @@ namespace AmongUsCapture
         private LobbyEventArgs lastJoinedLobby;
         public static Color NormalTextColor = Color.Black;
         private static object locker = new Object();
+
         private Color Rainbow(float progress)
         {
             float div = (Math.Abs(progress % 1) * 6);
@@ -69,7 +73,7 @@ namespace AmongUsCapture
 
         private void OnLoad(object sender, EventArgs e)
         {
-            TestFillConsole(25);
+            //TestFillConsole(1000);
         }
 
         private string getRainbowText(string nonRainbow)
@@ -243,19 +247,31 @@ namespace AmongUsCapture
 
         private void ConsoleTextBox_TextChanged(object sender, EventArgs e)
         {
+            //if (AutoScrollMenuItem.Checked && canAutoScroll)
+            //{
+            //    ConsoleTextBox.SelectionStart = ConsoleTextBox.Text.Length;
+            //    ConsoleTextBox.ScrollToCaret();
+            //}
+        }
+
+        private void autoscroll()
+        {
             if (AutoScrollMenuItem.Checked)
             {
-                ConsoleTextBox.SelectionStart = ConsoleTextBox.Text.Length;
-                ConsoleTextBox.ScrollToCaret();
+                ConsoleTextBox.BeginInvoke((MethodInvoker) delegate
+                {
+                    ConsoleTextBox.SelectionStart = ConsoleTextBox.Text.Length;
+                    ConsoleTextBox.ScrollToCaret();
+                });
             }
         }
 
         private void TestFillConsole(int entries) //Helper test method to see if filling console works.
         {
-            //for (int i = 0; i < entries; i++)
-            //{
-            //    this.WriteConsoleLineFormatted("Rainbow", Rainbow((float)i / entries), getRainbowText("Wow! " + Rainbow((float)i / entries).ToString()));
-            //};
+            for (int i = 0; i < entries; i++)
+            { 
+                Settings.conInterface.WriteModuleTextColored("Rainbow", Rainbow((float)i / entries), getRainbowText("Wow! " + Rainbow((float)i / entries).ToString()));
+            };
             //this.WriteColoredText(getRainbowText("This is a Pre-Release from Carbon's branch."));
         }
 
@@ -275,8 +291,9 @@ namespace AmongUsCapture
                 }
                 this.AppendColoredTextToConsole("", Color.White, true);
             }
-            
-            
+            autoscroll();
+
+
         }
 
         public void AppendColoredTextToConsole(String line, Color color, bool addNewLine = false)
@@ -285,14 +302,14 @@ namespace AmongUsCapture
             {
                 ConsoleTextBox.BeginInvoke((MethodInvoker)delegate
                 {
-                    ConsoleTextBox.SuspendLayout();
-                    ConsoleTextBox.SelectionColor = color;
-                    ConsoleTextBox.AppendText(addNewLine
-                        ? $"{line}{Environment.NewLine}"
-                        : line);
-                    ConsoleTextBox.ScrollToCaret();
-                    ConsoleTextBox.ResumeLayout();
-
+                    lock (locker)
+                    {
+                        ConsoleTextBox.SuspendLayout();
+                        ConsoleTextBox.SelectionColor = color;
+                        ConsoleTextBox.SelectedText = addNewLine ? $"{line}{Environment.NewLine}" : line;
+                        //ConsoleTextBox.ScrollToCaret();
+                        ConsoleTextBox.ResumeLayout();
+                    }
                 });
             }
         }
@@ -308,8 +325,9 @@ namespace AmongUsCapture
                         ConsoleTextBox.AppendText(line + "\n");
                     });
                 }
-                
+                autoscroll();
             }
+
             
         }
 
@@ -422,6 +440,7 @@ namespace AmongUsCapture
                         }
                         AppendColoredTextToConsole("", Color.White, true);
                     }
+                    autoscroll();
                     
                 });
                 

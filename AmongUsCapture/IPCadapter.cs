@@ -23,7 +23,7 @@ namespace AmongUsCapture
         {
             if(initialURI != null)
             {
-                OnToken?.Invoke(this, JsonConvert.DeserializeObject<StartToken>(Base64Decode(initialURI.Substring($"{Program.UriScheme}://".Length).TrimEnd('/'))));
+                OnToken?.Invoke(this, StartToken.FromString(initialURI));
             }
             while (true)
             {
@@ -43,7 +43,7 @@ namespace AmongUsCapture
 
                     string rawToken = ss.ReadString();
                     Console.WriteLine($"Got data: {rawToken}");
-                    StartToken startToken = JsonConvert.DeserializeObject<StartToken>(Base64Decode(rawToken.Substring($"{Program.UriScheme}://".Length).TrimEnd('/')));
+                    StartToken startToken = StartToken.FromString(rawToken);
                     Console.WriteLine($@"Decoded message as {JsonConvert.SerializeObject(startToken, Formatting.Indented)}");
                     OnToken?.Invoke(this, startToken);
                 }
@@ -115,10 +115,8 @@ namespace AmongUsCapture
         {
             try
             {
-                Uri uri = new Uri(rawToken);
-                NameValueCollection nvc = HttpUtility.ParseQueryString(uri.Query);
-                bool insecure = (nvc["insecure"] != null && nvc["insecure"] != "false") || uri.Query == "?insecure";
-                return new StartToken() { Host = (insecure ? "http://" : "https://") + uri.Authority, ConnectCode = uri.AbsolutePath.Substring(1) };
+                return JsonConvert.DeserializeObject<StartToken>(
+                    IPCadapter.Base64Decode(rawToken.Substring($"{Program.UriScheme}://".Length).TrimEnd('/')));
             }
             catch (Exception e)
             {

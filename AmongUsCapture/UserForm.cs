@@ -221,7 +221,7 @@ namespace AmongUsCapture
                 url = URLTextBox.Text;
             }
 
-            doConnect(url, ConnectCodeBox.Text);
+            doConnect(url);
         }
 
         public void setColor(MetroColorStyle color)
@@ -235,25 +235,18 @@ namespace AmongUsCapture
             });
         }
 
-        private void doConnect(string url, string connectCode)
+        private void doConnect(string url)
         {
             clientSocket.OnConnected += (sender, e) =>
             {
                 
                 Settings.PersistentSettings.host = url;
-
-                clientSocket.SendConnectCode(ConnectCodeBox.Text, (sender, e) =>
-                {
-                    if (lastJoinedLobby != null) // Send the game code _after_ the connect code
-                    {
-                        clientSocket.SendRoomCode(lastJoinedLobby);
-                    }
-                });
+                
             };
 
             try
             {
-                clientSocket.Connect(url, connectCode);
+                clientSocket.Connect(url, ConnectCodeBox.Text);
             }
             catch (Exception e)
             {

@@ -1,17 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Windows.Forms;
+using MetroFramework;
+using MetroFramework.Forms;
 using TextColorLibrary;
+using Timer = System.Threading.Timer;
 
 namespace AmongUsCapture
 {
-    public partial class UserForm : Form
+    public partial class UserForm : MetroForm
     {
         private ClientSocket clientSocket;
+        private LobbyEventArgs lastJoinedLobby;
         public static Color NormalTextColor = Color.Black;
+        private static object locker = new Object();
+
         private Color Rainbow(float progress)
         {
             float div = (Math.Abs(progress % 1) * 6);
@@ -34,18 +42,30 @@ namespace AmongUsCapture
                     return Color.FromArgb(255, 255, 0, descending);
             }
         }
-        public UserForm(ClientSocket sock)
+        public UserForm(ClientSocket clientSocket)
         {
-            clientSocket = sock;
+            this.clientSocket = clientSocket;
             InitializeComponent();
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
             GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
 
+            // Load URL
+            URLTextBox.Text = Settings.PersistentSettings.host;
+
+            // Connect on Enter
+            this.AcceptButton = ConnectButton;
+
             if (DarkTheme())
             {
                 EnableDarkTheme();
+            }
+            else
+            {
+                this.metroStyleExtender1.SetApplyMetroTheme(ConsoleTextBox, false);
+                ConsoleTextBox.ResetBackColor();
+                ConsoleTextBox.ResetForeColor();
             }
             NormalTextColor = DarkTheme() ? Color.White : Color.Black;
         }
@@ -56,20 +76,20 @@ namespace AmongUsCapture
             {
                 GameCodeBox.Text = e.LobbyCode;
             });
-            
+            lastJoinedLobby = e;
         }
 
         private void OnLoad(object sender, EventArgs e)
         {
-            TestFillConsole(25);
+            //TestFillConsole(1000);
         }
 
-        private string getRainbowText(string nonRainbow)
+        private string getRainbowText(string nonRainbow, int shift = 0)
         {
             string OutputString = "";
             for (int i = 0; i < nonRainbow.Length; i++)
             {
-                OutputString += Rainbow((float)i / nonRainbow.Length).ToTextColor() + nonRainbow[i];
+                OutputString += Rainbow((float)((i+shift)% nonRainbow.Length) / nonRainbow.Length).ToTextColor() + nonRainbow[i];
             }
             return OutputString;
         }
@@ -100,45 +120,82 @@ namespace AmongUsCapture
             var AlmostWhite = Color.FromArgb(153, 170, 181);
             var LighterGrey = Color.FromArgb(44, 47, 51);
             var DarkGrey = Color.FromArgb(35, 39, 42);
+            this.Theme = MetroThemeStyle.Dark;
+            this.metroStyleManager1.Theme = MetroThemeStyle.Dark;
+            this.metroStyleExtender1.StyleManager.Theme = MetroThemeStyle.Dark;
+            //this.metroStyleExtender1.SetApplyMetroTheme(ConsoleTextBox, true);
+            
+            //ConsoleTextBox.BackColor = LighterGrey;
+            //ConsoleTextBox.ForeColor = White;
 
-            ConsoleTextBox.BackColor = LighterGrey;
-            ConsoleTextBox.ForeColor = White;
+            //ConsoleGroupBox.BackColor = DarkGrey;
+            //ConsoleGroupBox.ForeColor = White;
 
-            ConsoleGroupBox.BackColor = DarkGrey;
-            ConsoleGroupBox.ForeColor = White;
+            //UserSettings.BackColor = DarkGrey;
+            //UserSettings.ForeColor = White;
 
-            UserSettings.BackColor = DarkGrey;
-            UserSettings.ForeColor = White;
+            //CurrentStateGroupBox.BackColor = LighterGrey;
+            //CurrentStateGroupBox.ForeColor = White;
 
-            CurrentStateGroupBox.BackColor = LighterGrey;
-            CurrentStateGroupBox.ForeColor = White;
+            //ConnectCodeGB.BackColor = LighterGrey;
+            //ConnectCodeGB.ForeColor = White;
 
-            ConnectCodeGB.BackColor = LighterGrey;
-            ConnectCodeGB.ForeColor = White;
+            //ConnectCodeBox.BackColor = DarkGrey;
+            //ConnectCodeBox.ForeColor = White;
 
-            ConnectCodeBox.BackColor = DarkGrey;
-            ConnectCodeBox.ForeColor = White;
+            //UrlGB.BackColor = LighterGrey;
+            //UrlGB.ForeColor = White;
 
-            SubmitButton.BackColor = BluePurpleAccent;
-            SubmitButton.ForeColor = White;
+            //URLTextBox.BackColor = DarkGrey;
+            //URLTextBox.ForeColor = White;
 
-            GameCodeBox.BackColor = DarkGrey;
-            GameCodeBox.ForeColor = White;
 
-            GameCodeGB.BackColor = LighterGrey;
-            GameCodeGB.ForeColor = White;
+            //ConnectButton.BackColor = BluePurpleAccent;
+            //ConnectButton.ForeColor = White;
 
-            GameCodeCopyButton.BackColor = BluePurpleAccent;
-            GameCodeCopyButton.ForeColor = White;
 
-            BackColor = DarkGrey;
-            ForeColor = White;
+            //GameCodeBox.BackColor = DarkGrey;
+            //GameCodeBox.ForeColor = White;
+
+            //GameCodeGB.BackColor = LighterGrey;
+            //GameCodeGB.ForeColor = White;
+
+            //GameCodeCopyButton.BackColor = BluePurpleAccent;
+            //GameCodeCopyButton.ForeColor = White;
+
+            //BackColor = DarkGrey;
+            //ForeColor = White;
         }
+
+        private void ConnectCodeBox_Enter(object sender, EventArgs e)
+        {
+            this.BeginInvoke((MethodInvoker)delegate ()
+            {
+                ConnectCodeBox.Select(0, 0);
+            });
+        }
+        private void ConnectCodeBox_Click(object sender, EventArgs e)
+        {
+            if (ConnectCodeBox.Enabled)
+            {
+                this.BeginInvoke((MethodInvoker)delegate ()
+                {
+                    ConnectCodeBox.Select(0, 0);
+                });
+            }
+
+        }
+
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
             Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
+        }
+
+        private void UserForm_Load(object sender, EventArgs e)
+        {
+            URLTextBox.Text = Settings.PersistentSettings.host;
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
@@ -151,47 +208,118 @@ namespace AmongUsCapture
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
         }
 
-        private void SubmitButton_Click(object sender, EventArgs e)
+        private void ConnectButton_Click(object sender, EventArgs e)
         {
-            if (ConnectCodeBox.TextLength == 6)
+
+            ConnectCodeBox.Enabled = false;
+            ConnectButton.Enabled = false;
+            URLTextBox.Enabled = false;
+
+            var url = "http://localhost:8123";
+            if (URLTextBox.Text != "")
             {
-                clientSocket.SendConnectCode(ConnectCodeBox.Text);
-                //ConnectCodeBox.Enabled = false;
-                //SubmitButton.Enabled = false;
+                url = URLTextBox.Text;
             }
+
+            doConnect(url, ConnectCodeBox.Text);
+        }
+
+        public void setColor(MetroColorStyle color)
+        {
+            this.BeginInvoke((MethodInvoker)delegate
+            {
+                this.Style = color;
+                this.metroStyleExtender1.Style = color;
+                this.metroStyleManager1.Style = color;
+                this.metroStyleManager1.Style = color;
+            });
+        }
+
+        private void doConnect(string url, string connectCode)
+        {
+            clientSocket.OnConnected += (sender, e) =>
+            {
+                
+                Settings.PersistentSettings.host = url;
+
+                clientSocket.SendConnectCode(ConnectCodeBox.Text, (sender, e) =>
+                {
+                    if (lastJoinedLobby != null) // Send the game code _after_ the connect code
+                    {
+                        clientSocket.SendRoomCode(lastJoinedLobby);
+                    }
+                });
+            };
+
+            try
+            {
+                clientSocket.Connect(url, connectCode);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK);
+                ConnectCodeBox.Enabled = true;
+                ConnectButton.Enabled = true;
+                URLTextBox.Enabled = true;
+                return;
+            }
+        }
+
+        private void ConnectCodeBox_TextChanged(object sender, EventArgs e)
+        {
+            ConnectButton.Enabled = (ConnectCodeBox.Enabled && ConnectCodeBox.Text.Length == 6 && !ConnectCodeBox.Text.Contains(" "));
         }
 
         private void ConsoleTextBox_TextChanged(object sender, EventArgs e)
         {
+            //if (AutoScrollMenuItem.Checked && canAutoScroll)
+            //{
+            //    ConsoleTextBox.SelectionStart = ConsoleTextBox.Text.Length;
+            //    ConsoleTextBox.ScrollToCaret();
+            //}
+        }
+
+        private void autoscroll()
+        {
             if (AutoScrollMenuItem.Checked)
             {
-                ConsoleTextBox.SelectionStart = ConsoleTextBox.Text.Length;
-                ConsoleTextBox.ScrollToCaret();
+                ConsoleTextBox.BeginInvoke((MethodInvoker) delegate
+                {
+                    ConsoleTextBox.SelectionStart = ConsoleTextBox.Text.Length;
+                    ConsoleTextBox.ScrollToCaret();
+                });
             }
         }
 
         private void TestFillConsole(int entries) //Helper test method to see if filling console works.
         {
-            //for (int i = 0; i < entries; i++)
-            //{
-            //    this.WriteConsoleLineFormatted("Rainbow", Rainbow((float)i / entries), getRainbowText("Wow! " + Rainbow((float)i / entries).ToString()));
-            //};
+            for (int i = 0; i < entries; i++)
+            {
+                var nonString = "Wow! Look at this pretty text!";
+                Settings.conInterface.WriteModuleTextColored("Rainbow", Rainbow((float)i / entries), getRainbowText(nonString, i));
+            };
             //this.WriteColoredText(getRainbowText("This is a Pre-Release from Carbon's branch."));
         }
 
         public void WriteConsoleLineFormatted(String moduleName, Color moduleColor, String message)
         {
             //Outputs a message like this: [{ModuleName}]: {Message}
-            this.WriteColoredText($"[{moduleColor.ToTextColor()}{moduleName}{NormalTextColor.ToTextColor()}]: {message}");
+            this.WriteColoredText($"{NormalTextColor.ToTextColor()}[{moduleColor.ToTextColor()}{moduleName}{NormalTextColor.ToTextColor()}]: {message}");
         }
 
         public void WriteColoredText(String ColoredText)
         {
-            foreach (var part in TextColor.toParts(ColoredText))
+            lock (locker)
             {
-                this.AppendColoredTextToConsole(part.text, part.textColor, false);
+                foreach (var part in TextColor.toParts(ColoredText))
+                {
+                    this.AppendColoredTextToConsole(part.text, part.textColor, false);
+                }
+                this.AppendColoredTextToConsole("", Color.White, true);
             }
-            this.AppendColoredTextToConsole("", Color.White, true);
+            autoscroll();
+
+
         }
 
         public void AppendColoredTextToConsole(String line, Color color, bool addNewLine = false)
@@ -200,13 +328,15 @@ namespace AmongUsCapture
             {
                 ConsoleTextBox.BeginInvoke((MethodInvoker)delegate
                 {
-                    ConsoleTextBox.SuspendLayout();
-                    ConsoleTextBox.SelectionColor = color;
-                    ConsoleTextBox.AppendText(addNewLine
-                        ? $"{line}{Environment.NewLine}"
-                        : line);
-                    ConsoleTextBox.ScrollToCaret();
-                    ConsoleTextBox.ResumeLayout();
+                    lock (locker)
+                    {
+                        ConsoleTextBox.SelectionStart = ConsoleTextBox.Text.Length;
+                        ConsoleTextBox.SuspendLayout();
+                        ConsoleTextBox.SelectionColor = color;
+                        ConsoleTextBox.SelectedText = addNewLine ? $"{line}{Environment.NewLine}" : line;
+                        //ConsoleTextBox.ScrollToCaret();
+                        ConsoleTextBox.ResumeLayout();
+                    }
                 });
             }
         }
@@ -215,11 +345,18 @@ namespace AmongUsCapture
         {
             if (!(ConsoleTextBox is null))
             {
-                ConsoleTextBox.BeginInvoke((MethodInvoker)delegate
+                lock (locker)
                 {
-                    ConsoleTextBox.AppendText(line + "\n");
-                });
+                    ConsoleTextBox.BeginInvoke((MethodInvoker)delegate
+                    {
+                        ConsoleTextBox.SelectionStart = ConsoleTextBox.Text.Length;
+                        ConsoleTextBox.AppendText(line + "\n");
+                    });
+                }
+                autoscroll();
             }
+
+            
         }
 
         private Color PlayerColorToColorOBJ(PlayerColor pColor)
@@ -281,53 +418,58 @@ namespace AmongUsCapture
             {
                 ConsoleTextBox.BeginInvoke((MethodInvoker)delegate
                 {
-                    if (!String.IsNullOrEmpty(str))
+                    lock (locker)
                     {
-                        if (!acceptnewlines)
+                        if (!String.IsNullOrEmpty(str))
                         {
-                            str = str.Replace('\n', ' ');
-                        }
-                        string[] parts = str.Split(new char[] { '§' });
-                        if (parts[0].Length > 0)
-                        {
-                            AppendColoredTextToConsole(parts[0], Color.White, false);
-                        }
-                        for (int i = 1; i < parts.Length; i++)
-                        {
-                            Color charColor = Color.White;
-                            if (parts[i].Length > 0)
+                            if (!acceptnewlines)
                             {
-                                switch (parts[i][0])
+                                str = str.Replace('\n', ' ');
+                            }
+                            string[] parts = str.Split(new char[] { '§' });
+                            if (parts[0].Length > 0)
+                            {
+                                AppendColoredTextToConsole(parts[0], Color.White, false);
+                            }
+                            for (int i = 1; i < parts.Length; i++)
+                            {
+                                Color charColor = Color.White;
+                                if (parts[i].Length > 0)
                                 {
-                                    case '0': charColor = Color.Gray; break; //Should be Black but Black is non-readable on a black background
-                                    case '1': charColor = Color.RoyalBlue; break;
-                                    case '2': charColor = Color.Green; break;
-                                    case '3': charColor = Color.DarkCyan; break;
-                                    case '4': charColor = Color.DarkRed; break;
-                                    case '5': charColor = Color.MediumPurple; break;
-                                    case '6': charColor = Color.DarkKhaki; break;
-                                    case '7': charColor = Color.Gray; break;
-                                    case '8': charColor = Color.DarkGray; break;
-                                    case '9': charColor = Color.LightBlue; break;
-                                    case 'a': charColor = Color.Lime; break;
-                                    case 'b': charColor = Color.Cyan; break;
-                                    case 'c': charColor = Color.Red; break;
-                                    case 'd': charColor = Color.Magenta; break;
-                                    case 'e': charColor = Color.Yellow; break;
-                                    case 'f': charColor = Color.White; break;
-                                    case 'o': charColor = Color.Orange; break;
-                                    case 'n': charColor = Color.SaddleBrown; break;
-                                    case 'r': charColor = Color.Gray; break;
-                                }
+                                    switch (parts[i][0])
+                                    {
+                                        case '0': charColor = Color.Gray; break; //Should be Black but Black is non-readable on a black background
+                                        case '1': charColor = Color.RoyalBlue; break;
+                                        case '2': charColor = Color.Green; break;
+                                        case '3': charColor = Color.DarkCyan; break;
+                                        case '4': charColor = Color.DarkRed; break;
+                                        case '5': charColor = Color.MediumPurple; break;
+                                        case '6': charColor = Color.DarkKhaki; break;
+                                        case '7': charColor = Color.Gray; break;
+                                        case '8': charColor = Color.DarkGray; break;
+                                        case '9': charColor = Color.LightBlue; break;
+                                        case 'a': charColor = Color.Lime; break;
+                                        case 'b': charColor = Color.Cyan; break;
+                                        case 'c': charColor = Color.Red; break;
+                                        case 'd': charColor = Color.Magenta; break;
+                                        case 'e': charColor = Color.Yellow; break;
+                                        case 'f': charColor = Color.White; break;
+                                        case 'o': charColor = Color.Orange; break;
+                                        case 'n': charColor = Color.SaddleBrown; break;
+                                        case 'r': charColor = Color.Gray; break;
+                                    }
 
-                                if (parts[i].Length > 1)
-                                {
-                                    AppendColoredTextToConsole(parts[i].Substring(1, parts[i].Length - 1), charColor, false);
+                                    if (parts[i].Length > 1)
+                                    {
+                                        AppendColoredTextToConsole(parts[i].Substring(1, parts[i].Length - 1), charColor, false);
+                                    }
                                 }
                             }
                         }
+                        AppendColoredTextToConsole("", Color.White, true);
                     }
-                    AppendColoredTextToConsole("", Color.White, true);
+                    autoscroll();
+                    
                 });
                 
             }

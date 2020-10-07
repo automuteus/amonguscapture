@@ -6,12 +6,14 @@ using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using System.Threading.Tasks;
 
 namespace AmongUsCapture
 {
@@ -40,6 +42,7 @@ namespace AmongUsCapture
             Application.SetCompatibleTextRenderingDefault(false);
             ClientSocket socket = new ClientSocket();
             var form = new UserForm(socket);
+            Settings.form = form;
             Settings.conInterface = new FormConsole(form); //Create the Form Console interface. 
             Task.Factory.StartNew(() => socket.Init()).Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
@@ -114,6 +117,7 @@ namespace AmongUsCapture
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
 
+        
     }
 
 

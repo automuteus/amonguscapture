@@ -11,10 +11,11 @@ namespace AmongUsCapture
         private static bool is64Bit;
         public static Process process;
         public static List<Module> modules;
-        public static bool IsHooked { get; private set; } = false;
+
+        public static bool IsHooked => process != null && !process.HasExited;
+
         public static bool HookProcess(string name)
         {
-            IsHooked = process != null && !process.HasExited;
             if (!IsHooked)
             {
                 Process[] processes = Process.GetProcessesByName(name);
@@ -28,8 +29,6 @@ namespace AmongUsCapture
                         is64Bit = Environment.Is64BitOperatingSystem && !flag;
 
                         LoadModules();
-
-                        IsHooked = true;
                     }
                 }
             }

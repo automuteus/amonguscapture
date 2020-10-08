@@ -53,12 +53,8 @@ namespace AmongUsCapture
         {
             while (true)
             {
-                if (cracked)
-                {
-                    Thread.Sleep(1000);
-                    continue;
-                }
-                else if (!ProcessMemory.IsHooked)
+
+                if (!ProcessMemory.IsHooked)
                 {
                     if (!ProcessMemory.HookProcess("Among Us"))
                     {
@@ -73,16 +69,17 @@ namespace AmongUsCapture
 
                         while(true)
                         {
+
                             foreach (ProcessMemory.Module module in ProcessMemory.modules)
                             {
                                 if (module.Name.Equals("GameAssembly.dll", StringComparison.OrdinalIgnoreCase))
                                 {
                                     GameAssemblyPtr = module.BaseAddress;
-                                    if (!GameVerifier.VerifyGameHash(module.FileName))
+                                    if (!GameVerifier.VerifySteamHash(module.FileName))
                                     {
                                         cracked = true;
                                         Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red, $"Client verification: {Color.Red.ToTextColor()}FAIL{UserForm.NormalTextColor.ToTextColor()}.");
-                                        Settings.form.ShowCrackedBox();
+                                        
                                     }
                                     else
                                     {
@@ -110,6 +107,17 @@ namespace AmongUsCapture
 
                         prevChatBubsVersion = ProcessMemory.Read<int>(GameAssemblyPtr, _gameOffsets.HudManagerOffset, 0x5C, 0, 0x28, 0xC, 0x14, 0x10);
                     }
+                }
+                if (cracked && ProcessMemory.IsHooked)
+                {
+                    ProcessMemory.process.Kill();
+                    Thread.Sleep(500);
+                    if (!ProcessMemory.IsHooked)
+                    {
+                        cracked = false;
+                    }
+                    Settings.form.ShowCrackedBox();
+                    continue;
                 }
 
                 GameState state;

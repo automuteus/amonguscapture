@@ -1,33 +1,25 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace AmongUsCapture
 {
     public static class GameVerifier
     {
-        private static string GetChecksumFromFile(string filepath)
+        public static bool VerifySteamHash(string executablePath)
         {
-            StringBuilder Sb = new StringBuilder();
-
-            using var hash = SHA256.Create();
-            using FileStream fileStream = File.OpenRead(filepath);
-            
-            Encoding enc = Encoding.UTF8;
-            Byte[] result = hash.ComputeHash(fileStream);
-
-            foreach (Byte b in result)
-                Sb.Append(b.ToString("x2"));
-            return Sb.ToString();
-        }
-
-        public static bool VerifyGameHash(string filepath)
-        {
-            var gameChecksum = GetChecksumFromFile(filepath);
-            return string.Equals(Settings.GameOffsets.GameHash, gameChecksum,
-                StringComparison.CurrentCultureIgnoreCase);
+            //Get Steam_api.dll from (parent)filepath\Among Us_Data\Plugins\x86\steam_api.dll and steam_api64.dll
+            var baseDllFolder = Path.Join(Directory.GetParent(executablePath).FullName, "\\Among Us_Data\\Plugins\\x86\\");
+            var steam_apiCert = AuthenticodeTools.IsTrusted(Path.Join(baseDllFolder, "steam_api.dll"));
+            var steam_api64Cert = AuthenticodeTools.IsTrusted(Path.Join(baseDllFolder, "steam_api64.dll"));
+            //Settings.conInterface.WriteModuleTextColored("GameVerifier",Color.Yellow,$"steam_apiCert: {steam_apiCert}");
+            //Settings.conInterface.WriteModuleTextColored("GameVerifier",Color.Yellow,$"steam_api64Cert: {steam_api64Cert}");
+            return (steam_apiCert) && (steam_api64Cert);
         }
     }
 }

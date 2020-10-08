@@ -65,6 +65,7 @@ namespace AmongUsCapture
                 socket.ConnectAsync().ContinueWith(t =>
                 {
                     SendConnectCode(connectCode);
+                    
                 });
             } catch (ArgumentNullException) {
                 Console.WriteLine("Invalid bot host, not connecting");
@@ -85,6 +86,7 @@ namespace AmongUsCapture
             {
                 GameMemReader.getInstance().ForceUpdatePlayers();
                 GameMemReader.getInstance().ForceTransmitState();
+                GameMemReader.getInstance().ForceTransmitLobby();
                 if (callback != null)
                 {
                     callback.Invoke(this, new EventArgs());

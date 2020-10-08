@@ -241,7 +241,6 @@ namespace AmongUsCapture
             {
                 
                 Settings.PersistentSettings.host = url;
-                
             };
 
             try

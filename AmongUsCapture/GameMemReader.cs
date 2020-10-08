@@ -180,6 +180,11 @@ namespace AmongUsCapture
                     shouldForceTransmitState = false;
                 }
 
+                if (state != oldState && state == GameState.LOBBY)
+                {
+                    shouldTransmitLobby = true;
+                }
+
                 oldState = state;
 
                 newPlayerInfos.Clear();
@@ -365,6 +370,11 @@ namespace AmongUsCapture
 
                 Thread.Sleep(250);
             }
+        }
+
+        public void ForceTransmitLobby()
+        {
+            this.shouldTransmitLobby = true;
         }
 
         public void ForceUpdatePlayers()

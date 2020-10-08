@@ -468,6 +468,13 @@ namespace AmongUsCapture
                 
         }
 
+        public void ShowCrackedBox()
+        {
+            var result =
+                MessageBox.Show("You are running a cracked version of Among Us or an outdated version of the capture. We do not support cracked versions of Among Us.",
+                    "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
         private void CopyButton_Click(object sender, EventArgs e)
         {
             if(!(this.GameCodeBox.Text is null || this.GameCodeBox.Text == ""))

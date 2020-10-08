@@ -46,13 +46,19 @@ namespace AmongUsCapture
         private GameState oldState = GameState.UNKNOWN;
         private bool exileCausesEnd = false;
 
+        private bool cracked = false;
+
         private int prevChatBubsVersion;
         public void RunLoop()
         {
             while (true)
             {
-
-                if (!ProcessMemory.IsHooked)
+                if (cracked)
+                {
+                    Thread.Sleep(1000);
+                    continue;
+                }
+                else if (!ProcessMemory.IsHooked)
                 {
                     if (!ProcessMemory.HookProcess("Among Us"))
                     {
@@ -72,6 +78,18 @@ namespace AmongUsCapture
                                 if (module.Name.Equals("GameAssembly.dll", StringComparison.OrdinalIgnoreCase))
                                 {
                                     GameAssemblyPtr = module.BaseAddress;
+                                    if (!GameVerifier.VerifyGameHash(module.FileName))
+                                    {
+                                        cracked = true;
+                                        Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red, $"Client verification: {Color.Red.ToTextColor()}FAIL{UserForm.NormalTextColor.ToTextColor()}.");
+                                        Settings.form.ShowCrackedBox();
+                                    }
+                                    else
+                                    {
+                                        cracked = false;
+                                        Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red, $"Client verification: {Color.Lime.ToTextColor()}PASS{UserForm.NormalTextColor.ToTextColor()}.");
+
+                                    }
                                     foundModule = true;
                                     break;
                                 }

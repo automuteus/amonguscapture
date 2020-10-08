@@ -22,14 +22,13 @@ namespace AmongUsCapture
         const string UriScheme = "aucapture";
         const string FriendlyName = "AmongUs Capture";
         private static Mutex mutex = null;
-        private static bool doConsole = true;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main(string[] args)
         {
-            if (doConsole)
+            if (Settings.PersistentSettings.debugConsole)
             {
                 AllocConsole(); // needs to be the first call in the program to prevent weird bugs
             }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -211,9 +211,10 @@ namespace AmongUsCapture
         private void ConnectButton_Click(object sender, EventArgs e)
         {
 
-            ConnectCodeBox.Enabled = false;
+            /*ConnectCodeBox.Enabled = false;
             ConnectButton.Enabled = false;
-            URLTextBox.Enabled = false;
+            URLTextBox.Enabled = false;*/
+            ConnectCodeBox.Clear();
 
             var url = "http://localhost:8123";
             if (URLTextBox.Text != "")

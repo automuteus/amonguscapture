@@ -29,7 +29,6 @@ namespace AmongUsCapture
         [STAThread]
         static void Main(string[] args)
         {
-            AllocConsole();
             if (Settings.PersistentSettings.debugConsole)
             {
                 AllocConsole(); // needs to be the first call in the program to prevent weird bugs

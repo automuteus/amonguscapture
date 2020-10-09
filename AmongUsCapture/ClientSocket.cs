@@ -28,8 +28,7 @@ namespace AmongUsCapture
                 GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
                 GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;
-                var OnOnConnected = this.OnConnected;
-                if (OnOnConnected != null) OnOnConnected(this, new EventArgs());
+                this.OnConnected?.Invoke(this, new EventArgs());
             };
 
             socket.OnDisconnected += (sender, e) =>
@@ -65,7 +64,6 @@ namespace AmongUsCapture
                 socket.ConnectAsync().ContinueWith(t =>
                 {
                     SendConnectCode(connectCode);
-                    
                 });
             } catch (ArgumentNullException) {
                 Console.WriteLine("Invalid bot host, not connecting");
@@ -74,32 +72,18 @@ namespace AmongUsCapture
             }
         }
 
-        public void SendConnectCode(string connectCode)
-        {
-            SendConnectCode(connectCode, null);
-        }
-
-        public void SendConnectCode(string connectCode, EventHandler callback)
+        public void SendConnectCode(string connectCode, EventHandler callback = null)
         {
             ConnectCode = connectCode;
-            socket.EmitAsync("connect", ConnectCode).ContinueWith((_) =>
+            socket.EmitAsync("connectCode", ConnectCode).ContinueWith((_) =>
             {
                 GameMemReader.getInstance().ForceUpdatePlayers();
                 GameMemReader.getInstance().ForceTransmitState();
                 GameMemReader.getInstance().ForceTransmitLobby();
-                if (callback != null)
-                {
-                    callback.Invoke(this, new EventArgs());
-                }
+                callback?.Invoke(this, new EventArgs());
             });
             Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Connection code ({Color.Red.ToTextColor()}{connectCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", System.Drawing.Color.Aqua, $"Connection code ({connectCode}) sent to server.");
-        }
-
-        public void SendRoomCode(LobbyEventArgs args)
-        {
-            socket.EmitAsync("lobby", JsonSerializer.Serialize(args));
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Room code ({Color.Yellow.ToTextColor()}{args.LobbyCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
@@ -115,7 +99,7 @@ namespace AmongUsCapture
         private void JoinedLobbyHandler(object sender, LobbyEventArgs e)
         {
             socket.EmitAsync("lobby", JsonSerializer.Serialize(e));
+            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
         }
-
     }
 }

@@ -28,6 +28,7 @@ namespace AmongUsCapture
         [STAThread]
         static void Main(string[] args)
         {
+            AllocConsole();
             if (Settings.PersistentSettings.debugConsole)
             {
                 AllocConsole(); // needs to be the first call in the program to prevent weird bugs
@@ -60,9 +61,14 @@ namespace AmongUsCapture
             CONTINUE
         }
 
+        public static string GetExecutablePath()
+        {
+            return Process.GetCurrentProcess().MainModule.FileName;
+        }
+
         private static URIStartResult HandleURIStart(string[] args)
         {
-            Console.WriteLine(Process.GetCurrentProcess().MainModule.FileName);
+            Console.WriteLine(GetExecutablePath());
             const string appName = "AmongUsCapture";
             mutex = new Mutex(true, appName, out bool createdNew);
             bool wasURIStart = args.Length > 0 && args[0].StartsWith(UriScheme + "://");
@@ -95,7 +101,7 @@ namespace AmongUsCapture
             {
                 // Replace typeof(App) by the class that contains the Main method or any class located in the project that produces the exe.
                 // or replace typeof(App).Assembly.Location by anything that gives the full path to the exe
-                string applicationLocation = Process.GetCurrentProcess().MainModule.FileName;
+                string applicationLocation = GetExecutablePath();
 
                 key.SetValue("", "URL:" + FriendlyName);
                 key.SetValue("URL Protocol", "");

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -259,7 +259,7 @@ namespace AmongUsCapture
 
         private void ConnectCodeBox_TextChanged(object sender, EventArgs e)
         {
-            ConnectButton.Enabled = (ConnectCodeBox.Enabled && ConnectCodeBox.Text.Length == 6 && !ConnectCodeBox.Text.Contains(" "));
+            ConnectButton.Enabled = (ConnectCodeBox.Enabled && ConnectCodeBox.Text.Length == 8 && !ConnectCodeBox.Text.Contains(" "));
         }
 
         private void ConsoleTextBox_TextChanged(object sender, EventArgs e)

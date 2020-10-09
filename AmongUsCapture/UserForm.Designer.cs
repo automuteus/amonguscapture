@@ -256,7 +256,7 @@ namespace AmongUsCapture
             this.ConnectCodeBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ConnectCodeBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.ConnectCodeBox.Location = new System.Drawing.Point(6, 6);
-            this.ConnectCodeBox.Mask = ">AAAAAA";
+            this.ConnectCodeBox.Mask = ">AAAAAAAA";
             this.ConnectCodeBox.Name = "ConnectCodeBox";
             this.ConnectCodeBox.Size = new System.Drawing.Size(115, 22);
             this.ConnectCodeBox.TabIndex = 0;

@@ -468,11 +468,14 @@ namespace AmongUsCapture
                 
         }
 
-        public void ShowCrackedBox()
+        public DialogResult ShowCrackedBox()
         {
-            var result =
-                MessageBox.Show("You are running a cracked version of Among Us. We do not support piracy.",
-                    "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+            var response = MessageBox.Show(
+                        "We have detected this is a non-steam release of the game. Do you want to try to link anyway? (Not recommended)",
+                        "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2,
+                        MessageBoxOptions.DefaultDesktopOnly);
+
+            return response;
         }
 
         private void CopyButton_Click(object sender, EventArgs e)

@@ -110,13 +110,17 @@ namespace AmongUsCapture
                 }
                 if (cracked && ProcessMemory.IsHooked)
                 {
-                    ProcessMemory.process.Kill();
-                    Thread.Sleep(500);
-                    if (!ProcessMemory.IsHooked)
+                    var response = Settings.form.ShowCrackedBox();
+                    if (response == DialogResult.No)
+                    {
+                        Settings.form.Close();
+                        Environment.Exit(0);
+                    }
+                    else
                     {
                         cracked = false;
+                        Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red, $"{Color.Red.ToTextColor()}Running unsupported version{UserForm.NormalTextColor.ToTextColor()}.");
                     }
-                    Settings.form.ShowCrackedBox();
                     continue;
                 }
 

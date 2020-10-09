@@ -2,6 +2,7 @@ using System;
 using System.Text.Json;
 using SocketIOClient;
 using System.Drawing;
+using System.Net.Sockets;
 using MetroFramework;
 using TextColorLibrary;
 
@@ -45,16 +46,8 @@ namespace AmongUsCapture
 
         private void OnTokenHandler(object sender, StartToken token)
         {
-            if (socket.Connected)
-            {
-                socket.DisconnectAsync().ContinueWith((t) =>
-                {
-                    this.Connect(token.Host, token.ConnectCode);
-                });
-            } else
-            {
-                this.Connect(token.Host, token.ConnectCode);
-            }
+            
+            this.Connect(token.Host, token.ConnectCode);
         }
 
         public void Connect(string url, string connectCode)
@@ -64,18 +57,23 @@ namespace AmongUsCapture
                 socket.ServerUri = new Uri(url);
                 if (socket.Connected)
                 {
-                    socket.DisconnectAsync().Wait();
-                }
-                socket.ConnectAsync().ContinueWith(t =>
-                {
                     SendConnectCode(connectCode);
-                    
-                });
+                }
+
+                if (socket.Disconnected)
+                {
+                    socket.ConnectAsync().ContinueWith(t =>
+                    {
+                        SendConnectCode(connectCode);
+                    });
+                }
+                
             } catch (ArgumentNullException) {
                 Console.WriteLine("Invalid bot host, not connecting");
             } catch (UriFormatException) {
                 Console.WriteLine("Invalid bot host, not connecting");
             }
+            
         }
 
         public void SendConnectCode(string connectCode)
@@ -88,9 +86,9 @@ namespace AmongUsCapture
             ConnectCode = connectCode;
             socket.EmitAsync("connect", ConnectCode).ContinueWith((_) =>
             {
-                GameMemReader.getInstance().ForceUpdatePlayers();
                 GameMemReader.getInstance().ForceTransmitState();
                 GameMemReader.getInstance().ForceTransmitLobby();
+                GameMemReader.getInstance().ForceUpdatePlayers();
                 if (callback != null)
                 {
                     callback.Invoke(this, new EventArgs());
@@ -118,6 +116,7 @@ namespace AmongUsCapture
 
         private void JoinedLobbyHandler(object sender, LobbyEventArgs e)
         {
+            GameMemReader.getInstance().ForceUpdatePlayers();
             socket.EmitAsync("lobby", JsonSerializer.Serialize(e));
         }
 

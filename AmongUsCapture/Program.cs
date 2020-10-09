@@ -21,6 +21,7 @@ namespace AmongUsCapture
     {
         const string UriScheme = "aucapture";
         const string FriendlyName = "AmongUs Capture";
+        private static UserForm form;
         private static Mutex mutex = null;
         /// <summary>
         ///  The main entry point for the application.
@@ -41,7 +42,7 @@ namespace AmongUsCapture
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             ClientSocket socket = new ClientSocket();
-            var form = new UserForm(socket);
+            form = new UserForm(socket);
             Settings.form = form;
             Settings.conInterface = new FormConsole(form); //Create the Form Console interface. 
             Task.Factory.StartNew(() => socket.Init()).Wait(); // run socket in background. Important to wait for init to have actually finished before continuing

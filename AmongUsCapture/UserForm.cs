@@ -245,7 +245,7 @@ namespace AmongUsCapture
 
             try
             {
-                clientSocket.Connect(url, ConnectCodeBox.Text);
+                clientSocket.OnTokenHandler(null, new StartToken() { Host = url, ConnectCode = ConnectCodeBox.Text });
             }
             catch (Exception e)
             {

@@ -10,6 +10,7 @@ namespace AmongUsCapture
     public class ClientSocket
     { 
         public event EventHandler OnConnected;
+        public event EventHandler OnDisconnected;
 
         private SocketIO socket;
         private string ConnectCode;
@@ -20,7 +21,7 @@ namespace AmongUsCapture
             socket = new SocketIO();
 
             IPCadapter.getInstance().OnToken += OnTokenHandler;
-            socket.OnConnected += (sender, e) =>
+            OnConnected += (sender, e) =>
             {
                 //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connected successfully!");
                 Settings.form.setColor(MetroColorStyle.Green);
@@ -28,10 +29,9 @@ namespace AmongUsCapture
                 GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
                 GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;
-                this.OnConnected?.Invoke(this, new EventArgs());
             };
 
-            socket.OnDisconnected += (sender, e) =>
+            OnDisconnected += (sender, e) =>
             {
                 Settings.form.setColor(MetroColorStyle.Red);
                 //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Lost connection!");
@@ -42,12 +42,13 @@ namespace AmongUsCapture
             };
         }
 
-        private void OnTokenHandler(object sender, StartToken token)
+        public void OnTokenHandler(object sender, StartToken token)
         {
             if (socket.Connected)
             {
                 socket.DisconnectAsync().ContinueWith((t) =>
                 {
+                    OnDisconnected?.Invoke(this, EventArgs.Empty);
                     this.Connect(token.Host, token.ConnectCode);
                 });
             } else
@@ -56,13 +57,14 @@ namespace AmongUsCapture
             }
         }
 
-        public void Connect(string url, string connectCode)
+        private void Connect(string url, string connectCode)
         {
             try
             {
                 socket.ServerUri = new Uri(url);
                 socket.ConnectAsync().ContinueWith(t =>
                 {
+                    OnConnected?.Invoke(this, EventArgs.Empty);
                     SendConnectCode(connectCode);
                 });
             } catch (ArgumentNullException) {

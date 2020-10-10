@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Text;
+using AmongUsCapture.TextColorLibrary;
 using CaptureGUI;
 
 namespace AmongUsCapture.ConsoleTypes
@@ -11,13 +10,19 @@ namespace AmongUsCapture.ConsoleTypes
     public class FormConsole : ConsoleInterface
     {
         private StreamWriter logFile;
-        public MainWindow form = null;
+        public MainWindow form;
         private static object locker = new Object();
+
         public FormConsole(MainWindow userForm)
         {
             form = userForm;
             var parent = Directory.GetParent(Process.GetCurrentProcess().MainModule.FileName);
             logFile = File.CreateText(Path.Join(parent.FullName, "CaptureLog.txt"));
+        }
+
+        public void WriteTextFormatted(string text, bool acceptNewLines = true)
+        {
+            throw new NotImplementedException();
         }
 
         public void WriteColoredText(string ColoredText)
@@ -26,6 +31,11 @@ namespace AmongUsCapture.ConsoleTypes
             WriteToLog(ColoredText);
         }
 
+
+        public void WriteLine(string s)
+        {
+            throw new NotImplementedException();
+        }
 
         public void WriteModuleTextColored(string ModuleName, Color moduleColor, string text)
         {
@@ -41,7 +51,7 @@ namespace AmongUsCapture.ConsoleTypes
 
         private string StripColor(string text)
         {
-            return TextColorLibrary.TextColor.StripColor(text);
+            return TextColor.StripColor(text);
         }
 
         private void WriteLogLine(DateTime time, string textToLog)

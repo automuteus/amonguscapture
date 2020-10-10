@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Text.Json;
 using AmongUsCapture.TextColorLibrary;
-using MetroFramework;
+using CaptureGUI;
 using SocketIOClient;
 
 namespace AmongUsCapture
@@ -23,8 +23,9 @@ namespace AmongUsCapture
             socket.OnConnected += (sender, e) =>
             {
                 //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connected successfully!");
-                Settings.form.setColor(MetroColorStyle.Green);
-                Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, "Connected successfully!");
+                Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                    "Connected successfully!");
+                Settings.form.setConnectionStatus(true);
                 GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
                 GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;
@@ -34,7 +35,7 @@ namespace AmongUsCapture
 
             socket.OnDisconnected += (sender, e) =>
             {
-                Settings.form.setColor(MetroColorStyle.Red);
+                Settings.form.setConnectionStatus(false);
                 //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Lost connection!");
                 Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"{Color.Red.ToTextColor()}Connection lost!");
                 GameMemReader.getInstance().GameStateChanged -= GameStateChangedHandler;
@@ -92,14 +93,16 @@ namespace AmongUsCapture
                     callback.Invoke(this, new EventArgs());
                 }
             });
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Connection code ({Color.Red.ToTextColor()}{connectCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
+            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                $"Connection code ({Color.Red.ToTextColor()}{connectCode}{MainWindow.NormalTextColor.ToTextColor()}) sent to server.");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", System.Drawing.Color.Aqua, $"Connection code ({connectCode}) sent to server.");
         }
 
         public void SendRoomCode(LobbyEventArgs args)
         {
             socket.EmitAsync("lobby", JsonSerializer.Serialize(args));
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Room code ({Color.Yellow.ToTextColor()}{args.LobbyCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
+            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                $"Room code ({Color.Yellow.ToTextColor()}{args.LobbyCode}{MainWindow.NormalTextColor.ToTextColor()}) sent to server.");
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)

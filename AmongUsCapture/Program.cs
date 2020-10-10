@@ -5,7 +5,6 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using AmongUsCapture.CaptureGUI;
 using AmongUsCapture.ConsoleTypes;
 using CaptureGUI;
@@ -15,14 +14,16 @@ namespace AmongUsCapture
 {
     static class Program
     {
+        public static MainWindow window;
         const string UriScheme = "aucapture";
         const string FriendlyName = "AmongUs Capture";
         private static Mutex mutex = null;
+
         /// <summary>
-        ///  The main entry point for the application.
+        ///     The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (Settings.PersistentSettings.debugConsole)
             {
@@ -31,19 +32,20 @@ namespace AmongUsCapture
 
             URIStartResult uriRes = HandleURIStart(args);
             if (uriRes == URIStartResult.CLOSE) return;
+            var socket = new ClientSocket();
 
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            ClientSocket socket = new ClientSocket();
-            var form = new App();
-            Settings.form = form.Run();
-            Settings.conInterface = new FormConsole(form); //Create the Form Console interface. 
+
+            var thread = new Thread(Foo);
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+
+            while (Settings.conInterface is null) Thread.Sleep(250);
+            //Create the Form Console interface. 
             Task.Factory.StartNew(() => socket.Init()).Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
             Task.Factory.StartNew(() => IPCadapter.getInstance().RunLoop(uriRes == URIStartResult.PARSE ? args[0] : null)); // Run listener for tokens
 
-
+            Console.ReadLine();
             //test
         }
 
@@ -52,6 +54,17 @@ namespace AmongUsCapture
             CLOSE,
             PARSE,
             CONTINUE
+        }
+
+        private static void Foo()
+        {
+            var a = new App();
+            window = new MainWindow();
+            a.MainWindow = window;
+            Settings.form = window;
+            Settings.conInterface = new FormConsole(window);
+            a.Run(window);
+            Environment.Exit(0);
         }
 
         private static URIStartResult HandleURIStart(string[] args)

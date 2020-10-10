@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>false</UseWindowsForms>
     <UseWPF>true</UseWPF>
@@ -16,6 +16,15 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>none</DebugType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="UserForm.cs" />
+    <Compile Remove="UserForm.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="UserForm.resx" />
+  </ItemGroup>
 
   <ItemGroup>
     <Page Remove="CaptureGUI\App.xaml" />

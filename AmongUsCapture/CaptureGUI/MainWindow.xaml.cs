@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
 using Config.Net;
 using ControlzEx.Theming;
@@ -35,11 +36,78 @@ namespace CaptureGUI
             ConsoleTextBox.Document.Blocks.Clear();
             DataContext = config;
             config.PropertyChanged += ConfigOnPropertyChanged;
-            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAccent;
-            ThemeManager.Current.SyncTheme();
-            SetDefaultThemeColor();
-            ApplyDarkMode();
+
+            GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
+            GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
+            GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
+            GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
+
             //ApplyDarkMode();
+        }
+
+        private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
+        {
+            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki,
+                $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
+            //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
+        }
+
+        private void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
+        {
+            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("CHAT", Color.DarkKhaki,
+                $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Sender}{NormalTextColor.ToTextColor()}: {e.Message}");
+            //WriteLineToConsole($"[CHAT] {e.Sender}: {e.Message}");
+        }
+
+        private void OnJoinedLobby(object sender, LobbyEventArgs e)
+        {
+            GameCodeBox.BeginInvoke(a => a.Text = e.LobbyCode);
+        }
+
+        private Color PlayerColorToColorOBJ(PlayerColor pColor)
+        {
+            var OutputCode = Color.White;
+            switch (pColor)
+            {
+                case PlayerColor.Red:
+                    OutputCode = Color.Red;
+                    break;
+                case PlayerColor.Blue:
+                    OutputCode = Color.RoyalBlue;
+                    break;
+                case PlayerColor.Green:
+                    OutputCode = Color.Green;
+                    break;
+                case PlayerColor.Pink:
+                    OutputCode = Color.Magenta;
+                    break;
+                case PlayerColor.Orange:
+                    OutputCode = Color.Orange;
+                    break;
+                case PlayerColor.Yellow:
+                    OutputCode = Color.Yellow;
+                    break;
+                case PlayerColor.Black:
+                    OutputCode = Color.Gray;
+                    break;
+                case PlayerColor.White:
+                    OutputCode = Color.White;
+                    break;
+                case PlayerColor.Purple:
+                    OutputCode = Color.MediumPurple;
+                    break;
+                case PlayerColor.Brown:
+                    OutputCode = Color.SaddleBrown;
+                    break;
+                case PlayerColor.Cyan:
+                    OutputCode = Color.Cyan;
+                    break;
+                case PlayerColor.Lime:
+                    OutputCode = Color.Lime;
+                    break;
+            }
+
+            return OutputCode;
         }
 
         private void ConfigOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -59,12 +127,10 @@ namespace CaptureGUI
         {
             if (config.ranBefore) return;
             config.ranBefore = true;
-            var currentTheme = ThemeManager.Current.DetectTheme();
-            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAppMode;
+            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncAll;
             ThemeManager.Current.SyncTheme();
             var newTheme = ThemeManager.Current.DetectTheme();
             config.DarkMode = newTheme.BaseColorScheme == ThemeManager.BaseColorDark;
-            ThemeManager.Current.ChangeTheme(this, currentTheme ?? throw new InvalidOperationException());
         }
 
         private void ApplyDarkMode()
@@ -96,8 +162,17 @@ namespace CaptureGUI
         private void ManualConnect_Click(object sender, RoutedEventArgs e)
         {
             //this.ManualConnectButton.IsEnabled = false;
-            setConnectionStatus(connected);
+            ThemeManager.Current.SyncTheme(ThemeSyncMode.SyncAll);
+            //setConnectionStatus(connected);
             connected = !connected;
+        }
+
+        private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
+        {
+            setCurrentState(e.NewState.ToString());
+            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
+                $"State changed to {Color.Cyan.ToTextColor()}{e.NewState}");
+            //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
         }
 
         private async void GameCodeBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -159,7 +234,6 @@ namespace CaptureGUI
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            //TestFillConsole(10);
         }
 
         private void TestFillConsole(int entries) //Helper test method to see if filling console works.
@@ -177,9 +251,12 @@ namespace CaptureGUI
 
         private void MainWindow_OnContentRendered(object? sender, EventArgs e)
         {
-            TestFillConsole(10);
-            setCurrentState("GAMESTATE");
-            setGameCode("GAMECODE");
+            //TestFillConsole(10);
+            //setCurrentState("GAMESTATE");
+            //setGameCode("GAMECODE");
+            SetDefaultThemeColor();
+
+            ApplyDarkMode();
         }
     }
 }

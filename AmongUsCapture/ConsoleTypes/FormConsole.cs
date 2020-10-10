@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -14,7 +15,8 @@ namespace AmongUsCapture.ConsoleTypes
         public FormConsole(UserForm userForm)
         {
             form = userForm;
-            logFile = File.CreateText("CaptureLog.txt");
+            var parent = Directory.GetParent(Process.GetCurrentProcess().MainModule.FileName);
+            logFile = File.CreateText(Path.Join(parent.FullName, "CaptureLog.txt"));
         }
 
         public void WriteColoredText(string ColoredText)

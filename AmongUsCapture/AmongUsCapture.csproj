@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
@@ -17,6 +18,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Page Remove="CaptureGUI\App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Include="CaptureGUI\App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Config.Net" Version="4.15.0" />
     <PackageReference Include="Config.Net.Json" Version="4.15.0" />
     <PackageReference Include="Costura.Fody" Version="5.0.0-alpha0281">
@@ -28,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="TextColorLibrary\" />
+    <ProjectReference Include="..\..\CaptureGUI\CaptureGUI\CaptureGUI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +56,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="CaptureGUI\MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>

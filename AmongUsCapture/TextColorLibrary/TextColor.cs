@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
-namespace TextColorLibrary
+namespace AmongUsCapture.TextColorLibrary
 {
     public static class TextColor
     {

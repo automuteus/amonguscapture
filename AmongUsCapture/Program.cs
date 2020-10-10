@@ -6,6 +6,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AmongUsCapture.CaptureGUI;
 using AmongUsCapture.ConsoleTypes;
 using CaptureGUI;
 using Microsoft.Win32;
@@ -35,8 +36,8 @@ namespace AmongUsCapture
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             ClientSocket socket = new ClientSocket();
-            var form = new App(socket);
-            Settings.form = form;
+            var form = new App();
+            Settings.form = form.Run();
             Settings.conInterface = new FormConsole(form); //Create the Form Console interface. 
             Task.Factory.StartNew(() => socket.Init()).Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background

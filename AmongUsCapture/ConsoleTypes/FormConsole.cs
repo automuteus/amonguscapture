@@ -4,15 +4,16 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using CaptureGUI;
 
 namespace AmongUsCapture.ConsoleTypes
 {
     public class FormConsole : ConsoleInterface
     {
         private StreamWriter logFile;
-        public UserForm form = null;
+        public MainWindow form = null;
         private static object locker = new Object();
-        public FormConsole(UserForm userForm)
+        public FormConsole(MainWindow userForm)
         {
             form = userForm;
             var parent = Directory.GetParent(Process.GetCurrentProcess().MainModule.FileName);
@@ -25,11 +26,6 @@ namespace AmongUsCapture.ConsoleTypes
             WriteToLog(ColoredText);
         }
 
-        public void WriteLine(string str)
-        {
-            form.WriteLineToConsole(str);
-            WriteToLog(str);
-        }
 
         public void WriteModuleTextColored(string ModuleName, Color moduleColor, string text)
         {
@@ -37,11 +33,6 @@ namespace AmongUsCapture.ConsoleTypes
             WriteToLog($"[{ModuleName}]: {text}");
         }
 
-        public void WriteTextFormatted(string text, bool acceptNewLines = true)
-        {
-            form.WriteLineFormatted(text, acceptNewLines);
-            WriteToLog(text);
-        }
 
         public void WriteToLog(string textToLog)
         {

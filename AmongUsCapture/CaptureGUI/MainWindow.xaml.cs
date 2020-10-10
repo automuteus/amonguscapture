@@ -5,11 +5,11 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using AmongUsCapture.TextColorLibrary;
 using Config.Net;
 using ControlzEx.Theming;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-using TextColorLibrary;
 using Color = System.Drawing.Color;
 
 namespace CaptureGUI
@@ -21,7 +21,7 @@ namespace CaptureGUI
     {
         public static Color NormalTextColor = Color.White;
 
-        private readonly AppSettings config = new ConfigurationBuilder<AppSettings>()
+        private readonly IAppSettings config = new ConfigurationBuilder<IAppSettings>()
             .UseJsonFile(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "\\AmongUsCapture\\AmongUsGUI", "Settings.json")).Build();
 

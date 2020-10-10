@@ -1,9 +1,9 @@
 using System;
-using System.Text.Json;
-using SocketIOClient;
 using System.Drawing;
+using System.Text.Json;
+using AmongUsCapture.TextColorLibrary;
 using MetroFramework;
-using TextColorLibrary;
+using SocketIOClient;
 
 namespace AmongUsCapture
 {

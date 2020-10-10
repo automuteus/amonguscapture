@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using TextColorLibrary;
+using AmongUsCapture.TextColorLibrary;
 
 namespace AmongUsCapture
 {

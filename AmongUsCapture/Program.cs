@@ -33,7 +33,7 @@ namespace AmongUsCapture
             var socket = new ClientSocket();
 
 
-            var thread = new Thread(Foo);
+            var thread = new Thread(OpenGUI);
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
 
@@ -57,7 +57,7 @@ namespace AmongUsCapture
             CONTINUE
         }
 
-        private static void Foo()
+        private static void OpenGUI()
         {
             var a = new App();
             window = new MainWindow();

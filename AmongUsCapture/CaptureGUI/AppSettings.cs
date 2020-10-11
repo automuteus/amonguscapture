@@ -6,7 +6,7 @@ using Config.Net;
 
 namespace CaptureGUI
 {
-    internal interface IAppSettings : INotifyPropertyChanged
+    public interface IAppSettings : INotifyPropertyChanged
     {
         [Option(DefaultValue = false)]
         bool ranBefore { get; set; }

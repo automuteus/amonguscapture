@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Threading;
 using AmongUsCapture.TextColorLibrary;
 using CaptureGUI;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace AmongUsCapture
 {
@@ -56,6 +57,7 @@ namespace AmongUsCapture
         public event EventHandler<LobbyEventArgs> JoinedLobby;
 
         private bool cracked = false;
+
         public void RunLoop()
         {
             while (true)
@@ -79,22 +81,22 @@ namespace AmongUsCapture
                         foreach (var module in ProcessMemory.modules)
                             if (module.Name.Equals("GameAssembly.dll", StringComparison.OrdinalIgnoreCase))
                             {
-                                    GameAssemblyPtr = module.BaseAddress;
-                                    if (!GameVerifier.VerifySteamHash(module.FileName))
-                                    {
-                                        cracked = true;
-                                        Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red, $"Client verification: {Color.Red.ToTextColor()}FAIL{UserForm.NormalTextColor.ToTextColor()}.");
-                                        
-                                    }
-                                    else
-                                    {
-                                        cracked = false;
-                                        Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red, $"Client verification: {Color.Lime.ToTextColor()}PASS{UserForm.NormalTextColor.ToTextColor()}.");
+                                GameAssemblyPtr = module.BaseAddress;
+                                if (!GameVerifier.VerifySteamHash(module.FileName))
+                                {
+                                    cracked = true;
+                                    Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red,
+                                        $"Client verification: {Color.Red.ToTextColor()}FAIL{MainWindow.NormalTextColor.ToTextColor()}.");
+                                }
+                                else
+                                {
+                                    cracked = false;
+                                    Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red,
+                                        $"Client verification: {Color.Lime.ToTextColor()}PASS{MainWindow.NormalTextColor.ToTextColor()}.");
+                                }
 
-                                    }
-                                    foundModule = true;
-                                    break;
-                        
+                                foundModule = true;
+                                break;
                             }
 
                         if (!foundModule)
@@ -116,13 +118,21 @@ namespace AmongUsCapture
                 }
                 if (cracked && ProcessMemory.IsHooked)
                 {
-                    ProcessMemory.process.Kill();
-                    Thread.Sleep(500);
-                    if (!ProcessMemory.IsHooked)
-                    {
+                    var result = Settings.form.context.DialogCoordinator.ShowMessageAsync(Settings.form.context,
+                            "Uh oh.",
+                            "We have detected that you are running an unsupported version of the game. This may or may not work.",
+                            MessageDialogStyle.AffirmativeAndNegative,
+                            new MetroDialogSettings
+                            {
+                                AffirmativeButtonText = "I understand", NegativeButtonText = "Exit",
+                                ColorScheme = MetroDialogColorScheme.Theme,
+                                DefaultButtonFocus = MessageDialogResult.Negative
+                            })
+                        .GetAwaiter().GetResult();
+                    if (result == MessageDialogResult.Negative)
+                        Environment.Exit(0);
+                    else
                         cracked = false;
-                    }
-                    Settings.form.ShowCrackedBox();
                     continue;
                 }
 

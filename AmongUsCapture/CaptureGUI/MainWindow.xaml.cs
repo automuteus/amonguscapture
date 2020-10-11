@@ -1,11 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using AmongUsCapture;
+using AmongUsCapture.CaptureGUI;
 using AmongUsCapture.TextColorLibrary;
 using Config.Net;
 using ControlzEx.Theming;
@@ -22,10 +24,10 @@ namespace CaptureGUI
     {
         public static Color NormalTextColor = Color.White;
 
-        private readonly IAppSettings config = new ConfigurationBuilder<IAppSettings>()
-            .UseJsonFile(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "\\AmongUsCapture\\AmongUsGUI", "Settings.json")).Build();
 
+        private IAppSettings config;
+
+        public UserDataContext context;
         private bool connected;
         private readonly object locker = new object();
 
@@ -34,7 +36,11 @@ namespace CaptureGUI
             InitializeComponent();
             var p = ConsoleTextBox.Document.Blocks.FirstBlock as Paragraph;
             ConsoleTextBox.Document.Blocks.Clear();
-            DataContext = config;
+            config = new ConfigurationBuilder<IAppSettings>()
+                .UseJsonFile(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "\\AmongUsCapture\\AmongUsGUI", "Settings.json")).Build();
+            context = new UserDataContext(DialogCoordinator.Instance, config);
+            DataContext = context;
             config.PropertyChanged += ConfigOnPropertyChanged;
 
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
@@ -175,9 +181,10 @@ namespace CaptureGUI
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
         }
 
+
         private async void GameCodeBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            await this.ShowMessageAsync("Gamecode copied to clipboard!", "");
+            await this.ShowMessageAsync("Gamecode copied to clipboard!", "", MessageDialogStyle.Affirmative);
             Clipboard.SetText(GameCodeBox.Text);
         }
 

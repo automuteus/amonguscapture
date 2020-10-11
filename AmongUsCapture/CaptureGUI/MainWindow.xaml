@@ -5,6 +5,7 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                 xmlns:dialogs="http://metro.mahapps.com/winfx/xaml/controls"
                  mc:Ignorable="d"
                  Style="{DynamicResource MahApps.Styles.MetroWindow.Clean}"
                  ResizeMode="CanResizeWithGrip"
@@ -12,6 +13,7 @@
                  ShowInTaskbar="True"
                  ShowSystemMenu="False"
                  ShowSystemMenuOnRightClick="False"
+                 dialogs:DialogParticipation.Register="{Binding }"
                  ContentRendered="MainWindow_OnContentRendered" Loaded="MetroWindow_Loaded" TryToBeFlickerFree="True" >
     <Window.Resources>
         <ResourceDictionary>
@@ -74,11 +76,13 @@
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <StackPanel Orientation="Vertical">
                                     <mah:ToggleSwitch x:Name="Darkmode_toggleswitch" Header="Dark mode"
-                                                      IsOn="{Binding DarkMode, Mode=TwoWay}" Toggled="Darkmode_Toggled" />
+                                                      IsOn="{Binding Settings.DarkMode, Mode=TwoWay}"
+                                                      Toggled="Darkmode_Toggled" />
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="Font size: " VerticalAlignment="Center" Margin="4 0 0 0" />
                                         <Slider Name="FontSlider" Maximum="72" Width="200" Minimum="1"
-                                                AutoToolTipPlacement="TopLeft" Value="{Binding fontSize, Mode=TwoWay}" />
+                                                AutoToolTipPlacement="TopLeft"
+                                                Value="{Binding Settings.fontSize, Mode=TwoWay}" />
                                     </StackPanel>
                                 </StackPanel>
                             </ScrollViewer>

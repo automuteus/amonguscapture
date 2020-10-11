@@ -214,6 +214,7 @@ namespace AmongUsCapture
             /*ConnectCodeBox.Enabled = false;
             ConnectButton.Enabled = false;
             URLTextBox.Enabled = false;*/
+            string connectCode = ConnectCodeBox.Text;
             ConnectCodeBox.Clear();
 
             var url = "http://localhost:8123";
@@ -222,7 +223,7 @@ namespace AmongUsCapture
                 url = URLTextBox.Text;
             }
 
-            doConnect(url);
+            doConnect(url, connectCode);
         }
 
         public void setColor(MetroColorStyle color)
@@ -236,7 +237,7 @@ namespace AmongUsCapture
             });
         }
 
-        private void doConnect(string url)
+        private void doConnect(string url, string connectCode)
         {
             clientSocket.OnConnected += (sender, e) =>
             {
@@ -245,7 +246,7 @@ namespace AmongUsCapture
 
             try
             {
-                clientSocket.OnTokenHandler(null, new StartToken() { Host = url, ConnectCode = ConnectCodeBox.Text });
+                clientSocket.OnTokenHandler(null, new StartToken() { Host = url, ConnectCode = connectCode });
             }
             catch (Exception e)
             {

@@ -16,8 +16,7 @@ namespace AmongUsCapture.ConsoleTypes
         public FormConsole(MainWindow userForm)
         {
             form = userForm;
-            var parent = Directory.GetParent(Process.GetCurrentProcess().MainModule.FileName);
-            logFile = File.CreateText(Path.Join(parent.FullName, "CaptureLog.txt"));
+            logFile = File.CreateText(Path.Combine(Directory.GetParent(Program.GetExecutablePath()).FullName, "CaptureLog.txt"));
         }
 
         public void WriteTextFormatted(string text, bool acceptNewLines = true)

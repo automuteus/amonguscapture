@@ -200,9 +200,10 @@ namespace AmongUsCapture
 
         private void ConnectButton_Click(object sender, EventArgs e)
         {
-            ConnectCodeBox.Enabled = false;
+
+            /*ConnectCodeBox.Enabled = false;
             ConnectButton.Enabled = false;
-            URLTextBox.Enabled = false;
+            URLTextBox.Enabled = false;*/
 
             var url = "http://localhost:8123";
             if (URLTextBox.Text != "") url = URLTextBox.Text;
@@ -223,11 +224,14 @@ namespace AmongUsCapture
 
         private void doConnect(string url)
         {
-            clientSocket.OnConnected += (sender, e) => { Settings.PersistentSettings.host = url; };
+            clientSocket.OnConnected += (sender, e) =>
+            {
+                Settings.PersistentSettings.host = url;
+            };
 
             try
             {
-                clientSocket.Connect(url, ConnectCodeBox.Text);
+                clientSocket.OnTokenHandler(null, new StartToken() { Host = url, ConnectCode = ConnectCodeBox.Text });
             }
             catch (Exception e)
             {
@@ -240,8 +244,7 @@ namespace AmongUsCapture
 
         private void ConnectCodeBox_TextChanged(object sender, EventArgs e)
         {
-            ConnectButton.Enabled = ConnectCodeBox.Enabled && ConnectCodeBox.Text.Length == 6 &&
-                                    !ConnectCodeBox.Text.Contains(" ");
+            ConnectButton.Enabled = (ConnectCodeBox.Enabled && ConnectCodeBox.Text.Length == 8 && ConnectCodeBox.MaskCompleted);
         }
 
         private void ConsoleTextBox_TextChanged(object sender, EventArgs e)
@@ -253,7 +256,7 @@ namespace AmongUsCapture
             //}
         }
 
-        private void autoscroll()
+        private void DoAutoScroll()
         {
             if (AutoScrollMenuItem.Checked)
                 ConsoleTextBox.BeginInvoke((MethodInvoker) delegate
@@ -291,7 +294,6 @@ namespace AmongUsCapture
                     AppendColoredTextToConsole(part.text, part.textColor);
                 AppendColoredTextToConsole("", Color.White, true);
             }
-
             autoscroll();
         }
 

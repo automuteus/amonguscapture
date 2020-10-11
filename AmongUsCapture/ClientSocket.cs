@@ -82,7 +82,7 @@ namespace AmongUsCapture
             }
         }
 
-        private void OnConnectionFailure(AggregateException? e)
+        private void OnConnectionFailure(AggregateException e)
         {
             string message = e != null ? e.Message : "A generic connection error occured.";
             Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"{Color.Red.ToTextColor()}{message}");

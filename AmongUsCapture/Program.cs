@@ -12,12 +12,11 @@ using Microsoft.Win32;
 
 namespace AmongUsCapture
 {
-    static class Program
+    internal static class Program
     {
         public static MainWindow window;
-        const string UriScheme = "aucapture";
-        const string FriendlyName = "AmongUs Capture";
-        private static UserForm form;
+        private const string UriScheme = "aucapture";
+        private const string FriendlyName = "AmongUs Capture";
         private static Mutex mutex = null;
 
         /// <summary>
@@ -27,11 +26,9 @@ namespace AmongUsCapture
         private static void Main(string[] args)
         {
             if (Settings.PersistentSettings.debugConsole)
-            {
                 AllocConsole(); // needs to be the first call in the program to prevent weird bugs
-            }
 
-            URIStartResult uriRes = HandleURIStart(args);
+            var uriRes = HandleURIStart(args);
             if (uriRes == URIStartResult.CLOSE) return;
             var socket = new ClientSocket();
 
@@ -42,9 +39,12 @@ namespace AmongUsCapture
 
             while (Settings.conInterface is null) Thread.Sleep(250);
             //Create the Form Console interface. 
-            Task.Factory.StartNew(() => socket.Init()).Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
+            Task.Factory.StartNew(() => socket.Init())
+                .Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
-            Task.Factory.StartNew(() => IPCadapter.getInstance().RunLoop(uriRes == URIStartResult.PARSE ? args[0] : null)); // Run listener for tokens
+            Task.Factory.StartNew(() =>
+                IPCadapter.getInstance()
+                    .RunLoop(uriRes == URIStartResult.PARSE ? args[0] : null)); // Run listener for tokens
 
             Console.ReadLine();
             //test
@@ -77,19 +77,22 @@ namespace AmongUsCapture
         {
             Console.WriteLine(GetExecutablePath());
             const string appName = "AmongUsCapture";
-            mutex = new Mutex(true, appName, out bool createdNew);
-            bool wasURIStart = args.Length > 0 && args[0].StartsWith(UriScheme + "://");
-            URIStartResult result = URIStartResult.CONTINUE;
+            mutex = new Mutex(true, appName, out var createdNew);
+            var wasURIStart = args.Length > 0 && args[0].StartsWith(UriScheme + "://");
+            var result = URIStartResult.CONTINUE;
 
             if (!createdNew) // send it to already existing instance if applicable, then close
             {
-                if (wasURIStart) {
-                    var pipeClient = new NamedPipeClientStream(".", "AmongUsCapturePipe", PipeDirection.InOut, PipeOptions.None, TokenImpersonationLevel.Impersonation);
+                if (wasURIStart)
+                {
+                    var pipeClient = new NamedPipeClientStream(".", "AmongUsCapturePipe", PipeDirection.InOut,
+                        PipeOptions.None, TokenImpersonationLevel.Impersonation);
                     pipeClient.Connect();
                     var ss = new StreamString(pipeClient);
                     ss.WriteString(args[0]);
                     pipeClient.Close();
                 }
+
                 return URIStartResult.CLOSE;
             }
             else if (wasURIStart) // URI start on new instance, continue as normal but also handle current argument
@@ -102,13 +105,13 @@ namespace AmongUsCapture
             return result;
         }
 
-        static void RegisterProtocol()  //myAppPath = full path to your application
+        private static void RegisterProtocol() //myAppPath = full path to your application
         {
             using (var key = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Classes\\" + UriScheme))
             {
                 // Replace typeof(App) by the class that contains the Main method or any class located in the project that produces the exe.
                 // or replace typeof(App).Assembly.Location by anything that gives the full path to the exe
-                string applicationLocation = GetExecutablePath();
+                var applicationLocation = GetExecutablePath();
 
                 key.SetValue("", "URL:" + FriendlyName);
                 key.SetValue("URL Protocol", "");
@@ -127,10 +130,6 @@ namespace AmongUsCapture
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();
-
-        
+        private static extern bool AllocConsole();
     }
-
-
 }

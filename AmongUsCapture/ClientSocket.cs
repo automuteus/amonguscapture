@@ -114,7 +114,8 @@ namespace AmongUsCapture
         private void JoinedLobbyHandler(object sender, LobbyEventArgs e)
         {
             socket.EmitAsync("lobby", JsonSerializer.Serialize(e));
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
+            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{MainWindow.NormalTextColor.ToTextColor()}) sent to server.");
         }
     }
 }

@@ -68,6 +68,10 @@ namespace AmongUsCapture
             try
             {
                 socket.ServerUri = new Uri(url);
+                if (socket.Connected)
+                {
+                    socket.DisconnectAsync().Wait();
+                }
                 socket.ConnectAsync().ContinueWith(t =>
                 {
                     if (!t.IsCompletedSuccessfully)

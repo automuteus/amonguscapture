@@ -19,6 +19,7 @@ namespace AmongUsCapture
         private LobbyEventArgs lastJoinedLobby;
         public static Color NormalTextColor = Color.Black;
         private static object locker = new Object();
+        private Queue<string> deadMessageQueue = new Queue<string>();
 
         private Color Rainbow(float progress)
         {
@@ -189,7 +190,12 @@ namespace AmongUsCapture
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
-            Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
+            if (e.Action == PlayerAction.Died)
+                deadMessageQueue.Enqueue(
+                    $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
+            else
+                Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki,
+                    $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
         }
 
@@ -200,6 +206,12 @@ namespace AmongUsCapture
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
         {
+            while (deadMessageQueue.Count > 0) //Lets print out the state changes now that gamestate has changed.
+            {
+                var text = deadMessageQueue.Dequeue();
+                Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, text);
+            }
+
             this.CurrentState.BeginInvoke((MethodInvoker)delegate
             {
                 CurrentState.Text = e.NewState.ToString();

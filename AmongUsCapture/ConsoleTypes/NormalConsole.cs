@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
-using TextColorLibrary;
+using AmongUsCapture.TextColorLibrary;
 
 namespace AmongUsCapture.ConsoleTypes
 {

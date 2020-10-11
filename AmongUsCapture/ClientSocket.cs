@@ -23,6 +23,11 @@ namespace AmongUsCapture
             // Handle tokens from protocol links.
             IPCadapter.getInstance().OnToken += OnTokenHandler;
 
+            // Register handlers for game-state change events.
+            GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
+            GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
+            GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;
+
             // Handle socket connection events.
             socket.OnConnected += (sender, e) =>
             {
@@ -30,10 +35,6 @@ namespace AmongUsCapture
                 Settings.form.setColor(MetroColorStyle.Green);
                 Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, "Connected successfully!");
 
-                // Register handlers for game-state change events.
-                GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
-                GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
-                GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;
 
                 // Alert any listeners that the connection has occurred.
                 OnConnected?.Invoke(this, EventArgs.Empty);
@@ -54,11 +55,6 @@ namespace AmongUsCapture
                 // Report the disconnection.
                 Settings.form.setColor(MetroColorStyle.Red);
                 Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"{Color.Red.ToTextColor()}Connection lost!");
-
-                // Deregister the event listeners.
-                GameMemReader.getInstance().GameStateChanged -= GameStateChangedHandler;
-                GameMemReader.getInstance().PlayerChanged -= PlayerChangedHandler;
-                GameMemReader.getInstance().JoinedLobby -= JoinedLobbyHandler;
 
                 // Alert any listeners that the disconnection has occured.
                 OnDisconnected?.Invoke(this, EventArgs.Empty);
@@ -111,16 +107,19 @@ namespace AmongUsCapture
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
         {
+            if (!socket.Connected) return;
             socket.EmitAsync("state", JsonSerializer.Serialize(e.NewState)); // could possibly use continueWith() w/ callback if result is needed
         }
 
         private void PlayerChangedHandler(object sender, PlayerChangedEventArgs e)
         {
+            if (!socket.Connected) return;
             socket.EmitAsync("player", JsonSerializer.Serialize(e)); //Makes code wait for socket to emit before closing thread.
         }
 
         private void JoinedLobbyHandler(object sender, LobbyEventArgs e)
         {
+            if (!socket.Connected) return;
             socket.EmitAsync("lobby", JsonSerializer.Serialize(e));
             Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
         }

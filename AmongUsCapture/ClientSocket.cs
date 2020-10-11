@@ -11,7 +11,6 @@ namespace AmongUsCapture
     public class ClientSocket
     { 
         public event EventHandler OnConnected;
-        public event EventHandler OnDisconnected;
 
         private SocketIO socket;
         private string ConnectCode;
@@ -22,7 +21,7 @@ namespace AmongUsCapture
             socket = new SocketIO();
 
             IPCadapter.getInstance().OnToken += OnTokenHandler;
-            OnConnected += (sender, e) =>
+            socket.OnConnected += (sender, e) =>
             {
                 //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Connected successfully!");
                 Settings.form.setColor(MetroColorStyle.Green);
@@ -30,9 +29,11 @@ namespace AmongUsCapture
                 GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
                 GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;
+                var OnOnConnected = this.OnConnected;
+                if (OnOnConnected != null) OnOnConnected(this, new EventArgs());
             };
 
-            OnDisconnected += (sender, e) =>
+            socket.OnDisconnected += (sender, e) =>
             {
                 Settings.form.setColor(MetroColorStyle.Red);
                 //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Lost connection!");
@@ -43,42 +44,30 @@ namespace AmongUsCapture
             };
         }
 
-        public void OnTokenHandler(object sender, StartToken token)
+        private void OnTokenHandler(object sender, StartToken token)
         {
-            if (socket.Connected)
-            {
-                socket.DisconnectAsync().ContinueWith((t) =>
-                {
-                    OnDisconnected?.Invoke(this, EventArgs.Empty);
-                    this.Connect(token.Host, token.ConnectCode);
-                });
-            } else
-            {
-                this.Connect(token.Host, token.ConnectCode);
-            }
+            
+            this.Connect(token.Host, token.ConnectCode);
         }
 
-        private void OnConnectionFailure(AggregateException? e)
-        {
-            string message = e != null ? e.Message : "A generic connection error occured.";
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"{Color.Red.ToTextColor()}{message}");
-        }
-
-        private void Connect(string url, string connectCode)
+        public void Connect(string url, string connectCode)
         {
             try
             {
                 socket.ServerUri = new Uri(url);
                 if (socket.Connected)
                 {
-                    if (!t.IsCompletedSuccessfully)
-                    {
-                        OnConnectionFailure(t.Exception);
-                        return;
-                    }
-                    OnConnected?.Invoke(this, EventArgs.Empty);
                     SendConnectCode(connectCode);
-                });
+                }
+
+                if (socket.Disconnected)
+                {
+                    socket.ConnectAsync().ContinueWith(t =>
+                    {
+                        SendConnectCode(connectCode);
+                    });
+                }
+                
             } catch (ArgumentNullException) {
                 Console.WriteLine("Invalid bot host, not connecting");
             } catch (UriFormatException) {
@@ -87,17 +76,32 @@ namespace AmongUsCapture
             
         }
 
-        public void SendConnectCode(string connectCode, EventHandler callback = null)
+        public void SendConnectCode(string connectCode)
+        {
+            SendConnectCode(connectCode, null);
+        }
+
+        public void SendConnectCode(string connectCode, EventHandler callback)
         {
             ConnectCode = connectCode;
-            socket.EmitAsync("connectCode", ConnectCode).ContinueWith((_) =>
+            socket.EmitAsync("connect", ConnectCode).ContinueWith((_) =>
             {
                 GameMemReader.getInstance().ForceTransmitState();
                 GameMemReader.getInstance().ForceTransmitLobby();
-                callback?.Invoke(this, new EventArgs());
+                GameMemReader.getInstance().ForceUpdatePlayers();
+                if (callback != null)
+                {
+                    callback.Invoke(this, new EventArgs());
+                }
             });
             Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Connection code ({Color.Red.ToTextColor()}{connectCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", System.Drawing.Color.Aqua, $"Connection code ({connectCode}) sent to server.");
+        }
+
+        public void SendRoomCode(LobbyEventArgs args)
+        {
+            socket.EmitAsync("lobby", JsonSerializer.Serialize(args));
+            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Room code ({Color.Yellow.ToTextColor()}{args.LobbyCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
@@ -114,7 +118,7 @@ namespace AmongUsCapture
         {
             GameMemReader.getInstance().ForceUpdatePlayers();
             socket.EmitAsync("lobby", JsonSerializer.Serialize(e));
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
         }
+
     }
 }

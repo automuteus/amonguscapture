@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using System.Threading.Tasks;
 
 namespace AmongUsCapture
 {
@@ -20,7 +21,6 @@ namespace AmongUsCapture
     {
         const string UriScheme = "aucapture";
         const string FriendlyName = "AmongUs Capture";
-        private static UserForm form;
         private static Mutex mutex = null;
         /// <summary>
         ///  The main entry point for the application.
@@ -40,7 +40,7 @@ namespace AmongUsCapture
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             ClientSocket socket = new ClientSocket();
-            form = new UserForm(socket);
+            var form = new UserForm(socket);
             Settings.form = form;
             Settings.conInterface = new FormConsole(form); //Create the Form Console interface. 
             Task.Factory.StartNew(() => socket.Init()).Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
@@ -60,14 +60,9 @@ namespace AmongUsCapture
             CONTINUE
         }
 
-        public static string GetExecutablePath()
-        {
-            return Process.GetCurrentProcess().MainModule.FileName;
-        }
-
         private static URIStartResult HandleURIStart(string[] args)
         {
-            Console.WriteLine(GetExecutablePath());
+            Console.WriteLine(Process.GetCurrentProcess().MainModule.FileName);
             const string appName = "AmongUsCapture";
             mutex = new Mutex(true, appName, out bool createdNew);
             bool wasURIStart = args.Length > 0 && args[0].StartsWith(UriScheme + "://");
@@ -100,7 +95,7 @@ namespace AmongUsCapture
             {
                 // Replace typeof(App) by the class that contains the Main method or any class located in the project that produces the exe.
                 // or replace typeof(App).Assembly.Location by anything that gives the full path to the exe
-                string applicationLocation = GetExecutablePath();
+                string applicationLocation = Process.GetCurrentProcess().MainModule.FileName;
 
                 key.SetValue("", "URL:" + FriendlyName);
                 key.SetValue("URL Protocol", "");

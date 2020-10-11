@@ -14,7 +14,7 @@ namespace AmongUsCapture.ConsoleTypes
         public FormConsole(UserForm userForm)
         {
             form = userForm;
-            logFile = File.CreateText(Path.Combine(Directory.GetParent(Program.GetExecutablePath()).FullName, "CaptureLog.txt"));
+            logFile = File.CreateText("CaptureLog.txt");
         }
 
         public void WriteColoredText(string ColoredText)

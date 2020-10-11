@@ -211,10 +211,9 @@ namespace AmongUsCapture
         private void ConnectButton_Click(object sender, EventArgs e)
         {
 
-            /*ConnectCodeBox.Enabled = false;
+            ConnectCodeBox.Enabled = false;
             ConnectButton.Enabled = false;
-            URLTextBox.Enabled = false;*/
-            ConnectCodeBox.Clear();
+            URLTextBox.Enabled = false;
 
             var url = "http://localhost:8123";
             if (URLTextBox.Text != "")
@@ -240,12 +239,13 @@ namespace AmongUsCapture
         {
             clientSocket.OnConnected += (sender, e) =>
             {
+                
                 Settings.PersistentSettings.host = url;
             };
 
             try
             {
-                clientSocket.OnTokenHandler(null, new StartToken() { Host = url, ConnectCode = ConnectCodeBox.Text });
+                clientSocket.Connect(url, ConnectCodeBox.Text);
             }
             catch (Exception e)
             {
@@ -259,7 +259,7 @@ namespace AmongUsCapture
 
         private void ConnectCodeBox_TextChanged(object sender, EventArgs e)
         {
-            ConnectButton.Enabled = (ConnectCodeBox.Enabled && ConnectCodeBox.Text.Length == 8 && ConnectCodeBox.MaskCompleted);
+            ConnectButton.Enabled = (ConnectCodeBox.Enabled && ConnectCodeBox.Text.Length == 6 && !ConnectCodeBox.Text.Contains(" "));
         }
 
         private void ConsoleTextBox_TextChanged(object sender, EventArgs e)
@@ -271,7 +271,7 @@ namespace AmongUsCapture
             //}
         }
 
-        private void DoAutoScroll()
+        private void autoscroll()
         {
             if (AutoScrollMenuItem.Checked)
             {
@@ -309,7 +309,9 @@ namespace AmongUsCapture
                 }
                 this.AppendColoredTextToConsole("", Color.White, true);
             }
-            DoAutoScroll();
+            autoscroll();
+
+
         }
 
         public void AppendColoredTextToConsole(String line, Color color, bool addNewLine = false)
@@ -343,7 +345,7 @@ namespace AmongUsCapture
                         ConsoleTextBox.AppendText(line + "\n");
                     });
                 }
-                DoAutoScroll();
+                autoscroll();
             }
 
             
@@ -458,7 +460,7 @@ namespace AmongUsCapture
                         }
                         AppendColoredTextToConsole("", Color.White, true);
                     }
-                    DoAutoScroll();
+                    autoscroll();
                     
                 });
                 

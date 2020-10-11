@@ -240,7 +240,6 @@ namespace AmongUsCapture
         {
             clientSocket.OnConnected += (sender, e) =>
             {
-                
                 Settings.PersistentSettings.host = url;
             };
 

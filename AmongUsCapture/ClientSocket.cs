@@ -57,6 +57,12 @@ namespace AmongUsCapture
             }
         }
 
+        private void OnConnectionFailure(AggregateException? e)
+        {
+            string message = e != null ? e.Message : "A generic connection error occured.";
+            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"{Color.Red.ToTextColor()}{message}");
+        }
+
         private void Connect(string url, string connectCode)
         {
             try
@@ -64,6 +70,11 @@ namespace AmongUsCapture
                 socket.ServerUri = new Uri(url);
                 socket.ConnectAsync().ContinueWith(t =>
                 {
+                    if (!t.IsCompletedSuccessfully)
+                    {
+                        OnConnectionFailure(t.Exception);
+                        return;
+                    }
                     OnConnected?.Invoke(this, EventArgs.Empty);
                     SendConnectCode(connectCode);
                 });

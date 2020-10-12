@@ -22,10 +22,15 @@ namespace AmongUsCapture
     class GameMemReader
     {
         private static GameMemReader instance = new GameMemReader();
+
+        private bool shouldReadLobby = false;
+
         private bool shouldForceUpdatePlayers = false;
         private bool shouldForceTransmitState = false;
         private bool shouldTransmitLobby = false;
         private IGameOffsets _gameOffsets = Settings.GameOffsets;
+        private LobbyEventArgs latestLobbyEventArgs = null;
+
         public static GameMemReader getInstance()
         {
             return instance;
@@ -182,7 +187,7 @@ namespace AmongUsCapture
 
                 if (state != oldState && state == GameState.LOBBY)
                 {
-                    shouldTransmitLobby = true;
+                    shouldReadLobby = true; // will eventually transmit
                 }
 
                 oldState = state;
@@ -351,22 +356,32 @@ namespace AmongUsCapture
                     });
                 }
 
-                if (shouldTransmitLobby)
+                if (shouldReadLobby)
                 {
                     string gameCode = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(GameAssemblyPtr, _gameOffsets.GameStartManagerOffset, 0x5c, 0, 0x20, 0x28));
                     string[] split;
                     if (gameCode != null && gameCode.Length > 0 && (split = gameCode.Split('\n')).Length == 2)
                     {
                         PlayRegion region = (PlayRegion)((4 - (ProcessMemory.Read<int>(GameAssemblyPtr, _gameOffsets.ServerManagerOffset, 0x5c, 0, 0x10, 0x8, 0x8) & 0b11)) % 3); // do NOT ask
-                        JoinedLobby?.Invoke(this, new LobbyEventArgs()
+
+                        this.latestLobbyEventArgs = new LobbyEventArgs()
                         {
                             LobbyCode = split[1],
                             Region = region
-                        });
-                        shouldTransmitLobby = false;
+                        };
+                        shouldReadLobby = false;
+                        shouldTransmitLobby = true; // since this is probably new info
                     }
                 }
 
+                if (shouldTransmitLobby)
+                {
+                    if (this.latestLobbyEventArgs != null)
+                    {
+                        JoinedLobby?.Invoke(this, this.latestLobbyEventArgs);
+                    }
+                    shouldTransmitLobby = false;
+                }
 
                 Thread.Sleep(250);
             }

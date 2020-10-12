@@ -16,7 +16,6 @@ namespace AmongUsCapture
     public partial class UserForm : MetroForm
     {
         private ClientSocket clientSocket;
-        private LobbyEventArgs lastJoinedLobby;
         public static Color NormalTextColor = Color.Black;
         private static object locker = new Object();
         private Queue<string> deadMessageQueue = new Queue<string>();
@@ -52,6 +51,11 @@ namespace AmongUsCapture
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
             GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
 
+            clientSocket.OnConnected += (sender, e) =>
+            {
+                Settings.PersistentSettings.host = e.Uri;
+            };
+
             // Load URL
             URLTextBox.Text = Settings.PersistentSettings.host;
 
@@ -77,7 +81,6 @@ namespace AmongUsCapture
             {
                 GameCodeBox.Text = e.LobbyCode;
             });
-            lastJoinedLobby = e;
         }
 
         private void OnLoad(object sender, EventArgs e)
@@ -251,11 +254,6 @@ namespace AmongUsCapture
 
         private void doConnect(string url, string connectCode)
         {
-            clientSocket.OnConnected += (sender, e) => // TODO: fix this
-            {
-                Settings.PersistentSettings.host = url;
-            };
-
             try
             {
                 clientSocket.OnTokenHandler(null, new StartToken() { Host = url, ConnectCode = connectCode });
@@ -485,7 +483,6 @@ namespace AmongUsCapture
             {
                 System.Windows.Forms.Clipboard.SetText(this.GameCodeBox.Text);
             } 
-           
         }
 
     }

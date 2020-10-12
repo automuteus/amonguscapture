@@ -9,7 +9,7 @@ namespace AmongUsCapture
 {
     public class ClientSocket
     { 
-        public event EventHandler OnConnected;
+        public event EventHandler<ConnectedEventArgs> OnConnected;
         public event EventHandler OnDisconnected;
 
         private SocketIO socket;
@@ -37,7 +37,7 @@ namespace AmongUsCapture
 
 
                 // Alert any listeners that the connection has occurred.
-                OnConnected?.Invoke(this, EventArgs.Empty);
+                OnConnected?.Invoke(this, new ConnectedEventArgs() { Uri = socket.ServerUri.ToString() });
 
                 // On each (re)connection, send the connect code and then force-update everything.
                 socket.EmitAsync("connectCode", ConnectCode).ContinueWith((_) =>
@@ -123,6 +123,11 @@ namespace AmongUsCapture
             socket.EmitAsync("lobby", JsonSerializer.Serialize(e));
             Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
                 $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
+        }
+
+        public class ConnectedEventArgs : EventArgs
+        {
+            public string Uri { get; set; }
         }
     }
 }

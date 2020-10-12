@@ -78,7 +78,7 @@ namespace AmongUsCapture
             }
         }
 
-        private void OnConnectionFailure(AggregateException e)
+        private void OnConnectionFailure(AggregateException e = null)
         {
             string message = e != null ? e.Message : "A generic connection error occured.";
             Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"{Color.Red.ToTextColor()}{message}");
@@ -121,7 +121,8 @@ namespace AmongUsCapture
         {
             if (!socket.Connected) return;
             socket.EmitAsync("lobby", JsonSerializer.Serialize(e));
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
+            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
         }
     }
 }

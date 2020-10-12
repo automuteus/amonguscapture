@@ -239,7 +239,7 @@ namespace AmongUsCapture
 
         private void doConnect(string url, string connectCode)
         {
-            clientSocket.OnConnected += (sender, e) =>
+            clientSocket.OnConnected += (sender, e) => // TODO: fix this
             {
                 Settings.PersistentSettings.host = url;
             };

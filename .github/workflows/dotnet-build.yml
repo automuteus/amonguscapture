@@ -28,4 +28,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: AmongUsCapture-beta
-          path: AmongUsCapture-x32.exe
+          path: AmongUsCapture.exe

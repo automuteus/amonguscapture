@@ -27,7 +27,6 @@ namespace AmongUsCapture
         {
             if (Settings.PersistentSettings.debugConsole)
                 AllocConsole(); // needs to be the first call in the program to prevent weird bugs
-            }
 
             var uriRes = IPCadapter.getInstance().HandleURIStart(args);
             switch (uriRes)
@@ -48,17 +47,18 @@ namespace AmongUsCapture
             var thread = new Thread(OpenGUI);
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
-
+            var socket = new ClientSocket();
             while (Settings.conInterface is null) Thread.Sleep(250);
             //Create the Form Console interface. 
             Task.Factory.StartNew(() => socket.Init())
                 .Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
-            form.Load += (sender, eventArgs) =>
+            IPCadapter.getInstance().RegisterMinion();
+            window.Loaded += (sender, eventArgs) =>
             {
                 if (uriRes == URIStartResult.PARSE) IPCadapter.getInstance().SendToken(args[0]);
             };
-            Console.ReadLine();
+            thread.Join();
         }
 
 

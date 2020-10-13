@@ -70,7 +70,7 @@ namespace AmongUsCapture
         {
             var rpcMaster = new RpcBuffer(appName);
             var RPCresult = rpcMaster.RemoteRequest(Encoding.UTF8.GetBytes(jsonText));
-            var SlaveResponse = Encoding.UTF8.GetString(RPCresult.Data, 0, RPCresult.Data.Length);
+            var MinionResponse = Encoding.UTF8.GetString(RPCresult.Data, 0, RPCresult.Data.Length);
             return RPCresult.Success;
         }
 
@@ -97,13 +97,13 @@ namespace AmongUsCapture
             }
         }
 
-        public void RegisterSlave()
+        public void RegisterMinion()
         {
-            var rpcSlave = new RpcBuffer(appName, (msgId, payload) =>
+            var rpcMinion = new RpcBuffer(appName, (msgId, payload) =>
             {
                 var serverResponse = "Carbon has a huge pp also this is debug messages.";
                 var gotData = Encoding.UTF8.GetString(payload, 0, payload.Length);
-                Console.WriteLine($"RPCSlave: Got data: {gotData}");
+                Console.WriteLine($"RPCMinion: Got data: {gotData}");
                 OnToken?.Invoke(this, StartToken.FromString(gotData)); //Invoke method and return.
                 return Encoding.UTF8.GetBytes(serverResponse);
             });

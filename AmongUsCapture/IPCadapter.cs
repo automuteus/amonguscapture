@@ -68,7 +68,7 @@ namespace AmongUsCapture
 
         public bool SendToken(string jsonText)
         {
-            var rpcGru = new RpcBuffer(appName);
+            var rpcGru = new RpcBuffer(appName); //Soup told me not to but its funny
             var RPCresult = rpcGru.RemoteRequest(Encoding.UTF8.GetBytes(jsonText));
             var MinionResponse = Encoding.UTF8.GetString(RPCresult.Data, 0, RPCresult.Data.Length);
             return RPCresult.Success;

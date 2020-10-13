@@ -44,14 +44,16 @@ namespace AmongUsCapture
             }
 
 
+            
+            var socket = new ClientSocket();
+            
+            //Create the Form Console interface. 
+            Task.Factory.StartNew(() => socket.Init()).Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
             var thread = new Thread(OpenGUI);
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
-            var socket = new ClientSocket();
             while (Settings.conInterface is null) Thread.Sleep(250);
-            //Create the Form Console interface. 
-            Task.Factory.StartNew(() => socket.Init())
-                .Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
+
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
             IPCadapter.getInstance().RegisterMinion();
             window.Loaded += (sender, eventArgs) =>

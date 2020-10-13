@@ -32,7 +32,7 @@ namespace AmongUsCapture
             socket.OnConnected += (sender, e) =>
             {
                 // Report the connection
-                Settings.form.setConnectionStatus(true);
+                //Settings.form.setConnectionStatus(true);
                 Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, "Connected successfully!");
 
 
@@ -53,7 +53,7 @@ namespace AmongUsCapture
             // Handle socket disconnection events.
             socket.OnDisconnected += (sender, e) =>
             {
-                Settings.form.setConnectionStatus(false);
+                //Settings.form.setConnectionStatus(false);
                 //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Lost connection!");
                 Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
                     $"{Color.Red.ToTextColor()}Connection lost!");

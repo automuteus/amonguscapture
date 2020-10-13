@@ -267,7 +267,8 @@ namespace CaptureGUI
 
         private void SubmitConnectButton_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            IPCadapter.getInstance().SendToken(config.host, config.connectCode);
+            ManualConnectionFlyout.IsOpen = false;
         }
     }
 }

@@ -110,13 +110,14 @@
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Host: " VerticalAlignment="Center" Margin="4 0 0 0" />
-                                <TextBox x:Name="Host" Text="{Binding Settings.host, Mode=TwoWay}"/>
+                                <TextBlock Text="Host: " VerticalAlignment="Center" Margin="4 0 3 0" />
+                                <TextBox x:Name="Host" VerticalAlignment="Center" MinWidth="150" Text="{Binding Settings.host, Mode=TwoWay}"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Code: " VerticalAlignment="Center" Margin="4 0 0 0" />
-                                <TextBox x:Name="Code" Text="{Binding Settings.connectCode, Mode=TwoWay}"/>
+                                <TextBox x:Name="Code" VerticalAlignment="Center" MinWidth="150" Text="{Binding Settings.connectCode, Mode=TwoWay}"/>
                             </StackPanel>
+                            <Button Content="Submit" x:Name="SubmitConnectButton" Margin="20" Click="SubmitConnectButton_OnClick"></Button>
                         </StackPanel>
                     </ScrollViewer>
                 </Grid>

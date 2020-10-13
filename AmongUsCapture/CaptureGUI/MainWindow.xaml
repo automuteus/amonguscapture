@@ -11,6 +11,7 @@
                  ResizeMode="CanResizeWithGrip"
                  Title="Among Us Capture" TitleAlignment="Center" Height="450" Width="800"
                  ShowInTaskbar="True"
+                 TitleCharacterCasing="Normal"
                  ShowSystemMenu="False"
                  ShowSystemMenuOnRightClick="False"
                  dialogs:DialogParticipation.Register="{Binding }"

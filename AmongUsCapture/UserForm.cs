@@ -10,10 +10,10 @@ namespace AmongUsCapture
 {
     public partial class UserForm : MetroForm
     {
+        private ClientSocket clientSocket;
         public static Color NormalTextColor = Color.Black;
-        private static readonly object locker = new object();
-        private readonly ClientSocket clientSocket;
-        private LobbyEventArgs lastJoinedLobby;
+        private static object locker = new Object();
+        private Queue<string> deadMessageQueue = new Queue<string>();
 
         public UserForm(ClientSocket clientSocket)
         {
@@ -23,6 +23,11 @@ namespace AmongUsCapture
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
             GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
+
+            clientSocket.OnConnected += (sender, e) =>
+            {
+                Settings.PersistentSettings.host = e.Uri;
+            };
 
             // Load URL
             URLTextBox.Text = Settings.PersistentSettings.host;
@@ -69,8 +74,10 @@ namespace AmongUsCapture
 
         private void OnJoinedLobby(object sender, LobbyEventArgs e)
         {
-            GameCodeBox.BeginInvoke((MethodInvoker) delegate { GameCodeBox.Text = e.LobbyCode; });
-            lastJoinedLobby = e;
+            GameCodeBox.BeginInvoke((MethodInvoker)delegate
+            {
+                GameCodeBox.Text = e.LobbyCode;
+            });
         }
 
         private void OnLoad(object sender, EventArgs e)
@@ -180,8 +187,12 @@ namespace AmongUsCapture
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
-            Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki,
-                $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
+            if (e.Action == PlayerAction.Died)
+                deadMessageQueue.Enqueue(
+                    $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
+            else
+                Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki,
+                    $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
         }
 
@@ -192,9 +203,17 @@ namespace AmongUsCapture
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
         {
-            CurrentState.BeginInvoke((MethodInvoker) delegate { CurrentState.Text = e.NewState.ToString(); });
-            Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
-                $"State changed to {Color.Cyan.ToTextColor()}{e.NewState}");
+            while (deadMessageQueue.Count > 0) //Lets print out the state changes now that gamestate has changed.
+            {
+                var text = deadMessageQueue.Dequeue();
+                Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, text);
+            }
+
+            this.CurrentState.BeginInvoke((MethodInvoker)delegate
+            {
+                CurrentState.Text = e.NewState.ToString();
+            });
+            Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"State changed to {Color.Cyan.ToTextColor()}{e.NewState}");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
         }
 
@@ -204,11 +223,13 @@ namespace AmongUsCapture
             /*ConnectCodeBox.Enabled = false;
             ConnectButton.Enabled = false;
             URLTextBox.Enabled = false;*/
+            string connectCode = ConnectCodeBox.Text;
+            ConnectCodeBox.Clear();
 
             var url = "http://localhost:8123";
             if (URLTextBox.Text != "") url = URLTextBox.Text;
 
-            doConnect(url);
+            doConnect(url, connectCode);
         }
 
         public void setColor(MetroColorStyle color)
@@ -222,16 +243,11 @@ namespace AmongUsCapture
             });
         }
 
-        private void doConnect(string url)
+        private void doConnect(string url, string connectCode)
         {
-            clientSocket.OnConnected += (sender, e) =>
-            {
-                Settings.PersistentSettings.host = url;
-            };
-
             try
             {
-                clientSocket.OnTokenHandler(null, new StartToken() { Host = url, ConnectCode = ConnectCodeBox.Text });
+                clientSocket.OnTokenHandler(null, new StartToken() { Host = url, ConnectCode = connectCode });
             }
             catch (Exception e)
             {
@@ -536,7 +552,10 @@ namespace AmongUsCapture
 
         private void CopyButton_Click(object sender, EventArgs e)
         {
-            if (!(GameCodeBox.Text is null || GameCodeBox.Text == "")) Clipboard.SetText(GameCodeBox.Text);
+            if(!(this.GameCodeBox.Text is null || this.GameCodeBox.Text == ""))
+            {
+                System.Windows.Forms.Clipboard.SetText(this.GameCodeBox.Text);
+            } 
         }
     }
 }

@@ -23,6 +23,7 @@ namespace AmongUsCapture
         private readonly IGameOffsets _gameOffsets = Settings.GameOffsets;
         private bool exileCausesEnd;
 
+        private bool shouldReadLobby = false;
         private IntPtr GameAssemblyPtr = IntPtr.Zero;
 
         public Dictionary<string, PlayerInfo>
@@ -30,6 +31,7 @@ namespace AmongUsCapture
                 new Dictionary<string, PlayerInfo>(
                     10); // container for new player infos. Also has capacity 10 already assigned so no internal resizing of the data structure is needed
 
+        private LobbyEventArgs latestLobbyEventArgs = null;
 
         public Dictionary<string, PlayerInfo>
             oldPlayerInfos =
@@ -226,7 +228,10 @@ namespace AmongUsCapture
                     shouldForceTransmitState = false;
                 }
 
-                if (state != oldState && state == GameState.LOBBY) shouldTransmitLobby = true;
+                if (state != oldState && state == GameState.LOBBY)
+                {
+                    shouldReadLobby = true; // will eventually transmit
+                }
 
                 oldState = state;
 
@@ -381,24 +386,33 @@ namespace AmongUsCapture
                     });
                 }
 
-                if (shouldTransmitLobby)
+                if (shouldReadLobby)
                 {
                     var gameCode = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(GameAssemblyPtr,
                         _gameOffsets.GameStartManagerOffset, 0x5c, 0, 0x20, 0x28));
                     string[] split;
                     if (gameCode != null && gameCode.Length > 0 && (split = gameCode.Split('\n')).Length == 2)
                     {
-                        var region = (PlayRegion) ((4 - (ProcessMemory.Read<int>(GameAssemblyPtr,
-                            _gameOffsets.ServerManagerOffset, 0x5c, 0, 0x10, 0x8, 0x8) & 0b11)) % 3); // do NOT ask
-                        JoinedLobby?.Invoke(this, new LobbyEventArgs
+                        PlayRegion region = (PlayRegion)((4 - (ProcessMemory.Read<int>(GameAssemblyPtr, _gameOffsets.ServerManagerOffset, 0x5c, 0, 0x10, 0x8, 0x8) & 0b11)) % 3); // do NOT ask
+
+                        this.latestLobbyEventArgs = new LobbyEventArgs()
                         {
                             LobbyCode = split[1],
                             Region = region
-                        });
-                        shouldTransmitLobby = false;
+                        };
+                        shouldReadLobby = false;
+                        shouldTransmitLobby = true; // since this is probably new info
                     }
                 }
 
+                if (shouldTransmitLobby)
+                {
+                    if (this.latestLobbyEventArgs != null)
+                    {
+                        JoinedLobby?.Invoke(this, this.latestLobbyEventArgs);
+                    }
+                    shouldTransmitLobby = false;
+                }
 
                 Thread.Sleep(250);
             }

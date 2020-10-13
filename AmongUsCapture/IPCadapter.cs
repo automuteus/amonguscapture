@@ -24,7 +24,7 @@ namespace AmongUsCapture
             {
                 OnToken?.Invoke(this, StartToken.FromString(initialURI));
             }
-            while (true)
+            while (false)
             {
                 PipeSecurity ps = new PipeSecurity();
 

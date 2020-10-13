@@ -75,11 +75,21 @@ namespace AmongUsCapture
 
         private static URIStartResult HandleURIStart(string[] args)
         {
+            int myProcessId = Process.GetCurrentProcess().Id;
+            Process[] processes = Process.GetProcessesByName("AmongUsCapture");
+            foreach (Process p in processes)
+            {
+                if (p.Id != myProcessId)
+                {
+                    p.Kill();
+                }
+            }
             Console.WriteLine(GetExecutablePath());
-            const string appName = "AmongUsCapture";
-            mutex = new Mutex(true, appName, out var createdNew);
-            var wasURIStart = args.Length > 0 && args[0].StartsWith(UriScheme + "://");
-            var result = URIStartResult.CONTINUE;
+            // const string appName = "AmongUsCapture";
+            // mutex = new Mutex(true, appName, out bool createdNew);
+            bool createdNew = true;
+            bool wasURIStart = args.Length > 0 && args[0].StartsWith(UriScheme + "://");
+            URIStartResult result = URIStartResult.CONTINUE;
 
             if (!createdNew) // send it to already existing instance if applicable, then close
             {

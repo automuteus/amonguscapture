@@ -137,6 +137,7 @@ namespace CaptureGUI
             ThemeManager.Current.SyncTheme();
             var newTheme = ThemeManager.Current.DetectTheme();
             config.DarkMode = newTheme.BaseColorScheme == ThemeManager.BaseColorDark;
+            Darkmode_toggleswitch.IsOn = config.DarkMode;
         }
 
         private void ApplyDarkMode()

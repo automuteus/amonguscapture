@@ -3,20 +3,20 @@ using System.Diagnostics;
 using System.IO.Pipes;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AmongUsCapture.CaptureGUI;
 using AmongUsCapture.ConsoleTypes;
 using CaptureGUI;
 using Microsoft.Win32;
+using SharedMemory;
 
 namespace AmongUsCapture
 {
     internal static class Program
     {
         public static MainWindow window;
-        private const string UriScheme = "aucapture";
-        private const string FriendlyName = "AmongUs Capture";
         private static Mutex mutex = null;
 
         /// <summary>
@@ -27,35 +27,40 @@ namespace AmongUsCapture
         {
             if (Settings.PersistentSettings.debugConsole)
                 AllocConsole(); // needs to be the first call in the program to prevent weird bugs
-            Console.WriteLine(Settings.PersistentSettings.debugConsole);
-            var uriRes = HandleURIStart(args);
-            if (uriRes == URIStartResult.CLOSE) return;
-            var socket = new ClientSocket();
+
+            var uriRes = IPCadapter.getInstance().HandleURIStart(args);
+            switch (uriRes)
+            {
+                case URIStartResult.CLOSE:
+                    Environment.Exit(0);
+                    break;
+                case URIStartResult.PARSE:
+                    Console.WriteLine($"Starting with args : {args[0]}");
+                    break;
+                case URIStartResult.CONTINUE:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
 
             var thread = new Thread(OpenGUI);
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
-
+            var socket = new ClientSocket();
             while (Settings.conInterface is null) Thread.Sleep(250);
             //Create the Form Console interface. 
             Task.Factory.StartNew(() => socket.Init())
                 .Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
-            Task.Factory.StartNew(() =>
-                IPCadapter.getInstance()
-                    .RunLoop(uriRes == URIStartResult.PARSE ? args[0] : null)); // Run listener for tokens
-
-            Console.ReadLine();
-            //test
+            IPCadapter.getInstance().RegisterMinion();
+            window.Loaded += (sender, eventArgs) =>
+            {
+                if (uriRes == URIStartResult.PARSE) IPCadapter.getInstance().SendToken(args[0]);
+            };
+            thread.Join();
         }
 
-        private enum URIStartResult
-        {
-            CLOSE,
-            PARSE,
-            CONTINUE
-        }
 
         private static void OpenGUI()
         {
@@ -73,73 +78,11 @@ namespace AmongUsCapture
             return Process.GetCurrentProcess().MainModule.FileName;
         }
 
-        private static URIStartResult HandleURIStart(string[] args)
-        {
-            int myProcessId = Process.GetCurrentProcess().Id;
-            Process[] processes = Process.GetProcessesByName("AmongUsCapture");
-            foreach (Process p in processes)
-            {
-                if (p.Id != myProcessId)
-                {
-                    p.Kill();
-                }
-            }
-            Console.WriteLine(GetExecutablePath());
-            // const string appName = "AmongUsCapture";
-            // mutex = new Mutex(true, appName, out bool createdNew);
-            bool createdNew = true;
-            bool wasURIStart = args.Length > 0 && args[0].StartsWith(UriScheme + "://");
-            URIStartResult result = URIStartResult.CONTINUE;
-
-            if (!createdNew) // send it to already existing instance if applicable, then close
-            {
-                if (wasURIStart)
-                {
-                    var pipeClient = new NamedPipeClientStream(".", "AmongUsCapturePipe", PipeDirection.InOut,
-                        PipeOptions.None, TokenImpersonationLevel.Impersonation);
-                    pipeClient.Connect();
-                    var ss = new StreamString(pipeClient);
-                    ss.WriteString(args[0]);
-                    pipeClient.Close();
-                }
-
-                return URIStartResult.CLOSE;
-            }
-            else if (wasURIStart) // URI start on new instance, continue as normal but also handle current argument
-            {
-                result = URIStartResult.PARSE;
-            }
-
-            RegisterProtocol();
-
-            return result;
-        }
-
-        private static void RegisterProtocol() //myAppPath = full path to your application
-        {
-            using (var key = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Classes\\" + UriScheme))
-            {
-                // Replace typeof(App) by the class that contains the Main method or any class located in the project that produces the exe.
-                // or replace typeof(App).Assembly.Location by anything that gives the full path to the exe
-                var applicationLocation = GetExecutablePath();
-
-                key.SetValue("", "URL:" + FriendlyName);
-                key.SetValue("URL Protocol", "");
-
-                using (var defaultIcon = key.CreateSubKey("DefaultIcon"))
-                {
-                    defaultIcon.SetValue("", applicationLocation + ",1");
-                }
-
-                using (var commandKey = key.CreateSubKey(@"shell\open\command"))
-                {
-                    commandKey.SetValue("", "\"" + applicationLocation + "\" \"%1\"");
-                }
-            }
-        }
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool AllocConsole();
+
+        
     }
 }

@@ -65,6 +65,8 @@ namespace AmongUsCapture
 
         public void OnTokenHandler(object sender, StartToken token)
         {
+            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                $"Attempting to connect to host {Color.LimeGreen.ToTextColor()}{token.Host}{Color.White.ToTextColor()} with connect code {Color.Red.ToTextColor()}{token.ConnectCode}{Color.White.ToTextColor()}");
             if (socket.Connected)
                 // Disconnect from the existing host...
                 socket.DisconnectAsync().ContinueWith((t) =>

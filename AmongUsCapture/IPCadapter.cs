@@ -54,6 +54,12 @@ namespace AmongUsCapture
                 pipeServer.Close();
             }
         }
+
+        public void SendToken(string host, string connectCode)
+        {
+            var st = new StartToken {ConnectCode = connectCode, Host = host};
+            OnToken?.Invoke(this, st);
+        }
     }
     public class StreamString
     {

@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace TextColorLibrary
+namespace AmongUsCapture.TextColorLibrary
 {
     public class ColoredString
     {

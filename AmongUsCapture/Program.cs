@@ -1,35 +1,31 @@
-using AmongUsCapture.ConsoleTypes;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.IO.Pipes;
-using System.Linq;
-using System.Reflection;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using AmongUsCapture.CaptureGUI;
+using AmongUsCapture.ConsoleTypes;
+using CaptureGUI;
 using Microsoft.Win32;
 using SharedMemory;
 
 namespace AmongUsCapture
 {
-    static class Program
+    internal static class Program
     {
-        private static UserForm form;
+        public static MainWindow window;
         private static Mutex mutex = null;
+
         /// <summary>
-        ///  The main entry point for the application.
+        ///     The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (Settings.PersistentSettings.debugConsole)
-            {
                 AllocConsole(); // needs to be the first call in the program to prevent weird bugs
             }
 
@@ -48,25 +44,34 @@ namespace AmongUsCapture
                     throw new ArgumentOutOfRangeException();
             }
 
-            IPCadapter.getInstance().RegisterSlave();
 
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            ClientSocket socket = new ClientSocket();
-            form = new UserForm(socket);
-            Settings.form = form;
-            Settings.conInterface = new FormConsole(form); //Create the Form Console interface. 
-            Task.Factory.StartNew(() => socket.Init()).Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
+            var thread = new Thread(OpenGUI);
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+
+            while (Settings.conInterface is null) Thread.Sleep(250);
+            //Create the Form Console interface. 
+            Task.Factory.StartNew(() => socket.Init())
+                .Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
             form.Load += (sender, eventArgs) =>
             {
                 if (uriRes == URIStartResult.PARSE) IPCadapter.getInstance().SendToken(args[0]);
             };
-            //AllocConsole();
-            Application.Run(form);
+            Console.ReadLine();
         }
 
+
+        private static void OpenGUI()
+        {
+            var a = new App();
+            window = new MainWindow();
+            a.MainWindow = window;
+            Settings.form = window;
+            Settings.conInterface = new FormConsole(window);
+            a.Run(window);
+            Environment.Exit(0);
+        }
 
         public static string GetExecutablePath()
         {
@@ -80,6 +85,4 @@ namespace AmongUsCapture
 
         
     }
-
-
 }

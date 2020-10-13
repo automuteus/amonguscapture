@@ -143,8 +143,13 @@ $RECYCLE.BIN/
 _NCrunch*
 
 .dtbcache.v2
+<<<<<<< HEAD
+/.idea/.idea.AmongUsCapture/.idea
+/.idea/.idea.AmongUsCapture/riderModule.iml
+=======
 
 # .NET Core
 project.lock.json
 project.fragment.lock.json
 artifacts/
+>>>>>>> master

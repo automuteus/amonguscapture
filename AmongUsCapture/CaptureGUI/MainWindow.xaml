@@ -87,14 +87,44 @@
                                 </StackPanel>
                             </ScrollViewer>
                         </mah:MetroTabItem>
-                        <TabItem Header="Debug" />
+                        <mah:MetroTabItem Header="Debug" >
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <StackPanel Orientation="Vertical">
+                                    <mah:ToggleSwitch x:Name="DebugConsole_Toggle" Header="Debug mode"
+                                                      IsOn="{Binding Settings.debug, Mode=TwoWay}"/>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </mah:MetroTabItem>
                     </TabControl>
 
                 </Grid>
             </mah:Flyout>
+            <mah:Flyout x:Name="ManualConnectionFlyout" Header="Manual Connection" Position="Right" Width="300" Theme="Adapt"
+                        IsAutoCloseEnabled="False" AnimateOpacity="True" ExternalCloseButton="Right">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Host: " VerticalAlignment="Center" Margin="4 0 0 0" />
+                                <TextBox x:Name="Host" Text="{Binding Settings.host, Mode=TwoWay}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Code: " VerticalAlignment="Center" Margin="4 0 0 0" />
+                                <TextBox x:Name="Code" Text="{Binding Settings.connectCode, Mode=TwoWay}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </mah:Flyout>
         </mah:FlyoutsControl>
-    </mah:MetroWindow.Flyouts>
 
+    </mah:MetroWindow.Flyouts>
+    
 
     <Grid>
         <Grid.RowDefinitions>

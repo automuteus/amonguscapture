@@ -167,10 +167,9 @@ namespace CaptureGUI
 
         private void ManualConnect_Click(object sender, RoutedEventArgs e)
         {
-            //this.ManualConnectButton.IsEnabled = false;
-            ThemeManager.Current.SyncTheme(ThemeSyncMode.SyncAll);
-            //setConnectionStatus(connected);
-            connected = !connected;
+            //Open up the manual connection flyout.
+            ManualConnectionFlyout.IsOpen = true;
+            
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
@@ -264,6 +263,11 @@ namespace CaptureGUI
             SetDefaultThemeColor();
 
             ApplyDarkMode();
+        }
+
+        private void SubmitConnectButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

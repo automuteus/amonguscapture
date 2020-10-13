@@ -17,5 +17,13 @@ namespace CaptureGUI
         [Option(DefaultValue = 18d)]
         double fontSize { get; set; }
 
+        [Option(DefaultValue = false)]
+        bool debug { get; set; }
+
+        [Option(DefaultValue = "")]
+        string host { get; set; }
+
+        [Option(DefaultValue = "")]
+        string connectCode { get; set; }
     }
 }

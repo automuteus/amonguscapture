@@ -30,7 +30,7 @@ namespace AmongUsCapture
         string host { get; set; }
         
         [Option(Alias = "DebugConsole", DefaultValue = false)]
-        bool debugConsole { get; }
+        bool debugConsole { get; set; }
         
     }
 

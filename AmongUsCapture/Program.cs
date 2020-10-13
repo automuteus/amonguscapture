@@ -27,7 +27,7 @@ namespace AmongUsCapture
         {
             if (Settings.PersistentSettings.debugConsole)
                 AllocConsole(); // needs to be the first call in the program to prevent weird bugs
-
+            Console.WriteLine(Settings.PersistentSettings.debugConsole);
             var uriRes = HandleURIStart(args);
             if (uriRes == URIStartResult.CLOSE) return;
             var socket = new ClientSocket();

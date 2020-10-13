@@ -1,4 +1,5 @@
-﻿using CaptureGUI;
+﻿using System.ComponentModel;
+using CaptureGUI;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace AmongUsCapture.CaptureGUI
@@ -12,6 +13,16 @@ namespace AmongUsCapture.CaptureGUI
         {
             DialogCoordinator = dialogCoordinator;
             Settings = settings;
+            Settings.debug = AmongUsCapture.Settings.PersistentSettings.debugConsole;
+            Settings.PropertyChanged += SettingsOnPropertyChanged;
+        }
+
+        private void SettingsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Settings.debug))
+            {
+                AmongUsCapture.Settings.PersistentSettings.debugConsole = Settings.debug;
+            }
         }
     }
 }

@@ -46,6 +46,7 @@
     <PackageReference Include="MahApps.Metro" Version="2.2.0" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="4.5.0" />
     <PackageReference Include="NamedPipeServerStream.NetFrameworkVersion" Version="1.0.2" />
+    <PackageReference Include="SharedMemory" Version="2.2.3" />
     <PackageReference Include="SocketIOClient" Version="2.0.2.6" />
   </ItemGroup>
 

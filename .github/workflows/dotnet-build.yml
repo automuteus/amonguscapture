@@ -21,18 +21,11 @@ jobs:
       - name: Publish
         run: |
           dotnet publish "AmongUsCapture\AmongUsCapture.csproj" -p:PublishProfile=FolderProfile -p:AssemblyVersion=0.0.1
-          dotnet publish "AmongUsCapture\AmongUsCapture.csproj" -p:PublishProfile=FolderProfile1 -p:AssemblyVersion=0.0.1
       - name: Relocate
         run: |
-          mv AmongUsCapture\\bin\\publish\\64Bit\\AmongUsCapture.exe AmongUsCapture-x64.exe
-          mv AmongUsCapture\\bin\\publish\\32Bit\\AmongUsCapture.exe AmongUsCapture-x32.exe
-      - name: AmongUsCapture-x64-beta
+          mv AmongUsCapture\\bin\\publish\\32Bit\\AmongUsCapture.exe AmongUsCapture.exe
+      - name: AmongUsCapture-beta
         uses: actions/upload-artifact@v2
         with:
-          name: AmongUsCapture-x64-beta
-          path: AmongUsCapture-x64.exe
-      - name: AmongUsCapture-x32-beta
-        uses: actions/upload-artifact@v2
-        with:
-          name: AmongUsCapture-x32-beta
-          path: AmongUsCapture-x32.exe
+          name: AmongUsCapture-beta
+          path: AmongUsCapture.exe

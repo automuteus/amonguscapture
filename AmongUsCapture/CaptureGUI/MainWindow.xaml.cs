@@ -256,6 +256,17 @@ namespace CaptureGUI
             //this.WriteColoredText(getRainbowText("This is a Pre-Release from Carbon's branch."));
         }
 
+        public void PlayGotEm()
+        {
+            this.BeginInvoke((win) => {
+                win.MemePlayer.Visibility = Visibility.Visible;
+                win.MemePlayer.Position = TimeSpan.Zero;
+                win.MemePlayer.Play();
+            });
+            
+            
+        }
+
         private void MainWindow_OnContentRendered(object? sender, EventArgs e)
         {
             //TestFillConsole(10);
@@ -270,6 +281,14 @@ namespace CaptureGUI
         {
             IPCadapter.getInstance().SendToken(config.host, config.connectCode);
             ManualConnectionFlyout.IsOpen = false;
+        }
+
+        private void MemePlayer_OnMediaEnded(object sender, RoutedEventArgs e)
+        {
+            this.BeginInvoke((win) =>
+            {
+                win.MemePlayer.Visibility = Visibility.Hidden;
+            });
         }
     }
 }

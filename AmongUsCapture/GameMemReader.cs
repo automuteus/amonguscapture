@@ -120,6 +120,7 @@ namespace AmongUsCapture
                 }
                 if (cracked && ProcessMemory.IsHooked)
                 {
+                    Settings.form.PlayGotEm();
                     var result = Settings.form.context.DialogCoordinator.ShowMessageAsync(Settings.form.context,
                             "Uh oh.",
                             "We have detected that you are running an unsupported version of the game. This may or may not work.",

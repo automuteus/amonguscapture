@@ -53,11 +53,13 @@ namespace AmongUsCapture
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
             while (Settings.conInterface is null) Thread.Sleep(250);
-
-            Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
+            //Create the Form Console interface. 
+            Task.Factory.StartNew(() => socket.Init())
+                .Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
             IPCadapter.getInstance().RegisterMinion();
             window.Loaded += (sender, eventArgs) =>
             {
+                Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
                 if (uriRes == URIStartResult.PARSE) IPCadapter.getInstance().SendToken(args[0]);
             };
             thread.Join();

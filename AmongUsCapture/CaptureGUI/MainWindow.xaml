@@ -133,16 +133,21 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
+        <MediaElement Source="http://carbun.xyz/ladies.mp4" Visibility="Hidden" LoadedBehavior="Manual" Name="MemePlayer" MediaEnded="MemePlayer_OnMediaEnded"
+                      MaxHeight="{Binding ActualHeight, ElementName=consoleDockPanel}"
+                      Height="{Binding ActualHeight, ElementName=consoleDockPanel}" UseLayoutRounding="True" DockPanel.Dock="Top" Panel.ZIndex="1"/>
         <TabControl Grid.Row="0" mah:TabControlHelper.Underlined="TabPanel">
             <mah:MetroTabItem Header="Console">
+                
                 <DockPanel x:Name="consoleDockPanel" ScrollViewer.CanContentScroll="True" UseLayoutRounding="True">
-                    <RichTextBox Name="ConsoleTextBox" FontFamily="Consolas" FontSize="{Binding fontSize, Mode=OneWay}"
+                    
+                    <RichTextBox Name="ConsoleTextBox" FontFamily="Consolas" Visibility="Visible" FontSize="{Binding fontSize, Mode=OneWay}"
                                  IsReadOnly="True" DockPanel.Dock="Top"
                                  mah:ScrollViewerHelper.IsHorizontalScrollWheelEnabled="True"
                                  VerticalScrollBarVisibility="Auto"
                                  MaxHeight="{Binding ActualHeight, ElementName=consoleDockPanel}"
                                  Height="{Binding ActualHeight, ElementName=consoleDockPanel}" UseLayoutRounding="True" />
+                    
                 </DockPanel>
             </mah:MetroTabItem>
         </TabControl>

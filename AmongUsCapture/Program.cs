@@ -52,10 +52,10 @@ namespace AmongUsCapture
             //Create the Form Console interface. 
             Task.Factory.StartNew(() => socket.Init())
                 .Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
-            Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
             IPCadapter.getInstance().RegisterMinion();
             window.Loaded += (sender, eventArgs) =>
             {
+                Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
                 if (uriRes == URIStartResult.PARSE) IPCadapter.getInstance().SendToken(args[0]);
             };
             thread.Join();

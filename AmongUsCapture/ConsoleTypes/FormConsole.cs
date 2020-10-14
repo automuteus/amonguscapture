@@ -1,20 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Text;
+using AmongUsCapture.TextColorLibrary;
+using CaptureGUI;
 
 namespace AmongUsCapture.ConsoleTypes
 {
     public class FormConsole : ConsoleInterface
     {
         private StreamWriter logFile;
-        public UserForm form = null;
+        public MainWindow form;
         private static object locker = new Object();
-        public FormConsole(UserForm userForm)
+
+        public FormConsole(MainWindow userForm)
         {
             form = userForm;
             logFile = File.CreateText(Path.Combine(Directory.GetParent(Program.GetExecutablePath()).FullName, "CaptureLog.txt"));
+        }
+
+        public void WriteTextFormatted(string text, bool acceptNewLines = true)
+        {
+            throw new NotImplementedException();
         }
 
         public void WriteColoredText(string ColoredText)
@@ -23,10 +30,10 @@ namespace AmongUsCapture.ConsoleTypes
             WriteToLog(ColoredText);
         }
 
-        public void WriteLine(string str)
+
+        public void WriteLine(string s)
         {
-            form.WriteLineToConsole(str);
-            WriteToLog(str);
+            throw new NotImplementedException();
         }
 
         public void WriteModuleTextColored(string ModuleName, Color moduleColor, string text)
@@ -35,11 +42,6 @@ namespace AmongUsCapture.ConsoleTypes
             WriteToLog($"[{ModuleName}]: {text}");
         }
 
-        public void WriteTextFormatted(string text, bool acceptNewLines = true)
-        {
-            form.WriteLineFormatted(text, acceptNewLines);
-            WriteToLog(text);
-        }
 
         public void WriteToLog(string textToLog)
         {
@@ -48,7 +50,7 @@ namespace AmongUsCapture.ConsoleTypes
 
         private string StripColor(string text)
         {
-            return TextColorLibrary.TextColor.StripColor(text);
+            return TextColor.StripColor(text);
         }
 
         private void WriteLogLine(DateTime time, string textToLog)

@@ -24,7 +24,7 @@ namespace AmongUsCapture
             {
                 OnToken?.Invoke(this, StartToken.FromString(initialURI));
             }
-            while (true)
+            while (false)
             {
                 PipeSecurity ps = new PipeSecurity();
 
@@ -53,6 +53,12 @@ namespace AmongUsCapture
                 }
                 pipeServer.Close();
             }
+        }
+
+        public void SendToken(string host, string connectCode)
+        {
+            var st = new StartToken {ConnectCode = connectCode, Host = host};
+            OnToken?.Invoke(this, st);
         }
     }
     public class StreamString

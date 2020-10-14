@@ -74,8 +74,7 @@ namespace AmongUsCapture
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(23, 80);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.splitContainer1.Location = new System.Drawing.Point(20, 60);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -85,9 +84,8 @@ namespace AmongUsCapture
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.ConsoleGroupBox);
-            this.splitContainer1.Size = new System.Drawing.Size(896, 528);
-            this.splitContainer1.SplitterDistance = 297;
-            this.splitContainer1.SplitterWidth = 5;
+            this.splitContainer1.Size = new System.Drawing.Size(784, 396);
+            this.splitContainer1.SplitterDistance = 259;
             this.splitContainer1.TabIndex = 0;
             this.splitContainer1.Text = "splitContainer1";
             // 
@@ -102,10 +100,8 @@ namespace AmongUsCapture
             this.UserSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.UserSettings.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.UserSettings.Location = new System.Drawing.Point(0, 0);
-            this.UserSettings.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.UserSettings.Name = "UserSettings";
-            this.UserSettings.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.UserSettings.Size = new System.Drawing.Size(297, 528);
+            this.UserSettings.Size = new System.Drawing.Size(259, 396);
             this.UserSettings.TabIndex = 0;
             this.UserSettings.TabStop = false;
             this.UserSettings.Text = "Settings";
@@ -118,13 +114,12 @@ namespace AmongUsCapture
             this.tableLayoutPanel2.Controls.Add(this.CurrentStateGroupBox, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.GameCodeGB, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 358);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 269);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(291, 166);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(253, 124);
             this.tableLayoutPanel2.TabIndex = 5;
             // 
             // CurrentStateGroupBox
@@ -134,11 +129,9 @@ namespace AmongUsCapture
             this.CurrentStateGroupBox.Controls.Add(this.CurrentState);
             this.CurrentStateGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CurrentStateGroupBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.CurrentStateGroupBox.Location = new System.Drawing.Point(3, 87);
-            this.CurrentStateGroupBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.CurrentStateGroupBox.Location = new System.Drawing.Point(3, 65);
             this.CurrentStateGroupBox.Name = "CurrentStateGroupBox";
-            this.CurrentStateGroupBox.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.CurrentStateGroupBox.Size = new System.Drawing.Size(285, 75);
+            this.CurrentStateGroupBox.Size = new System.Drawing.Size(247, 56);
             this.CurrentStateGroupBox.TabIndex = 3;
             this.CurrentStateGroupBox.TabStop = false;
             this.CurrentStateGroupBox.Text = "Current State";
@@ -152,9 +145,9 @@ namespace AmongUsCapture
             this.CurrentState.AutoSize = true;
             this.CurrentState.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.CurrentState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.CurrentState.Location = new System.Drawing.Point(43, 37);
+            this.CurrentState.Location = new System.Drawing.Point(38, 28);
             this.CurrentState.Name = "CurrentState";
-            this.CurrentState.Size = new System.Drawing.Size(72, 20);
+            this.CurrentState.Size = new System.Drawing.Size(59, 15);
             this.CurrentState.TabIndex = 0;
             this.CurrentState.Text = "Loading...";
             this.CurrentState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -167,11 +160,9 @@ namespace AmongUsCapture
             this.GameCodeGB.Controls.Add(this.tableLayoutPanel3);
             this.GameCodeGB.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GameCodeGB.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.GameCodeGB.Location = new System.Drawing.Point(3, 4);
-            this.GameCodeGB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.GameCodeGB.Location = new System.Drawing.Point(3, 3);
             this.GameCodeGB.Name = "GameCodeGB";
-            this.GameCodeGB.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.GameCodeGB.Size = new System.Drawing.Size(285, 75);
+            this.GameCodeGB.Size = new System.Drawing.Size(247, 56);
             this.GameCodeGB.TabIndex = 4;
             this.GameCodeGB.TabStop = false;
             this.GameCodeGB.Text = "RoomCode";
@@ -180,16 +171,15 @@ namespace AmongUsCapture
             // 
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 114F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.tableLayoutPanel3.Controls.Add(this.GameCodeBox, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.GameCodeCopyButton, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 24);
-            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 19);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(279, 47);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(241, 34);
             this.tableLayoutPanel3.TabIndex = 6;
             // 
             // GameCodeBox
@@ -198,13 +188,12 @@ namespace AmongUsCapture
             this.GameCodeBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.GameCodeBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GameCodeBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.GameCodeBox.Location = new System.Drawing.Point(3, 4);
-            this.GameCodeBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.GameCodeBox.Location = new System.Drawing.Point(3, 3);
             this.GameCodeBox.MaxLength = 6;
             this.GameCodeBox.Name = "GameCodeBox";
             this.GameCodeBox.PlaceholderText = "No Game Found";
             this.GameCodeBox.ReadOnly = true;
-            this.GameCodeBox.Size = new System.Drawing.Size(159, 27);
+            this.GameCodeBox.Size = new System.Drawing.Size(135, 23);
             this.GameCodeBox.TabIndex = 0;
             this.GameCodeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -214,10 +203,9 @@ namespace AmongUsCapture
             this.GameCodeCopyButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GameCodeCopyButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
             this.GameCodeCopyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GameCodeCopyButton.Location = new System.Drawing.Point(168, 4);
-            this.GameCodeCopyButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.GameCodeCopyButton.Location = new System.Drawing.Point(144, 3);
             this.GameCodeCopyButton.Name = "GameCodeCopyButton";
-            this.GameCodeCopyButton.Size = new System.Drawing.Size(108, 39);
+            this.GameCodeCopyButton.Size = new System.Drawing.Size(94, 28);
             this.GameCodeCopyButton.TabIndex = 1;
             this.GameCodeCopyButton.Text = "Copy";
             this.GameCodeCopyButton.UseVisualStyleBackColor = true;
@@ -232,12 +220,10 @@ namespace AmongUsCapture
             this.ConnectCodeGB.Dock = System.Windows.Forms.DockStyle.Top;
             this.ConnectCodeGB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ConnectCodeGB.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.ConnectCodeGB.Location = new System.Drawing.Point(3, 97);
-            this.ConnectCodeGB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ConnectCodeGB.Location = new System.Drawing.Point(3, 74);
             this.ConnectCodeGB.Name = "ConnectCodeGB";
-            this.ConnectCodeGB.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ConnectCodeGB.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.ConnectCodeGB.Size = new System.Drawing.Size(291, 84);
+            this.ConnectCodeGB.Size = new System.Drawing.Size(253, 63);
             this.ConnectCodeGB.TabIndex = 4;
             this.ConnectCodeGB.TabStop = false;
             this.ConnectCodeGB.Text = "Connect Code";
@@ -251,13 +237,13 @@ namespace AmongUsCapture
             this.tableLayoutPanel1.Controls.Add(this.ConnectCodeBox, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.ConnectButton, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 24);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(9, 11, 9, 11);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 19);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(285, 56);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(247, 41);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
             // ConnectCodeBox
@@ -269,11 +255,10 @@ namespace AmongUsCapture
             this.ConnectCodeBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ConnectCodeBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ConnectCodeBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.ConnectCodeBox.Location = new System.Drawing.Point(6, 8);
-            this.ConnectCodeBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ConnectCodeBox.Location = new System.Drawing.Point(6, 6);
             this.ConnectCodeBox.Mask = ">AAAAAAAA";
             this.ConnectCodeBox.Name = "ConnectCodeBox";
-            this.ConnectCodeBox.Size = new System.Drawing.Size(133, 26);
+            this.ConnectCodeBox.Size = new System.Drawing.Size(114, 22);
             this.ConnectCodeBox.TabIndex = 0;
             this.ConnectCodeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.ConnectCodeBox.Click += new System.EventHandler(this.ConnectCodeBox_Click);
@@ -291,10 +276,9 @@ namespace AmongUsCapture
             this.ConnectButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption;
             this.ConnectButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ConnectButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.ConnectButton.Location = new System.Drawing.Point(145, 8);
-            this.ConnectButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ConnectButton.Location = new System.Drawing.Point(126, 6);
             this.ConnectButton.Name = "ConnectButton";
-            this.ConnectButton.Size = new System.Drawing.Size(134, 40);
+            this.ConnectButton.Size = new System.Drawing.Size(115, 29);
             this.ConnectButton.TabIndex = 2;
             this.ConnectButton.Text = "Connect";
             this.ConnectButton.UseCompatibleTextRendering = true;
@@ -308,11 +292,10 @@ namespace AmongUsCapture
             this.UrlGB.Controls.Add(this.URLTextBox);
             this.UrlGB.Dock = System.Windows.Forms.DockStyle.Top;
             this.UrlGB.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.UrlGB.Location = new System.Drawing.Point(3, 24);
-            this.UrlGB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.UrlGB.Location = new System.Drawing.Point(3, 19);
             this.UrlGB.Name = "UrlGB";
-            this.UrlGB.Padding = new System.Windows.Forms.Padding(11, 4, 11, 4);
-            this.UrlGB.Size = new System.Drawing.Size(291, 73);
+            this.UrlGB.Padding = new System.Windows.Forms.Padding(10, 3, 10, 3);
+            this.UrlGB.Size = new System.Drawing.Size(253, 55);
             this.UrlGB.TabIndex = 1;
             this.UrlGB.TabStop = false;
             this.UrlGB.Text = "URL";
@@ -324,11 +307,10 @@ namespace AmongUsCapture
             this.URLTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.URLTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.URLTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.URLTextBox.Location = new System.Drawing.Point(11, 24);
-            this.URLTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.URLTextBox.Location = new System.Drawing.Point(10, 19);
             this.URLTextBox.Name = "URLTextBox";
             this.URLTextBox.PlaceholderText = "http://localhost:8123";
-            this.URLTextBox.Size = new System.Drawing.Size(269, 27);
+            this.URLTextBox.Size = new System.Drawing.Size(233, 23);
             this.URLTextBox.TabIndex = 0;
             // 
             // ConsoleGroupBox
@@ -340,10 +322,8 @@ namespace AmongUsCapture
             this.ConsoleGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ConsoleGroupBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.ConsoleGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.ConsoleGroupBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ConsoleGroupBox.Name = "ConsoleGroupBox";
-            this.ConsoleGroupBox.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.ConsoleGroupBox.Size = new System.Drawing.Size(594, 528);
+            this.ConsoleGroupBox.Size = new System.Drawing.Size(521, 396);
             this.ConsoleGroupBox.TabIndex = 0;
             this.ConsoleGroupBox.TabStop = false;
             this.ConsoleGroupBox.Text = "Console Output";
@@ -358,11 +338,10 @@ namespace AmongUsCapture
             this.ConsoleTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ConsoleTextBox.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ConsoleTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.ConsoleTextBox.Location = new System.Drawing.Point(3, 24);
-            this.ConsoleTextBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.ConsoleTextBox.Location = new System.Drawing.Point(3, 19);
             this.ConsoleTextBox.Name = "ConsoleTextBox";
             this.ConsoleTextBox.ReadOnly = true;
-            this.ConsoleTextBox.Size = new System.Drawing.Size(588, 500);
+            this.ConsoleTextBox.Size = new System.Drawing.Size(515, 374);
             this.ConsoleTextBox.TabIndex = 0;
             this.ConsoleTextBox.TabStop = false;
             this.ConsoleTextBox.Text = "";
@@ -376,7 +355,7 @@ namespace AmongUsCapture
             this.metroContextMenu1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.AutoScrollMenuItem});
             this.metroContextMenu1.Name = "metroContextMenu1";
-            this.metroContextMenu1.Size = new System.Drawing.Size(146, 30);
+            this.metroContextMenu1.Size = new System.Drawing.Size(129, 26);
             // 
             // AutoScrollMenuItem
             // 
@@ -384,16 +363,15 @@ namespace AmongUsCapture
             this.AutoScrollMenuItem.CheckOnClick = true;
             this.AutoScrollMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.AutoScrollMenuItem.Name = "AutoScrollMenuItem";
-            this.AutoScrollMenuItem.Size = new System.Drawing.Size(145, 26);
+            this.AutoScrollMenuItem.Size = new System.Drawing.Size(128, 22);
             this.AutoScrollMenuItem.Text = "Autoscroll";
             // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(286, 420);
-            this.checkBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.checkBox1.Location = new System.Drawing.Point(250, 315);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(101, 24);
+            this.checkBox1.Size = new System.Drawing.Size(83, 19);
             this.checkBox1.TabIndex = 2;
             this.checkBox1.Text = "checkBox1";
             this.checkBox1.UseVisualStyleBackColor = true;
@@ -411,13 +389,11 @@ namespace AmongUsCapture
             // 
             // UserForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(942, 635);
+            this.ClientSize = new System.Drawing.Size(824, 476);
             this.Controls.Add(this.splitContainer1);
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "UserForm";
-            this.Padding = new System.Windows.Forms.Padding(23, 80, 23, 27);
             this.ShadowType = MetroFramework.Forms.MetroFormShadowType.AeroShadow;
             this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultLocation;
             this.Style = MetroFramework.MetroColorStyle.Red;

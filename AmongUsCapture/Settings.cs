@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Windows;
+using CaptureGUI;
 using Config.Net;
 
 namespace AmongUsCapture
@@ -10,7 +12,10 @@ namespace AmongUsCapture
 
         public static ConsoleInterface conInterface;
 
-        public static UserForm form;
+        public static Application app;
+
+        public static MainWindow form;
+
         //Global persistent settings that are saved to a json file. Limited Types
         public static IPersistentSettings PersistentSettings = new ConfigurationBuilder<IPersistentSettings>().UseJsonFile(Path.Join(StorageLocation, "Settings.json")).Build();
         public static IGameOffsets GameOffsets = new ConfigurationBuilder<IGameOffsets>().UseJsonFile(Path.Join(StorageLocation, "GameOffsets.json")).Build();
@@ -25,7 +30,7 @@ namespace AmongUsCapture
         string host { get; set; }
         
         [Option(Alias = "DebugConsole", DefaultValue = false)]
-        bool debugConsole { get; }
+        bool debugConsole { get; set; }
         
     }
 

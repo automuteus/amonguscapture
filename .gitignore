@@ -9,7 +9,7 @@
 *.userprefs
 
 # Visual Studio 2015/2017 cache/options directory
-.vs/
+.vs/*
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
 
@@ -143,13 +143,13 @@ $RECYCLE.BIN/
 _NCrunch*
 
 .dtbcache.v2
-<<<<<<< HEAD
+
 /.idea/.idea.AmongUsCapture/.idea
 /.idea/.idea.AmongUsCapture/riderModule.iml
-=======
+
 
 # .NET Core
 project.lock.json
 project.fragment.lock.json
 artifacts/
->>>>>>> master
+

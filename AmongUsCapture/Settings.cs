@@ -12,13 +12,12 @@ namespace AmongUsCapture
 
         public static ConsoleInterface conInterface;
 
-        public static Application app;
-
         public static MainWindow form;
 
         //Global persistent settings that are saved to a json file. Limited Types
         public static IPersistentSettings PersistentSettings = new ConfigurationBuilder<IPersistentSettings>().UseJsonFile(Path.Join(StorageLocation, "Settings.json")).Build();
         public static IGameOffsets GameOffsets = new ConfigurationBuilder<IGameOffsets>().UseJsonFile(Path.Join(StorageLocation, "GameOffsets.json")).Build();
+
     }
 
 

@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using AmongUsCapture;
 using AmongUsCapture.CaptureGUI;
+using AmongUsCapture.ConsoleTypes;
 using AmongUsCapture.TextColorLibrary;
 using Config.Net;
 using ControlzEx.Theming;
@@ -20,7 +21,7 @@ namespace CaptureGUI
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class MainWindow
     {
         public static Color NormalTextColor = Color.White;
 
@@ -47,9 +48,29 @@ namespace CaptureGUI
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
             GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
+            IPCadapter.getInstance().OnToken += (sender, token) => {
+                this.BeginInvoke((w) => 
+                {
+                    if (!w.IsVisible)
+                    {
+                        w.Show();
+                    }
 
+                    if (w.WindowState == WindowState.Minimized)
+                    {
+                        w.WindowState = WindowState.Normal;
+                    }
+
+                    w.Activate();
+                    w.Topmost = true;  // important
+                    w.Topmost = false; // important
+                    w.Focus();         // important
+
+                    w.Activate();
+                }); };
             //ApplyDarkMode();
         }
+
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {

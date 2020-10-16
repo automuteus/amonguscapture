@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO.Pipes;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
@@ -14,55 +15,22 @@ using SharedMemory;
 
 namespace AmongUsCapture
 {
-    internal static class Program
+    static class Program
     {
         public static MainWindow window;
-        private static Mutex mutex = null;
-
+        private static readonly EventWaitHandle waitHandle = new AutoResetEvent(false);
+        public static readonly ClientSocket socket = new ClientSocket();
         /// <summary>
         ///     The main entry point for the application.
         /// </summary>
-        [STAThread]
-        private static void Main(string[] args)
+        public static void Main()
         {
-            if (Settings.PersistentSettings.debugConsole)
-                AllocConsole(); // needs to be the first call in the program to prevent weird bugs
-
-            var uriRes = IPCadapter.getInstance().HandleURIStart(args);
-            switch (uriRes)
-            {
-                case URIStartResult.CLOSE:
-                    Environment.Exit(0);
-                    break;
-                case URIStartResult.PARSE:
-                    Console.WriteLine($"Starting with args : {args[0]}");
-                    break;
-                case URIStartResult.CONTINUE:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-
-            
-            var socket = new ClientSocket();
-            
             //Create the Form Console interface. 
-            Task.Factory.StartNew(() => socket.Init()).Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
-            var thread = new Thread(OpenGUI);
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.Start();
-            while (Settings.conInterface is null) Thread.Sleep(250);
-            //Create the Form Console interface. 
-            Task.Factory.StartNew(() => socket.Init())
-                .Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
+            var socketTask = Task.Factory.StartNew(() => socket.Init()); // run socket in background. Important to wait for init to have actually finished before continuing
+            Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
+            socketTask.Wait();
             IPCadapter.getInstance().RegisterMinion();
-            window.Loaded += (sender, eventArgs) =>
-            {
-                Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
-                if (uriRes == URIStartResult.PARSE) IPCadapter.getInstance().SendToken(args[0]);
-            };
-            thread.Join();
+            
         }
 
 
@@ -70,9 +38,9 @@ namespace AmongUsCapture
         {
             var a = new App();
             window = new MainWindow();
+            waitHandle.Set();
             a.MainWindow = window;
-            Settings.form = window;
-            Settings.conInterface = new FormConsole(window);
+
             a.Run(window);
             Environment.Exit(0);
         }
@@ -83,9 +51,7 @@ namespace AmongUsCapture
         }
 
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool AllocConsole();
+        
 
         
     }

@@ -1,4 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using System.Windows;
+using AmongUsCapture.ConsoleTypes;
+using CaptureGUI;
 using ControlzEx.Theming;
 
 namespace AmongUsCapture.CaptureGUI
@@ -12,9 +17,66 @@ namespace AmongUsCapture.CaptureGUI
         {
             base.OnStartup(e);
 
-            // Set the application theme to Dark.Green
+            var args = e.Args;
             ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncAll;
             ThemeManager.Current.SyncTheme();
+             // needs to be the first call in the program to prevent weird bugs
+             if (Settings.PersistentSettings.debugConsole)
+                 AllocConsole();
+
+            var uriStart = IPCadapter.getInstance().HandleURIStart(e.Args);
+            
+            switch (uriStart)
+            {
+                case URIStartResult.CLOSE:
+                    Environment.Exit(0);
+                    break;
+                case URIStartResult.PARSE:
+                    Console.WriteLine($"Starting with args : {e.Args[0]}");
+                    break;
+                case URIStartResult.CONTINUE:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+            var splashScreen = new SplashScreenWindow();
+            this.MainWindow = splashScreen;
+            splashScreen.Show();
+            Task.Factory.StartNew(() =>
+            {
+                //simulate some work being done
+                //System.Threading.Thread.Sleep(3000);
+
+                //since we're not on the UI thread
+                //once we're done we need to use the Dispatcher
+                //to create and show the main window
+                this.Dispatcher.Invoke(() =>
+                {
+                    //initialize the main window, set it as the application main window
+                    //and close the splash screen
+                    var mainWindow = new MainWindow();
+                    this.MainWindow = mainWindow;
+                    AmongUsCapture.Settings.form = mainWindow;
+                    AmongUsCapture.Settings.conInterface = new FormConsole(mainWindow);
+                    Program.Main();
+                    mainWindow.Loaded += (sender, args2) =>
+                    {
+                        if (uriStart == URIStartResult.PARSE) IPCadapter.getInstance().SendToken(args[0]);
+                    };
+                    mainWindow.Closing += (sender, args2) =>
+                    {
+                        Environment.Exit(0);
+                    };
+                    mainWindow.Show();
+                    splashScreen.Close();
+                });
+            });
+            
         }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool AllocConsole();
     }
 }

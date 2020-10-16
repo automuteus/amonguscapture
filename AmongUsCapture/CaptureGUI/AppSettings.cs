@@ -20,6 +20,9 @@ namespace CaptureGUI
         [Option(DefaultValue = false)]
         bool debug { get; set; }
 
+        [Option(DefaultValue = true)]
+        bool checkForUpdate { get; set; }
+
         [Option(DefaultValue = "")]
         string host { get; set; }
 

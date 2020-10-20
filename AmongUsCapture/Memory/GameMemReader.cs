@@ -50,6 +50,7 @@ namespace AmongUsCapture
             return instance;
         }
 
+        public event EventHandler<ValidatorEventArgs> GameVersionUnverified;
         public event EventHandler<GameStateChangedEventArgs> GameStateChanged;
 
         public event EventHandler<PlayerChangedEventArgs> PlayerChanged;
@@ -64,23 +65,23 @@ namespace AmongUsCapture
         {
             while (true)
             {
-                if (!ProcessMemory.IsHooked)
+                if (!ProcessMemory.getInstance().IsHooked)
                 {
-                    if (!ProcessMemory.HookProcess("Among Us"))
+                    if (!ProcessMemory.getInstance().HookProcess("Among Us"))
                     {
                         Thread.Sleep(1000);
                         continue;
                     }
 
                     Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
-                        $"Connected to Among Us process ({Color.Red.ToTextColor()}{ProcessMemory.process.Id}{MainWindow.NormalTextColor.ToTextColor()})");
+                        $"Connected to Among Us process ({Color.Red.ToTextColor()}{ProcessMemory.getInstance().process.Id}{MainWindow.NormalTextColor.ToTextColor()})");
 
 
                     var foundModule = false;
 
                     while (true)
                     {
-                        foreach (var module in ProcessMemory.modules)
+                        foreach (var module in ProcessMemory.getInstance().modules)
                             if (module.Name.Equals("GameAssembly.dll", StringComparison.OrdinalIgnoreCase))
                             {
                                 GameAssemblyPtr = module.BaseAddress;
@@ -107,7 +108,7 @@ namespace AmongUsCapture
                                 "Still looking for modules...");
                             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "Still looking for modules..."); // TODO: This still isn't functional, we need to re-hook to reload module addresses
                             Thread.Sleep(500); // delay and try again
-                            ProcessMemory.LoadModules();
+                            ProcessMemory.getInstance().LoadModules();
                         }
                         else
                         {
@@ -115,10 +116,10 @@ namespace AmongUsCapture
                         }
                     }
 
-                    prevChatBubsVersion = ProcessMemory.Read<int>(GameAssemblyPtr, _gameOffsets.HudManagerOffset, 0x5C,
+                    prevChatBubsVersion = ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, _gameOffsets.HudManagerOffset, 0x5C,
                         0, 0x28, 0xC, 0x14, 0x10);
                 }
-                if (cracked && ProcessMemory.IsHooked)
+                if (cracked && ProcessMemory.getInstance().IsHooked)
                 {
                     Settings.form.PlayGotEm();
                     var result = Settings.form.context.DialogCoordinator.ShowMessageAsync(Settings.form.context,
@@ -141,15 +142,15 @@ namespace AmongUsCapture
 
                 GameState state;
                 //int meetingHudState = /*meetingHud_cachePtr == 0 ? 4 : */ProcessMemory.ReadWithDefault<int>(GameAssemblyPtr, 4, 0xDA58D0, 0x5C, 0, 0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
-                var meetingHud = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, _gameOffsets.MeetingHudOffset, 0x5C, 0);
-                var meetingHud_cachePtr = meetingHud == IntPtr.Zero ? 0 : ProcessMemory.Read<uint>(meetingHud, 0x8);
+                var meetingHud = ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr, _gameOffsets.MeetingHudOffset, 0x5C, 0);
+                var meetingHud_cachePtr = meetingHud == IntPtr.Zero ? 0 : ProcessMemory.getInstance().Read<uint>(meetingHud, 0x8);
                 var meetingHudState =
                     meetingHud_cachePtr == 0
                         ? 4
-                        : ProcessMemory.ReadWithDefault(meetingHud, 4,
+                        : ProcessMemory.getInstance().ReadWithDefault(meetingHud, 4,
                             0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
                 var gameState =
-                    ProcessMemory.Read<int>(GameAssemblyPtr, _gameOffsets.AmongUsClientOffset, 0x5C, 0,
+                    ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, _gameOffsets.AmongUsClientOffset, 0x5C, 0,
                         0x64); // 0 = NotJoined, 1 = Joined, 2 = Started, 3 = Ended (during "defeat" or "victory" screen only)
 
                 switch (gameState)
@@ -178,22 +179,22 @@ namespace AmongUsCapture
 
 
                 var allPlayersPtr =
-                    ProcessMemory.Read<IntPtr>(GameAssemblyPtr, _gameOffsets.GameDataOffset, 0x5C, 0, 0x24);
-                var allPlayers = ProcessMemory.Read<IntPtr>(allPlayersPtr, 0x08);
-                var playerCount = ProcessMemory.Read<int>(allPlayersPtr, 0x0C);
+                    ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr, _gameOffsets.GameDataOffset, 0x5C, 0, 0x24);
+                var allPlayers = ProcessMemory.getInstance().Read<IntPtr>(allPlayersPtr, 0x08);
+                var playerCount = ProcessMemory.getInstance().Read<int>(allPlayersPtr, 0x0C);
 
                 var playerAddrPtr = allPlayers + 0x10;
 
                 // check if exile causes end
                 if (oldState == GameState.DISCUSSION && state == GameState.TASKS)
                 {
-                    var exiledPlayerId = ProcessMemory.ReadWithDefault<byte>(GameAssemblyPtr, 255,
+                    var exiledPlayerId = ProcessMemory.getInstance().ReadWithDefault<byte>(GameAssemblyPtr, 255,
                         _gameOffsets.MeetingHudOffset, 0x5C, 0, 0x94, 0x08);
                     int impostorCount = 0, innocentCount = 0;
 
                     for (var i = 0; i < playerCount; i++)
                     {
-                        var pi = ProcessMemory.Read<PlayerInfo>(playerAddrPtr, 0, 0);
+                        var pi = ProcessMemory.getInstance().Read<PlayerInfo>(playerAddrPtr, 0, 0);
                         playerAddrPtr += 4;
 
                         if (pi.PlayerId == exiledPlayerId)
@@ -242,7 +243,7 @@ namespace AmongUsCapture
 
                 for (var i = 0; i < playerCount; i++)
                 {
-                    var pi = ProcessMemory.Read<PlayerInfo>(playerAddrPtr, 0, 0);
+                    var pi = ProcessMemory.getInstance().Read<PlayerInfo>(playerAddrPtr, 0, 0);
                     playerAddrPtr += 4;
                     if (pi.PlayerName == 0) continue;
                     var playerName = pi.GetPlayerName();
@@ -337,15 +338,15 @@ namespace AmongUsCapture
                         });
                 }
 
-                var chatBubblesPtr = ProcessMemory.Read<IntPtr>(GameAssemblyPtr, _gameOffsets.HudManagerOffset, 0x5C, 0,
+                var chatBubblesPtr = ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr, _gameOffsets.HudManagerOffset, 0x5C, 0,
                     0x28, 0xC, 0x14);
 
                 var poolSize = 20; // = ProcessMemory.Read<int>(GameAssemblyPtr, 0xD0B25C, 0x5C, 0, 0x28, 0xC, 0xC)
 
-                var numChatBubbles = ProcessMemory.Read<int>(chatBubblesPtr, 0xC);
-                var chatBubsVersion = ProcessMemory.Read<int>(chatBubblesPtr, 0x10);
-                var chatBubblesAddr = ProcessMemory.Read<IntPtr>(chatBubblesPtr, 0x8) + 0x10;
-                var chatBubblePtrs = ProcessMemory.ReadArray(chatBubblesAddr, numChatBubbles);
+                var numChatBubbles = ProcessMemory.getInstance().Read<int>(chatBubblesPtr, 0xC);
+                var chatBubsVersion = ProcessMemory.getInstance().Read<int>(chatBubblesPtr, 0x10);
+                var chatBubblesAddr = ProcessMemory.getInstance().Read<IntPtr>(chatBubblesPtr, 0x8) + 0x10;
+                var chatBubblePtrs = ProcessMemory.getInstance().ReadArray(chatBubblesAddr, numChatBubbles);
 
                 var newMsgs = 0;
 
@@ -375,9 +376,9 @@ namespace AmongUsCapture
 
                 for (var i = numChatBubbles - newMsgs; i < numChatBubbles; i++)
                 {
-                    var msgText = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(chatBubblePtrs[i], 0x20, 0x28));
+                    var msgText = ProcessMemory.getInstance().ReadString(ProcessMemory.getInstance().Read<IntPtr>(chatBubblePtrs[i], 0x20, 0x28));
                     if (msgText.Length == 0) continue;
-                    var msgSender = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(chatBubblePtrs[i], 0x1C, 0x28));
+                    var msgSender = ProcessMemory.getInstance().ReadString(ProcessMemory.getInstance().Read<IntPtr>(chatBubblePtrs[i], 0x1C, 0x28));
                     var oldPlayerInfo = oldPlayerInfos[msgSender];
                     ChatMessageAdded?.Invoke(this, new ChatMessageEventArgs
                     {
@@ -389,12 +390,12 @@ namespace AmongUsCapture
 
                 if (shouldReadLobby)
                 {
-                    var gameCode = ProcessMemory.ReadString(ProcessMemory.Read<IntPtr>(GameAssemblyPtr,
+                    var gameCode = ProcessMemory.getInstance().ReadString(ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr,
                         _gameOffsets.GameStartManagerOffset, 0x5c, 0, 0x20, 0x28));
                     string[] split;
                     if (gameCode != null && gameCode.Length > 0 && (split = gameCode.Split('\n')).Length == 2)
                     {
-                        PlayRegion region = (PlayRegion)((4 - (ProcessMemory.Read<int>(GameAssemblyPtr, _gameOffsets.ServerManagerOffset, 0x5c, 0, 0x10, 0x8, 0x8) & 0b11)) % 3); // do NOT ask
+                        PlayRegion region = (PlayRegion)((4 - (ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, _gameOffsets.ServerManagerOffset, 0x5c, 0, 0x10, 0x8, 0x8) & 0b11)) % 3); // do NOT ask
 
                         this.latestLobbyEventArgs = new LobbyEventArgs()
                         {

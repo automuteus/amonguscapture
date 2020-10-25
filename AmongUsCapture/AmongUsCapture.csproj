@@ -5,7 +5,6 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>false</UseWindowsForms>
     <UseWPF>true</UseWPF>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -40,9 +39,6 @@
   <ItemGroup>
     <PackageReference Include="Config.Net" Version="4.15.0" />
     <PackageReference Include="Config.Net.Json" Version="4.15.0" />
-    <PackageReference Include="Costura.Fody" Version="5.0.0-alpha0281">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
     <PackageReference Include="MahApps.Metro" Version="2.2.0" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="4.5.0" />
     <PackageReference Include="NamedPipeServerStream.NetFrameworkVersion" Version="1.0.2" />

@@ -18,8 +18,14 @@ Windows Security → Virus & threat protection → Virus & threat protection set
 
 Then browse to the AmongUsCapture.exe file and confirm that you want to create the exception.
 
-## Developing / Contributing
-WIP
+*** 
+
+
+## Develop
+### Tools for developing
+* [Visual Studio](https://visualstudio.microsoft.com/vs/)
+* [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) (should be installed automatically by Visual Studio)
+* [SonarLint](https://www.sonarlint.org/visualstudio/)
 
 ## Releasing
 WIP

@@ -35,7 +35,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.project }}-${{ matrix.os }}-stanalone
+          name: ${{ matrix.project }}-${{ matrix.os }}-standalone
           path: ${{ matrix.project }}/bin/${{ matrix.configuration }}/netcoreapp3.1/${{ matrix.os }}/publish/${{ matrix.project }}.exe
         
   build_variants_dependant:

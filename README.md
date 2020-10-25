@@ -6,6 +6,8 @@
 
 Capture of the local Among Us executable state.
 
+## Installation
+Download the [lastest release](https://github.com/litetex/amonguscapture/releases/latest) and execute it.
 
 ## Important notes
 ### Antivirus detection
@@ -15,3 +17,6 @@ Windows Defender may flag this executable as Trojan:Win32/Emali.A!cl, you can ma
 Windows Security → Virus & threat protection → Virus & threat protection settings → Exclusions → Add exclusion
 
 Then browse to the AmongUsCapture.exe file and confirm that you want to create the exception.
+
+## Releasing
+<WIP>

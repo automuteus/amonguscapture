@@ -18,5 +18,8 @@ Windows Security → Virus & threat protection → Virus & threat protection set
 
 Then browse to the AmongUsCapture.exe file and confirm that you want to create the exception.
 
+## Developing / Contributing
+WIP
+
 ## Releasing
-<WIP>
+WIP

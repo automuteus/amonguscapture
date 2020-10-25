@@ -9,8 +9,9 @@ on:
 
 jobs:
   build_variants_standalone:
-    name: Standalone Variant
-    runs-on: ubuntu-latest
+    name: Standalone
+    # windows-latest is required; building with linux results in NETSDK1100 error
+    runs-on: windows-latest
     strategy:
       matrix:
         os: [win-x64, win-x86]
@@ -36,8 +37,9 @@ jobs:
           path: ${{ matrix.project }}/bin/${{ matrix.configuration }}/netcoreapp3.1/${{ matrix.os }}/publish/${{ matrix.project }}.exe
         
   build_variants_dependant:
-    name: Dependant Variant
-    runs-on: ubuntu-latest
+    name: Dependant
+    # windows-latest is required; building with linux results in NETSDK1100 error
+    runs-on: windows-latest
     strategy:
       matrix:
         os: [win-x64, win-x86]
@@ -54,7 +56,7 @@ jobs:
         
       - name: Publish ${{ matrix.os }} ${{ matrix.configuration }} - dotnet publish 
         working-directory: ${{ matrix.project }}
-        run: dotnet publish -c ${{ matrix.configuration }} -r ${{ matrix.os }} --selfcontained false /p:PublishSingleFile=true
+        run: dotnet publish -c ${{ matrix.configuration }} -r ${{ matrix.os }} --no-self-contained /p:PublishSingleFile=true
         
       - name: Upload artifact
         uses: actions/upload-artifact@v2

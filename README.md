@@ -20,8 +20,7 @@ Then browse to the AmongUsCapture.exe file and confirm that you want to create t
 
 *** 
 
-
-## Develop
+## Developing
 ### Tools for developing
 * [Visual Studio](https://visualstudio.microsoft.com/vs/)
 * [.NET Core 3.1 SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1) (should be installed automatically by Visual Studio)

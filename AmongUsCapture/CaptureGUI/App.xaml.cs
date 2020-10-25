@@ -20,12 +20,12 @@ namespace AmongUsCapture.CaptureGUI
             var args = e.Args;
             ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncAll;
             ThemeManager.Current.SyncTheme();
-             // needs to be the first call in the program to prevent weird bugs
-             if (Settings.PersistentSettings.debugConsole)
-                 AllocConsole();
+            // needs to be the first call in the program to prevent weird bugs
+            if (Settings.PersistentSettings.DebugConsole)
+                AllocConsole();
 
             var uriStart = IPCadapter.getInstance().HandleURIStart(e.Args);
-            
+
             switch (uriStart)
             {
                 case URIStartResult.CLOSE:
@@ -39,15 +39,13 @@ namespace AmongUsCapture.CaptureGUI
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
             var splashScreen = new SplashScreenWindow();
             this.MainWindow = splashScreen;
             splashScreen.Show();
+
             Task.Factory.StartNew(() =>
             {
-                //simulate some work being done
-                //System.Threading.Thread.Sleep(3000);
-
                 //since we're not on the UI thread
                 //once we're done we need to use the Dispatcher
                 //to create and show the main window
@@ -57,8 +55,8 @@ namespace AmongUsCapture.CaptureGUI
                     //and close the splash screen
                     var mainWindow = new MainWindow();
                     this.MainWindow = mainWindow;
-                    AmongUsCapture.Settings.form = mainWindow;
-                    AmongUsCapture.Settings.conInterface = new FormConsole(mainWindow);
+                    Settings.Form = mainWindow;
+                    Settings.ConInterface = new FormConsole(mainWindow);
                     Program.Main();
                     mainWindow.Loaded += (sender, args2) =>
                     {
@@ -72,7 +70,7 @@ namespace AmongUsCapture.CaptureGUI
                     splashScreen.Close();
                 });
             });
-            
+
         }
 
         [DllImport("kernel32.dll", SetLastError = true)]

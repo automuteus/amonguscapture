@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Text.Json;
 using AmongUsCapture.TextColorLibrary;
@@ -33,7 +33,7 @@ namespace AmongUsCapture
             {
                 // Report the connection
                 //Settings.form.setConnectionStatus(true);
-                Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, "Connected successfully!");
+                Settings.ConInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, "Connected successfully!");
 
 
                 // Alert any listeners that the connection has occurred.
@@ -42,7 +42,7 @@ namespace AmongUsCapture
                 // On each (re)connection, send the connect code and then force-update everything.
                 socket.EmitAsync("connectCode", ConnectCode).ContinueWith((_) =>
                 {
-                    Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                    Settings.ConInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
                         $"Connection code ({Color.Red.ToTextColor()}{ConnectCode}{MainWindow.NormalTextColor.ToTextColor()}) sent to server.");
                     GameMemReader.getInstance().ForceUpdatePlayers();
                     GameMemReader.getInstance().ForceTransmitState();
@@ -53,9 +53,7 @@ namespace AmongUsCapture
             // Handle socket disconnection events.
             socket.OnDisconnected += (sender, e) =>
             {
-                //Settings.form.setConnectionStatus(false);
-                //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Lost connection!");
-                Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                Settings.ConInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
                     $"{Color.Red.ToTextColor()}Connection lost!");
 
                 // Alert any listeners that the disconnection has occured.
@@ -65,7 +63,7 @@ namespace AmongUsCapture
 
         public void OnTokenHandler(object sender, StartToken token)
         {
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+            Settings.ConInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
                 $"Attempting to connect to host {Color.LimeGreen.ToTextColor()}{token.Host}{Color.White.ToTextColor()} with connect code {Color.Red.ToTextColor()}{token.ConnectCode}{Color.White.ToTextColor()}");
             if (socket.Connected)
                 // Disconnect from the existing host...
@@ -82,7 +80,7 @@ namespace AmongUsCapture
         private void OnConnectionFailure(AggregateException e = null)
         {
             var message = e != null ? e.Message : "A generic connection error occured.";
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+            Settings.ConInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
                 $"{Color.Red.ToTextColor()}{message}");
         }
 
@@ -124,14 +122,14 @@ namespace AmongUsCapture
         {
             if (!socket.Connected) return;
             socket.EmitAsync("player",
-                JsonSerializer.Serialize(e)); //Makes code wait for socket to emit before closing thread.
+                JsonSerializer.Serialize(e)); // Makes code wait for socket to emit before closing thread.
         }
 
         private void JoinedLobbyHandler(object sender, LobbyEventArgs e)
         {
             if (!socket.Connected) return;
             socket.EmitAsync("lobby", JsonSerializer.Serialize(e));
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+            Settings.ConInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
                 $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{MainWindow.NormalTextColor.ToTextColor()}) sent to server.");
         }
 

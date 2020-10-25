@@ -72,7 +72,7 @@ namespace AmongUsCapture
                         continue;
                     }
 
-                    Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
+                    Settings.ConInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
                         $"Connected to Among Us process ({Color.Red.ToTextColor()}{ProcessMemory.process.Id}{MainWindow.NormalTextColor.ToTextColor()})");
 
 
@@ -87,13 +87,13 @@ namespace AmongUsCapture
                                 if (!GameVerifier.VerifySteamHash(module.FileName))
                                 {
                                     cracked = true;
-                                    Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red,
+                                    Settings.ConInterface.WriteModuleTextColored("GameVerifier", Color.Red,
                                         $"Client verification: {Color.Red.ToTextColor()}FAIL{MainWindow.NormalTextColor.ToTextColor()}.");
                                 }
                                 else
                                 {
                                     cracked = false;
-                                    Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red,
+                                    Settings.ConInterface.WriteModuleTextColored("GameVerifier", Color.Red,
                                         $"Client verification: {Color.Lime.ToTextColor()}PASS{MainWindow.NormalTextColor.ToTextColor()}.");
                                 }
 
@@ -101,18 +101,15 @@ namespace AmongUsCapture
                                 break;
                             }
 
-                        if (!foundModule)
-                        {
-                            Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
-                                "Still looking for modules...");
-                            //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "Still looking for modules..."); // TODO: This still isn't functional, we need to re-hook to reload module addresses
-                            Thread.Sleep(500); // delay and try again
-                            ProcessMemory.LoadModules();
-                        }
-                        else
-                        {
+                        if (foundModule)
                             break; // we have found all modules
-                        }
+
+
+                        Settings.ConInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
+                            "Still looking for modules...");
+                        //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "Still looking for modules..."); // TODO: This still isn't functional, we need to re-hook to reload module addresses
+                        Thread.Sleep(500); // delay and try again
+                        ProcessMemory.LoadModules();
                     }
 
                     prevChatBubsVersion = ProcessMemory.Read<int>(GameAssemblyPtr, _gameOffsets.HudManagerOffset, 0x5C,
@@ -120,8 +117,8 @@ namespace AmongUsCapture
                 }
                 if (cracked && ProcessMemory.IsHooked)
                 {
-                    Settings.form.PlayGotEm();
-                    var result = Settings.form.context.DialogCoordinator.ShowMessageAsync(Settings.form.context,
+                    Settings.Form.PlayGotEm();
+                    var result = Settings.Form.context.DialogCoordinator.ShowMessageAsync(Settings.Form.context,
                             "Uh oh.",
                             "We have detected that you are running an unsupported version of the game. This may or may not work.",
                             MessageDialogStyle.AffirmativeAndNegative,

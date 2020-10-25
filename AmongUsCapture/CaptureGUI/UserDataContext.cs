@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Windows;
 using CaptureGUI;
 using MahApps.Metro.Controls.Dialogs;
 using Octokit;
@@ -20,7 +19,7 @@ namespace AmongUsCapture.CaptureGUI
         {
             DialogCoordinator = dialogCoordinator;
             Settings = settings;
-            Settings.debug = AmongUsCapture.Settings.PersistentSettings.debugConsole;
+            Settings.Debug = AmongUsCapture.Settings.PersistentSettings.DebugConsole;
             Settings.PropertyChanged += SettingsOnPropertyChanged;
 
             FileVersionInfo v = FileVersionInfo.GetVersionInfo(Program.GetExecutablePath());
@@ -36,17 +35,13 @@ namespace AmongUsCapture.CaptureGUI
                 Console.WriteLine(e);
                 LatestVersion = "ERROR";
             }
-
-            
-
-
         }
 
         private void SettingsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Settings.debug))
+            if (e.PropertyName == nameof(Settings.Debug))
             {
-                AmongUsCapture.Settings.PersistentSettings.debugConsole = Settings.debug;
+                AmongUsCapture.Settings.PersistentSettings.DebugConsole = Settings.Debug;
             }
         }
     }

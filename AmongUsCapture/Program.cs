@@ -1,17 +1,9 @@
-using System;
+﻿using System;
 using System.Diagnostics;
-using System.Drawing;
-using System.IO.Pipes;
-using System.Runtime.InteropServices;
-using System.Security.Principal;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AmongUsCapture.CaptureGUI;
-using AmongUsCapture.ConsoleTypes;
 using CaptureGUI;
-using Microsoft.Win32;
-using SharedMemory;
 
 namespace AmongUsCapture
 {
@@ -30,9 +22,7 @@ namespace AmongUsCapture
             Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
             socketTask.Wait();
             IPCadapter.getInstance().RegisterMinion();
-            
         }
-
 
         private static void OpenGUI()
         {
@@ -50,9 +40,5 @@ namespace AmongUsCapture
             return Process.GetCurrentProcess().MainModule.FileName;
         }
 
-
-        
-
-        
     }
 }

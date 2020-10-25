@@ -8,7 +8,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using AmongUsCapture;
 using AmongUsCapture.CaptureGUI;
-using AmongUsCapture.ConsoleTypes;
 using AmongUsCapture.TextColorLibrary;
 using Config.Net;
 using ControlzEx.Theming;
@@ -23,23 +22,24 @@ namespace CaptureGUI
     /// </summary>
     public partial class MainWindow
     {
-        public static Color NormalTextColor = Color.White;
+        public static Color NormalTextColor { get; private set; } = Color.White;
 
 
-        private IAppSettings config;
+        private readonly IAppSettings config;
 
         public UserDataContext context;
-        private bool connected;
         private readonly object locker = new object();
 
         public MainWindow()
         {
             InitializeComponent();
-            var p = ConsoleTextBox.Document.Blocks.FirstBlock as Paragraph;
+            
             ConsoleTextBox.Document.Blocks.Clear();
+            
             config = new ConfigurationBuilder<IAppSettings>()
                 .UseJsonFile(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    "\\AmongUsCapture\\AmongUsGUI", "Settings.json")).Build();
+                    "AmongUsCapture", "AmongUsGUI", "Settings.json")).Build();
+            
             context = new UserDataContext(DialogCoordinator.Instance, config);
             DataContext = context;
             config.PropertyChanged += ConfigOnPropertyChanged;
@@ -68,22 +68,19 @@ namespace CaptureGUI
 
                     w.Activate();
                 }); };
-            //ApplyDarkMode();
         }
 
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
-            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki,
+            AmongUsCapture.Settings.ConInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki,
                 $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
-            //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
         }
 
         private void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
         {
-            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("CHAT", Color.DarkKhaki,
+            AmongUsCapture.Settings.ConInterface.WriteModuleTextColored("CHAT", Color.DarkKhaki,
                 $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Sender}{NormalTextColor.ToTextColor()}: {e.Message}");
-            //WriteLineToConsole($"[CHAT] {e.Sender}: {e.Message}");
         }
 
         private void OnJoinedLobby(object sender, LobbyEventArgs e)
@@ -139,21 +136,17 @@ namespace CaptureGUI
 
         private void ConfigOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "fontSize")
+            if (e.PropertyName == "FontSize")
                 ConsoleTextBox.BeginInvoke(tb =>
                 {
-                    tb.Document.FontSize = config.fontSize;
-                    //foreach (var block in tb.Document.Blocks)
-                    //{
-                    //    block.FontSize = config.fontSize;
-                    //}
+                    tb.Document.FontSize = config.FontSize;
                 });
         }
 
         private void SetDefaultThemeColor()
         {
-            if (config.ranBefore) return;
-            config.ranBefore = true;
+            if (config.RanBefore) return;
+            config.RanBefore = true;
             ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncAll;
             ThemeManager.Current.SyncTheme();
             var newTheme = ThemeManager.Current.DetectTheme();
@@ -189,7 +182,7 @@ namespace CaptureGUI
 
         private void ManualConnect_Click(object sender, RoutedEventArgs e)
         {
-            //Open up the manual connection flyout.
+            // Open up the manual connection flyout.
             ManualConnectionFlyout.IsOpen = true;
             
         }
@@ -197,9 +190,8 @@ namespace CaptureGUI
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
         {
             setCurrentState(e.NewState.ToString());
-            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
+            AmongUsCapture.Settings.ConInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
                 $"State changed to {Color.Cyan.ToTextColor()}{e.NewState}");
-            //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
         }
 
 
@@ -221,15 +213,11 @@ namespace CaptureGUI
 
         public void setConnectionStatus(bool connected)
         {
-            if (connected)
-                ThemeManager.Current.ChangeThemeColorScheme(this, "Green");
-            else
-                ThemeManager.Current.ChangeThemeColorScheme(this, "Red");
+           ThemeManager.Current.ChangeThemeColorScheme(this, connected ? "Green" : "Red");
         }
 
         public void WriteConsoleLineFormatted(string moduleName, Color moduleColor, string message)
         {
-            //Outputs a message like this: [{ModuleName}]: {Message}
             WriteColoredText(
                 $"{NormalTextColor.ToTextColor()}[{moduleColor.ToTextColor()}{moduleName}{NormalTextColor.ToTextColor()}]: {message}");
         }
@@ -251,7 +239,6 @@ namespace CaptureGUI
                         };
                         paragraph.Inlines.Add(run);
                         paragraph.LineHeight = 1;
-                        //this.AppendText(part.text, part.textColor, false);
                     }
 
                     tb.Document.Blocks.Add(paragraph);
@@ -284,15 +271,10 @@ namespace CaptureGUI
                 win.MemePlayer.Position = TimeSpan.Zero;
                 win.MemePlayer.Play();
             });
-            
-            
         }
 
-        private void MainWindow_OnContentRendered(object? sender, EventArgs e)
+        private void MainWindow_OnContentRendered(object sender, EventArgs e)
         {
-            //TestFillConsole(10);
-            //setCurrentState("GAMESTATE");
-            //setGameCode("GAMECODE");
             SetDefaultThemeColor();
 
             ApplyDarkMode();
@@ -300,7 +282,7 @@ namespace CaptureGUI
 
         private void SubmitConnectButton_OnClick(object sender, RoutedEventArgs e)
         {
-            IPCadapter.getInstance().SendToken(config.host, config.connectCode);
+            IPCadapter.getInstance().SendToken(config.Host, config.ConnectCode);
             ManualConnectionFlyout.IsOpen = false;
         }
 

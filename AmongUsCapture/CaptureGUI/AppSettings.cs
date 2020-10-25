@@ -9,24 +9,24 @@ namespace CaptureGUI
     public interface IAppSettings : INotifyPropertyChanged
     {
         [Option(DefaultValue = false)]
-        bool ranBefore { get; set; }
+        bool RanBefore { get; set; }
 
         [Option(DefaultValue = false)]
         bool DarkMode { get; set; }
 
         [Option(DefaultValue = 18d)]
-        double fontSize { get; set; }
+        double FontSize { get; set; }
 
         [Option(DefaultValue = false)]
-        bool debug { get; set; }
+        bool Debug { get; set; }
 
         [Option(DefaultValue = true)]
-        bool checkForUpdate { get; set; }
+        bool CheckForUpdate { get; set; }
 
         [Option(DefaultValue = "")]
-        string host { get; set; }
+        string Host { get; set; }
 
         [Option(DefaultValue = "")]
-        string connectCode { get; set; }
+        string ConnectCode { get; set; }
     }
 }

@@ -4,6 +4,8 @@
 
 # AmongUsCapture <img src="AmongUsCapture/Icon.ico" width="48">
 
+### ❌**Capture only works with the Official Steam Non-Beta Version of Among Us**❌
+
 Capture of the local Among Us executable state.
 
 ## Installation

@@ -1,0 +1,76 @@
+name: Master CI
+
+on: 
+  push:
+    branches: [ master ]
+
+jobs:
+  build_release:
+    runs-on: ubuntu-latest
+    outputs:
+       upload_url: ${{ steps.create_draft.outputs.upload_url }}
+
+    steps:
+      - name: Release - Create Draft for a Release
+        id: create_draft
+        uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+  build_variants_standalone:
+    name: Standalone
+    # windows-latest is required; building with linux results in NETSDK1100 error
+    runs-on: windows-latest
+    needs: [build_release]
+    strategy:
+      matrix:
+        os: [win-x64, win-x86]
+        configuration: [Release]
+        project: [AmongUsCapture]
+        
+    steps:
+      - uses: actions/checkout@v2
+        
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1
+        
+      - name: Publish ${{ matrix.os }} ${{ matrix.configuration }} - dotnet publish 
+        working-directory: ${{ matrix.project }}
+        run: dotnet publish -c ${{ matrix.configuration }} -r ${{ matrix.os }} /p:PublishSingleFile=true
+        
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.project }}-${{ matrix.os }}-standalone
+          path: ${{ matrix.project }}/bin/${{ matrix.configuration }}/netcoreapp3.1/${{ matrix.os }}/publish/${{ matrix.project }}.exe
+      
+        #Ignore pdb files
+      - name: Pack ${{ matrix.os }} - Zip
+        run: zip -r ${{ matrix.project }}.zip . -x \*.pdb
+        working-directory: ${{ matrix.project }}/bin/${{ matrix.configuration }}/netcoreapp3.1/${{ matrix.os }}/publish/
+        
+      - name: Release ${{ matrix.os }} - Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.build_release.outputs.upload_url }} 
+          asset_path: ./${{ matrix.project }}/bin/${{ matrix.configuration }}/netcoreapp3.1/${{ matrix.os }}/publish/${{ matrix.project }}.zip
+          asset_name: ${{ matrix.project }}-${{ matrix.os }}-standalone.zip
+          asset_content_type: application/zip
+          
+  after_release:
+    runs-on: ubuntu-latest
+    needs: [build_variants_standalone]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: pull-request
+        uses: repo-sync/pull-request@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          destination_branch: "develop"
+          pr_title: "Sync back"
+          pr_body: "An automated PR to sync changes back to default branch"

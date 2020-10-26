@@ -47,9 +47,8 @@ jobs:
           name: ${{ matrix.project }}-${{ matrix.os }}-standalone
           path: ${{ matrix.project }}/bin/${{ matrix.configuration }}/netcoreapp3.1/${{ matrix.os }}/publish/${{ matrix.project }}.exe
       
-        #Ignore pdb files
       - name: Pack ${{ matrix.os }} - Zip
-        run: zip -r ${{ matrix.project }}.zip . -x \*.pdb
+        run: Compress-Archive ${{ matrix.project }}.exe ${{ matrix.project }}.zip
         working-directory: ${{ matrix.project }}/bin/${{ matrix.configuration }}/netcoreapp3.1/${{ matrix.os }}/publish/
         
       - name: Release ${{ matrix.os }} - Upload Release Asset

@@ -39,12 +39,12 @@
   <ItemGroup>
     <PackageReference Include="Config.Net" Version="4.15.0" />
     <PackageReference Include="Config.Net.Json" Version="4.15.0" />
-    <PackageReference Include="MahApps.Metro" Version="2.2.0" />
-    <PackageReference Include="MahApps.Metro.IconPacks" Version="4.5.0" />
-    <PackageReference Include="NamedPipeServerStream.NetFrameworkVersion" Version="1.0.2" />
+    <PackageReference Include="MahApps.Metro" Version="2.3.1" />
+    <PackageReference Include="MahApps.Metro.IconPacks" Version="4.7.0" />
+    <PackageReference Include="NamedPipeServerStream.NetFrameworkVersion" Version="1.0.5" />
     <PackageReference Include="Octokit" Version="0.48.0" />
     <PackageReference Include="SharedMemory" Version="2.2.3" />
-    <PackageReference Include="SocketIOClient" Version="2.0.2.6" />
+    <PackageReference Include="SocketIOClient" Version="2.0.2.8" />
   </ItemGroup>
 
   <ItemGroup>

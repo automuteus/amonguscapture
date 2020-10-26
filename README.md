@@ -5,8 +5,6 @@
 
 # AmongUsCapture <img src="AmongUsCapture/Icon.ico" width="48">
 
-### ❌**Capture only works with the Official Steam Non-Beta Version of Among Us**❌
-
 Capture of the local Among Us executable state.
 
 ## Installation
@@ -15,6 +13,7 @@ Only Windows is supported!
 Download the [lastest release](https://github.com/litetex/amonguscapture/releases/latest) and execute it.
 
 ## Important notes
+### ❌**Capture only works with the Official Steam Non-Beta Version of Among Us**❌
 ### Antivirus detection
 Windows Defender may flag this executable as Trojan:Win32/Emali.A!cl, you can make an exception for this file depending on your version of Windows
 

@@ -30,7 +30,7 @@ jobs:
         
       - name: Publish ${{ matrix.os }} ${{ matrix.configuration }} - dotnet publish 
         working-directory: ${{ matrix.project }}
-        run: dotnet publish -c ${{ matrix.configuration }} -r ${{ matrix.os }} /p:PublishSingleFile=true
+        run: dotnet publish -c ${{ matrix.configuration }} -r ${{ matrix.os }} -p:PublishSingleFile=true -p:AssemblyVersion=0.0.1
         
       - name: Upload artifact
         uses: actions/upload-artifact@v2
@@ -58,7 +58,7 @@ jobs:
         
       - name: Publish ${{ matrix.os }} ${{ matrix.configuration }} - dotnet publish 
         working-directory: ${{ matrix.project }}
-        run: dotnet publish -c ${{ matrix.configuration }} -r ${{ matrix.os }} --no-self-contained /p:PublishSingleFile=true
+        run: dotnet publish -c ${{ matrix.configuration }} -r ${{ matrix.os }} --no-self-contained -p:PublishSingleFile=true -p:AssemblyVersion=0.0.1
         
       - name: Upload artifact
         uses: actions/upload-artifact@v2

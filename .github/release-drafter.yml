@@ -1,7 +1,7 @@
 branches:
   - master
-name-template: "v$RESOLVED_VERSION"
-tag-template: "v$RESOLVED_VERSION"
+name-template: "$RESOLVED_VERSION"
+tag-template: "$RESOLVED_VERSION"
 version-resolver:
   major:
     labels:

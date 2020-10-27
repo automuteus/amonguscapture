@@ -63,7 +63,7 @@ namespace AmongUsCapture
         {
             while (true)
             {
-                if (!ProcessMemory.getInstance().IsHooked)
+                if (!ProcessMemory.getInstance().IsHooked || ProcessMemory.getInstance().process is null || ProcessMemory.getInstance().process.HasExited)
                 {
                     if (!ProcessMemory.getInstance().HookProcess("Among Us"))
                     {
@@ -94,6 +94,7 @@ namespace AmongUsCapture
                                     Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red, $"Client verification: {Color.Lime.ToTextColor()}PASS{Settings.conInterface.getNormalColor().ToTextColor()}.");
                                 }
 
+
                                 foundModule = true;
                                 break;
                             }
@@ -112,14 +113,21 @@ namespace AmongUsCapture
                         }
                     }
 
-                    prevChatBubsVersion = ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, _gameOffsets.HudManagerOffset, 0x5C,
-                        0, 0x28, 0xC, 0x14, 0x10);
+                    try
+                    {
+                        prevChatBubsVersion = ProcessMemory.getInstance().Read<int>(GameAssemblyPtr,
+                            _gameOffsets.HudManagerOffset, 0x5C,
+                            0, 0x28, 0xC, 0x14, 0x10);
+                    }
+                    catch
+                    {
+                        Settings.conInterface.WriteModuleTextColored("ERROR",Color.Red, "Outdated version of the game.");
+                    }
+                    
                 }
                 if (cracked && ProcessMemory.getInstance().IsHooked)
                 {
-
                     var result = Settings.conInterface.CrackDetected();
-
                     if (!result)
                         Environment.Exit(0);
                     else

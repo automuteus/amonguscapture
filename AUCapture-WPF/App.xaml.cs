@@ -59,11 +59,6 @@ namespace AUCapture_WPF
             splashScreen.Show();
             Task.Factory.StartNew(() =>
             {
-                IPCAdapter.getInstance().OnToken += OnTokenHandler;
-                var socketTask = Task.Factory.StartNew(() => socket.Init()); // run socket in background. Important to wait for init to have actually finished before continuing
-                Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
-                socketTask.Wait();
-                IPCAdapter.getInstance().RegisterMinion();
                 this.Dispatcher.Invoke(() =>
                 {
                     //initialize the main window, set it as the application main window
@@ -71,8 +66,13 @@ namespace AUCapture_WPF
                     var mainWindow = new MainWindow();
                     this.MainWindow = mainWindow;
                     Settings.conInterface = new WPFLogger(mainWindow);
+                    IPCAdapter.getInstance().OnToken += OnTokenHandler;
+                    var socketTask = Task.Factory.StartNew(() => socket.Init()); // run socket in background. Important to wait for init to have actually finished before continuing
+                    socketTask.Wait();
+                    IPCAdapter.getInstance().RegisterMinion();
                     mainWindow.Loaded += (sender, args2) =>
                     {
+                        Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
                         if (uriStart == URIStartResult.PARSE) IPCAdapter.getInstance().SendToken(args[0]);
                     };
                     mainWindow.Closing += (sender, args2) =>

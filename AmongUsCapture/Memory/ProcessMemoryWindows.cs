@@ -8,6 +8,7 @@ namespace AmongUsCapture
 {
  public class ProcessMemoryWindows : ProcessMemory
     {
+
         public override bool HookProcess(string name)
         {
             if (!IsHooked)
@@ -26,6 +27,8 @@ namespace AmongUsCapture
                     }
                 }
             }
+
+            IsHooked = process != null && !process.HasExited;
             return IsHooked;
         }
 

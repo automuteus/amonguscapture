@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -279,6 +280,20 @@ namespace AUCapture_WPF
             //this.WriteColoredText(getRainbowText("This is a Pre-Release from Carbon's branch."));
         }
 
+        public bool Cracked()
+        {
+            MessageDialogResult x = MessageDialogResult.Affirmative;
+            x = this.ShowMessageAsync("Uh oh.",
+                "We have detected that you are running an unsupported version of the game. This may or may not work.",
+                MessageDialogStyle.AffirmativeAndNegative,
+                new MetroDialogSettings
+                {
+                    AffirmativeButtonText = "I understand", NegativeButtonText = "Exit",
+                    ColorScheme = MetroDialogColorScheme.Theme,
+                    DefaultButtonFocus = MessageDialogResult.Negative
+                }).Result;
+            return x == MessageDialogResult.Affirmative; 
+        }
         public void PlayGotEm()
         {
             this.BeginInvoke((win) => {

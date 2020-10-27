@@ -13,25 +13,27 @@ namespace AmongUsCapture
         private static ProcessMemory instance;
         public static ProcessMemory getInstance()
         {
-            if (instance != null) return instance;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (instance == null)
             {
-                instance = new ProcessMemoryWindows();
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                instance = new ProcessMemoryLinux();
-            }
-            else
-            {
-                throw new PlatformNotSupportedException();
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    instance = new ProcessMemoryWindows();
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    instance = new ProcessMemoryLinux();
+                }
+                else
+                {
+                    throw new PlatformNotSupportedException();
+                }
             }
             return instance;
         }
         protected bool is64Bit;
         public Process process;
         public List<Module> modules;
-        public bool IsHooked => process != null && !process.HasExited;
+        public bool IsHooked { get; protected set; }
         public abstract bool HookProcess(string name);
         public abstract void LoadModules();
         public abstract T Read<T>(IntPtr address, params int[] offsets) where T : unmanaged;

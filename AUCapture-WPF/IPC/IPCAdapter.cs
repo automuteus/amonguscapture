@@ -19,12 +19,7 @@ namespace AUCapture_WPF.IPC
 
         public static IPCAdapter getInstance()
         {
-            if (instance == null)
-            {
-                instance = new IPCAdapterRpcBuffer();
-            }
-
-            return instance;
+            return instance ??= new IPCAdapterRpcBuffer();
         }
         public event EventHandler<StartToken> OnToken;
         protected virtual void OnTokenEvent(StartToken e)

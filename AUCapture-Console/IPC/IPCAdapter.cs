@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using AUCapture_WPF.IPC.RpcBuffer;
+using AUCapture_Console.IPC.RpcBuffer;
 
-namespace AUCapture_WPF.IPC
+namespace AUCapture_Console.IPC
 {
     abstract class IPCAdapter
     {
@@ -19,12 +18,7 @@ namespace AUCapture_WPF.IPC
 
         public static IPCAdapter getInstance()
         {
-            if (instance == null)
-            {
-                instance = new IPCAdapterRpcBuffer();
-            }
-
-            return instance;
+            return instance ??= new IPCAdapterRpcBuffer();
         }
         public event EventHandler<StartToken> OnToken;
         protected virtual void OnTokenEvent(StartToken e)

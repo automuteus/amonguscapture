@@ -84,7 +84,7 @@ namespace AmongUsCapture
                                 GameAssemblyPtr = module.BaseAddress;
                                 if (!GameVerifier.VerifySteamHash(module.FileName))
                                 {
-                                    cracked = true;
+                                    cracked = true; 
                                     Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red,
                                         $"Client verification: {Color.Red.ToTextColor()}FAIL{Settings.conInterface.getNormalColor().ToTextColor()}.");
                                 }

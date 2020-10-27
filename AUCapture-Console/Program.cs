@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
-using AUCapture_WPF.IPC;
+using AUCapture_Console.IPC;
 
 namespace AUCapture_Console
 {

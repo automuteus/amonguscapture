@@ -32,18 +32,18 @@ namespace AmongUsCapture
         public static bool VerifySteamHash(string executablePath)
         {
            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
+           {
                 //Get Steam_api.dll from (parent)filepath\Among Us_Data\Plugins\x86\steam_api.dll and steam_api64.dll
-                var baseDllFolder = Directory.GetParent(executablePath).FullName;
-                    var steam_apiCert = AuthenticodeTools.IsTrusted(Path.Join(baseDllFolder, "steam_api.dll"));
+                var baseDllFolder = Path.Join(Directory.GetParent(executablePath).FullName,"/Among Us_Data/Plugins/x86/");
+                var steam_apiCert = AuthenticodeTools.IsTrusted(Path.Join(baseDllFolder, "steam_api.dll"));
                 var steam_api64Cert = AuthenticodeTools.IsTrusted(Path.Join(baseDllFolder, "steam_api64.dll"));
                 //Settings.conInterface.WriteModuleTextColored("GameVerifier",Color.Yellow,$"steam_apiCert: {steam_apiCert}");
                 //Settings.conInterface.WriteModuleTextColored("GameVerifier",Color.Yellow,$"steam_api64Cert: {steam_api64Cert}");
                 return (steam_apiCert) && (steam_api64Cert);
-            }
+           }
             
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
+           if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+           {
                 var baseDllFolder = Path.Join(Directory.GetParent(executablePath).FullName,
                     "/Among Us_Data/Plugins/x86/");
                 
@@ -89,12 +89,12 @@ namespace AmongUsCapture
                 return (String.Equals(steamapi32_orig_hash.ToUpper(), steam_apiHash) &&
                         String.Equals(steamapi64_orig_hash.ToUpper(), steam_api64Hash));
 
-            }
+           }
             
-            throw new PlatformNotSupportedException();
+           throw new PlatformNotSupportedException();
         }
         
-                public static bool VerifyGameHash(string executablePath)
+        public static bool VerifyGameHash(string executablePath)
         {
             // This is for Beta detection.
             var baseDllFolder = Directory.GetParent(executablePath).FullName;

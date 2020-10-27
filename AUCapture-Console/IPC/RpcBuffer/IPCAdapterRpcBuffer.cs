@@ -3,11 +3,9 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using AmongUsCapture;
-using AUCapture_Console;
 using Microsoft.Win32;
 
-namespace AUCapture_WPF.IPC.RpcBuffer
+namespace AUCapture_Console.IPC.RpcBuffer
 {
     class IPCAdapterRpcBuffer : IPCAdapter
     {

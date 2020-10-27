@@ -8,12 +8,6 @@ namespace AmongUsCapture
 {
  public class ProcessMemoryWindows : ProcessMemory
     {
-        private static bool is64Bit;
-        public static Process process;
-        public static List<Module> modules;
-
-        public static bool IsHooked => process != null && !process.HasExited;
-
         public override bool HookProcess(string name)
         {
             if (!IsHooked)

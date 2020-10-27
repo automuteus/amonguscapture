@@ -31,7 +31,7 @@ namespace AmongUsCapture
         protected bool is64Bit;
         public Process process;
         public List<Module> modules;
-        public bool IsHooked { get; protected set; }
+        public bool IsHooked => process != null && !process.HasExited;
         public abstract bool HookProcess(string name);
         public abstract void LoadModules();
         public abstract T Read<T>(IntPtr address, params int[] offsets) where T : unmanaged;

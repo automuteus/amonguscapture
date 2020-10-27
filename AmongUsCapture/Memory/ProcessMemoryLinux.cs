@@ -49,7 +49,6 @@ namespace AmongUsCapture
                             is64Bit = flag;
 
                             LoadModules();
-                            IsHooked = true;
 
                         }
 

@@ -21,7 +21,7 @@ namespace AmongUsCapture
             socket = new SocketIO();
 
             // Handle tokens from protocol links.
-            IPCadapter.getInstance().OnToken += OnTokenHandler;
+            IPCAdapter.getInstance().OnToken += OnTokenHandler;
 
             // Register handlers for game-state change events.
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;

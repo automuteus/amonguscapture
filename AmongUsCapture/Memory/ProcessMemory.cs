@@ -13,20 +13,18 @@ namespace AmongUsCapture
         private static ProcessMemory instance;
         public static ProcessMemory getInstance()
         {
-            if (instance == null)
+            if (instance != null) return instance;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    instance = new ProcessMemoryWindows();
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    instance = new ProcessMemoryLinux();
-                }
-                else
-                {
-                    throw new PlatformNotSupportedException();
-                }
+                instance = new ProcessMemoryWindows();
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                instance = new ProcessMemoryLinux();
+            }
+            else
+            {
+                throw new PlatformNotSupportedException();
             }
             return instance;
         }

@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.Win32;
-using Newtonsoft.Json;
-using SharedMemory;
+using AUCapture_WPF.IPC.RpcBuffer;
 
-namespace AmongUsCapture
+namespace AUCapture_WPF.IPC
 {
     abstract class IPCAdapter
     {
@@ -28,20 +21,7 @@ namespace AmongUsCapture
         {
             if (instance == null)
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    // Use the RPC Buffer for Windows.
-                    instance = new IPCAdapterRpcBuffer();
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    // Use DBus for Linux.
-                    instance = new IPCAdapterDBus();
-                }
-                else
-                {
-                    throw new PlatformNotSupportedException();
-                }
+                instance = new IPCAdapterRpcBuffer();
             }
 
             return instance;

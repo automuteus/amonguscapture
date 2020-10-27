@@ -1,22 +1,24 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Text;
+using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
-using CaptureGUI;
+using MahApps.Metro.Controls.Dialogs;
 
-namespace AmongUsCapture.ConsoleTypes
+namespace AUCapture_WPF
 {
-    public class FormConsole : ConsoleInterface
+    class WPFLogger : IConsoleInterface
     {
         private StreamWriter logFile;
         public MainWindow form;
         private static object locker = new Object();
 
-        public FormConsole(MainWindow userForm)
+        public WPFLogger(MainWindow userForm)
         {
             form = userForm;
-            logFile = File.CreateText(Path.Combine(Directory.GetParent(Program.GetExecutablePath()).FullName, "CaptureLog.txt"));
+            logFile = File.CreateText(Path.Combine(Directory.GetParent(App.GetExecutablePath()).FullName, "CaptureLog.txt"));
         }
 
         public void WriteTextFormatted(string text, bool acceptNewLines = true)
@@ -30,6 +32,28 @@ namespace AmongUsCapture.ConsoleTypes
             WriteToLog(ColoredText);
         }
 
+        public bool CrackDetected()
+        {
+            form.PlayGotEm();
+            var result = form.context.DialogCoordinator.ShowMessageAsync(form.context,
+                    "Uh oh.",
+                    "We have detected that you are running an unsupported version of the game. This may or may not work.",
+                    MessageDialogStyle.AffirmativeAndNegative,
+                    new MetroDialogSettings
+                    {
+                        AffirmativeButtonText = "I understand", NegativeButtonText = "Exit",
+                        ColorScheme = MetroDialogColorScheme.Theme,
+                        DefaultButtonFocus = MessageDialogResult.Negative
+                    })
+                .GetAwaiter().GetResult();
+            return result == MessageDialogResult.Affirmative;
+        }
+
+
+        public Color getNormalColor()
+        {
+            return form.NormalTextColor;
+        }
 
         public void WriteLine(string s)
         {

@@ -3,9 +3,10 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using SharedMemory;
+using AmongUsCapture;
+using Microsoft.Win32;
 
-namespace AmongUsCapture
+namespace AUCapture_WPF.IPC.RpcBuffer
 {
     class IPCAdapterRpcBuffer : IPCAdapter
     {
@@ -20,7 +21,7 @@ namespace AmongUsCapture
             //        p.Kill();
             //    }
             // }
-            Console.WriteLine(Program.GetExecutablePath());
+            Console.WriteLine(App.GetExecutablePath());
 
             mutex = new Mutex(true, appName, out var createdNew);
             var wasURIStart = args.Length > 0 && args[0].StartsWith(UriScheme + "://");
@@ -51,7 +52,7 @@ namespace AmongUsCapture
 
         public async override Task<bool> SendToken(string jsonText)
         {
-            var rpcGru = new RpcBuffer(appName); //Soup told me not to but its funny
+            var rpcGru = new SharedMemory.RpcBuffer(appName); //Soup told me not to but its funny
             var RPCresult = rpcGru.RemoteRequest(Encoding.UTF8.GetBytes(jsonText));
             var MinionResponse = Encoding.UTF8.GetString(RPCresult.Data, 0, RPCresult.Data.Length);
             return RPCresult.Success;
@@ -66,7 +67,7 @@ namespace AmongUsCapture
             {
                 // Replace typeof(App) by the class that contains the Main method or any class located in the project that produces the exe.
                 // or replace typeof(App).Assembly.Location by anything that gives the full path to the exe
-                var applicationLocation = Program.GetExecutablePath();
+                var applicationLocation = App.GetExecutablePath();
 
                 key.SetValue("", "URL:" + FriendlyName);
                 key.SetValue("URL Protocol", "");
@@ -86,7 +87,7 @@ namespace AmongUsCapture
 
         public override Task RegisterMinion()
         {
-            var rpcMinion = new RpcBuffer(appName, (msgId, payload) =>
+            var rpcMinion = new SharedMemory.RpcBuffer(appName, (msgId, payload) =>
             {
                 var serverResponse = "Carbon has a huge pp also this is debug messages.";
                 var gotData = Encoding.UTF8.GetString(payload, 0, payload.Length);

@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Win</OutputType>
+    <OutputType>Library</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>false</UseWindowsForms>
-    <UseWPF>true</UseWPF>
+    <UseWPF>false</UseWPF>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
@@ -27,30 +27,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Remove="CaptureGUI\App.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ApplicationDefinition Include="CaptureGUI\App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </ApplicationDefinition>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Config.Net" Version="4.15.0" />
     <PackageReference Include="Config.Net.Json" Version="4.15.0" />
     <PackageReference Include="Costura.Fody" Version="5.0.0-alpha0281">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="MahApps.Metro" Version="2.2.0" />
-    <PackageReference Include="MahApps.Metro.IconPacks" Version="4.5.0" />
-    <PackageReference Include="Mono.Posix.NETStandard" Version="5.20.1-preview" />
-    <PackageReference Include="NamedPipeServerStream.NetFrameworkVersion" Version="1.0.2" />
-    <PackageReference Include="Octokit" Version="0.48.0" />
-    <PackageReference Include="SharedMemory" Version="2.2.3" />
     <PackageReference Include="SocketIOClient" Version="2.0.2.6" />
-    <PackageReference Include="Tmds.DBus" Version="0.9.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,14 +49,8 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="CaptureGUI\MainWindow.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>
-    <StartupObject>AmongUsCapture.CaptureGUI.App</StartupObject>
+    <StartupObject></StartupObject>
   </PropertyGroup>
 </Project>

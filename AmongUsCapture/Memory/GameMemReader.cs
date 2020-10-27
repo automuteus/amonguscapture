@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using AmongUsCapture.TextColorLibrary;
-using CaptureGUI;
-using MahApps.Metro.Controls.Dialogs;
 
 namespace AmongUsCapture
 {
@@ -17,7 +15,7 @@ namespace AmongUsCapture
         UNKNOWN
     }
 
-    internal class GameMemReader
+    public class GameMemReader
     {
         private static readonly GameMemReader instance = new GameMemReader();
         private readonly IGameOffsets _gameOffsets = Settings.GameOffsets;
@@ -73,8 +71,7 @@ namespace AmongUsCapture
                         continue;
                     }
 
-                    Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
-                        $"Connected to Among Us process ({Color.Red.ToTextColor()}{ProcessMemory.getInstance().process.Id}{MainWindow.NormalTextColor.ToTextColor()})");
+                    Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"Connected to Among Us process ({Color.Red.ToTextColor()}{ProcessMemory.getInstance().process.Id}{Settings.conInterface.getNormalColor().ToTextColor()})");
 
 
                     var foundModule = false;
@@ -89,13 +86,12 @@ namespace AmongUsCapture
                                 {
                                     cracked = true;
                                     Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red,
-                                        $"Client verification: {Color.Red.ToTextColor()}FAIL{MainWindow.NormalTextColor.ToTextColor()}.");
+                                        $"Client verification: {Color.Red.ToTextColor()}FAIL{Settings.conInterface.getNormalColor().ToTextColor()}.");
                                 }
                                 else
                                 {
                                     cracked = false;
-                                    Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red,
-                                        $"Client verification: {Color.Lime.ToTextColor()}PASS{MainWindow.NormalTextColor.ToTextColor()}.");
+                                    Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red, $"Client verification: {Color.Lime.ToTextColor()}PASS{Settings.conInterface.getNormalColor().ToTextColor()}.");
                                 }
 
                                 foundModule = true;
@@ -121,19 +117,10 @@ namespace AmongUsCapture
                 }
                 if (cracked && ProcessMemory.getInstance().IsHooked)
                 {
-                    Settings.form.PlayGotEm();
-                    var result = Settings.form.context.DialogCoordinator.ShowMessageAsync(Settings.form.context,
-                            "Uh oh.",
-                            "We have detected that you are running an unsupported version of the game. This may or may not work.",
-                            MessageDialogStyle.AffirmativeAndNegative,
-                            new MetroDialogSettings
-                            {
-                                AffirmativeButtonText = "I understand", NegativeButtonText = "Exit",
-                                ColorScheme = MetroDialogColorScheme.Theme,
-                                DefaultButtonFocus = MessageDialogResult.Negative
-                            })
-                        .GetAwaiter().GetResult();
-                    if (result == MessageDialogResult.Negative)
+
+                    var result = Settings.conInterface.CrackDetected();
+
+                    if (!result)
                         Environment.Exit(0);
                     else
                         cracked = false;

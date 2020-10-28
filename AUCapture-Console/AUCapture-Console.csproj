@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>AUCapture_Console</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="SharedMemory" Version="2.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AmongUsCapture\AmongUsCapture.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Win32.Registry">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\packs\Microsoft.WindowsDesktop.App.Ref\3.1.0\ref\netcoreapp3.1\Microsoft.Win32.Registry.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

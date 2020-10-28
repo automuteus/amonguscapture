@@ -1,4 +1,4 @@
-﻿<mah:MetroWindow x:Class="CaptureGUI.MainWindow"
+﻿<mah:MetroWindow x:Class="AUCapture_WPF.MainWindow"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -32,7 +32,7 @@
             <iconPacks:PackIconUnicons Width="{TemplateBinding Width}"
                                        Height="{TemplateBinding Height}"
                                        Margin="4"
-                                       Foreground="{DynamicResource MahApps.Brushes.IdealForeground}"
+                                       Foreground="{DynamicResource MahApps.Brushes.Text}"
                                        Kind="Capture" />
         </DataTemplate>
     </mah:MetroWindow.IconTemplate>
@@ -167,20 +167,20 @@
         </TabControl>
 
 
-        <StatusBar Grid.Row="1">
+        <StatusBar Grid.Row="1" SnapsToDevicePixels="True">
             <StackPanel Orientation="Horizontal">
                 <StatusBarItem>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Game status:" VerticalAlignment="Center" Margin="4 0 0 0" />
+                        <TextBlock Text="Game status:" VerticalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Text}" Margin="4 0 0 0" />
                         <TextBox x:Name="StatusBox" mah:TextBoxHelper.Watermark="UNKNOWN" Margin="4 0 0 0"
                                  VerticalAlignment="Center" IsManipulationEnabled="True" Focusable="False"
                                  IsHitTestVisible="False" AllowDrop="False" IsReadOnly="True" />
                     </StackPanel>
                 </StatusBarItem>
-                <Separator Style="{StaticResource MahApps.Styles.Separator.StatusBar}" />
+                <Separator Style="{DynamicResource MahApps.Styles.Separator.StatusBar}" Foreground="{DynamicResource MahApps.Brushes.Text}" />
                 <StatusBarItem>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Game code:" VerticalAlignment="Center" Margin="4 0 0 0" />
+                        <TextBlock Text="Game code:" VerticalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Text}" Margin="4 0 0 0" />
                         <TextBox x:Name="GameCodeBox" Text="" mah:TextBoxHelper.Watermark="UNKNOWN"
                                  ToolTip="Click to copy" Margin="4 0 0 0" VerticalAlignment="Center"
                                  IsManipulationEnabled="True" Focusable="False" IsHitTestVisible="True"

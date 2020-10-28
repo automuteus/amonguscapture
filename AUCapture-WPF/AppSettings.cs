@@ -4,7 +4,7 @@ using Config.Net;
 
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
-namespace CaptureGUI
+namespace AUCapture_WPF
 {
     public interface IAppSettings : INotifyPropertyChanged
     {

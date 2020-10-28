@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
-using CaptureGUI;
 using Config.Net;
 
 namespace AmongUsCapture
@@ -10,9 +9,7 @@ namespace AmongUsCapture
     {
         public static string StorageLocation = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "\\AmongUsCapture");
 
-        public static ConsoleInterface conInterface;
-
-        public static MainWindow form;
+        public static IConsoleInterface conInterface;
 
         //Global persistent settings that are saved to a json file. Limited Types
         public static IPersistentSettings PersistentSettings = new ConfigurationBuilder<IPersistentSettings>().UseJsonFile(Path.Join(StorageLocation, "Settings.json")).Build();

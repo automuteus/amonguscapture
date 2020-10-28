@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -7,24 +8,22 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using AmongUsCapture;
-using AmongUsCapture.CaptureGUI;
-using AmongUsCapture.ConsoleTypes;
 using AmongUsCapture.TextColorLibrary;
+using AUCapture_WPF.IPC;
 using Config.Net;
 using ControlzEx.Theming;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Color = System.Drawing.Color;
 
-namespace CaptureGUI
+namespace AUCapture_WPF
 {
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow
     {
-        public static Color NormalTextColor = Color.White;
-
+        public Color NormalTextColor = Color.White;
 
         private IAppSettings config;
 
@@ -48,7 +47,7 @@ namespace CaptureGUI
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
             GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
-            IPCadapter.getInstance().OnToken += (sender, token) => {
+            IPCAdapter.getInstance().OnToken += (sender, token) => {
                 this.BeginInvoke((w) => 
                 {
                     if (!w.IsVisible)
@@ -161,12 +160,14 @@ namespace CaptureGUI
             Darkmode_toggleswitch.IsOn = config.DarkMode;
         }
 
+
         private void ApplyDarkMode()
         {
             if (config.DarkMode)
             {
                 ThemeManager.Current.ChangeThemeBaseColor(this, ThemeManager.BaseColorDark);
                 NormalTextColor = Color.White;
+                
             }
             else
             {
@@ -243,12 +244,14 @@ namespace CaptureGUI
                     var paragraph = new Paragraph();
                     foreach (var part in TextColor.toParts(ColoredText))
                     {
-                        var run = new Run(part.text)
+                        //Foreground="{DynamicResource MahApps.Brushes.Text}"
+                        var run = new Run(part.text);
+
+                        if (part.textColor.ToTextColor() != NormalTextColor.ToTextColor())
                         {
-                            Foreground =
-                                new SolidColorBrush(System.Windows.Media.Color.FromArgb(part.textColor.A,
-                                    part.textColor.R, part.textColor.G, part.textColor.B))
-                        };
+                            run.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(part.textColor.A,
+                                part.textColor.R, part.textColor.G, part.textColor.B));
+                        }
                         paragraph.Inlines.Add(run);
                         paragraph.LineHeight = 1;
                         //this.AppendText(part.text, part.textColor, false);
@@ -277,6 +280,20 @@ namespace CaptureGUI
             //this.WriteColoredText(getRainbowText("This is a Pre-Release from Carbon's branch."));
         }
 
+        public bool Cracked()
+        {
+            MessageDialogResult x = MessageDialogResult.Affirmative;
+            x = this.ShowMessageAsync("Uh oh.",
+                "We have detected that you are running an unsupported version of the game. This may or may not work.",
+                MessageDialogStyle.AffirmativeAndNegative,
+                new MetroDialogSettings
+                {
+                    AffirmativeButtonText = "I understand", NegativeButtonText = "Exit",
+                    ColorScheme = MetroDialogColorScheme.Theme,
+                    DefaultButtonFocus = MessageDialogResult.Negative
+                }).Result;
+            return x == MessageDialogResult.Affirmative; 
+        }
         public void PlayGotEm()
         {
             this.BeginInvoke((win) => {
@@ -300,7 +317,7 @@ namespace CaptureGUI
 
         private void SubmitConnectButton_OnClick(object sender, RoutedEventArgs e)
         {
-            IPCadapter.getInstance().SendToken(config.host, config.connectCode);
+            IPCAdapter.getInstance().SendToken(config.host, config.connectCode);
             ManualConnectionFlyout.IsOpen = false;
         }
 

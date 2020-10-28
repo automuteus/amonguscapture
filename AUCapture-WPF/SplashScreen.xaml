@@ -1,4 +1,4 @@
-﻿<mah:MetroWindow x:Class="CaptureGUI.SplashScreenWindow"
+﻿<mah:MetroWindow x:Class="AUCapture_WPF.SplashScreenWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,7 +9,6 @@
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         AllowsTransparency="True"
-        xmlns:local="clr-namespace:AmongUsCapture.CaptureGUI"
         mc:Ignorable="d"
         Title="SplashScreen" Height="300" Width="533">
     <Grid>

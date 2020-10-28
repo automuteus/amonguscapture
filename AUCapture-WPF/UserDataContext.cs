@@ -1,12 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Windows;
-using CaptureGUI;
+using System.Drawing;
 using MahApps.Metro.Controls.Dialogs;
 using Octokit;
 
-namespace AmongUsCapture.CaptureGUI
+namespace AUCapture_WPF
 {
     public class UserDataContext
     {
@@ -23,7 +22,7 @@ namespace AmongUsCapture.CaptureGUI
             Settings.debug = AmongUsCapture.Settings.PersistentSettings.debugConsole;
             Settings.PropertyChanged += SettingsOnPropertyChanged;
 
-            FileVersionInfo v = FileVersionInfo.GetVersionInfo(Program.GetExecutablePath());
+            FileVersionInfo v = FileVersionInfo.GetVersionInfo(App.GetExecutablePath());
             Version = $"{v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}";
             try
             {

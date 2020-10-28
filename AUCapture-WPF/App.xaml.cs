@@ -1,18 +1,32 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
-using AmongUsCapture.ConsoleTypes;
-using CaptureGUI;
+using AmongUsCapture;
+using AmongUsCapture.TextColorLibrary;
+using AUCapture_WPF.IPC;
 using ControlzEx.Theming;
+using IPCAdapter = AUCapture_WPF.IPC.IPCAdapter;
+using URIStartResult = AUCapture_WPF.IPC.URIStartResult;
 
-namespace AmongUsCapture.CaptureGUI
+namespace AUCapture_WPF
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
+        public static readonly ClientSocket socket = new ClientSocket();
+        
+        public void OnTokenHandler(object sender, StartToken token)
+        {
+            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                $"Attempting to connect to host {Color.LimeGreen.ToTextColor()}{token.Host}{Color.White.ToTextColor()} with connect code {Color.Red.ToTextColor()}{token.ConnectCode}{Color.White.ToTextColor()}");
+            socket.Connect(token.Host, token.ConnectCode);
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -24,7 +38,7 @@ namespace AmongUsCapture.CaptureGUI
              if (Settings.PersistentSettings.debugConsole)
                  AllocConsole();
 
-            var uriStart = IPCadapter.getInstance().HandleURIStart(e.Args);
+            var uriStart = IPCAdapter.getInstance().HandleURIStart(e.Args);
             
             switch (uriStart)
             {
@@ -45,24 +59,21 @@ namespace AmongUsCapture.CaptureGUI
             splashScreen.Show();
             Task.Factory.StartNew(() =>
             {
-                //simulate some work being done
-                //System.Threading.Thread.Sleep(3000);
-
-                //since we're not on the UI thread
-                //once we're done we need to use the Dispatcher
-                //to create and show the main window
                 this.Dispatcher.Invoke(() =>
                 {
                     //initialize the main window, set it as the application main window
                     //and close the splash screen
                     var mainWindow = new MainWindow();
                     this.MainWindow = mainWindow;
-                    AmongUsCapture.Settings.form = mainWindow;
-                    AmongUsCapture.Settings.conInterface = new FormConsole(mainWindow);
-                    Program.Main();
+                    Settings.conInterface = new WPFLogger(mainWindow);
+                    IPCAdapter.getInstance().OnToken += OnTokenHandler;
+                    var socketTask = Task.Factory.StartNew(() => socket.Init()); // run socket in background. Important to wait for init to have actually finished before continuing
+                    socketTask.Wait();
+                    IPCAdapter.getInstance().RegisterMinion();
                     mainWindow.Loaded += (sender, args2) =>
                     {
-                        if (uriStart == URIStartResult.PARSE) IPCadapter.getInstance().SendToken(args[0]);
+                        Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
+                        if (uriStart == URIStartResult.PARSE) IPCAdapter.getInstance().SendToken(args[0]);
                     };
                     mainWindow.Closing += (sender, args2) =>
                     {
@@ -73,6 +84,11 @@ namespace AmongUsCapture.CaptureGUI
                 });
             });
             
+        }
+
+        public static string GetExecutablePath()
+        {
+            return Process.GetCurrentProcess().MainModule.FileName;
         }
 
         [DllImport("kernel32.dll", SetLastError = true)]

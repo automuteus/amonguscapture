@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>AUCapture_WPF</RootNamespace>
+    <UseWPF>true</UseWPF>
+    <StartupObject>AUCapture_WPF.App</StartupObject>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Prefer32Bit>true</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Config.Net" Version="4.15.0" />
+    <PackageReference Include="Config.Net.Json" Version="4.15.0" />
+    <PackageReference Include="MahApps.Metro" Version="2.2.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks" Version="4.5.0" />
+    <PackageReference Include="Octokit" Version="0.48.0" />
+    <PackageReference Include="SharedMemory" Version="2.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AmongUsCapture\AmongUsCapture.csproj" />
+  </ItemGroup>
+
+</Project>

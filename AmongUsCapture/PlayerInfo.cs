@@ -25,7 +25,7 @@ namespace AmongUsCapture
 
         public string GetPlayerName()
         {
-            return ProcessMemory.ReadString((IntPtr)this.PlayerName);
+            return ProcessMemory.getInstance().ReadString((IntPtr)this.PlayerName);
         }
 
         public PlayerColor GetPlayerColor()

@@ -2,7 +2,6 @@ using System;
 using System.Drawing;
 using System.Text.Json;
 using AmongUsCapture.TextColorLibrary;
-using CaptureGUI;
 using SocketIOClient;
 
 namespace AmongUsCapture
@@ -21,7 +20,7 @@ namespace AmongUsCapture
             socket = new SocketIO();
 
             // Handle tokens from protocol links.
-            IPCadapter.getInstance().OnToken += OnTokenHandler;
+            
 
             // Register handlers for game-state change events.
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
@@ -43,7 +42,7 @@ namespace AmongUsCapture
                 socket.EmitAsync("connectCode", ConnectCode).ContinueWith((_) =>
                 {
                     Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
-                        $"Connection code ({Color.Red.ToTextColor()}{ConnectCode}{MainWindow.NormalTextColor.ToTextColor()}) sent to server.");
+                        $"Connection code ({Color.Red.ToTextColor()}{ConnectCode}{Settings.conInterface.getNormalColor().ToTextColor()}) sent to server.");
                     GameMemReader.getInstance().ForceUpdatePlayers();
                     GameMemReader.getInstance().ForceTransmitState();
                     GameMemReader.getInstance().ForceTransmitLobby();
@@ -63,21 +62,6 @@ namespace AmongUsCapture
             };
         }
 
-        public void OnTokenHandler(object sender, StartToken token)
-        {
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
-                $"Attempting to connect to host {Color.LimeGreen.ToTextColor()}{token.Host}{Color.White.ToTextColor()} with connect code {Color.Red.ToTextColor()}{token.ConnectCode}{Color.White.ToTextColor()}");
-            if (socket.Connected)
-                // Disconnect from the existing host...
-                socket.DisconnectAsync().ContinueWith((t) =>
-                {
-                    // ...then connect to the new one.
-                    Connect(token.Host, token.ConnectCode);
-                });
-            else
-                // Connect using the host and connect code specified by the token.
-                Connect(token.Host, token.ConnectCode);
-        }
 
         private void OnConnectionFailure(AggregateException e = null)
         {
@@ -86,7 +70,7 @@ namespace AmongUsCapture
                 $"{Color.Red.ToTextColor()}{message}");
         }
 
-        private void Connect(string url, string connectCode)
+        public void Connect(string url, string connectCode)
         {
             try
             {
@@ -132,7 +116,7 @@ namespace AmongUsCapture
             if (!socket.Connected) return;
             socket.EmitAsync("lobby", JsonSerializer.Serialize(e));
             Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
-                $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{MainWindow.NormalTextColor.ToTextColor()}) sent to server.");
+                $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{Settings.conInterface.getNormalColor().ToTextColor()}) sent to server.");
         }
 
         public class ConnectedEventArgs : EventArgs

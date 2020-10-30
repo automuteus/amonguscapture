@@ -13,18 +13,21 @@ namespace AmongUsCapture.CaptureGUI
     /// </summary>
     public partial class App : Application
     {
+        private static ClientSocket Socket { get; } = new ClientSocket();
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
             var args = e.Args;
+
             ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncAll;
             ThemeManager.Current.SyncTheme();
             // needs to be the first call in the program to prevent weird bugs
             if (Settings.PersistentSettings.DebugConsole)
                 AllocConsole();
 
-            var uriStart = IPCadapter.getInstance().HandleURIStart(e.Args);
+            var uriStart = IPCadapter.getInstance().HandleURIStart(args);
 
             switch (uriStart)
             {
@@ -32,7 +35,7 @@ namespace AmongUsCapture.CaptureGUI
                     Environment.Exit(0);
                     break;
                 case URIStartResult.PARSE:
-                    Console.WriteLine($"Starting with args : {e.Args[0]}");
+                    Console.WriteLine($"Starting with args : {args[0]}");
                     break;
                 case URIStartResult.CONTINUE:
                     break;
@@ -40,36 +43,31 @@ namespace AmongUsCapture.CaptureGUI
                     throw new ArgumentOutOfRangeException();
             }
 
-            var splashScreen = new SplashScreenWindow();
-            this.MainWindow = splashScreen;
-            splashScreen.Show();
+            // Run socket in background. Important to wait for init to have actually finished before continuing
+            var socketTask = Task.Factory.StartNew(() => Socket.Init()); 
+            // Init GameMemReader - Run loop in background
+            Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); 
 
-            Task.Factory.StartNew(() =>
+            socketTask.Wait();
+
+            IPCadapter.getInstance().RegisterMinion();
+
+            var mainWindow = new MainWindow();
+
+            Settings.Form = mainWindow;
+            Settings.ConInterface = new FormConsole(mainWindow);
+
+            MainWindow = mainWindow;
+            MainWindow.Loaded += (sender, args2) =>
             {
-                //since we're not on the UI thread
-                //once we're done we need to use the Dispatcher
-                //to create and show the main window
-                this.Dispatcher.Invoke(() =>
-                {
-                    //initialize the main window, set it as the application main window
-                    //and close the splash screen
-                    var mainWindow = new MainWindow();
-                    this.MainWindow = mainWindow;
-                    Settings.Form = mainWindow;
-                    Settings.ConInterface = new FormConsole(mainWindow);
-                    Program.Main();
-                    mainWindow.Loaded += (sender, args2) =>
-                    {
-                        if (uriStart == URIStartResult.PARSE) IPCadapter.getInstance().SendToken(args[0]);
-                    };
-                    mainWindow.Closing += (sender, args2) =>
-                    {
-                        Environment.Exit(0);
-                    };
-                    mainWindow.Show();
-                    splashScreen.Close();
-                });
-            });
+                if (uriStart == URIStartResult.PARSE)
+                    IPCadapter.getInstance().SendToken(args[0]);
+            };
+            MainWindow.Closing += (sender, args2) =>
+            {
+                Environment.Exit(0);
+            };
+            MainWindow.Show();
 
         }
 

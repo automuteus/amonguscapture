@@ -73,14 +73,14 @@ namespace AmongUsCapture
                     }
 
                     Settings.ConInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
-                        $"Connected to Among Us process ({Color.Red.ToTextColor()}{ProcessMemory.process.Id}{MainWindow.NormalTextColor.ToTextColor()})");
+                        $"Connected to Among Us process ({Color.Red.ToTextColor()}{ProcessMemory.Process.Id}{MainWindow.NormalTextColor.ToTextColor()})");
 
 
                     var foundModule = false;
 
                     while (true)
                     {
-                        foreach (var module in ProcessMemory.modules)
+                        foreach (var module in ProcessMemory.Modules)
                             if (module.Name.Equals("GameAssembly.dll", StringComparison.OrdinalIgnoreCase))
                             {
                                 GameAssemblyPtr = module.BaseAddress;

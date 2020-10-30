@@ -1,27 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Pipes;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Web;
 using Microsoft.Win32;
-using Newtonsoft.Json;
 using SharedMemory;
 
 namespace AmongUsCapture
 {
     class IPCadapter
     {
+        private static readonly IPCadapter instance = new IPCadapter();
+
         public const string appName = "AmongUsCapture";
         private const string UriScheme = "aucapture";
         private const string FriendlyName = "AmongUs Capture";
         private Mutex mutex;
-        private static IPCadapter instance = new IPCadapter();
         public event EventHandler<StartToken> OnToken;
+
         public static IPCadapter getInstance()
         {
             return instance;
@@ -29,16 +25,7 @@ namespace AmongUsCapture
 
         public URIStartResult HandleURIStart(string[] args)
         {
-            var myProcessId = Process.GetCurrentProcess().Id;
-            //Process[] processes = Process.GetProcessesByName("AmongUsCapture");
-            //foreach (Process p in processes)
-            //{
-            //if (p.Id != myProcessId)
-            //    {
-            //        p.Kill();
-            //    }
-            // }
-            Console.WriteLine(Program.GetExecutablePath());
+            Console.WriteLine(AppUtil.GetExecutablePath());
 
             mutex = new Mutex(true, appName, out var createdNew);
             var wasURIStart = args.Length > 0 && args[0].StartsWith(UriScheme + "://");
@@ -80,7 +67,7 @@ namespace AmongUsCapture
             {
                 // Replace typeof(App) by the class that contains the Main method or any class located in the project that produces the exe.
                 // or replace typeof(App).Assembly.Location by anything that gives the full path to the exe
-                var applicationLocation = Program.GetExecutablePath();
+                var applicationLocation = AppUtil.GetExecutablePath();
 
                 key.SetValue("", "URL:" + FriendlyName);
                 key.SetValue("URL Protocol", "");

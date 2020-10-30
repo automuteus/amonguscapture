@@ -22,7 +22,7 @@ namespace AmongUsCapture.CaptureGUI
             Settings.Debug = AmongUsCapture.Settings.PersistentSettings.DebugConsole;
             Settings.PropertyChanged += SettingsOnPropertyChanged;
 
-            FileVersionInfo v = FileVersionInfo.GetVersionInfo(Program.GetExecutablePath());
+            FileVersionInfo v = FileVersionInfo.GetVersionInfo(AppUtil.GetExecutablePath());
             Version = $"{v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}";
             try
             {

@@ -1,13 +1,11 @@
-name: Develop CI
+name: Check Build CI
 
 on:
   workflow_dispatch:
   push:
-    branches: [develop]
     paths-ignore: 
       - '**.md'
   pull_request:
-    branches: [develop]
 
 jobs:
   build_ui_variants:

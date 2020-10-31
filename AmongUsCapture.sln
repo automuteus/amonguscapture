@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmongUsCapture", "AmongUsCa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AUCapture_WPF", "AUCapture-WPF\AUCapture_WPF.csproj", "{08D31E79-65D2-4AF2-9D40-2321E7BDE183}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AUCapture_Console", "AUCapture-Console\AUCapture_Console.csproj", "{2B189BCB-DA94-462C-B1B6-DD86465ABBA2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,14 @@ Global
 		{08D31E79-65D2-4AF2-9D40-2321E7BDE183}.Release|Any CPU.Build.0 = Release|Any CPU
 		{08D31E79-65D2-4AF2-9D40-2321E7BDE183}.Release|x86.ActiveCfg = Release|x86
 		{08D31E79-65D2-4AF2-9D40-2321E7BDE183}.Release|x86.Build.0 = Release|x86
+		{2B189BCB-DA94-462C-B1B6-DD86465ABBA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B189BCB-DA94-462C-B1B6-DD86465ABBA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B189BCB-DA94-462C-B1B6-DD86465ABBA2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2B189BCB-DA94-462C-B1B6-DD86465ABBA2}.Debug|x86.Build.0 = Debug|Any CPU
+		{2B189BCB-DA94-462C-B1B6-DD86465ABBA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B189BCB-DA94-462C-B1B6-DD86465ABBA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B189BCB-DA94-462C-B1B6-DD86465ABBA2}.Release|x86.ActiveCfg = Release|Any CPU
+		{2B189BCB-DA94-462C-B1B6-DD86465ABBA2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    
+    <!-- Comment this in for debugging purposes if you are using Windows -->
+    <!--<DefineConstants>BUILT_FOR_WINDOWS</DefineConstants>-->
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="SharedMemory" Version="2.2.3" />
+  </ItemGroup>
+  
+  <!-- https://stackoverflow.com/questions/48590270/packagereference-condition-is-ignored -->
+  <Choose>
+    <When Condition="$(DefineConstants.Contains(BUILT_FOR_WINDOWS))">
+      <ItemGroup>
+        <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
+      </ItemGroup>
+    </When>
+  </Choose>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AmongUsCapture\AmongUsCapture.csproj" />
+  </ItemGroup>
+  
+</Project>

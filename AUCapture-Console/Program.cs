@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
@@ -13,9 +12,9 @@ namespace AUCapture_Console
     {
         public static readonly ClientSocket socket = new ClientSocket();
         
-        public static void OnTokenHandler(object sender, StartToken token)
+        public static void OnTokenHandler(object sender, StartTokenEventArgs token)
         {
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+            Settings.ConInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
                 $"Attempting to connect to host {Color.LimeGreen.ToTextColor()}{token.Host}{Color.White.ToTextColor()} with connect code {Color.Red.ToTextColor()}{token.ConnectCode}{Color.White.ToTextColor()}");
             socket.Connect(token.Host, token.ConnectCode);
         }
@@ -27,7 +26,7 @@ namespace AUCapture_Console
         static void Main(string[] args)
         {
 
-            var uriStart = IPCAdapter.getInstance().HandleURIStart(args);
+            var uriStart = IpcAdapter.getInstance().HandleURIStart(args);
             
             switch (uriStart)
             {
@@ -45,7 +44,7 @@ namespace AUCapture_Console
 
             var foreverTask = Task.Factory.StartNew(() =>
             {
-                IPCAdapter.getInstance().OnToken += OnTokenHandler;
+                IpcAdapter.getInstance().OnToken += OnTokenHandler;
                 var socketTask = Task.Factory.StartNew(() => socket.Init()); // run socket in background. Important to wait for init to have actually finished before continuing
                 GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
@@ -54,33 +53,34 @@ namespace AUCapture_Console
                 var gameReader = Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
                 
                 socketTask.Wait();
-                IPCAdapter.getInstance().RegisterMinion();
-                Settings.conInterface = new ConsoleLogger();
-                if (uriStart == URIStartResult.PARSE) IPCAdapter.getInstance().SendToken(args[0]);
+                IpcAdapter.getInstance().RegisterMinion();
+                Settings.ConInterface = new ConsoleLogger();
+                if (uriStart == URIStartResult.PARSE) 
+                    IpcAdapter.getInstance().SendToken(args[0]);
+
                 gameReader.Wait();
             });
             foreverTask.Wait();
         }
 
-        private static void OnJoinedLobby(object? sender, LobbyEventArgs e)
+        private static void OnJoinedLobby(object sender, LobbyEventArgs e)
         {
-            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("Join", Color.DarkKhaki, $"Joined lobby: {e.LobbyCode}");
+            Settings.ConInterface.WriteModuleTextColored("Join", Color.DarkKhaki, $"Joined lobby: {e.LobbyCode}");
         }
 
-        private static void OnChatMessageAdded(object? sender, ChatMessageEventArgs e)
+        private static void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
         {
-            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("CHAT", Color.DarkKhaki, $"{e.Sender}: {e.Message}");
+            Settings.ConInterface.WriteModuleTextColored("CHAT", Color.DarkKhaki, $"{e.Sender}: {e.Message}");
         }
 
-        private static void UserForm_PlayerChanged(object? sender, PlayerChangedEventArgs e)
+        private static void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
-            Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, $"{e.Name}: {e.Action}");
-
+            Settings.ConInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, $"{e.Name}: {e.Action}");
         }
 
-        private static void GameStateChangedHandler(object? sender, GameStateChangedEventArgs e)
+        private static void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
         {
-            Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"State changed to {Color.Cyan.ToTextColor()}{e.NewState}");
+            Settings.ConInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"State changed to {Color.Cyan.ToTextColor()}{e.NewState}");
         }
     }
 }

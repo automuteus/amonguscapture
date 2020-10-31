@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace AmongUsCapture
@@ -19,7 +16,7 @@ namespace AmongUsCapture
 
     public class ValidatorEventArgs : EventArgs
     {
-        public AmongUsValidity Validity;
+        public AmongUsValidity Validity { get; set; }
     }
     
     public static class GameVerifier
@@ -37,12 +34,9 @@ namespace AmongUsCapture
                 var baseDllFolder = Path.Join(Directory.GetParent(executablePath).FullName,"/Among Us_Data/Plugins/x86/");
                 var steam_apiCert = AuthenticodeTools.IsTrusted(Path.Join(baseDllFolder, "steam_api.dll"));
                 var steam_api64Cert = AuthenticodeTools.IsTrusted(Path.Join(baseDllFolder, "steam_api64.dll"));
-                //Settings.conInterface.WriteModuleTextColored("GameVerifier",Color.Yellow,$"steam_apiCert: {steam_apiCert}");
-                //Settings.conInterface.WriteModuleTextColored("GameVerifier",Color.Yellow,$"steam_api64Cert: {steam_api64Cert}");
-                return (steam_apiCert) && (steam_api64Cert);
+                return steam_apiCert && steam_api64Cert;
            }
-            
-           if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+           else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
            {
                 var baseDllFolder = Path.Join(Directory.GetParent(executablePath).FullName,
                     "/Among Us_Data/Plugins/x86/");
@@ -72,22 +66,20 @@ namespace AmongUsCapture
                     
                     using (FileStream fs = new FileStream(steam_api64Path, FileMode.Open))
                     {
-                        using (var bs = new BufferedStream(fs))
+                        using var bs = new BufferedStream(fs);
+                        var hash = sha1.ComputeHash(bs);
+                        StringBuilder steam_api64hashSb = new StringBuilder(2 * hash.Length);
+                        foreach (byte byt in hash)
                         {
-                            var hash = sha1.ComputeHash(bs);
-                            StringBuilder steam_api64hashSb = new StringBuilder(2 * hash.Length);
-                            foreach (byte byt in hash)
-                            {
-                                steam_api64hashSb.AppendFormat("{0:X2}", byt);
-                            }
-
-                            steam_api64Hash = steam_api64hashSb.ToString();
+                            steam_api64hashSb.AppendFormat("{0:X2}", byt);
                         }
+
+                        steam_api64Hash = steam_api64hashSb.ToString();
                     }
                 }
 
-                return (String.Equals(steamapi32_orig_hash.ToUpper(), steam_apiHash) &&
-                        String.Equals(steamapi64_orig_hash.ToUpper(), steam_api64Hash));
+                return string.Equals(steamapi32_orig_hash.ToUpper(), steam_apiHash) &&
+                        string.Equals(steamapi64_orig_hash.ToUpper(), steam_api64Hash);
 
            }
             
@@ -136,8 +128,8 @@ namespace AmongUsCapture
                     }
                 }
             }
-            return (String.Equals(amongusexe_orig_hash.ToUpper(), amongus_exeHash) &&
-                    String.Equals(gameassembly_orig_hash.ToUpper(), gameassembly_dllHash));
+            return string.Equals(amongusexe_orig_hash.ToUpper(), amongus_exeHash) &&
+                    string.Equals(gameassembly_orig_hash.ToUpper(), gameassembly_dllHash);
         }
     }
 }

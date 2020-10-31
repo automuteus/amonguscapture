@@ -1,5 +1,5 @@
 [![Build](https://github.com/denverquane/amonguscapture/workflows/Beta%20releases/badge.svg)](https://github.com/denverquane/amonguscapture/actions?query=Beta%20releases)
-# AmongUsCapture <img src="AmongUsCapture/Icon.ico" width="48">
+# AmongUsCapture <img src="assets/icon.ico" width="40">
 
 ### ❌**Capture only works with the Official Steam Non-Beta Version of Among Us**❌
 

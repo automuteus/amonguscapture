@@ -1,0 +1,72 @@
+name: Check Build CI
+
+on:
+  workflow_dispatch:
+  push:
+    paths-ignore: 
+      - '**.md'
+  pull_request:
+
+jobs:
+  build_ui_variants:
+    name: UI
+    # windows-latest is required; building with linux results in NETSDK1100 error
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        os: [win-x64, win-x86]
+        configuration: [Release]
+        project: [AmongUsCaptureUI]
+        
+    steps:
+      - uses: actions/checkout@v2
+        
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1
+        
+      - name: Publish ${{ matrix.os }} ${{ matrix.configuration }} - dotnet publish 
+        working-directory: ${{ matrix.project }}
+        run: dotnet publish -c ${{ matrix.configuration }} -r ${{ matrix.os }} -p:PublishSingleFile=true -p:AssemblyVersion=0.0.1
+
+      - name: Pack ${{ matrix.os }} - Zip
+        run: Compress-Archive ${{ matrix.project }}.exe ${{ matrix.project }}.zip
+        working-directory: ${{ matrix.project }}/bin/${{ matrix.configuration }}/netcoreapp3.1/${{ matrix.os }}/publish/
+        
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.project }}-${{ matrix.os }}
+          path: ${{ matrix.project }}/bin/${{ matrix.configuration }}/netcoreapp3.1/${{ matrix.os }}/publish/${{ matrix.project }}.zip
+        
+  build_console_variants:
+    name: Console
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [win-x64, win-x86, linux-x64, osx-x64]
+        configuration: [Release]
+        project: [AmongUsCaptureConsole]
+        
+    steps:
+      - uses: actions/checkout@v2
+        
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1
+        
+      - name: Publish ${{ matrix.os }} ${{ matrix.configuration }} - dotnet publish 
+        working-directory: ${{ matrix.project }}
+        run: dotnet publish -c ${{ matrix.configuration }} -r ${{ matrix.os }} -p:PublishSingleFile=true -p:AssemblyVersion=0.0.1
+
+      - name: Pack ${{ matrix.os }} - Zip
+        run: zip ${{ matrix.project }}.exe ${{ matrix.project }}.zip
+        working-directory: ${{ matrix.project }}/bin/${{ matrix.configuration }}/netcoreapp3.1/${{ matrix.os }}/publish/
+        
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.project }}-${{ matrix.os }}
+          path: ${{ matrix.project }}/bin/${{ matrix.configuration }}/netcoreapp3.1/${{ matrix.os }}/publish/${{ matrix.project }}.zip

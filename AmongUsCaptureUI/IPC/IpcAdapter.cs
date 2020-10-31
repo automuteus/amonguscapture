@@ -3,9 +3,9 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Web;
-using AUCapture_Console.IPC.RpcBuffer;
+using AmongUsCaptureUI.IPC.RpcBuffer;
 
-namespace AUCapture_Console.IPC
+namespace AmongUsCaptureUI.IPC
 {
     abstract class IpcAdapter
     {

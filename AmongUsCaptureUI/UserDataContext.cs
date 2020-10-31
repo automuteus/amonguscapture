@@ -4,7 +4,7 @@ using System.Diagnostics;
 using MahApps.Metro.Controls.Dialogs;
 using Octokit;
 
-namespace AUCapture_WPF
+namespace AmongUsCaptureUI
 {
     public class UserDataContext
     {

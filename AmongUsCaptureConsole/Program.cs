@@ -4,9 +4,9 @@ using System.Drawing;
 using System.Threading.Tasks;
 using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
-using AUCapture_Console.IPC;
+using AmongUsCaptureConsole.IPC;
 
-namespace AUCapture_Console
+namespace AmongUsCaptureConsole
 {
     class Program
     {

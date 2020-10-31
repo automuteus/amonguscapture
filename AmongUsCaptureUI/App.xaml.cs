@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
-using AUCapture_WPF.IPC;
+using AmongUsCaptureUI.IPC;
 using ControlzEx.Theming;
-using IpcAdapter = AUCapture_WPF.IPC.IpcAdapter;
-using URIStartResult = AUCapture_WPF.IPC.URIStartResult;
+using IpcAdapter = AmongUsCaptureUI.IPC.IpcAdapter;
+using URIStartResult = AmongUsCaptureUI.IPC.URIStartResult;
 
-namespace AUCapture_WPF
+namespace AmongUsCaptureUI
 {
     /// <summary>
     /// Interaction logic for App.xaml

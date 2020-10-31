@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmongUsCapture", "AmongUsCapture\AmongUsCapture.csproj", "{72CF81BF-8BB3-4D4C-A642-C45865F9A72F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AUCapture_WPF", "AUCapture-WPF\AUCapture_WPF.csproj", "{08D31E79-65D2-4AF2-9D40-2321E7BDE183}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmongUsCaptureUI", "AmongUsCaptureUI\AmongUsCaptureUI.csproj", "{08D31E79-65D2-4AF2-9D40-2321E7BDE183}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AUCapture_Console", "AUCapture-Console\AUCapture_Console.csproj", "{2B189BCB-DA94-462C-B1B6-DD86465ABBA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmongUsCaptureConsole", "AmongUsCaptureConsole\AmongUsCaptureConsole.csproj", "{2B189BCB-DA94-462C-B1B6-DD86465ABBA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

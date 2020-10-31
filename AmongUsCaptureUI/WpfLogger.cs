@@ -5,7 +5,7 @@ using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
 using MahApps.Metro.Controls.Dialogs;
 
-namespace AUCapture_WPF
+namespace AmongUsCaptureUI
 {
     class WpfLogger : IConsoleInterface
     {

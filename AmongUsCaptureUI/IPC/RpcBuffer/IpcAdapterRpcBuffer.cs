@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-#if BUILT_FOR_WINDOWS
 using Microsoft.Win32;
-#endif
 
-namespace AUCapture_Console.IPC.RpcBuffer
+namespace AmongUsCaptureUI.IPC.RpcBuffer
 {
     class IpcAdapterRpcBuffer : IpcAdapter
     {
         public override URIStartResult HandleURIStart(string[] args)
         {
-            Console.WriteLine(Program.GetExecutablePath());
+            Console.WriteLine(App.GetExecutablePath());
 
             mutex = new Mutex(true, appName, out var createdNew);
             var wasURIStart = args.Length > 0 && args[0].StartsWith(UriScheme + "://");
@@ -50,17 +47,13 @@ namespace AUCapture_Console.IPC.RpcBuffer
 
         private static void RegisterProtocol()
         {
-#if BUILT_FOR_WINDOWS
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                return;
-
             // Literally code that only works under Windows. This isn't even included with the .NET Core 3 Linux runtime.
             // Consider handling protocol registration outside of this library.
             using var key = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Classes\\" + UriScheme);
 
             // Replace typeof(App) by the class that contains the Main method or any class located in the project that produces the exe.
             // or replace typeof(App).Assembly.Location by anything that gives the full path to the exe
-            var applicationLocation = Program.GetExecutablePath();
+            var applicationLocation = App.GetExecutablePath();
 
             key.SetValue("", "URL:" + FriendlyName);
             key.SetValue("URL Protocol", "");
@@ -74,7 +67,6 @@ namespace AUCapture_Console.IPC.RpcBuffer
             {
                 commandKey.SetValue("", "\"" + applicationLocation + "\" \"%1\"");
             }
-#endif
         }
 
         public override void RegisterMinion()

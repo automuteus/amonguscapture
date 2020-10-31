@@ -1,4 +1,4 @@
-﻿<mah:MetroWindow x:Class="AUCapture_WPF.MainWindow"
+﻿<mah:MetroWindow x:Class="AmongUsCaptureUI.MainWindow"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"

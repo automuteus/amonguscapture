@@ -3,9 +3,9 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
 using System.Web;
-using AUCapture_WPF.IPC.RpcBuffer;
+using AmongUsCaptureConsole.IPC.RpcBuffer;
 
-namespace AUCapture_WPF.IPC
+namespace AmongUsCaptureConsole.IPC
 {
     abstract class IpcAdapter
     {

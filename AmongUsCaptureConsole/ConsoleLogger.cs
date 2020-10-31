@@ -3,7 +3,7 @@ using System.Drawing;
 using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
 
-namespace AUCapture_Console
+namespace AmongUsCaptureConsole
 {
     class ConsoleLogger : IConsoleInterface
     {

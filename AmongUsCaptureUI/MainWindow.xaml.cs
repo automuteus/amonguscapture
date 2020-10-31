@@ -7,14 +7,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
-using AUCapture_WPF.IPC;
+using AmongUsCaptureUI.IPC;
 using Config.Net;
 using ControlzEx.Theming;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Color = System.Drawing.Color;
 
-namespace AUCapture_WPF
+namespace AmongUsCaptureUI
 {
     /// <summary>
     ///     Interaction logic for MainWindow.xaml

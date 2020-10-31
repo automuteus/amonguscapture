@@ -37,7 +37,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.project }}-${{ matrix.os }}-standalone
+          name: ${{ matrix.project }}-${{ matrix.os }}
           path: ${{ matrix.project }}/bin/${{ matrix.configuration }}/netcoreapp3.1/${{ matrix.os }}/publish/${{ matrix.project }}.zip
         
   build_console_variants:
@@ -68,5 +68,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.project }}-${{ matrix.os }}-standalone
+          name: ${{ matrix.project }}-${{ matrix.os }}
           path: ${{ matrix.project }}/bin/${{ matrix.configuration }}/netcoreapp3.1/${{ matrix.os }}/publish/${{ matrix.project }}.zip

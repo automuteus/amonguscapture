@@ -62,7 +62,7 @@ jobs:
         run: dotnet publish -c ${{ matrix.configuration }} -r ${{ matrix.os }} -p:PublishSingleFile=true -p:AssemblyVersion=0.0.1
 
       - name: Pack ${{ matrix.os }} - Zip
-        run: zip ${{ matrix.project }}.exe ${{ matrix.project }}.zip
+        run: zip ${{ matrix.project }}.zip ${{ matrix.project }}.exe
         working-directory: ${{ matrix.project }}/bin/${{ matrix.configuration }}/netcoreapp3.1/${{ matrix.os }}/publish/
         
       - name: Upload artifact

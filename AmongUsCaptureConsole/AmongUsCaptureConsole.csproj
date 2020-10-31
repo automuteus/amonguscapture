@@ -6,6 +6,8 @@
     
     <!-- Comment this in for debugging purposes if you are using Windows -->
     <!--<DefineConstants>BUILT_FOR_WINDOWS</DefineConstants>-->
+	<DefineConstants Condition="'$(RuntimeIdentifier)' == 'win-x64'">$(DefineConstants);BUILT_FOR_WINDOWS</DefineConstants>
+	<DefineConstants Condition="'$(RuntimeIdentifier)' == 'win-x86'">$(DefineConstants);BUILT_FOR_WINDOWS</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

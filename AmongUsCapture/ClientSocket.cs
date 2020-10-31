@@ -32,7 +32,7 @@ namespace AmongUsCapture
             {
                 // Report the connection
                 //Settings.form.setConnectionStatus(true);
-                Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, "Connected successfully!");
+                Settings.ConInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, "Connected successfully!");
 
 
                 // Alert any listeners that the connection has occurred.
@@ -41,8 +41,8 @@ namespace AmongUsCapture
                 // On each (re)connection, send the connect code and then force-update everything.
                 socket.EmitAsync("connectCode", ConnectCode).ContinueWith((_) =>
                 {
-                    Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
-                        $"Connection code ({Color.Red.ToTextColor()}{ConnectCode}{Settings.conInterface.getNormalColor().ToTextColor()}) sent to server.");
+                    Settings.ConInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                        $"Connection code ({Color.Red.ToTextColor()}{ConnectCode}{Settings.ConInterface.getNormalColor().ToTextColor()}) sent to server.");
                     GameMemReader.getInstance().ForceUpdatePlayers();
                     GameMemReader.getInstance().ForceTransmitState();
                     GameMemReader.getInstance().ForceTransmitLobby();
@@ -54,7 +54,7 @@ namespace AmongUsCapture
             {
                 //Settings.form.setConnectionStatus(false);
                 //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Lost connection!");
-                Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                Settings.ConInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
                     $"{Color.Red.ToTextColor()}Connection lost!");
 
                 // Alert any listeners that the disconnection has occured.
@@ -66,7 +66,7 @@ namespace AmongUsCapture
         private void OnConnectionFailure(AggregateException e = null)
         {
             var message = e != null ? e.Message : "A generic connection error occured.";
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+            Settings.ConInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
                 $"{Color.Red.ToTextColor()}{message}");
         }
 
@@ -115,8 +115,8 @@ namespace AmongUsCapture
         {
             if (!socket.Connected) return;
             socket.EmitAsync("lobby", JsonSerializer.Serialize(e));
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
-                $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{Settings.conInterface.getNormalColor().ToTextColor()}) sent to server.");
+            Settings.ConInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{Settings.ConInterface.getNormalColor().ToTextColor()}) sent to server.");
         }
 
         public class ConnectedEventArgs : EventArgs

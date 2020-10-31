@@ -68,7 +68,7 @@ namespace AmongUsCapture
                         continue;
                     }
 
-                    Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"Connected to Among Us process ({Color.Red.ToTextColor()}{ProcessMemory.getInstance().process.Id}{Settings.conInterface.getNormalColor().ToTextColor()})");
+                    Settings.ConInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"Connected to Among Us process ({Color.Red.ToTextColor()}{ProcessMemory.getInstance().process.Id}{Settings.ConInterface.getNormalColor().ToTextColor()})");
 
 
                     var foundModule = false;
@@ -82,13 +82,13 @@ namespace AmongUsCapture
                                 if (!GameVerifier.VerifySteamHash(module.FileName))
                                 {
                                     cracked = true;
-                                    Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red,
-                                        $"Client verification: {Color.Red.ToTextColor()}FAIL{Settings.conInterface.getNormalColor().ToTextColor()}.");
+                                    Settings.ConInterface.WriteModuleTextColored("GameVerifier", Color.Red,
+                                        $"Client verification: {Color.Red.ToTextColor()}FAIL{Settings.ConInterface.getNormalColor().ToTextColor()}.");
                                 }
                                 else
                                 {
                                     cracked = false;
-                                    Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red, $"Client verification: {Color.Lime.ToTextColor()}PASS{Settings.conInterface.getNormalColor().ToTextColor()}.");
+                                    Settings.ConInterface.WriteModuleTextColored("GameVerifier", Color.Red, $"Client verification: {Color.Lime.ToTextColor()}PASS{Settings.ConInterface.getNormalColor().ToTextColor()}.");
                                 }
 
 
@@ -98,7 +98,7 @@ namespace AmongUsCapture
 
                         if (!foundModule)
                         {
-                            Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
+                            Settings.ConInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
                                 "Still looking for modules...");
                             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "Still looking for modules..."); // TODO: This still isn't functional, we need to re-hook to reload module addresses
                             Thread.Sleep(500); // delay and try again
@@ -118,13 +118,13 @@ namespace AmongUsCapture
                     }
                     catch
                     {
-                        Settings.conInterface.WriteModuleTextColored("ERROR", Color.Red, "Outdated version of the game.");
+                        Settings.ConInterface.WriteModuleTextColored("ERROR", Color.Red, "Outdated version of the game.");
                     }
 
                 }
                 if (cracked && ProcessMemory.getInstance().IsHooked)
                 {
-                    var result = Settings.conInterface.CrackDetected();
+                    var result = Settings.ConInterface.CrackDetected();
                     if (!result)
                         Environment.Exit(0);
                     else

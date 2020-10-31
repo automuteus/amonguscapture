@@ -83,7 +83,7 @@
                                         <TextBlock Text="Font size: " VerticalAlignment="Center" Margin="4 0 0 0" />
                                         <Slider Name="FontSlider" Maximum="72" Width="200" Minimum="1"
                                                 AutoToolTipPlacement="TopLeft"
-                                                Value="{Binding Settings.fontSize, Mode=TwoWay}" />
+                                                Value="{Binding Settings.FontSize, Mode=TwoWay}" />
                                     </StackPanel>
                                 </StackPanel>
                             </ScrollViewer>
@@ -92,7 +92,7 @@
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <StackPanel Orientation="Vertical">
                                     <mah:ToggleSwitch x:Name="DebugConsole_Toggle" Header="Debug mode"
-                                                      IsOn="{Binding Settings.debug, Mode=TwoWay}"/>
+                                                      IsOn="{Binding Settings.Debug, Mode=TwoWay}"/>
                                 </StackPanel>
                             </ScrollViewer>
                         </mah:MetroTabItem>
@@ -126,11 +126,11 @@
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Host: " VerticalAlignment="Center" Margin="4 0 3 0" />
-                                <TextBox x:Name="Host" VerticalAlignment="Center" MinWidth="150" Text="{Binding Settings.host, Mode=TwoWay}"/>
+                                <TextBox x:Name="Host" VerticalAlignment="Center" MinWidth="150" Text="{Binding Settings.Host, Mode=TwoWay}"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Code: " VerticalAlignment="Center" Margin="4 0 0 0" />
-                                <TextBox x:Name="Code" VerticalAlignment="Center" MinWidth="150" Text="{Binding Settings.connectCode, Mode=TwoWay}"/>
+                                <TextBox x:Name="Code" VerticalAlignment="Center" MinWidth="150" Text="{Binding Settings.ConnectCode, Mode=TwoWay}"/>
                             </StackPanel>
                             <Button Content="Submit" x:Name="SubmitConnectButton" Margin="20" Click="SubmitConnectButton_OnClick"></Button>
                         </StackPanel>
@@ -147,15 +147,12 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <MediaElement Source="http://carbun.xyz/ladies.mp4" Visibility="Hidden" LoadedBehavior="Manual" Name="MemePlayer" MediaEnded="MemePlayer_OnMediaEnded"
-                      MaxHeight="{Binding ActualHeight, ElementName=consoleDockPanel}"
-                      Height="{Binding ActualHeight, ElementName=consoleDockPanel}" UseLayoutRounding="True" DockPanel.Dock="Top" Panel.ZIndex="1"/>
         <TabControl Grid.Row="0" mah:TabControlHelper.Underlined="TabPanel">
             <mah:MetroTabItem Header="Console">
                 
                 <DockPanel x:Name="consoleDockPanel" ScrollViewer.CanContentScroll="True" UseLayoutRounding="True">
                     
-                    <RichTextBox Name="ConsoleTextBox" FontFamily="Consolas" Visibility="Visible" FontSize="{Binding fontSize, Mode=OneWay}"
+                    <RichTextBox Name="ConsoleTextBox" FontFamily="Consolas" Visibility="Visible" FontSize="{Binding Settings.FontSize, Mode=OneWay}"
                                  IsReadOnly="True" DockPanel.Dock="Top"
                                  mah:ScrollViewerHelper.IsHorizontalScrollWheelEnabled="True"
                                  VerticalScrollBarVisibility="Auto"

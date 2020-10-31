@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using MahApps.Metro.Controls.Dialogs;
 using Octokit;
 
@@ -19,7 +18,7 @@ namespace AUCapture_WPF
         {
             DialogCoordinator = dialogCoordinator;
             Settings = settings;
-            Settings.debug = AmongUsCapture.Settings.PersistentSettings.debugConsole;
+            Settings.Debug = AmongUsCapture.Settings.PersistentSettings.debugConsole;
             Settings.PropertyChanged += SettingsOnPropertyChanged;
 
             FileVersionInfo v = FileVersionInfo.GetVersionInfo(App.GetExecutablePath());
@@ -35,17 +34,13 @@ namespace AUCapture_WPF
                 Console.WriteLine(e);
                 LatestVersion = "ERROR";
             }
-
-            
-
-
         }
 
         private void SettingsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Settings.debug))
+            if (e.PropertyName == nameof(Settings.Debug))
             {
-                AmongUsCapture.Settings.PersistentSettings.debugConsole = Settings.debug;
+                AmongUsCapture.Settings.PersistentSettings.debugConsole = Settings.Debug;
             }
         }
     }

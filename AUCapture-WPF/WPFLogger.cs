@@ -1,23 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Text;
 using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace AUCapture_WPF
 {
-    class WPFLogger : IConsoleInterface
+    class WpfLogger : IConsoleInterface
     {
-        private StreamWriter logFile;
-        public MainWindow form;
-        private static object locker = new Object();
+        private static readonly object locker = new Object();
 
-        public WPFLogger(MainWindow userForm)
+        private readonly StreamWriter logFile;
+        private MainWindow Form { get; set; }
+
+        public WpfLogger(MainWindow userForm)
         {
-            form = userForm;
+            Form = userForm;
             logFile = File.CreateText(Path.Combine(Directory.GetParent(App.GetExecutablePath()).FullName, "CaptureLog.txt"));
         }
 
@@ -28,32 +27,39 @@ namespace AUCapture_WPF
 
         public void WriteColoredText(string ColoredText)
         {
-            form.WriteColoredText(ColoredText);
+            Form.WriteColoredText(ColoredText);
             WriteToLog(ColoredText);
         }
 
         public bool CrackDetected()
         {
-            Settings.conInterface.WriteModuleTextColored("Crack", Color.Red, "Trying to show thing");
-            //form.PlayGotEm();
-            var x = form.context.DialogCoordinator.ShowMessageAsync(form.context, "Uh oh.",
-                "We have detected that you are running an unsupported version of the game. This may or may not work.",
-                MessageDialogStyle.AffirmativeAndNegative,
-                new MetroDialogSettings
-                {
-                    AffirmativeButtonText = "I understand", NegativeButtonText = "Exit",
-                    ColorScheme = MetroDialogColorScheme.Theme,
-                    DefaultButtonFocus = MessageDialogResult.Negative
-                }).ConfigureAwait(false).GetAwaiter().GetResult();
-            Settings.conInterface.WriteModuleTextColored("Crack", Color.Red, "finished show thing");
+            Settings.ConInterface.WriteModuleTextColored("Crack", Color.Red, "Trying to show thing");
+            var result = 
+                Form.Context.DialogCoordinator.ShowMessageAsync(
+                    Form.Context,
+                    "Uh oh.",
+                    "We have detected that you are running an unsupported version of the game. This may or may not work.",
+                    MessageDialogStyle.AffirmativeAndNegative,
+                    new MetroDialogSettings
+                    {
+                        AffirmativeButtonText = "I understand",
+                        NegativeButtonText = "Exit",
+                        ColorScheme = MetroDialogColorScheme.Theme,
+                        DefaultButtonFocus = MessageDialogResult.Negative
+                    })
+                .ConfigureAwait(false)
+                .GetAwaiter()
+                .GetResult();
 
-            return x == MessageDialogResult.Affirmative;
+            Settings.ConInterface.WriteModuleTextColored("Crack", Color.Red, "finished show thing");
+
+            return result == MessageDialogResult.Affirmative;
         }
 
 
         public Color getNormalColor()
         {
-            return form.NormalTextColor;
+            return Form.NormalTextColor;
         }
 
         public void WriteLine(string s)
@@ -63,7 +69,7 @@ namespace AUCapture_WPF
 
         public void WriteModuleTextColored(string ModuleName, Color moduleColor, string text)
         {
-            form.WriteConsoleLineFormatted(ModuleName, moduleColor, text);
+            Form.WriteConsoleLineFormatted(ModuleName, moduleColor, text);
             WriteToLog($"[{ModuleName}]: {text}");
         }
 
@@ -85,7 +91,6 @@ namespace AUCapture_WPF
                 logFile.WriteLine($"{time.ToLongTimeString()} | {StripColor(textToLog)}");
                 logFile.Flush();
             }
-            
         }
     }
 }

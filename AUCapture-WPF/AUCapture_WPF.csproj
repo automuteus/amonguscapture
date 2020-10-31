@@ -3,20 +3,18 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>AUCapture_WPF</RootNamespace>
     <UseWPF>true</UseWPF>
-    <StartupObject>AUCapture_WPF.App</StartupObject>
-    <Platforms>AnyCPU;x86;x64</Platforms>
-  </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>none</DebugType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="splash.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Config.Net" Version="4.15.0" />
@@ -29,6 +27,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AmongUsCapture\AmongUsCapture.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SplashScreen Include="splash.ico" />
   </ItemGroup>
 
 </Project>

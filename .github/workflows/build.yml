@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [win-x64, win-x86, linux-x64, osx-x64]
+        os: [win-x64, win-x86, linux-x64]
         configuration: [Release]
         project: [AmongUsCaptureConsole]
         

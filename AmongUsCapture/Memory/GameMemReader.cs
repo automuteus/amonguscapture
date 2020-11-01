@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using AmongUsCapture.TextColorLibrary;
 
@@ -31,13 +32,13 @@ namespace AmongUsCapture
         private IntPtr GameAssemblyPtr = IntPtr.Zero;
 
         // container for new player infos. Also has capacity 10 already assigned so no internal resizing of the data structure is needed
-        private Dictionary<string, PlayerInfo> NewPlayerInfos { get; set; } = new Dictionary<string, PlayerInfo>(10); 
+        private Dictionary<string, PlayerInfo> NewPlayerInfos { get; set; } = new Dictionary<string, PlayerInfo>(10);
 
         private LobbyEventArgs latestLobbyEventArgs = null;
 
         // Important: this is making the assumption that player names are unique. 
         // They are, but for better tracking of players and to eliminate any ambiguity the keys of this probably need to be the players' network IDs instead
-        private Dictionary<string, PlayerInfo> OldPlayerInfos { get; set; } = new Dictionary<string, PlayerInfo>(10); 
+        private Dictionary<string, PlayerInfo> OldPlayerInfos { get; set; } = new Dictionary<string, PlayerInfo>(10);
 
         private GameState oldState = GameState.UNKNOWN;
 
@@ -60,7 +61,10 @@ namespace AmongUsCapture
         {
             while (true)
             {
-                if (!ProcessMemory.getInstance().IsHooked || ProcessMemory.getInstance().process is null || ProcessMemory.getInstance().process.HasExited)
+                // Hook process
+                if (!ProcessMemory.getInstance().IsHooked ||
+                    ProcessMemory.getInstance().Process == null ||
+                    ProcessMemory.getInstance().Process.HasExited)
                 {
                     if (!ProcessMemory.getInstance().HookProcess("Among Us"))
                     {
@@ -68,64 +72,76 @@ namespace AmongUsCapture
                         continue;
                     }
 
-                    Settings.ConInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"Connected to Among Us process ({Color.Red.ToTextColor()}{ProcessMemory.getInstance().process.Id}{Settings.ConInterface.getNormalColor().ToTextColor()})");
-
+                    Settings.ConInterface.WriteModuleTextColored(
+                        "GameMemReader",
+                        Color.Lime,
+                        $"Connected to Among Us process ({Color.Red.ToTextColor()}{ProcessMemory.getInstance().Process.Id}{Settings.ConInterface.getNormalColor().ToTextColor()})");
 
                     var foundModule = false;
 
-                    while (true)
+                    while (!foundModule)
                     {
-                        foreach (var module in ProcessMemory.getInstance().modules)
-                            if (module.Name.Equals("GameAssembly.dll", StringComparison.OrdinalIgnoreCase))
+                        foreach (var module in ProcessMemory.getInstance().Modules
+                            .Where(module => module.Name.Equals("GameAssembly.dll", StringComparison.OrdinalIgnoreCase)))
+                        {
+                            GameAssemblyPtr = module.BaseAddress;
+                            if (!GameVerifier.VerifySteamHash(module.FileName))
                             {
-                                GameAssemblyPtr = module.BaseAddress;
-                                if (!GameVerifier.VerifySteamHash(module.FileName))
-                                {
-                                    cracked = true;
-                                    Settings.ConInterface.WriteModuleTextColored("GameVerifier", Color.Red,
-                                        $"Client verification: {Color.Red.ToTextColor()}FAIL{Settings.ConInterface.getNormalColor().ToTextColor()}.");
-                                }
-                                else
-                                {
-                                    cracked = false;
-                                    Settings.ConInterface.WriteModuleTextColored("GameVerifier", Color.Red, $"Client verification: {Color.Lime.ToTextColor()}PASS{Settings.ConInterface.getNormalColor().ToTextColor()}.");
-                                }
-
-
-                                foundModule = true;
-                                break;
+                                cracked = true;
+                                Settings.ConInterface.WriteModuleTextColored(
+                                    "GameVerifier",
+                                    Color.Red,
+                                    $"Client verification: {Color.Red.ToTextColor()}FAIL{Settings.ConInterface.getNormalColor().ToTextColor()}.");
                             }
+                            else
+                            {
+                                cracked = false;
+                                Settings.ConInterface.WriteModuleTextColored(
+                                    "GameVerifier",
+                                    Color.Red,
+                                    $"Client verification: {Color.Lime.ToTextColor()}PASS{Settings.ConInterface.getNormalColor().ToTextColor()}.");
+                            }
+
+                            foundModule = true;
+                        }
 
                         if (!foundModule)
                         {
-                            Settings.ConInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
+                            Settings.ConInterface.WriteModuleTextColored(
+                                "GameMemReader",
+                                Color.Lime,
                                 "Still looking for modules...");
-                            //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "Still looking for modules..."); // TODO: This still isn't functional, we need to re-hook to reload module addresses
+                            // TODO: This still isn't functional, we need to re-hook to reload module addresses
                             Thread.Sleep(500); // delay and try again
                             ProcessMemory.getInstance().LoadModules();
-                        }
-                        else
-                        {
-                            break; // we have found all modules
                         }
                     }
 
                     try
                     {
-                        prevChatBubsVersion = ProcessMemory.getInstance().Read<int>(GameAssemblyPtr,
-                            _gameOffsets.HudManagerOffset, 0x5C,
-                            0, 0x28, 0xC, 0x14, 0x10);
+                        prevChatBubsVersion = ProcessMemory.getInstance().Read<int>(
+                            GameAssemblyPtr,
+                            _gameOffsets.HudManagerOffset,
+                            0x5C,
+                            0,
+                            0x28,
+                            0xC,
+                            0x14,
+                            0x10);
                     }
                     catch
                     {
-                        Settings.ConInterface.WriteModuleTextColored("ERROR", Color.Red, "Outdated version of the game.");
+                        Settings.ConInterface.WriteModuleTextColored(
+                            "ERROR",
+                            Color.Red,
+                            "Outdated version of the game.");
                     }
 
                 }
+
                 if (cracked && ProcessMemory.getInstance().IsHooked)
                 {
-                    var result = Settings.ConInterface.CrackDetected();
-                    if (!result)
+                    if (!Settings.ConInterface.CrackDetected())
                         Environment.Exit(0);
                     else
                         cracked = false;
@@ -133,16 +149,20 @@ namespace AmongUsCapture
                 }
 
                 GameState state;
-                //int meetingHudState = /*meetingHud_cachePtr == 0 ? 4 : */ProcessMemory.ReadWithDefault<int>(GameAssemblyPtr, 4, 0xDA58D0, 0x5C, 0, 0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
+
+                // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
                 var meetingHud = ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr, _gameOffsets.MeetingHudOffset, 0x5C, 0);
                 var meetingHud_cachePtr = meetingHud == IntPtr.Zero ? 0 : ProcessMemory.getInstance().Read<uint>(meetingHud, 0x8);
                 var meetingHudState =
                     meetingHud_cachePtr == 0
                         ? 4
-                        : ProcessMemory.getInstance().ReadWithDefault(meetingHud, 4,
-                            0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
+                        : ProcessMemory.getInstance().ReadWithDefault(meetingHud, 4, 0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
                 var gameState =
-                    ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, _gameOffsets.AmongUsClientOffset, 0x5C, 0,
+                    ProcessMemory.getInstance().Read<int>(
+                        GameAssemblyPtr,
+                        _gameOffsets.AmongUsClientOffset,
+                        0x5C,
+                        0,
                         0x64); // 0 = NotJoined, 1 = Joined, 2 = Started, 3 = Ended (during "defeat" or "victory" screen only)
 
                 switch (gameState)
@@ -171,7 +191,12 @@ namespace AmongUsCapture
 
 
                 var allPlayersPtr =
-                    ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr, _gameOffsets.GameDataOffset, 0x5C, 0, 0x24);
+                    ProcessMemory.getInstance().Read<IntPtr>(
+                        GameAssemblyPtr,
+                        _gameOffsets.GameDataOffset,
+                        0x5C,
+                        0,
+                        0x24);
                 var allPlayers = ProcessMemory.getInstance().Read<IntPtr>(allPlayersPtr, 0x08);
                 var playerCount = ProcessMemory.getInstance().Read<int>(allPlayersPtr, 0x0C);
 
@@ -200,8 +225,11 @@ namespace AmongUsCapture
                             });
 
                         // skip invalid, dead and exiled players
-                        if (pi.PlayerName == 0 || pi.PlayerId == exiledPlayerId || pi.IsDead == 1 ||
-                            pi.Disconnected == 1) continue;
+                        if (pi.PlayerName == 0 ||
+                            pi.PlayerId == exiledPlayerId ||
+                            pi.IsDead == 1 ||
+                            pi.Disconnected == 1)
+                            continue;
 
                         if (pi.IsImpostor == 1)
                             impostorCount++;
@@ -314,8 +342,8 @@ namespace AmongUsCapture
                     emitAll = true;
                 }
 
-                foreach (var kvp in NewPlayerInfos
-                ) // do this instead of assignment so they don't point to the same object
+                // do this instead of assignment so they don't point to the same object
+                foreach (var kvp in NewPlayerInfos)
                 {
                     var pi = kvp.Value;
                     OldPlayerInfos[kvp.Key] = pi;
@@ -330,8 +358,13 @@ namespace AmongUsCapture
                         });
                 }
 
-                var chatBubblesPtr = ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr, _gameOffsets.HudManagerOffset, 0x5C, 0,
-                    0x28, 0xC, 0x14);
+                var chatBubblesPtr = ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr,
+                    _gameOffsets.HudManagerOffset,
+                    0x5C,
+                    0,
+                    0x28,
+                    0xC,
+                    0x14);
 
                 var poolSize = 20; // = ProcessMemory.Read<int>(GameAssemblyPtr, 0xD0B25C, 0x5C, 0, 0x28, 0xC, 0xC)
 
@@ -369,9 +402,12 @@ namespace AmongUsCapture
                 for (var i = numChatBubbles - newMsgs; i < numChatBubbles; i++)
                 {
                     var msgText = ProcessMemory.getInstance().ReadString(ProcessMemory.getInstance().Read<IntPtr>(chatBubblePtrs[i], 0x20, 0x28));
-                    if (msgText.Length == 0) continue;
+                    if (msgText.Length == 0)
+                        continue;
+
                     var msgSender = ProcessMemory.getInstance().ReadString(ProcessMemory.getInstance().Read<IntPtr>(chatBubblePtrs[i], 0x1C, 0x28));
                     var oldPlayerInfo = OldPlayerInfos[msgSender];
+
                     ChatMessageAdded?.Invoke(this, new ChatMessageEventArgs
                     {
                         Sender = msgSender,
@@ -382,29 +418,38 @@ namespace AmongUsCapture
 
                 if (shouldReadLobby)
                 {
-                    var gameCode = ProcessMemory.getInstance().ReadString(ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr,
-                        _gameOffsets.GameStartManagerOffset, 0x5c, 0, 0x20, 0x28));
-                    string[] split;
-                    if (gameCode != null && gameCode.Length > 0 && (split = gameCode.Split('\n')).Length == 2)
-                    {
-                        PlayRegion region = (PlayRegion)((4 - (ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, _gameOffsets.ServerManagerOffset, 0x5c, 0, 0x10, 0x8, 0x8) & 0b11)) % 3); // do NOT ask
+                    var gameCode = ProcessMemory.getInstance().ReadString(
+                        ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr,
+                            _gameOffsets.GameStartManagerOffset,
+                            0x5c,
+                            0,
+                            0x20,
+                            0x28)
+                        );
 
-                        this.latestLobbyEventArgs = new LobbyEventArgs()
+                    string[] split = gameCode.Split('\n');
+                    if (gameCode != null && gameCode.Length > 0 && split.Length == 2)
+                    {
+                        // TODO: Explain what happens here
+                        var readedValue = ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, _gameOffsets.ServerManagerOffset, 0x5c, 0, 0x10, 0x8, 0x8);
+                        PlayRegion region = (PlayRegion)((4 - (readedValue & 0b11)) % 3); // do NOT ask
+
+                        latestLobbyEventArgs = new LobbyEventArgs()
                         {
                             LobbyCode = split[1],
                             Region = region
                         };
                         shouldReadLobby = false;
-                        shouldTransmitLobby = true; // since this is probably new info
+                        // since this is probably new info
+                        shouldTransmitLobby = true;
                     }
                 }
 
                 if (shouldTransmitLobby)
                 {
-                    if (this.latestLobbyEventArgs != null)
-                    {
-                        JoinedLobby?.Invoke(this, this.latestLobbyEventArgs);
-                    }
+                    if (latestLobbyEventArgs != null)
+                        JoinedLobby?.Invoke(this, latestLobbyEventArgs);
+
                     shouldTransmitLobby = false;
                 }
 

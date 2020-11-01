@@ -19,10 +19,10 @@ namespace AmongUsCapture
                 Process[] processes = Process.GetProcessesByName(name);
                 if (processes.Length > 0)
                 {
-                    process = processes[0];
-                    if (process != null && !process.HasExited)
+                    Process = processes[0];
+                    if (Process != null && !Process.HasExited)
                     {
-                        int pid = process.Id;
+                        int pid = Process.Id;
 
                         // Get PID - we will need this to calculate the /proc folder location.
                         if (Directory.Exists($"/proc/{pid}/"))
@@ -46,7 +46,7 @@ namespace AmongUsCapture
 
                             bool flag = result.Contains("64-bit");
 
-                            is64Bit = flag;
+                            Is64Bit = flag;
 
                             LoadModules();
 
@@ -61,19 +61,19 @@ namespace AmongUsCapture
 
         public override void LoadModules()
         {
-            modules = new List<Module>();
+            Modules = new List<Module>();
             
             // Read /proc/<pid>/maps for library mapping information.
             // Reading from /proc/<pid>/maps is negligible, since this file is a kernel pseudofile.
             // Also, it's more reliable then using C#'s native Process object.
             
-            if (!File.Exists($"/proc/{process.Id}/maps"))
+            if (!File.Exists($"/proc/{Process.Id}/maps"))
             {
                 // We don't have the maps file yet, or we ended up in a state where it doesn't exist.
                 return;
             }
             
-            var proc_maps = File.ReadLines($"/proc/{process.Id}/maps")
+            var proc_maps = File.ReadLines($"/proc/{Process.Id}/maps")
                 .Where(s => s.Contains("GameAssembly.dll"))
                 .ToList();
 
@@ -115,7 +115,7 @@ namespace AmongUsCapture
 
             string librarypath = pathbuilder.ToString();
             
-            modules.Add(new Module()
+            Modules.Add(new Module()
             {
                 Name = librarypath.Split('/').Last().Trim(), // Make sure hidden characters aren't there.
                 BaseAddress = (IntPtr) addr_start,
@@ -133,7 +133,7 @@ namespace AmongUsCapture
 
         public override T ReadWithDefault<T>(IntPtr address, T defaultParam, params int[] offsets)
         {
-            if (process == null || address == IntPtr.Zero)
+            if (Process == null || address == IntPtr.Zero)
             {
                 return defaultParam;
             }
@@ -145,7 +145,7 @@ namespace AmongUsCapture
             unsafe
             {
                 int size = sizeof(T);
-                if (typeof(T) == typeof(IntPtr)) size = is64Bit ? 8 : 4;
+                if (typeof(T) == typeof(IntPtr)) size = Is64Bit ? 8 : 4;
                 byte[] buffer = Read(address + last, size);
                 fixed (byte* ptr = buffer)
                 {
@@ -156,7 +156,7 @@ namespace AmongUsCapture
 
         public override string ReadString(IntPtr address)
         {
-            if (process == null || address == IntPtr.Zero)
+            if (Process == null || address == IntPtr.Zero)
                 return default;
             int stringLength = Read<int>(address + 0x8);
             byte[] rawString = Read(address + 0xC, stringLength << 1);
@@ -184,7 +184,7 @@ namespace AmongUsCapture
         
         private int OffsetAddress(ref IntPtr address, params int[] offsets)
         {
-            byte[] buffer = new byte[is64Bit ? 8 : 4];
+            byte[] buffer = new byte[Is64Bit ? 8 : 4];
             IntPtr buffer_marshal;
             IntPtr local_ptr;
             IntPtr remote_ptr;
@@ -192,7 +192,7 @@ namespace AmongUsCapture
             unsafe
             {
                 // We need to work unsafe here to get the size of the iovec structures, then malloc them.
-                buffer_marshal = Marshal.AllocHGlobal(is64Bit ? 8 : 4);
+                buffer_marshal = Marshal.AllocHGlobal(Is64Bit ? 8 : 4);
                 local_ptr = Marshal.AllocHGlobal(sizeof(iovec));
                 remote_ptr = Marshal.AllocHGlobal(sizeof(iovec));
             }
@@ -204,7 +204,7 @@ namespace AmongUsCapture
                 var local = new iovec()
                 {
                     iov_base = buffer_marshal,
-                    iov_len = is64Bit ? 8 : 4
+                    iov_len = Is64Bit ? 8 : 4
                 };
                 var remote = new iovec()
                 {
@@ -215,11 +215,11 @@ namespace AmongUsCapture
                 Marshal.StructureToPtr(local, local_ptr, true);
                 Marshal.StructureToPtr(remote, remote_ptr, true);
 
-                LinuxAPI.process_vm_readv(process.Id, local_ptr, 1, remote_ptr, 1, 0);
+                LinuxAPI.process_vm_readv(Process.Id, local_ptr, 1, remote_ptr, 1, 0);
 
                 Marshal.Copy(local.iov_base, buffer, 0, buffer.Length);
                 
-                if (is64Bit)
+                if (Is64Bit)
                     address = (IntPtr) BitConverter.ToUInt64(buffer, 0);
                 else
                     address = (IntPtr) BitConverter.ToUInt32(buffer, 0);
@@ -238,7 +238,7 @@ namespace AmongUsCapture
         {
             byte[] buffer = new byte[numBytes];
 
-            if (process == null || address == IntPtr.Zero)
+            if (Process == null || address == IntPtr.Zero)
             {
                 return buffer;
             }
@@ -267,7 +267,7 @@ namespace AmongUsCapture
             Marshal.StructureToPtr(local, local_ptr, true);
             Marshal.StructureToPtr(remote, remote_ptr, true);
 
-            LinuxAPI.process_vm_readv(process.Id, local_ptr, 1, remote_ptr, 1, 0);
+            LinuxAPI.process_vm_readv(Process.Id, local_ptr, 1, remote_ptr, 1, 0);
 
             Marshal.Copy(local.iov_base, buffer, 0, numBytes);
 

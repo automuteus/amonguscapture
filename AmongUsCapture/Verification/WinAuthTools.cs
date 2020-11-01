@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace AmongUsCapture
 {
-    internal static class AuthenticodeTools
+    internal static class WinAuthTools
     {
         [DllImport("Wintrust.dll", PreserveSig = true, SetLastError = false)]
         private static extern uint WinVerifyTrust(IntPtr hWnd, IntPtr pgActionID, IntPtr pWinTrustData);

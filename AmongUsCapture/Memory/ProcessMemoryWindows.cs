@@ -16,45 +16,45 @@ namespace AmongUsCapture
                 Process[] processes = Process.GetProcessesByName(name);
                 if (processes.Length > 0)
                 {
-                    process = processes[0];
-                    if (process != null && !process.HasExited)
+                    Process = processes[0];
+                    if (Process != null && !Process.HasExited)
                     {
                         bool flag;
-                        WinAPI.IsWow64Process(process.Handle, out flag);
-                        is64Bit = Environment.Is64BitOperatingSystem && !flag;
+                        WinAPI.IsWow64Process(Process.Handle, out flag);
+                        Is64Bit = Environment.Is64BitOperatingSystem && !flag;
 
                         LoadModules();
                     }
                 }
             }
 
-            IsHooked = process != null && !process.HasExited;
+            IsHooked = Process != null && !Process.HasExited;
             return IsHooked;
         }
 
         public override void LoadModules()
         {
-            modules = new List<Module>();
+            Modules = new List<Module>();
             IntPtr[] buffer = new IntPtr[1024];
             uint cb = (uint)(IntPtr.Size * buffer.Length);
-            if (WinAPI.EnumProcessModulesEx(process.Handle, buffer, cb, out uint totalModules, 3u))
+            if (WinAPI.EnumProcessModulesEx(Process.Handle, buffer, cb, out uint totalModules, 3u))
             {
                 uint moduleSize = totalModules / (uint)IntPtr.Size;
                 StringBuilder stringBuilder = new StringBuilder(260);
                 for (uint count = 0; count < moduleSize; count++)
                 {
                     stringBuilder.Clear();
-                    if (WinAPI.GetModuleFileNameEx(process.Handle, buffer[count], stringBuilder, (uint)stringBuilder.Capacity) == 0u)
+                    if (WinAPI.GetModuleFileNameEx(Process.Handle, buffer[count], stringBuilder, (uint)stringBuilder.Capacity) == 0u)
                         break;
                     string fileName = stringBuilder.ToString();
                     stringBuilder.Clear();
-                    if (WinAPI.GetModuleBaseName(process.Handle, buffer[count], stringBuilder, (uint)stringBuilder.Capacity) == 0u)
+                    if (WinAPI.GetModuleBaseName(Process.Handle, buffer[count], stringBuilder, (uint)stringBuilder.Capacity) == 0u)
                         break;
                     string moduleName = stringBuilder.ToString();
                     ModuleInfo moduleInfo = default;
-                    if (!WinAPI.GetModuleInformation(process.Handle, buffer[count], out moduleInfo, (uint)Marshal.SizeOf(moduleInfo)))
+                    if (!WinAPI.GetModuleInformation(Process.Handle, buffer[count], out moduleInfo, (uint)Marshal.SizeOf(moduleInfo)))
                         break;
-                    modules.Add(new Module
+                    Modules.Add(new Module
                     {
                         FileName = fileName,
                         BaseAddress = moduleInfo.BaseAddress,
@@ -73,7 +73,7 @@ namespace AmongUsCapture
 
         public override T ReadWithDefault<T>(IntPtr address, T defaultParam, params int[] offsets)
         {
-            if (process == null || address == IntPtr.Zero)
+            if (Process == null || address == IntPtr.Zero)
                 return defaultParam;
 
             int last = OffsetAddress(ref address, offsets);
@@ -83,7 +83,7 @@ namespace AmongUsCapture
             unsafe
             {
                 int size = sizeof(T);
-                if (typeof(T) == typeof(IntPtr)) size = is64Bit ? 8 : 4;
+                if (typeof(T) == typeof(IntPtr)) size = Is64Bit ? 8 : 4;
                 byte[] buffer = Read(address + last, size);
                 fixed (byte* ptr = buffer)
                 {
@@ -94,7 +94,7 @@ namespace AmongUsCapture
 
         public override string ReadString(IntPtr address)
         {
-            if (process == null || address == IntPtr.Zero)
+            if (Process == null || address == IntPtr.Zero)
                 return default;
             int stringLength = Read<int>(address + 0x8);
             byte[] rawString = Read(address + 0xC, stringLength << 1);
@@ -115,19 +115,19 @@ namespace AmongUsCapture
         private byte[] Read(IntPtr address, int numBytes)
         {
             byte[] buffer = new byte[numBytes];
-            if (process == null || address == IntPtr.Zero)
+            if (Process == null || address == IntPtr.Zero)
                 return buffer;
 
-            WinAPI.ReadProcessMemory(process.Handle, address, buffer, numBytes, out int bytesRead);
+            WinAPI.ReadProcessMemory(Process.Handle, address, buffer, numBytes, out int bytesRead);
             return buffer;
         }
         private int OffsetAddress(ref IntPtr address, params int[] offsets)
         {
-            byte[] buffer = new byte[is64Bit ? 8 : 4];
+            byte[] buffer = new byte[Is64Bit ? 8 : 4];
             for (int i = 0; i < offsets.Length - 1; i++)
             {
-                WinAPI.ReadProcessMemory(process.Handle, address + offsets[i], buffer, buffer.Length, out int bytesRead);
-                if (is64Bit)
+                WinAPI.ReadProcessMemory(Process.Handle, address + offsets[i], buffer, buffer.Length, out int bytesRead);
+                if (Is64Bit)
                     address = (IntPtr)BitConverter.ToUInt64(buffer, 0);
                 else
                     address = (IntPtr)BitConverter.ToUInt32(buffer, 0);

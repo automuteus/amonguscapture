@@ -18,7 +18,7 @@ namespace AmongUsCaptureUI
         {
             DialogCoordinator = dialogCoordinator;
             Settings = settings;
-            Settings.Debug = AmongUsCapture.Settings.PersistentSettings.debugConsole;
+            Settings.Debug = AmongUsCapture.Settings.PersistentSettings.DebugConsole;
             Settings.PropertyChanged += SettingsOnPropertyChanged;
 
             FileVersionInfo v = FileVersionInfo.GetVersionInfo(App.GetExecutablePath());
@@ -40,7 +40,7 @@ namespace AmongUsCaptureUI
         {
             if (e.PropertyName == nameof(Settings.Debug))
             {
-                AmongUsCapture.Settings.PersistentSettings.debugConsole = Settings.Debug;
+                AmongUsCapture.Settings.PersistentSettings.DebugConsole = Settings.Debug;
             }
         }
     }

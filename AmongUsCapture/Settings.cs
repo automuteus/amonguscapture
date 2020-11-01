@@ -28,11 +28,10 @@ namespace AmongUsCapture
         //Types allowed: bool, double, int, long, string, TimeSpan, DateTime, Uri, Guid
         //DateTime is always converted to UTC
         [Option(Alias = "Host", DefaultValue = "http://localhost:8123")]
-        string host { get; set; }
+        string Host { get; set; }
 
         [Option(Alias = "DebugConsole", DefaultValue = false)]
-        bool debugConsole { get; set; }
-
+        bool DebugConsole { get; set; }
     }
 
     public interface IGameOffsets

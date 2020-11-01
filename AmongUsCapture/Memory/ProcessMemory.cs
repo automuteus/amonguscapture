@@ -1,39 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace AmongUsCapture
 {
-
     public abstract class ProcessMemory
     {
+        private static readonly object instanceLock = new object();
+
         private static ProcessMemory instance;
         public static ProcessMemory getInstance()
         {
-            if (instance == null)
+            if (instance != null)
+                return instance;
+
+            lock (instanceLock)
             {
+                if (instance != null)
+                    return instance;
+
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
                     instance = new ProcessMemoryWindows();
-                }
                 else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
                     instance = new ProcessMemoryLinux();
-                }
                 else
-                {
                     throw new PlatformNotSupportedException();
-                }
+
+                return instance;
             }
-            return instance;
         }
-        protected bool is64Bit;
-        public Process process;
-        public List<Module> modules;
+
+        protected bool Is64Bit { get; set; }
+        public Process Process { get; protected set; }
+        public List<Module> Modules { get; protected set; }
         public bool IsHooked { get; protected set; }
+
         public abstract bool HookProcess(string name);
         public abstract void LoadModules();
         public abstract T Read<T>(IntPtr address, params int[] offsets) where T : unmanaged;
@@ -55,6 +57,7 @@ namespace AmongUsCapture
                 return Name ?? base.ToString();
             }
         }
+
         [StructLayout(LayoutKind.Sequential)]
         protected struct ModuleInfo
         {

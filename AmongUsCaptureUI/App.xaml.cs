@@ -34,7 +34,7 @@ namespace AmongUsCaptureUI
             ThemeManager.Current.SyncTheme();
 
             // needs to be the first call in the program to prevent weird bugs
-            if (Settings.PersistentSettings.debugConsole)
+            if (Settings.PersistentSettings.DebugConsole)
                 AllocConsole();
 
             var uriStart = IpcAdapter.getInstance().HandleURIStart(args);

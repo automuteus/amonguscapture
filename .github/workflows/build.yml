@@ -1,4 +1,4 @@
-name: Check Build CI
+name: Check Build
 
 on:
   workflow_dispatch:

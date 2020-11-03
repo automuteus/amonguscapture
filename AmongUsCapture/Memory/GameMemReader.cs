@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
+using AmongUsCapture.Memory.Structs;
 using AmongUsCapture.TextColorLibrary;
 
 namespace AmongUsCapture
@@ -38,6 +39,8 @@ namespace AmongUsCapture
 
         private GameState oldState = GameState.UNKNOWN;
 
+        private GameOverReason prevGameOverReason;
+
         private int prevChatBubsVersion;
         private bool shouldForceTransmitState;
         private bool shouldForceUpdatePlayers;
@@ -56,6 +59,9 @@ namespace AmongUsCapture
         public event EventHandler<ChatMessageEventArgs> ChatMessageAdded;
 
         public event EventHandler<LobbyEventArgs> JoinedLobby;
+
+        public event EventHandler<GameOverEventArgs> GameOver;
+
 
         private bool cracked = false;
 
@@ -118,6 +124,7 @@ namespace AmongUsCapture
                         prevChatBubsVersion = ProcessMemory.getInstance().Read<int>(GameAssemblyPtr,
                             _gameOffsets.HudManagerOffset, 0x5C,
                             0, 0x28, 0xC, 0x14, 0x10);
+                        prevGameOverReason = ProcessMemory.getInstance().Read<GameOverReason>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5c, 4);
                     }
                     catch
                     {
@@ -230,7 +237,36 @@ namespace AmongUsCapture
                     shouldReadLobby = true; // will eventually transmit
                 }
 
+                if ((oldState == GameState.DISCUSSION || oldState == GameState.LOBBY) && (state == GameState.LOBBY || state == GameState.MENU))
+                {
+
+                    GameOverReason gameOverReason = ProcessMemory.getInstance().Read<GameOverReason>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5c, 0x4);
+
+                    GameOver?.Invoke(this, new GameOverEventArgs { GameOverReason = gameOverReason });
+
+                    //if (gameOverReason != prevGameOverReason)
+                    //{
+                    //    Settings.conInterface.WriteModuleTextColored("test", Color.Red, gameOverReason.ToString());
+
+                    //    var winningPlayersPtr = ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5C, 0xC);
+                    //    var winningPlayers = ProcessMemory.getInstance().Read<IntPtr>(winningPlayersPtr, 0x08);
+                    //    var winningPlayerCount = ProcessMemory.getInstance().Read<int>(winningPlayersPtr, 0x0C);
+
+                    //    var winnerAddrPtr = winningPlayers + 0x10;
+
+                    //    for (var i = 0; i < winningPlayerCount; i++)
+                    //    {
+                    //        var wpi = ProcessMemory.getInstance().Read<WinningPlayerData>(winnerAddrPtr, 0, 0);
+                    //        winnerAddrPtr += 4;
+                    //        Settings.conInterface.WriteModuleTextColored("test", Color.Red, wpi.Display());
+                    //    }
+                    //}
+
+                    //prevGameOverReason = gameOverReason;
+                }
+
                 oldState = state;
+
 
                 newPlayerInfos.Clear();
 
@@ -490,5 +526,10 @@ namespace AmongUsCapture
     {
         public string LobbyCode { get; set; }
         public PlayRegion Region { get; set; }
+    }
+
+    public class GameOverEventArgs : EventArgs
+    {
+        public GameOverReason GameOverReason { get; set; }
     }
 }

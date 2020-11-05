@@ -36,12 +36,12 @@ namespace AUCapture_WPF
         {
             //Settings.conInterface.WriteModuleTextColored("Crack", Color.Red, "Trying to show thing");
             form.PlayGotEm();
-            var x = form.context.DialogCoordinator.ShowMessageAsync(form.context, "Uh oh.",
+            var x = form.context.DialogCoordinator.ShowMessageAsync(form.context, "YO HO YO HO YOOOOOOOOOOOOOUR A PIRATE",
                 "We have detected that you are running an unsupported version of the game. This may or may not work.",
                 MessageDialogStyle.AffirmativeAndNegative,
                 new MetroDialogSettings
                 {
-                    AffirmativeButtonText = "I understand", NegativeButtonText = "Exit",
+                    AffirmativeButtonText = "RRRRRRRR MATEY", NegativeButtonText = "BACK TO THE SEA",
                     ColorScheme = MetroDialogColorScheme.Theme,
                     DefaultButtonFocus = MessageDialogResult.Negative
                 }).ConfigureAwait(false).GetAwaiter().GetResult();

@@ -18,20 +18,13 @@ jobs:
         with:
           dotnet-version: 3.1
       - name: Install dependencies
-        run: dotnet restore "AmongUsCapture\AmongUsCapture.csproj"
+        run: dotnet restore "AUCapture-WPF\AUCapture-WPF.csproj"
       - name: Publish
         run: |
-          dotnet publish "AmongUsCapture\AmongUsCapture.csproj" -p:PublishProfile=FolderProfile -p:AssemblyVersion=0.0.1
-          dotnet publish "AmongUsCapture\AmongUsCapture.csproj" -p:PublishProfile=FolderProfile1 -p:AssemblyVersion=0.0.1
+          dotnet publish "AUCapture-WPF\AUCapture-WPF.csproj" -p:PublishProfile=FolderProfile -p:AssemblyVersion=0.0.1
       - name: Relocate
         run: |
-          mv AmongUsCapture\\bin\\publish\\32Bit-2\\AmongUsCapture.exe AmongUsCapture-Dependant.exe
-          mv AmongUsCapture\\bin\\publish\\32Bit\\AmongUsCapture.exe AmongUsCapture.exe
-      - name: AmongUsCapture-x64-beta
-        uses: actions/upload-artifact@v2
-        with:
-          name: AmongUsCapture-Dependant-beta
-          path: AmongUsCapture-Dependant.exe
+          mv AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AUCapture-WPF.exe AmongUsCapture.exe
       - name: AmongUsCapture-beta
         uses: actions/upload-artifact@v2
         with:

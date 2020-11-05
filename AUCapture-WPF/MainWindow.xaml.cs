@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -179,6 +181,7 @@ namespace AUCapture_WPF
         private void Settings(object sender, RoutedEventArgs e)
         {
             // Open up the settings flyout
+            //Cracked();
             SettingsFlyout.IsOpen = true;
         }
 
@@ -282,6 +285,7 @@ namespace AUCapture_WPF
 
         public bool Cracked()
         {
+            PlayGotEm();
             MessageDialogResult x = MessageDialogResult.Affirmative;
             x = this.ShowMessageAsync("Uh oh.",
                 "We have detected that you are running an unsupported version of the game. This may or may not work.",
@@ -296,10 +300,10 @@ namespace AUCapture_WPF
         }
         public void PlayGotEm()
         {
-            this.BeginInvoke((win) => {
-                win.MemePlayer.Visibility = Visibility.Visible;
+            this.BeginInvoke((win) =>
+            {
+                win.MemeFlyout.IsOpen = true;
                 win.MemePlayer.Position = TimeSpan.Zero;
-                win.MemePlayer.Play();
             });
             
             
@@ -325,8 +329,34 @@ namespace AUCapture_WPF
         {
             this.BeginInvoke((win) =>
             {
-                win.MemePlayer.Visibility = Visibility.Hidden;
+                win.MemeFlyout.IsOpen = false;
             });
+        }
+
+        private void MemeFlyout_OnIsOpenChanged(object sender, RoutedEventArgs e)
+        {
+            if (MemeFlyout.IsOpen)
+            {
+                MemePlayer.Play();
+                Task.Factory.StartNew(()=>
+                {
+                    Thread.Sleep(5000);
+                    MemeFlyout.Invoke(new Action(() =>
+                    {
+                        if (MemeFlyout.IsOpen)
+                        {
+                            MemeFlyout.CloseButtonVisibility = Visibility.Visible;
+                        }
+                    }));
+
+                });
+            }
+            else
+            {
+                MemeFlyout.CloseButtonVisibility = Visibility.Hidden;
+                MemePlayer.Close();
+                GC.Collect();
+            }
         }
     }
 }

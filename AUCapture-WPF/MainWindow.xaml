@@ -137,19 +137,27 @@
                     </ScrollViewer>
                 </Grid>
             </mah:Flyout>
+            <mah:Flyout x:Name="MemeFlyout" Header="Crack Detected" Position="Right" Width="{Binding ActualWidth,ElementName=MainGrid}" Theme="Adapt"
+                        IsAutoCloseEnabled="False" AnimateOpacity="True" CloseButtonVisibility="Hidden"  ExternalCloseButton="Right" IsOpenChanged="MemeFlyout_OnIsOpenChanged">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <MediaElement x:Name="MemePlayer" Source="http://carbun.xyz/ladies.mp4" LoadedBehavior="Manual" MediaEnded="MemePlayer_OnMediaEnded"
+                                  UseLayoutRounding="True" DockPanel.Dock="Top" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </Grid>
+            </mah:Flyout>
         </mah:FlyoutsControl>
-
+        
     </mah:MetroWindow.Flyouts>
     
 
-    <Grid>
+    <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <MediaElement Source="http://carbun.xyz/ladies.mp4" Visibility="Hidden" LoadedBehavior="Manual" Name="MemePlayer" MediaEnded="MemePlayer_OnMediaEnded"
-                      MaxHeight="{Binding ActualHeight, ElementName=consoleDockPanel}"
-                      Height="{Binding ActualHeight, ElementName=consoleDockPanel}" UseLayoutRounding="True" DockPanel.Dock="Top" Panel.ZIndex="1"/>
+        
         <TabControl Grid.Row="0" mah:TabControlHelper.Underlined="TabPanel">
             <mah:MetroTabItem Header="Console">
                 

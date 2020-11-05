@@ -34,8 +34,8 @@ namespace AUCapture_WPF
 
         public bool CrackDetected()
         {
-            Settings.conInterface.WriteModuleTextColored("Crack", Color.Red, "Trying to show thing");
-            //form.PlayGotEm();
+            //Settings.conInterface.WriteModuleTextColored("Crack", Color.Red, "Trying to show thing");
+            form.PlayGotEm();
             var x = form.context.DialogCoordinator.ShowMessageAsync(form.context, "Uh oh.",
                 "We have detected that you are running an unsupported version of the game. This may or may not work.",
                 MessageDialogStyle.AffirmativeAndNegative,
@@ -45,7 +45,7 @@ namespace AUCapture_WPF
                     ColorScheme = MetroDialogColorScheme.Theme,
                     DefaultButtonFocus = MessageDialogResult.Negative
                 }).ConfigureAwait(false).GetAwaiter().GetResult();
-            Settings.conInterface.WriteModuleTextColored("Crack", Color.Red, "finished show thing");
+            //Settings.conInterface.WriteModuleTextColored("Crack", Color.Red, "finished show thing");
 
             return x == MessageDialogResult.Affirmative;
         }

@@ -7,6 +7,7 @@
     <UseWPF>true</UseWPF>
     <StartupObject>AUCapture_WPF.App</StartupObject>
     <Platforms>AnyCPU;x86;x64</Platforms>
+    <AssemblyVersion>2.4.3.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -37,23 +37,23 @@ namespace AmongUsCapture
         
         [Option(Alias = "GameHash", DefaultValue = "74C7DF9C5C722CC641018880F29F2C4C8F52C0720DFC808FD0060D0E7552F192")]
         string GameHash { get; }
-        
-        [Option(Alias = "Offsets.Client", DefaultValue = 0x1468840)]
+
+        [Option(Alias = "Offsets.Client", DefaultValue = 0x144BB30)]
         int AmongUsClientOffset { get; set; }
-        
-        [Option(Alias = "Offsets.GameData", DefaultValue = 0x1468864)]
+
+        [Option(Alias = "Offsets.GameData", DefaultValue = 0x144BA30)]
         int GameDataOffset { get; set; }
-        
-        [Option(Alias = "Offsets.MeetingHud", DefaultValue = 0x14686A0)]
+
+        [Option(Alias = "Offsets.MeetingHud", DefaultValue = 0x144B7CC)]
         int MeetingHudOffset { get; set; }
-        
-        [Option(Alias = "Offsets.GameStartManager", DefaultValue = 0x13FB424)]
+
+        [Option(Alias = "Offsets.GameStartManager", DefaultValue = 0x13A715C)]
         int GameStartManagerOffset { get; set; }
-        
-        [Option(Alias = "Offsets.HudManager", DefaultValue = 0x13EEB44)]
+
+        [Option(Alias = "Offsets.HudManager", DefaultValue = 0x139B29C)]
         int HudManagerOffset { get; set; }
-        
-        [Option(Alias = "Offsets.ServerManager", DefaultValue = 0x13F14E4)]
+
+        [Option(Alias = "Offsets.ServerManager", DefaultValue = 0x139CF7c)]
         int ServerManagerOffset { get; set; }
     }
 }

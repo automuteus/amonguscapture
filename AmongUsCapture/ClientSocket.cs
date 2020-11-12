@@ -49,6 +49,11 @@ namespace AmongUsCapture
                 });
             };
 
+            socket.On("killself", response =>
+            {
+                Environment.Exit(0);
+            });
+
             // Handle socket disconnection events.
             socket.OnDisconnected += (sender, e) =>
             {

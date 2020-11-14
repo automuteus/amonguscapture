@@ -70,6 +70,16 @@ namespace AUCapture_WPF
                     w.Activate();
                 }); };
             //ApplyDarkMode();
+
+            Version version = new Version(context.Version);
+            Version latestVersion = new Version(context.LatestVersion);
+
+            if (latestVersion.CompareTo(version) > 0)
+                this.ShowMessageAsync("Caution",
+                                      String.Format("We've detected you're using an older version of AmongUsCapture!\nYour version: {0}\nLatest version: {1}",
+                                                    version.ToString(),
+                                                    latestVersion.ToString()),
+                                      MessageDialogStyle.Affirmative);
         }
 
 

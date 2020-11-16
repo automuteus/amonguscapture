@@ -45,13 +45,16 @@ namespace AUCapture_WPF
             context = new UserDataContext(DialogCoordinator.Instance, config);
             DataContext = context;
             config.PropertyChanged += ConfigOnPropertyChanged;
+            App.handler.OnReady += (sender, args) =>
+            {
+                App.socket.AddHandler(App.handler);
+            };
             if (context.Settings.discordToken != "")
             {
                 Task.Factory.StartNew(() =>
                 {
                     Thread.Sleep(2000);
                     App.handler.Init(context.Settings.discordToken);
-                    App.socket.AddHandler(App.handler);
                 });
                 
             }
@@ -375,7 +378,6 @@ namespace AUCapture_WPF
             {
                 App.handler.Init(context.Settings.discordToken);
             }
-            App.socket.AddHandler(App.handler);
         }
     }
 }

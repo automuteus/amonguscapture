@@ -49,6 +49,8 @@ namespace AmongUsCapture
                 if (!(this.handler is null))
                 {
                     socket.EmitAsync("botID", handler.DClient.CurrentUser.Id);
+                    Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                        $"{Color.Red.ToTextColor()}Sending BotID: {Color.LightGreen.ToTextColor()}{handler.DClient.CurrentUser.Id}");
                 }
             };
 
@@ -75,7 +77,16 @@ namespace AmongUsCapture
             this.handler = handler;
             if (socket.Connected)
             {
-                socket.EmitAsync("botID", handler.DClient.CurrentUser.Id);
+                try
+                {
+                    socket.EmitAsync("botID", handler.DClient.CurrentUser.Id);
+                    Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                        $"{Color.Red.ToTextColor()}Sending BotID: {Color.LightGreen.ToTextColor()}{handler.DClient.CurrentUser.Id}");
+                }
+                catch
+                {
+                    this.handler = null;
+                }
             }
             
         }

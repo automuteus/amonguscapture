@@ -24,7 +24,7 @@ namespace AmongUsCapture
         //DateTime is always converted to UTC
         [Option(Alias = "Host", DefaultValue = "http://localhost:8123")]
         string host { get; set; }
-        
+
         [Option(Alias = "DebugConsole", DefaultValue = false)]
         bool debugConsole { get; set; }
         

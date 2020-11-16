@@ -64,7 +64,7 @@
 
     <mah:MetroWindow.Flyouts>
         <mah:FlyoutsControl>
-            <mah:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right" Width="300" Theme="Adapt"
+            <mah:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right" Width="{Binding ActualWidth,ElementName=MainGrid}" Theme="Adapt"
                         IsAutoCloseEnabled="False" AnimateOpacity="True" ExternalCloseButton="Left">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
@@ -93,6 +93,17 @@
                                 <StackPanel Orientation="Vertical">
                                     <mah:ToggleSwitch x:Name="DebugConsole_Toggle" Header="Debug mode"
                                                       IsOn="{Binding Settings.debug, Mode=TwoWay}"/>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </mah:MetroTabItem>
+                        <mah:MetroTabItem Header="Discord" >
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Discord Token: " VerticalAlignment="Center" Margin="4 0 3 0" />
+                                        <TextBox VerticalAlignment="Center" MinWidth="150" IsReadOnly="False" Text="{Binding Settings.discordToken, Mode=TwoWay}"/>
+                                        <Button Content="Submit" x:Name="SubmitDiscordButton" Margin="20" Click="SubmitDiscordButton_OnClick"></Button>
+                                    </StackPanel>
                                 </StackPanel>
                             </ScrollViewer>
                         </mah:MetroTabItem>

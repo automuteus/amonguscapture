@@ -36,6 +36,7 @@ namespace AUCapture_WPF
         public MainWindow()
         {
             InitializeComponent();
+            
             var p = ConsoleTextBox.Document.Blocks.FirstBlock as Paragraph;
             ConsoleTextBox.Document.Blocks.Clear();
             config = new ConfigurationBuilder<IAppSettings>()
@@ -44,7 +45,16 @@ namespace AUCapture_WPF
             context = new UserDataContext(DialogCoordinator.Instance, config);
             DataContext = context;
             config.PropertyChanged += ConfigOnPropertyChanged;
-
+            if (context.Settings.discordToken != "")
+            {
+                Task.Factory.StartNew(() =>
+                {
+                    Thread.Sleep(2000);
+                    App.handler.Init(context.Settings.discordToken);
+                    App.socket.AddHandler(App.handler);
+                });
+                
+            }
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
@@ -71,7 +81,7 @@ namespace AUCapture_WPF
                 }); };
             //ApplyDarkMode();
         }
-
+        
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
@@ -357,6 +367,15 @@ namespace AUCapture_WPF
                 MemePlayer.Close();
                 GC.Collect();
             }
+        }
+
+        private void SubmitDiscordButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (context.Settings.discordToken != "")
+            {
+                App.handler.Init(context.Settings.discordToken);
+            }
+            App.socket.AddHandler(App.handler);
         }
     }
 }

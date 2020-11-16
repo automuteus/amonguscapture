@@ -13,19 +13,18 @@ namespace AmongUsCapture
 
         private SocketIO socket;
         private string ConnectCode;
-
+        private DiscordHandler handler;
         public void Init()
         {
             // Initialize a socket.io connection.
             socket = new SocketIO();
-
             // Handle tokens from protocol links.
-            
 
             // Register handlers for game-state change events.
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
             GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;
+
 
             // Handle socket connection events.
             socket.OnConnected += (sender, e) =>
@@ -47,6 +46,10 @@ namespace AmongUsCapture
                     GameMemReader.getInstance().ForceTransmitState();
                     GameMemReader.getInstance().ForceTransmitLobby();
                 });
+                if (!(this.handler is null))
+                {
+                    socket.EmitAsync("botID", handler.DClient.CurrentUser.Id);
+                }
             };
 
             socket.On("killself", response =>
@@ -67,7 +70,15 @@ namespace AmongUsCapture
             };
         }
 
-
+        public void AddHandler(DiscordHandler handler)
+        {
+            this.handler = handler;
+            if (socket.Connected)
+            {
+                socket.EmitAsync("botID", handler.DClient.CurrentUser.Id);
+            }
+            
+        }
         private void OnConnectionFailure(AggregateException e = null)
         {
             var message = e != null ? e.Message : "A generic connection error occured.";

@@ -8,6 +8,9 @@ namespace AUCapture_WPF
 {
     public interface IAppSettings : INotifyPropertyChanged
     {
+        [Option(DefaultValue = "")]
+        string discordToken { get; set; }
+
         [Option(DefaultValue = false)]
         bool ranBefore { get; set; }
 

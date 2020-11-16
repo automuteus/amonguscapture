@@ -19,6 +19,7 @@ namespace AUCapture_WPF
     public partial class App : Application
     {
         public static readonly ClientSocket socket = new ClientSocket();
+        public static readonly DiscordHandler handler = new DiscordHandler();
         
         public void OnTokenHandler(object sender, StartToken token)
         {
@@ -67,8 +68,7 @@ namespace AUCapture_WPF
                     this.MainWindow = mainWindow;
                     Settings.conInterface = new WPFLogger(mainWindow);
                     IPCAdapter.getInstance().OnToken += OnTokenHandler;
-                    var socketTask = Task.Factory.StartNew(() => socket.Init()); // run socket in background. Important to wait for init to have actually finished before continuing
-                    socketTask.Wait();
+                    socket.Init();
                     IPCAdapter.getInstance().RegisterMinion();
                     mainWindow.Loaded += (sender, args2) =>
                     {

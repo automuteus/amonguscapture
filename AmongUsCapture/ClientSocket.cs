@@ -54,7 +54,7 @@ namespace AmongUsCapture
                         $"{Color.Red.ToTextColor()}Sending BotID: {Color.LightGreen.ToTextColor()}{handler.DClient.CurrentUser.Id}");
                 }
             };
-            socket.On("updateRequest", response =>
+            socket.On("modify", response =>
             {
                 if (handler is null) return;
                 string jsonRequest = response.GetValue(0).ToString();
@@ -64,7 +64,7 @@ namespace AmongUsCapture
                     $"{Color.LawnGreen.ToTextColor()}Got task: {Color.LightGreen.ToTextColor()}{update.ToJson()}");
                 handler.UpdateUser(update.GuildId, update.UserId, update.Parameters.Mute, update.Parameters.Deaf).ContinueWith(x => {
                     Settings.conInterface.WriteModuleTextColored("Discord", Color.Red, $"TaskComplete: {Color.Aqua.ToTextColor()}{x.Result}");
-                    socket.EmitAsync(x.Result ? "TaskComplete" : "TaskFailed", update.TaskId);
+                    socket.EmitAsync(x.Result ? "taskComplete" : "taskFailed", update.TaskId);
                 });
 
             });

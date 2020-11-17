@@ -32,7 +32,6 @@ namespace AUCapture_WPF
         public UserDataContext context;
         private bool connected;
         private readonly object locker = new object();
-        private bool Permissive = false;
         private Queue<string> DeadMessages = new Queue<string>();
 
         public MainWindow()
@@ -90,7 +89,7 @@ namespace AUCapture_WPF
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
-            if (!Permissive)
+            if (e.Action == PlayerAction.Died)
             {
                 DeadMessages.Enqueue($"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
             }
@@ -223,15 +222,11 @@ namespace AUCapture_WPF
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
         {
             setCurrentState(e.NewState.ToString());
-            Permissive = e.NewState == GameState.LOBBY || e.NewState == GameState.DISCUSSION ||
-                         e.NewState == GameState.UNKNOWN;
-            if (Permissive)
+            while (DeadMessages.Count > 0)
             {
-                while (DeadMessages.Count > 0)
-                {
                     AmongUsCapture.Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, DeadMessages.Dequeue());
-                }
             }
+            
             AmongUsCapture.Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
                 $"State changed to {Color.Cyan.ToTextColor()}{e.NewState}");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);

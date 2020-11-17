@@ -1,8 +1,9 @@
 using System;
 using System.Drawing;
-using System.Text.Json;
 using AmongUsCapture.TextColorLibrary;
+using Newtonsoft.Json;
 using SocketIOClient;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace AmongUsCapture
 {
@@ -53,7 +54,15 @@ namespace AmongUsCapture
                         $"{Color.Red.ToTextColor()}Sending BotID: {Color.LightGreen.ToTextColor()}{handler.DClient.CurrentUser.Id}");
                 }
             };
+            socket.On("updateRequest", response =>
+            {
+                string jsonResponse = response.ToString();
+                UpdateRequest update = JsonConvert.DeserializeObject<UpdateRequest>(jsonResponse);
+                handler.UpdateUser(update.GuildId, update.UserId, update.Parameters.Mute, update.Parameters.Deaf).ContinueWith(x => {
+                        socket.EmitAsync(x.IsCompletedSuccessfully ? "TaskComplete" : "TaskFailed", update.TaskId);
+                }).Start();
 
+            });
             socket.On("killself", response =>
             {
                 Environment.Exit(0);

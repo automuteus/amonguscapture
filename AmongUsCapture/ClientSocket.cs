@@ -57,14 +57,15 @@ namespace AmongUsCapture
             socket.On("updateRequest", response =>
             {
                 if (handler is null) return;
-                string jsonResponse = response.ToString();
-                UpdateRequest update = JsonConvert.DeserializeObject<UpdateRequest>(jsonResponse);
+                string jsonRequest = response.GetValue(0).ToString();
+                UpdateRequest update = JsonConvert.DeserializeObject<UpdateRequest>(jsonRequest);
+                Console.Write(JsonConvert.SerializeObject(update, Formatting.Indented));
                 Settings.conInterface.WriteModuleTextColored("Discord", Color.Red,
                     $"{Color.LawnGreen.ToTextColor()}Got task: {Color.LightGreen.ToTextColor()}{update.ToJson()}");
                 handler.UpdateUser(update.GuildId, update.UserId, update.Parameters.Mute, update.Parameters.Deaf).ContinueWith(x => {
-                    Settings.conInterface.WriteModuleTextColored("Discord", Color.Red, $"TaskComplete: {Color.Aqua}{x.IsCompletedSuccessfully}");
-                    socket.EmitAsync(x.IsCompletedSuccessfully ? "TaskComplete" : "TaskFailed", update.TaskId);
-                }).Start();
+                    Settings.conInterface.WriteModuleTextColored("Discord", Color.Red, $"TaskComplete: {Color.Aqua.ToTextColor()}{x.Result}");
+                    socket.EmitAsync(x.Result ? "TaskComplete" : "TaskFailed", update.TaskId);
+                });
 
             });
             socket.On("killself", response =>

@@ -44,20 +44,20 @@ namespace AmongUsCapture
             return Task.CompletedTask;
         }
 
-        public async Task<Task> UpdateUser(ulong GuildID, ulong UserID, bool? mute, bool? deafen)
+        public async Task<bool> UpdateUser(ulong GuildID, ulong UserID, bool? mute, bool? deafen)
         {
             try
             {
                 var guild = await DClient.GetGuildAsync(GuildID);
                 var member = await guild.GetMemberAsync(UserID);
                 await member.ModifyAsync(null, null, mute, deafen, null, null);
-                return Task.CompletedTask;
+                return true;
             }
             catch (Exception e)
             {
                 Settings.conInterface.WriteModuleTextColored("DiscordHandler", Color.Red,
                     $"{Color.Red.ToTextColor()} Error: {e}");
-                return Task.FromException(e);
+                return false;
             }
             
         }

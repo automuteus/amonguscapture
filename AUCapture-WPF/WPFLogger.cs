@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -19,6 +20,8 @@ namespace AUCapture_WPF
         {
             form = userForm;
             logFile = File.CreateText(Path.Combine(Directory.GetParent(App.GetExecutablePath()).FullName, "CaptureLog.txt"));
+            FileVersionInfo v = FileVersionInfo.GetVersionInfo(App.GetExecutablePath());
+            WriteToLog($"Capture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}");
         }
 
         public void WriteTextFormatted(string text, bool acceptNewLines = true)

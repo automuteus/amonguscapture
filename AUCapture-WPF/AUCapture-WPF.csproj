@@ -1,14 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <RootNamespace>AUCapture_WPF</RootNamespace>
     <UseWPF>true</UseWPF>
     <StartupObject>AUCapture_WPF.App</StartupObject>
     <Platforms>AnyCPU;x86;x64</Platforms>
     <AssemblyVersion>2.4.4.0</AssemblyVersion>
     <FileVersion>2.4.4.0</FileVersion>
+    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

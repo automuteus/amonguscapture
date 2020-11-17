@@ -143,7 +143,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <MediaElement x:Name="MemePlayer" Source="https://github.com/denverquane/amonguscapture/blob/master/AUCapture-WPF/Pirate%20Video.mp4?raw=true" LoadedBehavior="Manual" MediaEnded="MemePlayer_OnMediaEnded"
+                    <MediaElement x:Name="MemePlayer" Source="https://ia800803.us.archive.org/29/items/MacArthur_Foundation_100andChange_dQw4w9WgXcQ/Rick_Astley_-_Never_Gonna_Give_You_Up_dQw4w9WgXcQ.mp4" LoadedBehavior="Manual" MediaEnded="MemePlayer_OnMediaEnded"
                                   UseLayoutRounding="True" DockPanel.Dock="Top" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 </Grid>
             </mah:Flyout>

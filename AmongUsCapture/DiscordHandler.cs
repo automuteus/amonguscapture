@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
 using AmongUsCapture.TextColorLibrary;
-using DSharpPlus;
+using Discord;
+using Discord.WebSocket;
+using Color = System.Drawing.Color;
 
 namespace AmongUsCapture
 {
     public class DiscordHandler
     {
-        public DiscordClient DClient;
+        public DiscordSocketClient DClient;
         public event EventHandler<ReadyEventArgs> OnReady;
         public async void Init(string DiscordToken)
         {
@@ -18,14 +19,11 @@ namespace AmongUsCapture
                 $"{Color.LawnGreen.ToTextColor()}Trying to connect to discord");
             try
             {
-                DClient = new DiscordClient(new DiscordConfiguration
-                {
-                    AutoReconnect = true,
-                    Token = DiscordToken,
-                    TokenType = TokenType.Bot
-                });
-                DClient.Ready += DClientOnReady;
-                await DClient.ConnectAsync();
+                DClient = new DiscordSocketClient();
+                DClient.Log += DClient_Log;
+                DClient.Ready += DClient_Ready;
+                await DClient.LoginAsync(TokenType.Bot, DiscordToken, true);
+                await DClient.StartAsync();
             }
             catch (Exception e)
             {
@@ -35,23 +33,41 @@ namespace AmongUsCapture
             
         }
 
-        private Task DClientOnReady(DSharpPlus.EventArgs.ReadyEventArgs e)
+        private Task DClient_Ready()
         {
             Settings.conInterface.WriteModuleTextColored("DiscordHandler", Color.Red,
-                $"{Color.Aqua.ToTextColor()}Connection successful! ID: {e.Client.CurrentUser.Id}, name: {e.Client.CurrentUser.Username}");
-            var args = new ReadyEventArgs {BotID = e.Client.CurrentUser.Id};
+                $"{Color.Aqua.ToTextColor()}Connection successful! ID: {DClient.CurrentUser.Id}, name: {DClient.CurrentUser.Username}");
+            var args = new ReadyEventArgs {BotID = DClient.CurrentUser.Id};
             OnReady?.Invoke(this, args);
             return Task.CompletedTask;
         }
 
-        public async Task<bool> UpdateUser(ulong GuildID, ulong UserID, bool? mute, bool? deafen)
+        private Task DClient_Log(LogMessage arg)
+        {
+            Settings.conInterface.WriteModuleTextColored("Discord.Net", Color.Red, $"{arg.ToString()}");
+            return Task.CompletedTask;
+        }
+
+        public async Task<bool> UpdateUser(ulong GuildID, ulong UserID, bool mute, bool deafen)
         {
             try
             {
-                var guild = await DClient.GetGuildAsync(GuildID);
-                var member = await guild.GetMemberAsync(UserID);
-                await member.ModifyAsync(null, null, mute, deafen, null, null);
-                return true;
+                var guild = DClient.GetGuild(GuildID);
+                var member = guild.GetUser(UserID);
+                TaskStatus s = TaskStatus.WaitingToRun;
+                return await member.ModifyAsync(x =>
+                {
+                    x.Deaf = deafen;
+                    x.Mute = mute;
+                }, new RequestOptions
+                {
+                    RetryMode = RetryMode.Retry502,
+                    Timeout = 200
+                }).ContinueWith(x =>
+                {
+                    Console.WriteLine($"Status: {x.Status}, Exception: {x.Exception}, Faulted: {x.IsFaulted}");
+                    return !x.IsFaulted;
+                });
             }
             catch (Exception e)
             {

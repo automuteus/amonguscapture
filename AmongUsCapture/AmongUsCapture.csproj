@@ -31,7 +31,7 @@
   <ItemGroup>
     <PackageReference Include="Config.Net" Version="4.15.0" />
     <PackageReference Include="Config.Net.Json" Version="4.15.0" />
-    <PackageReference Include="DSharpPlus" Version="3.2.3" />
+    <PackageReference Include="Discord.Net" Version="2.2.0" />
     <PackageReference Include="SocketIOClient" Version="2.1.1" />
   </ItemGroup>
 

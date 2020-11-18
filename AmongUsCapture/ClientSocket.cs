@@ -66,7 +66,8 @@ namespace AmongUsCapture
                 };
                 Settings.conInterface.WriteModuleTextColored("Discord", Color.Red,
                     $"{Color.LawnGreen.ToTextColor()}Got task: {Color.LightGreen.ToTextColor()}{update.ToJson()}");
-                handler.UpdateUser(update.GuildId, update.UserId, update.Parameters.Mute, update.Parameters.Deaf).ContinueWith(x => {
+                handler.UpdateUser(update.GuildId, update.UserId, update.Parameters.Mute, update.Parameters.Deaf).ContinueWith(x =>
+                {
                     Settings.conInterface.WriteModuleTextColored("Discord", Color.Red, $"TaskComplete: {Color.Aqua.ToTextColor()}{x.Result}");
                     socket.EmitAsync(x.Result ? "taskComplete" : "taskFailed", update.TaskId);
                 });

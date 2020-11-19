@@ -1,0 +1,83 @@
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>Among Us Capture</value>
+  </data>
+  <data name="CodeBox" xml:space="preserve">
+    <value>Code: </value>
+  </data>
+  <data name="CurrentVersionBox" xml:space="preserve">
+    <value>Version: </value>
+  </data>
+  <data name="DarkmodetoggleswitchHeader" xml:space="preserve">
+    <value>Dark mode</value>
+  </data>
+  <data name="DebugHeader" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="DebugConsoleToggleHeader" xml:space="preserve">
+    <value>Debug mode</value>
+  </data>
+  <data name="FontSizeHeader" xml:space="preserve">
+    <value>Font size: </value>
+  </data>
+  <data name="GameCode" xml:space="preserve">
+    <value>Game code:</value>
+  </data>
+  <data name="GameCodeBoxToolTip" xml:space="preserve">
+    <value>Click to copy</value>
+  </data>
+  <data name="GameStatus" xml:space="preserve">
+    <value>Game status:</value>
+  </data>
+  <data name="GeneralSettingsTab" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="HostBox" xml:space="preserve">
+    <value>Host: </value>
+  </data>
+  <data name="LatestVersionBox" xml:space="preserve">
+    <value>Latest Version: </value>
+  </data>
+  <data name="LoadingText" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="MainConsoleHeader" xml:space="preserve">
+    <value>Console</value>
+  </data>
+  <data name="ManualConnectButtonToolTip" xml:space="preserve">
+    <value>Open the manual connection window</value>
+  </data>
+  <data name="ManualConnectionFlyoutHeader" xml:space="preserve">
+    <value>Manual Connection</value>
+  </data>
+  <data name="MemeFlyoutHeader" xml:space="preserve">
+    <value>Crack Detected</value>
+  </data>
+  <data name="SettingsToolTip" xml:space="preserve">
+    <value>Open the settings window</value>
+  </data>
+  <data name="SettingsFlyoutHeader" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="SubmitButtonContent" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="UNKNOWN" xml:space="preserve">
+    <value>UNKNOWN</value>
+  </data>
+  <data name="LanguageHeader" xml:space="preserve">
+    <value>Language: </value>
+  </data>
+</root>

@@ -11,6 +11,9 @@ namespace AUCapture_WPF
         [Option(DefaultValue = false)]
         bool ranBefore { get; set; }
 
+        [Option(DefaultValue = "en-us")]
+        string culture { get; set; }
+
         [Option(DefaultValue = false)]
         bool DarkMode { get; set; }
 

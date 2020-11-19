@@ -46,6 +46,7 @@
   <ItemGroup>
     <PackageReference Include="Config.Net" Version="4.15.0" />
     <PackageReference Include="Config.Net.Json" Version="4.15.0" />
+    <PackageReference Include="Gu.Wpf.Localization" Version="6.5.0" />
     <PackageReference Include="MahApps.Metro" Version="2.2.0" />
     <PackageReference Include="MahApps.Metro.IconPacks.Modern" Version="4.8.0" />
     <PackageReference Include="MahApps.Metro.IconPacks.Unicons" Version="4.8.0" />
@@ -63,9 +64,21 @@
       </ManagedAssemblyToLink>
     </ItemGroup>
   </Target>
-
   <ItemGroup>
     <ProjectReference Include="..\AmongUsCapture\AmongUsCapture.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

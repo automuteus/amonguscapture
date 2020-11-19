@@ -6,14 +6,10 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                  xmlns:dialogs="http://metro.mahapps.com/winfx/xaml/controls"
-                 xmlns:localize="http://gu.se/Localization"
-                 xmlns:l="clr-namespace:Gu.Wpf.Localization;assembly=Gu.Wpf.Localization"
-                 xmlns:p="clr-namespace:AUCapture_WPF"
-                 xmlns:auCaptureWpf="clr-namespace:AUCapture_WPF"
                  mc:Ignorable="d"
                  Style="{DynamicResource MahApps.Styles.MetroWindow.Clean}"
                  ResizeMode="CanResizeWithGrip"
-                 Title="{localize:Static auCaptureWpf:Strings.AppTitle}" TitleAlignment="Center" Height="450" Width="800"
+                 Title="Among Us Capture" TitleAlignment="Center" Height="450" Width="800"
                  ShowInTaskbar="True"
                  TitleCharacterCasing="Normal"
                  ShowSystemMenu="False"
@@ -43,7 +39,7 @@
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
             <Button Click="ManualConnect_Click" x:Name="ManualConnectButton"
-                    ToolTip="{l:Static p:Strings.ManualConnectButtonToolTip}">
+                    ToolTip="Open the manual connection window">
                 <Button.ContentTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -52,7 +48,7 @@
                     </DataTemplate>
                 </Button.ContentTemplate>
             </Button>
-            <Button Click="Settings" ToolTip="{localize:Static auCaptureWpf:Strings.SettingsToolTip}">
+            <Button Click="Settings" ToolTip="Open the settings window">
                 <Button.ContentTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -68,7 +64,7 @@
 
     <mah:MetroWindow.Flyouts>
         <mah:FlyoutsControl>
-            <mah:Flyout x:Name="SettingsFlyout" Header="{localize:Static auCaptureWpf:Strings.SettingsFlyoutHeader}" Position="Right" Width="300" Theme="Adapt"
+            <mah:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right" Width="300" Theme="Adapt"
                         IsAutoCloseEnabled="False" AnimateOpacity="True" ExternalCloseButton="Left">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
@@ -77,29 +73,25 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <TabControl Grid.Row="1" mah:TabControlHelper.Underlined="TabPanel">
-                        <mah:MetroTabItem Header="{localize:Static auCaptureWpf:Strings.GeneralSettingsTab}">
+                        <mah:MetroTabItem Header="General">
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <StackPanel Orientation="Vertical">
-                                    <mah:ToggleSwitch x:Name="Darkmode_toggleswitch" Header="{localize:Static auCaptureWpf:Strings.DarkmodetoggleswitchHeader}"
+                                    <mah:ToggleSwitch x:Name="Darkmode_toggleswitch" Header="Dark mode"
                                                       IsOn="{Binding Settings.DarkMode, Mode=TwoWay}"
                                                       Toggled="Darkmode_Toggled" />
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{localize:Static auCaptureWpf:Strings.FontSizeHeader}" VerticalAlignment="Center" Margin="4 0 0 0" />
+                                        <TextBlock Text="Font size: " VerticalAlignment="Center" Margin="4 0 0 0" />
                                         <Slider Name="FontSlider" Maximum="72" Width="200" Minimum="1"
                                                 AutoToolTipPlacement="TopLeft"
                                                 Value="{Binding Settings.fontSize, Mode=TwoWay}" />
                                     </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{localize:Static auCaptureWpf:Strings.LanguageHeader}" VerticalAlignment="Center" Margin="4 0 0 0" />
-                                        <l:LanguageSelector AutogenerateLanguages="True" VerticalAlignment="Center"/>
-                                    </StackPanel>
                                 </StackPanel>
                             </ScrollViewer>
                         </mah:MetroTabItem>
-                        <mah:MetroTabItem Header="{localize:Static auCaptureWpf:Strings.DebugHeader}" >
+                        <mah:MetroTabItem Header="Debug" >
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <StackPanel Orientation="Vertical">
-                                    <mah:ToggleSwitch x:Name="DebugConsole_Toggle" Header="{localize:Static auCaptureWpf:Strings.DebugConsoleToggleHeader}"
+                                    <mah:ToggleSwitch x:Name="DebugConsole_Toggle" Header="Debug mode"
                                                       IsOn="{Binding Settings.debug, Mode=TwoWay}"/>
                                 </StackPanel>
                             </ScrollViewer>
@@ -108,11 +100,11 @@
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <StackPanel Orientation="Vertical">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{localize:Static auCaptureWpf:Strings.CurrentVersionBox}" VerticalAlignment="Center" Margin="4 0 3 0" />
+                                        <TextBlock Text="Version: " VerticalAlignment="Center" Margin="4 0 3 0" />
                                         <TextBox VerticalAlignment="Center" MinWidth="150" IsReadOnly="True" Text="{Binding Version, Mode=OneWay}"/>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{localize:Static auCaptureWpf:Strings.LatestVersionBox}" VerticalAlignment="Center" Margin="4 0 3 0" />
+                                        <TextBlock Text="Latest Version: " VerticalAlignment="Center" Margin="4 0 3 0" />
                                         <TextBox VerticalAlignment="Center" MinWidth="150" IsReadOnly="True" Text="{Binding LatestVersion, Mode=OneWay}"/>
                                     </StackPanel>
                                 </StackPanel>
@@ -122,7 +114,7 @@
 
                 </Grid>
             </mah:Flyout>
-            <mah:Flyout x:Name="ManualConnectionFlyout" Header="{localize:Static auCaptureWpf:Strings.ManualConnectionFlyoutHeader}" Position="Right" Width="300" Theme="Adapt"
+            <mah:Flyout x:Name="ManualConnectionFlyout" Header="Manual Connection" Position="Right" Width="300" Theme="Adapt"
                         IsAutoCloseEnabled="False" AnimateOpacity="True" ExternalCloseButton="Right">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
@@ -133,19 +125,19 @@
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{localize:Static auCaptureWpf:Strings.HostBox}" VerticalAlignment="Center" Margin="4 0 3 0" />
+                                <TextBlock Text="Host: " VerticalAlignment="Center" Margin="4 0 3 0" />
                                 <TextBox x:Name="Host" VerticalAlignment="Center" MinWidth="150" Text="{Binding Settings.host, Mode=TwoWay}"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{localize:Static auCaptureWpf:Strings.CodeBox}" VerticalAlignment="Center" Margin="4 0 0 0" />
+                                <TextBlock Text="Code: " VerticalAlignment="Center" Margin="4 0 0 0" />
                                 <TextBox x:Name="Code" VerticalAlignment="Center" MinWidth="150" Text="{Binding Settings.connectCode, Mode=TwoWay}"/>
                             </StackPanel>
-                            <Button Content="{localize:Static auCaptureWpf:Strings.SubmitButtonContent}" x:Name="SubmitConnectButton" Margin="20" Click="SubmitConnectButton_OnClick"></Button>
+                            <Button Content="Submit" x:Name="SubmitConnectButton" Margin="20" Click="SubmitConnectButton_OnClick"></Button>
                         </StackPanel>
                     </ScrollViewer>
                 </Grid>
             </mah:Flyout>
-            <mah:Flyout x:Name="MemeFlyout" Header="{localize:Static auCaptureWpf:Strings.MemeFlyoutHeader}" Position="Right" Width="{Binding ActualWidth,ElementName=MainGrid}" Theme="Adapt"
+            <mah:Flyout x:Name="MemeFlyout" Header="Crack Detected" Position="Right" Width="{Binding ActualWidth,ElementName=MainGrid}" Theme="Adapt"
                         IsAutoCloseEnabled="False" AnimateOpacity="True" CloseButtonVisibility="Hidden"  ExternalCloseButton="Right" IsOpenChanged="MemeFlyout_OnIsOpenChanged">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
@@ -167,16 +159,16 @@
         </Grid.RowDefinitions>
         
         <TabControl Grid.Row="0" mah:TabControlHelper.Underlined="TabPanel">
-            <mah:MetroTabItem Header="{localize:Static auCaptureWpf:Strings.MainConsoleHeader}">
+            <mah:MetroTabItem Header="Console">
                 
-                <DockPanel x:Name="ConsoleDockPanel" ScrollViewer.CanContentScroll="True" UseLayoutRounding="True">
+                <DockPanel x:Name="consoleDockPanel" ScrollViewer.CanContentScroll="True" UseLayoutRounding="True">
                     
-                    <RichTextBox Name="ConsoleTextBox" FontFamily="Consolas" Visibility="Visible" FontSize="{Binding Settings.fontSize, Mode=OneWay}"
+                    <RichTextBox Name="ConsoleTextBox" FontFamily="Consolas" Visibility="Visible" FontSize="{Binding fontSize, Mode=OneWay}"
                                  IsReadOnly="True" DockPanel.Dock="Top"
                                  mah:ScrollViewerHelper.IsHorizontalScrollWheelEnabled="True"
                                  VerticalScrollBarVisibility="Auto"
-                                 MaxHeight="{Binding ActualHeight, ElementName=ConsoleDockPanel}"
-                                 Height="{Binding ActualHeight, ElementName=ConsoleDockPanel}" UseLayoutRounding="True" />
+                                 MaxHeight="{Binding ActualHeight, ElementName=consoleDockPanel}"
+                                 Height="{Binding ActualHeight, ElementName=consoleDockPanel}" UseLayoutRounding="True" />
                     
                 </DockPanel>
             </mah:MetroTabItem>
@@ -187,8 +179,8 @@
             <StackPanel Orientation="Horizontal">
                 <StatusBarItem>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{localize:Static auCaptureWpf:Strings.GameStatus}" VerticalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Text}" Margin="4 0 0 0" />
-                        <TextBox x:Name="StatusBox" mah:TextBoxHelper.Watermark="{localize:Static auCaptureWpf:Strings.UNKNOWN}" Margin="4 0 0 0"
+                        <TextBlock Text="Game status:" VerticalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Text}" Margin="4 0 0 0" />
+                        <TextBox x:Name="StatusBox" mah:TextBoxHelper.Watermark="UNKNOWN" Margin="4 0 0 0"
                                  VerticalAlignment="Center" IsManipulationEnabled="True" Focusable="False"
                                  IsHitTestVisible="False" AllowDrop="False" IsReadOnly="True" />
                     </StackPanel>
@@ -196,9 +188,9 @@
                 <Separator Style="{DynamicResource MahApps.Styles.Separator.StatusBar}" Foreground="{DynamicResource MahApps.Brushes.Text}" />
                 <StatusBarItem>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{localize:Static auCaptureWpf:Strings.GameCode}" VerticalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Text}" Margin="4 0 0 0" />
-                        <TextBox x:Name="GameCodeBox" Text="" mah:TextBoxHelper.Watermark="{localize:Static auCaptureWpf:Strings.UNKNOWN}"
-                                 ToolTip="{localize:Static auCaptureWpf:Strings.GameCodeBoxToolTip}" Margin="4 0 0 0" VerticalAlignment="Center"
+                        <TextBlock Text="Game code:" VerticalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Text}" Margin="4 0 0 0" />
+                        <TextBox x:Name="GameCodeBox" Text="" mah:TextBoxHelper.Watermark="UNKNOWN"
+                                 ToolTip="Click to copy" Margin="4 0 0 0" VerticalAlignment="Center"
                                  IsManipulationEnabled="True" Focusable="False" IsHitTestVisible="True"
                                  AllowDrop="False" IsReadOnly="True" MouseLeftButtonUp="GameCodeBox_MouseLeftButtonUp" />
                     </StackPanel>

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
 using System.IO;
-using System.Resources;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -47,6 +44,7 @@ namespace AUCapture_WPF
             context = new UserDataContext(DialogCoordinator.Instance, config);
             DataContext = context;
             config.PropertyChanged += ConfigOnPropertyChanged;
+
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
@@ -73,7 +71,6 @@ namespace AUCapture_WPF
                 }); };
             //ApplyDarkMode();
         }
-
 
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)

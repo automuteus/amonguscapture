@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:dialogs="http://metro.mahapps.com/winfx/xaml/controls"
-        xmlns:auCaptureWpf="clr-namespace:AUCapture_WPF"
         Style="{DynamicResource MahApps.Styles.MetroWindow.Clean}"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
@@ -15,6 +14,6 @@
     <Grid>
         <ProgressBar IsIndeterminate="True" />
         <TextBlock HorizontalAlignment="Center"
-                   VerticalAlignment="Center" Text="{x:Static auCaptureWpf:Strings.LoadingText}"/>
+                   VerticalAlignment="Center">Loading...</TextBlock>
     </Grid>
 </mah:MetroWindow>

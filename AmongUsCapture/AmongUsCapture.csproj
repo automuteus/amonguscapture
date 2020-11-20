@@ -21,15 +21,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="UserForm.cs" />
-    <Compile Remove="UserForm.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Remove="UserForm.resx" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Config.Net" Version="4.15.0" />
     <PackageReference Include="Config.Net.Json" Version="4.15.0" />
     <PackageReference Include="SocketIOClient" Version="2.0.2.6" />
@@ -39,20 +30,6 @@
     <ProjectReference Include="..\AUOffsetManager\AUOffsetManager.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <StartupObject></StartupObject>

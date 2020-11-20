@@ -57,7 +57,10 @@ namespace AUCapture_WPF
                     Thread.Sleep(2000);
                     App.handler.Init(context.Settings.discordToken);
                 });
-                
+            }
+            else
+            {
+                WriteConsoleLineFormatted("DiscordHandler", Color.Red, "You have not set a selfhost bot token. You will get increased performance if you add one in the settings.");
             }
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;

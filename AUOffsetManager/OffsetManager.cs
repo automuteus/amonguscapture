@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using Newtonsoft.Json;
 
@@ -15,6 +14,8 @@ namespace AUOffsetManager
         private Dictionary<string, GameOffsets> LocalOffsetIndex = new Dictionary<string, GameOffsets>();
         public string indexURL;
         private string StorageLocation = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "\\AmongUsCapture\\index.json");
+        private string StorageLocationCache = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "\\AmongUsCapture\\indexCache.json");
+
         public OffsetManager(string indexURL = "")
         {
             this.indexURL = indexURL;
@@ -35,9 +36,25 @@ namespace AUOffsetManager
                 OffsetIndex = new Dictionary<string, GameOffsets>();
                 return;
             }
-            using var httpClient = new HttpClient();
-            var json = await httpClient.GetStringAsync(indexURL);
-            OffsetIndex = JsonConvert.DeserializeObject<Dictionary<string, GameOffsets>>(json);
+
+            try
+            {
+                using var httpClient = new HttpClient();
+                var json = await httpClient.GetStringAsync(indexURL);
+                OffsetIndex = JsonConvert.DeserializeObject<Dictionary<string, GameOffsets>>(json);
+                await using StreamWriter sw = File.CreateText(StorageLocationCache);
+                await sw.WriteAsync(JsonConvert.SerializeObject(OffsetIndex, Formatting.Indented));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                if (File.Exists(StorageLocationCache))
+                {
+                    OffsetIndex = JsonConvert.DeserializeObject<Dictionary<string, GameOffsets>>(await File.ReadAllTextAsync(StorageLocationCache));
+                }
+                Console.WriteLine("If you are reading this that means that the site is down, and you have never used our program before. If github still exists in the future, try again in 30 minutes. - Carbon ");
+            }
+            
         }
 
         public GameOffsets FetchForHash(string sha256Hash)

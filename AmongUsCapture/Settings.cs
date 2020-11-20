@@ -24,6 +24,9 @@ namespace AmongUsCapture
         //DateTime is always converted to UTC
         [Option(Alias = "Host", DefaultValue = "http://localhost:8123")]
         string host { get; set; }
+
+        [Option(Alias = "IndexURL", DefaultValue = "")] //TODO: Add default index location on github.
+        string indexURL { get; set; }
         
         [Option(Alias = "DebugConsole", DefaultValue = false)]
         bool debugConsole { get; set; }

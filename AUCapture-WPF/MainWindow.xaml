@@ -163,7 +163,7 @@
                 
                 <DockPanel x:Name="consoleDockPanel" ScrollViewer.CanContentScroll="True" UseLayoutRounding="True">
                     
-                    <RichTextBox Name="ConsoleTextBox" FontFamily="Consolas" Visibility="Visible" FontSize="{Binding fontSize, Mode=OneWay}"
+                    <RichTextBox Name="ConsoleTextBox" FontFamily="Consolas" Visibility="Visible" FontSize="{Binding Settings.fontSize, Mode=OneWay}"
                                  IsReadOnly="True" DockPanel.Dock="Top"
                                  mah:ScrollViewerHelper.IsHorizontalScrollWheelEnabled="True"
                                  VerticalScrollBarVisibility="Auto"

@@ -25,7 +25,7 @@ namespace AmongUsCapture
         [Option(Alias = "Host", DefaultValue = "http://localhost:8123")]
         string host { get; set; }
 
-        [Option(Alias = "IndexURL", DefaultValue = "")] //TODO: Add default index location on github.
+        [Option(Alias = "IndexURL", DefaultValue = "https://raw.githubusercontent.com/denverquane/amonguscapture/master/Offsets.json")]
         string indexURL { get; set; }
         
         [Option(Alias = "DebugConsole", DefaultValue = false)]

@@ -46,8 +46,9 @@ namespace AmongUsCapture
         private bool shouldForceTransmitState;
         private bool shouldForceUpdatePlayers;
         private bool shouldTransmitLobby;
-        private OffsetManager offMan = new OffsetManager(Settings.PersistentSettings.indexURL);
+        public OffsetManager offMan = new OffsetManager(Settings.PersistentSettings.indexURL);
         public GameOffsets CurrentOffsets;
+        public string GameHash = "";
         public static GameMemReader getInstance()
         {
             return instance;
@@ -112,6 +113,7 @@ namespace AmongUsCapture
                                             }
 
                                             Console.WriteLine($"GameAssembly Hash: {GameAssemblyhashSb.ToString()}");
+                                            GameHash = GameAssemblyhashSb.ToString();
                                             CurrentOffsets = offMan.FetchForHash(GameAssemblyhashSb.ToString());
                                             if (CurrentOffsets is not null)
                                             {

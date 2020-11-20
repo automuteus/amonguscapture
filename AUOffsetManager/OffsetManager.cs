@@ -13,9 +13,11 @@ namespace AUOffsetManager
         public static int GameMemReaderVersion = 1; //GameMemReader should update this.
         private Dictionary<string, GameOffsets> OffsetIndex = new Dictionary<string, GameOffsets>();
         private Dictionary<string, GameOffsets> LocalOffsetIndex = new Dictionary<string, GameOffsets>();
+        public string indexURL;
         private string StorageLocation = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "\\AmongUsCapture\\index.json");
         public OffsetManager(string indexURL = "")
         {
+            this.indexURL = indexURL;
             if (File.Exists(StorageLocation))
             {
                  LocalOffsetIndex = JsonConvert.DeserializeObject<Dictionary<string, GameOffsets>>(File.ReadAllText(StorageLocation));
@@ -24,9 +26,9 @@ namespace AUOffsetManager
                      LocalOffsetIndex = new Dictionary<string, GameOffsets>();
                  }
             }
-            RefreshIndex(indexURL);
+            RefreshIndex();
         }
-        public async void RefreshIndex(string indexURL)
+        public async void RefreshIndex()
         {
             if (indexURL == "")
             {
@@ -40,8 +42,21 @@ namespace AUOffsetManager
 
         public GameOffsets FetchForHash(string sha256Hash)
         {
-            return LocalOffsetIndex.ContainsKey(sha256Hash) ? LocalOffsetIndex[sha256Hash] :
-                OffsetIndex.ContainsKey(sha256Hash) ? OffsetIndex[sha256Hash] : null;
+            if (LocalOffsetIndex.ContainsKey(sha256Hash))
+            {
+                Console.WriteLine($"Loaded offsets: {LocalOffsetIndex[sha256Hash].description}");
+                return LocalOffsetIndex[sha256Hash];
+            }
+            else
+            {
+                var offsets = OffsetIndex.ContainsKey(sha256Hash) ? OffsetIndex[sha256Hash] : null;
+                if (offsets is not null)
+                {
+                    Console.WriteLine($"Loaded offsets: {OffsetIndex[sha256Hash].description}");
+                }
+                return offsets;
+            }
+                
         }
 
         public void refreshLocal()

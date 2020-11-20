@@ -392,5 +392,13 @@ namespace AUCapture_WPF
                 App.handler.Init(context.Settings.discordToken);
             }
         }
+
+        private void ReloadOffsetsButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            GameMemReader.getInstance().offMan.refreshLocal();
+            GameMemReader.getInstance().offMan.RefreshIndex();
+            GameMemReader.getInstance().CurrentOffsets = GameMemReader.getInstance().offMan
+                .FetchForHash(GameMemReader.getInstance().GameHash);
+        }
     }
 }

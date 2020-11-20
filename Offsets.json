@@ -1,0 +1,91 @@
+{
+  "95A833FBE31A614FB3E50A3153D512E781107BD1D518FA3DAD9F034E2B30F2D7": {
+    "description": "v2020.10.22s",
+    "allPlayersOffsets": [
+      0x8
+    ],
+    "allPlayersPtrOffsets": [
+      0x144ba30,
+      0x5c,
+      0x0,
+      0x24
+    ],
+    "chatBubblePoolSize": 20,
+    "chatBubblesAddrOffsets": [
+      0x8
+    ],
+    "chatBubblesPtrOffsets": [
+      0x139b29c,
+      0x5c,
+      0x0,
+      0x28,
+      0xc,
+      0x14
+    ],
+    "chatBubsVersionOffsets": [
+      0x10
+    ],
+    "exiledPlayerIdOffsets": [
+      0x144b7cc,
+      0x5c,
+      0x0,
+      0x94,
+      0x8
+    ],
+    "gameCodeOffsets": [
+      0x13a715c,
+      0x5c,
+      0x0,
+      0x20,
+      0x28
+    ],
+    "gameStateOffsets": [
+      0x144bb30,
+      0x5c,
+      0x0,
+      0x64
+    ],
+    "meetingHudCacheOffsets": [
+      0x8
+    ],
+    "meetingHudPtrOffsets": [
+      0x139b29c,
+      0x5c,
+      0x0
+    ],
+    "meetingHudStateOffsets": [
+      0x84
+    ],
+    "messageTextOffsets": [
+      0x20,
+      0x28
+    ],
+    "msgSenderOffsets": [
+      0x1c,
+      0x28
+    ],
+    "numChatBubblesOffsets": [
+      0xc
+    ],
+    "playerCountOffsets": [
+      0xc
+    ],
+    "prevChatBubsVersionOffsets": [
+      0x139b29c,
+      0x5c,
+      0x0,
+      0x28,
+      0xc,
+      0x14,
+      0x10
+    ],
+    "regionOffsets": [
+      0x139cf7c,
+      0x5c,
+      0x0,
+      0x10,
+      0x8,
+      0x8
+    ]
+  }
+}

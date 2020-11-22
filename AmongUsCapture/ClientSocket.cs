@@ -25,6 +25,8 @@ namespace AmongUsCapture
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
             GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;
+            GameMemReader.getInstance().GameOver += GameOverHandler;
+
 
 
             // Handle socket connection events.
@@ -89,6 +91,25 @@ namespace AmongUsCapture
                 // Alert any listeners that the disconnection has occured.
                 OnDisconnected?.Invoke(this, EventArgs.Empty);
             };
+
+            socket.On("requestdata", OnRequestData);
+        }
+
+        private void OnRequestData(SocketIOResponse resp)
+        {
+            int requestedData = resp.GetValue<int>();
+            if ((requestedData & (int) GameDataType.GameState) > 0)
+            {
+                GameMemReader.getInstance().ForceTransmitState();
+            }
+            if ((requestedData & (int)GameDataType.LobbyCode) > 0)
+            {
+                GameMemReader.getInstance().ForceTransmitLobby();
+            }
+            if ((requestedData & (int)GameDataType.Players) > 0)
+            {
+                GameMemReader.getInstance().ForceUpdatePlayers();
+            }
         }
 
         public void AddHandler(DiscordHandler handler)
@@ -165,9 +186,24 @@ namespace AmongUsCapture
                 $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{Settings.conInterface.getNormalColor().ToTextColor()}) sent to server.");
         }
 
+        private void GameOverHandler(object sender, GameOverEventArgs e)
+        {
+            if (!socket.Connected) return;
+            socket.EmitAsync("gameover",
+                JsonSerializer
+                    .Serialize(e)); // could possibly use continueWith() w/ callback if result is needed
+        }
+
         public class ConnectedEventArgs : EventArgs
         {
             public string Uri { get; set; }
         }
+    }
+
+    enum GameDataType
+    {
+        GameState = 1,
+        Players = 2,
+        LobbyCode = 4
     }
 }

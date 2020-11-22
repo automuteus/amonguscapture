@@ -57,7 +57,14 @@ namespace AUCapture_WPF
                     Thread.Sleep(2000);
                     App.handler.Init(context.Settings.discordToken);
                 });
-                
+            }
+            else
+            {
+                Task.Factory.StartNew(() =>
+                {
+                    Thread.Sleep(2000);
+                    WriteConsoleLineFormatted("Discord", Color.Red, "You do not have a self-host discord token set. Enabling this in settings will increase performance.");
+                });
             }
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;

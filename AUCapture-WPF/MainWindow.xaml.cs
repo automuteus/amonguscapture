@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
 using AUCapture_WPF.IPC;
@@ -310,30 +311,26 @@ namespace AUCapture_WPF
 
         public void WriteColoredText(string ColoredText)
         {
-            lock (locker)
+            ConsoleTextBox.BeginInvoke(tb =>
             {
-                ConsoleTextBox.BeginInvoke(tb =>
+                var paragraph = new Paragraph();
+                foreach (var part in TextColor.toParts(ColoredText))
                 {
-                    var paragraph = new Paragraph();
-                    foreach (var part in TextColor.toParts(ColoredText))
+                    //Foreground="{DynamicResource MahApps.Brushes.Text}"
+                    var run = new Run(part.text);
+
+                    if (part.textColor.ToTextColor() != NormalTextColor.ToTextColor())
                     {
-                        //Foreground="{DynamicResource MahApps.Brushes.Text}"
-                        var run = new Run(part.text);
-
-                        if (part.textColor.ToTextColor() != NormalTextColor.ToTextColor())
-                        {
-                            run.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(part.textColor.A,
-                                part.textColor.R, part.textColor.G, part.textColor.B));
-                        }
-                        paragraph.Inlines.Add(run);
-                        paragraph.LineHeight = 1;
-                        //this.AppendText(part.text, part.textColor, false);
+                        run.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(part.textColor.A,
+                            part.textColor.R, part.textColor.G, part.textColor.B));
                     }
-
-                    tb.Document.Blocks.Add(paragraph);
-                    tb.ScrollToEnd();
-                });
-            }
+                    paragraph.Inlines.Add(run);
+                    paragraph.LineHeight = 1;
+                    //this.AppendText(part.text, part.textColor, false);
+                }
+                tb.Document.Blocks.Add(paragraph);
+                tb.ScrollToEnd();
+            }, DispatcherPriority.Send);
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)

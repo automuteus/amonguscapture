@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace AUOffsetManager
@@ -16,6 +17,7 @@ namespace AUOffsetManager
         private string StorageLocation = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "\\AmongUsCapture\\index.json");
         private string StorageLocationCache = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "\\AmongUsCapture\\indexCache.json");
 
+        public Task indexTask;
         public OffsetManager(string indexURL = "")
         {
             this.indexURL = indexURL;
@@ -27,9 +29,10 @@ namespace AUOffsetManager
                      LocalOffsetIndex = new Dictionary<string, GameOffsets>();
                  }
             }
-            RefreshIndex();
+
+            indexTask = RefreshIndex();
         }
-        public async void RefreshIndex()
+        public async Task RefreshIndex()
         {
             if (indexURL == "")
             {
@@ -59,6 +62,7 @@ namespace AUOffsetManager
 
         public GameOffsets FetchForHash(string sha256Hash)
         {
+            indexTask.Wait();
             if (LocalOffsetIndex.ContainsKey(sha256Hash))
             {
                 Console.WriteLine($"Loaded offsets: {LocalOffsetIndex[sha256Hash].Description}");

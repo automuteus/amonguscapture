@@ -93,6 +93,7 @@
                                 <StackPanel Orientation="Vertical">
                                     <mah:ToggleSwitch x:Name="DebugConsole_Toggle" Header="Debug mode"
                                                       IsOn="{Binding Settings.debug, Mode=TwoWay}"/>
+                                    <Button x:Name="ReloadOffsetsButton" Content="Reload offsets" Click="ReloadOffsetsButton_OnClick"/>
                                 </StackPanel>
                             </ScrollViewer>
                         </mah:MetroTabItem>

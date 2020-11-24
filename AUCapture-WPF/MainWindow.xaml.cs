@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -98,10 +100,15 @@ namespace AUCapture_WPF
 
             if (latestVersion.CompareTo(version) > 0)
                 this.ShowMessageAsync("Caution",
-                    String.Format("We've detected you're using an older version of AmongUsCapture!\nYour version: {0}\nLatest version: {1}",
-                        version.ToString(),
-                        latestVersion.ToString()),
-                    MessageDialogStyle.Affirmative);
+                    $"We've detected you're using an older version of AmongUsCapture!\nYour version: {version}\nLatest version: {latestVersion}",
+                    MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings{AffirmativeButtonText = "Download", NegativeButtonText = "No thanks", DefaultButtonFocus = MessageDialogResult.Affirmative}).ContinueWith(
+                    task =>
+                    {
+                        if (task.Result == MessageDialogResult.Affirmative)
+                        {
+                            OpenBrowser(@"https://github.com/denverquane/amonguscapture/releases/latest/");
+                        }
+                    });
             //ApplyDarkMode();
         }
         
@@ -202,7 +209,25 @@ namespace AUCapture_WPF
             Darkmode_toggleswitch.IsOn = config.DarkMode;
         }
 
-
+        public static void OpenBrowser(string url)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Process.Start("xdg-open", url);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                Process.Start("open", url);
+            }
+            else
+            {
+                // throw 
+            }
+        }
         private void ApplyDarkMode()
         {
             if (config.DarkMode)

@@ -124,7 +124,7 @@ namespace AmongUsCapture
                         prevChatBubsVersion = ProcessMemory.getInstance().Read<int>(GameAssemblyPtr,
                             _gameOffsets.HudManagerOffset, 0x5C,
                             0, 0x28, 0xC, 0x14, 0x10);
-                        prevGameOverReason = ProcessMemory.getInstance().Read<GameOverReason>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5c, 4);
+                        //prevGameOverReason = ProcessMemory.getInstance().Read<GameOverReason>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5c, 4);
                     }
                     catch
                     {
@@ -178,6 +178,7 @@ namespace AmongUsCapture
                         break;
                     }
                 }
+                //Console.WriteLine($"Got state: {state}");
 
 
                 var allPlayersPtr =

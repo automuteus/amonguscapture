@@ -37,9 +37,9 @@ namespace AmongUsCapture
                 new Dictionary<string, PlayerInfo>(
                     10); // Important: this is making the assumption that player names are unique. They are, but for better tracking of players and to eliminate any ambiguity the keys of this probably need to be the players' network IDs instead
 
-        private GameState oldState = GameState.UNKNOWN;
+        private Dictionary<string, ImmutablePlayer> CachedPlayerInfos = new Dictionary<string, ImmutablePlayer>();
 
-        private GameOverReason prevGameOverReason;
+        private GameState oldState = GameState.UNKNOWN;
 
         private int prevChatBubsVersion;
         private bool shouldForceTransmitState;
@@ -124,7 +124,7 @@ namespace AmongUsCapture
                         prevChatBubsVersion = ProcessMemory.getInstance().Read<int>(GameAssemblyPtr,
                             _gameOffsets.HudManagerOffset, 0x5C,
                             0, 0x28, 0xC, 0x14, 0x10);
-                        //prevGameOverReason = ProcessMemory.getInstance().Read<GameOverReason>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5c, 4);
+                        // prevGameOverReason = ProcessMemory.getInstance().Read<GameOverReason>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5c, 4);
                     }
                     catch
                     {
@@ -237,34 +237,47 @@ namespace AmongUsCapture
                 {
                     shouldReadLobby = true; // will eventually transmit
                 }
+                    
 
-                if ((oldState == GameState.DISCUSSION || oldState == GameState.LOBBY) && (state == GameState.LOBBY || state == GameState.MENU))
+                if ((oldState == GameState.DISCUSSION || oldState == GameState.TASKS) && (state == GameState.LOBBY || state == GameState.MENU)) // game ended
                 {
+                    int rawGameOverReason = ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5c, 0x4);
+                    GameOverReason gameOverReason = (GameOverReason)rawGameOverReason;
 
-                    //GameOverReason gameOverReason = ProcessMemory.getInstance().Read<GameOverReason>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5c, 0x4);
+                    bool humansWon = rawGameOverReason <= 1 || rawGameOverReason == 5;
 
-                    //GameOver?.Invoke(this, new GameOverEventArgs { GameOverReason = gameOverReason });
+                    if (humansWon) // we will be reading humans data, so set all to imps
+                    {
+                        foreach (string playerName in CachedPlayerInfos.Keys)
+                        {
+                            CachedPlayerInfos[playerName].IsImpostor = true;
+                        }
+                    }
 
-                    //if (gameOverReason != prevGameOverReason)
-                    //{
-                    //    Settings.conInterface.WriteModuleTextColored("test", Color.Red, gameOverReason.ToString());
+                    var winningPlayersPtr = ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5C, 0xC);
+                    var winningPlayers = ProcessMemory.getInstance().Read<IntPtr>(winningPlayersPtr, 0x08);
+                    var winningPlayerCount = ProcessMemory.getInstance().Read<int>(winningPlayersPtr, 0x0C);
 
-                    //    var winningPlayersPtr = ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5C, 0xC);
-                    //    var winningPlayers = ProcessMemory.getInstance().Read<IntPtr>(winningPlayersPtr, 0x08);
-                    //    var winningPlayerCount = ProcessMemory.getInstance().Read<int>(winningPlayersPtr, 0x0C);
+                    var winnerAddrPtr = winningPlayers + 0x10;
 
-                    //    var winnerAddrPtr = winningPlayers + 0x10;
+                    for (var i = 0; i < winningPlayerCount; i++)
+                    {
+                        WinningPlayerData wpi = ProcessMemory.getInstance().Read<WinningPlayerData>(winnerAddrPtr, 0, 0);
+                        winnerAddrPtr += 4;
+                        CachedPlayerInfos[wpi.GetPlayerName()].IsImpostor = wpi.IsImpostor;
+                    }
 
-                    //    for (var i = 0; i < winningPlayerCount; i++)
-                    //    {
-                    //        var wpi = ProcessMemory.getInstance().Read<WinningPlayerData>(winnerAddrPtr, 0, 0);
-                    //        winnerAddrPtr += 4;
-                    //        Settings.conInterface.WriteModuleTextColored("test", Color.Red, wpi.Display());
-                    //    }
-                    //}
+                    ImmutablePlayer[] endingPlayerInfos = new ImmutablePlayer[CachedPlayerInfos.Count];
+                    CachedPlayerInfos.Values.CopyTo(endingPlayerInfos, 0);
 
-                    //prevGameOverReason = gameOverReason;
+                    GameOver?.Invoke(this, new GameOverEventArgs
+                    {
+                        GameOverReason = gameOverReason,
+                        PlayerInfos = endingPlayerInfos
+                    });
                 }
+
+                GameState cachedOldState = oldState;
 
                 oldState = state;
 
@@ -352,6 +365,22 @@ namespace AmongUsCapture
                 {
                     shouldForceUpdatePlayers = false;
                     emitAll = true;
+                }
+
+
+                if (state != cachedOldState && (state == GameState.DISCUSSION || state == GameState.TASKS)) // game started, or at least we're still in game
+                {
+                    CachedPlayerInfos.Clear();
+                    foreach (var kvp in newPlayerInfos) // do this instead of assignment so they don't point to the same object
+                    {
+                        var pi = kvp.Value;
+                        string playerName = pi.GetPlayerName();
+                        CachedPlayerInfos[playerName] = new ImmutablePlayer()
+                        {
+                            Name = playerName,
+                            IsImpostor = false
+                        };
+                    }
                 }
 
                 foreach (var kvp in newPlayerInfos
@@ -532,5 +561,6 @@ namespace AmongUsCapture
     public class GameOverEventArgs : EventArgs
     {
         public GameOverReason GameOverReason { get; set; }
+        public ImmutablePlayer[] PlayerInfos { get; set; }
     }
 }

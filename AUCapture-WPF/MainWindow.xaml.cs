@@ -437,12 +437,21 @@ namespace AUCapture_WPF
             }
         }
 
-        private void ReloadOffsetsButton_OnClick(object sender, RoutedEventArgs e)
+        private async void ReloadOffsetsButton_OnClick(object sender, RoutedEventArgs e)
         {
             GameMemReader.getInstance().offMan.refreshLocal();
-            GameMemReader.getInstance().offMan.RefreshIndex();
+            await GameMemReader.getInstance().offMan.RefreshIndex();
             GameMemReader.getInstance().CurrentOffsets = GameMemReader.getInstance().offMan
                 .FetchForHash(GameMemReader.getInstance().GameHash);
+            if (GameMemReader.getInstance().CurrentOffsets is not null)
+            {
+                WriteConsoleLineFormatted("GameMemReader", Color.Lime, $"Loaded offsets: {GameMemReader.getInstance().CurrentOffsets.Description}");
+            }
+            else
+            {
+                WriteConsoleLineFormatted("GameMemReader", Color.Lime, $"No offsets found for: {Color.Aqua.ToTextColor()}{GameMemReader.getInstance().GameHash.ToString()}.");
+
+            }
         }
     }
 }

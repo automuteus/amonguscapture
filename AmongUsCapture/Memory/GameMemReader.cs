@@ -129,7 +129,6 @@ namespace AmongUsCapture
                                             else
                                             {
                                                 Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"No offsets found for: {Color.Aqua.ToTextColor()}{GameAssemblyhashSb.ToString()}.");
-                                                cracked = true;
 
                                             }
                                             

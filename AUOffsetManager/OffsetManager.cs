@@ -61,7 +61,7 @@ namespace AUOffsetManager
         {
             if (LocalOffsetIndex.ContainsKey(sha256Hash))
             {
-                Console.WriteLine($"Loaded offsets: {LocalOffsetIndex[sha256Hash].description}");
+                Console.WriteLine($"Loaded offsets: {LocalOffsetIndex[sha256Hash].Description}");
                 return LocalOffsetIndex[sha256Hash];
             }
             else
@@ -69,7 +69,7 @@ namespace AUOffsetManager
                 var offsets = OffsetIndex.ContainsKey(sha256Hash) ? OffsetIndex[sha256Hash] : null;
                 if (offsets is not null)
                 {
-                    Console.WriteLine($"Loaded offsets: {OffsetIndex[sha256Hash].description}");
+                    Console.WriteLine($"Loaded offsets: {OffsetIndex[sha256Hash].Description}");
                 }
                 return offsets;
             }
@@ -95,28 +95,21 @@ namespace AUOffsetManager
     public class GameOffsets
     {
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
-        public string description = "";
+        public string Description = "";
 
-        [JsonProperty(ItemConverterType = typeof(HexStringJsonConverter))]
-        int AmongUsClientOffset { get; set; }
+        public int AmongUsClientOffset { get; set; }
 
-        [JsonProperty(ItemConverterType = typeof(HexStringJsonConverter))]
-        int GameDataOffset { get; set; }
+        public int GameDataOffset { get; set; }
 
-        [JsonProperty(ItemConverterType = typeof(HexStringJsonConverter))]
-        int MeetingHudOffset { get; set; }
+        public int MeetingHudOffset { get; set; }
 
-        [JsonProperty(ItemConverterType = typeof(HexStringJsonConverter))]
-        int GameStartManagerOffset { get; set; }
+        public int GameStartManagerOffset { get; set; }
 
-        [JsonProperty(ItemConverterType = typeof(HexStringJsonConverter))]
-        int HudManagerOffset { get; set; }
+        public int HudManagerOffset { get; set; }
 
-        [JsonProperty(ItemConverterType = typeof(HexStringJsonConverter))]
-        int ServerManagerOffset { get; set; }
+        public int ServerManagerOffset { get; set; }
 
-        [JsonProperty(ItemConverterType = typeof(HexStringJsonConverter))]
-        int TempDataOffset { get; set; }
+        public int WinDataOffset { get; set; }
     }
 
     public sealed class HexStringJsonConverter : JsonConverter

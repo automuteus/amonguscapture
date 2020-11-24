@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AUCapture-Console", "AUCapt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AUOffsetManager", "AUOffsetManager\AUOffsetManager.csproj", "{0587E71D-6F62-4E1C-802E-65D51EA15243}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AUOffsetHelper", "AUOffsetHelper\AUOffsetHelper.csproj", "{4978D4E1-F562-468B-A55E-F0396157D9E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,26 @@ Global
 		{0587E71D-6F62-4E1C-802E-65D51EA15243}.Release|x64.Build.0 = Release|Any CPU
 		{0587E71D-6F62-4E1C-802E-65D51EA15243}.Release|x86.ActiveCfg = Release|Any CPU
 		{0587E71D-6F62-4E1C-802E-65D51EA15243}.Release|x86.Build.0 = Release|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Debug|ARM.Build.0 = Debug|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Debug|x64.Build.0 = Debug|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Debug|x86.Build.0 = Debug|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Release|ARM.ActiveCfg = Release|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Release|ARM.Build.0 = Release|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Release|ARM64.Build.0 = Release|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Release|x64.ActiveCfg = Release|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Release|x64.Build.0 = Release|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Release|x86.ActiveCfg = Release|Any CPU
+		{4978D4E1-F562-468B-A55E-F0396157D9E8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -27,6 +27,9 @@ namespace AmongUsCapture
 
         [Option(Alias = "DebugConsole", DefaultValue = false)]
         bool debugConsole { get; set; }
+
+        [Option(Alias = "IndexURL", DefaultValue = "")]
+        string IndexURL { get; set; }
         
     }
 

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
 using MahApps.Metro.Controls.Dialogs;
@@ -19,7 +20,9 @@ namespace AUCapture_WPF
         public WPFLogger(MainWindow userForm)
         {
             form = userForm;
-            logFile = File.CreateText(Path.Combine(Directory.GetParent(App.GetExecutablePath()).FullName, "CaptureLog.txt"));
+            logFile = File.CreateText(Path.Combine(Directory.GetParent(App.GetExecutablePath()).FullName,
+                "CaptureLog.txt"));
+            logFile.AutoFlush = true;
             FileVersionInfo v = FileVersionInfo.GetVersionInfo(App.GetExecutablePath());
             WriteToLog($"Capture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}");
         }
@@ -39,7 +42,8 @@ namespace AUCapture_WPF
         {
             //Settings.conInterface.WriteModuleTextColored("Crack", Color.Red, "Trying to show thing");
             form.PlayGotEm();
-            var x = form.context.DialogCoordinator.ShowMessageAsync(form.context, "YO HO YO HO YOOOOOOOOOOOOOUR A PIRATE",
+            var x = form.context.DialogCoordinator.ShowMessageAsync(form.context,
+                "YO HO YO HO YOOOOOOOOOOOOOUR A PIRATE",
                 "We have detected that you are running an unsupported version of the game. This may or may not work.",
                 MessageDialogStyle.AffirmativeAndNegative,
                 new MetroDialogSettings
@@ -86,9 +90,7 @@ namespace AUCapture_WPF
             lock (locker)
             {
                 logFile.WriteLine($"{time.ToLongTimeString()} | {StripColor(textToLog)}");
-                logFile.Flush();
             }
-            
         }
     }
 }

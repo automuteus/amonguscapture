@@ -112,36 +112,4 @@ namespace AUOffsetManager
         public int WinDataOffset { get; set; }
     }
 
-    public sealed class HexStringJsonConverter : JsonConverter
-    {
-        public override bool CanConvert(Type objectType)
-        {
-            return typeof(int) == objectType;
-        }
-
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            writer.WriteRawValue($"0x{value:x}");
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
-            JsonSerializer serializer)
-        {
-            if (reader.TokenType == JsonToken.StartArray || reader.TokenType == JsonToken.EndArray || reader.TokenType == JsonToken.Null)
-            {
-                return null;
-            }
-            else
-            {
-                if (reader.TokenType == JsonToken.Integer)
-                {
-                    return Int32.Parse(reader.Value.ToString());
-                }
-            }
-
-            return null;
-
-        }
-    }
 }

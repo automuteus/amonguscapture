@@ -241,9 +241,9 @@ namespace AmongUsCapture
                 if ((oldState == GameState.DISCUSSION || oldState == GameState.LOBBY) && (state == GameState.LOBBY || state == GameState.MENU))
                 {
 
-                    GameOverReason gameOverReason = ProcessMemory.getInstance().Read<GameOverReason>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5c, 0x4);
+                    //GameOverReason gameOverReason = ProcessMemory.getInstance().Read<GameOverReason>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5c, 0x4);
 
-                    GameOver?.Invoke(this, new GameOverEventArgs { GameOverReason = gameOverReason });
+                    //GameOver?.Invoke(this, new GameOverEventArgs { GameOverReason = gameOverReason });
 
                     //if (gameOverReason != prevGameOverReason)
                     //{

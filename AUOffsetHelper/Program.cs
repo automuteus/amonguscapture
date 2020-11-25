@@ -24,7 +24,7 @@ namespace AUOffsetHelper
 
         public static int ServerManagerOffset = 0x138E51C;
 
-        public static int WinDataOffset = 0x14B2AFC;
+        public static int TempDataOffset = 0x143B7AC;
 
         static void Main(string[] args)
         {
@@ -37,7 +37,7 @@ namespace AUOffsetHelper
                 GameStartManagerOffset = GameStartManagerOffset,
                 HudManagerOffset = HudManagerOffset,
                 ServerManagerOffset = ServerManagerOffset,
-                WinDataOffset = WinDataOffset
+                TempDataOffset = TempDataOffset
             };
             Console.Write(JsonConvert.SerializeObject(a, Formatting.Indented));
             var b = new OffsetManager("");

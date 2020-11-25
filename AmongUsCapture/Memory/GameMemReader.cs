@@ -276,7 +276,7 @@ namespace AmongUsCapture
 
                 if ((oldState == GameState.DISCUSSION || oldState == GameState.TASKS) && (state == GameState.LOBBY || state == GameState.MENU)) // game ended
                 {
-                    int rawGameOverReason = ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5c, 0x4);
+                    int rawGameOverReason = ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, CurrentOffsets.TempDataOffset, 0x5c, 0x4);
                     GameOverReason gameOverReason = (GameOverReason)rawGameOverReason;
 
                     bool humansWon = rawGameOverReason <= 1 || rawGameOverReason == 5;
@@ -289,7 +289,7 @@ namespace AmongUsCapture
                         }
                     }
 
-                    var winningPlayersPtr = ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5C, 0xC);
+                    var winningPlayersPtr = ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr, CurrentOffsets.TempDataOffset, 0x5C, 0xC);
                     var winningPlayers = ProcessMemory.getInstance().Read<IntPtr>(winningPlayersPtr, 0x08);
                     var winningPlayerCount = ProcessMemory.getInstance().Read<int>(winningPlayersPtr, 0x0C);
 

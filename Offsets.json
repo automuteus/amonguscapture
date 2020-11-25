@@ -7,7 +7,7 @@
     "GameStartManagerOffset": 20552656,
     "HudManagerOffset": 17173184,
     "ServerManagerOffset": 20511952,
-    "WinDataOffset": 21703420
+    "TempDataOffset": 0x143B7AC
   },
   "38119B8551718D9016BAFEEDC105610D5B3AED5B0036D1A6060B8E2ABE523C02": {
     "Description": "v2020.11.17s (Release 1)",
@@ -17,6 +17,6 @@
     "GameStartManagerOffset": 20546524,
     "HudManagerOffset": 20494844,
     "ServerManagerOffset": 20505884,
-    "WinDataOffset": 21703420
+    "TempDataOffset": 0x143B7AC
   }
 }

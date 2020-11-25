@@ -66,11 +66,16 @@ namespace AmongUsCapture
                     socket.EmitAsync("taskFailed", update.TaskId);
                     return;
                 };
+                var paramString = "";
                 Settings.conInterface.WriteModuleTextColored("Discord", Color.Red,
-                    $"{Color.LawnGreen.ToTextColor()}Got task: {Color.LightGreen.ToTextColor()}{update.ToJson()}");
+                    $"Galactus is asking me to update user {Color.LightGreen.ToTextColor()}{update.UserId}{Settings.conInterface.getNormalColor().ToTextColor()}" +
+                    $" in guild {Color.LightSkyBlue.ToTextColor()}{update.GuildId}{Settings.conInterface.getNormalColor().ToTextColor()}. Params: {JsonConvert.SerializeObject(update.Parameters)}.");
                 handler.UpdateUser(update.GuildId, update.UserId, update.Parameters.Mute, update.Parameters.Deaf).ContinueWith(x =>
                 {
-                    Settings.conInterface.WriteModuleTextColored("Discord", Color.Red, $"TaskComplete: {Color.Aqua.ToTextColor()}{x.Result}");
+                    Settings.conInterface.WriteModuleTextColored("Discord", Color.Red,
+                        x.Result
+                            ? $"Telling Galactus Task: {Color.LightSkyBlue.ToTextColor()}{update.TaskId}{Color.LightGreen.ToTextColor()} worked!"
+                            : $"Telling Galactus Task: {Color.LightSkyBlue.ToTextColor()}{update.TaskId}{Color.LightCoral.ToTextColor()} failed!");
                     socket.EmitAsync(x.Result ? "taskComplete" : "taskFailed", update.TaskId);
                 });
 

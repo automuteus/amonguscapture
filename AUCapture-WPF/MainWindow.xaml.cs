@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
 using AUCapture_WPF.IPC;
@@ -310,30 +311,26 @@ namespace AUCapture_WPF
 
         public void WriteColoredText(string ColoredText)
         {
-            lock (locker)
+            ConsoleTextBox.BeginInvoke(tb =>
             {
-                ConsoleTextBox.BeginInvoke(tb =>
+                var paragraph = new Paragraph();
+                foreach (var part in TextColor.toParts(ColoredText))
                 {
-                    var paragraph = new Paragraph();
-                    foreach (var part in TextColor.toParts(ColoredText))
+                    //Foreground="{DynamicResource MahApps.Brushes.Text}"
+                    var run = new Run(part.text);
+
+                    if (part.textColor.ToTextColor() != NormalTextColor.ToTextColor())
                     {
-                        //Foreground="{DynamicResource MahApps.Brushes.Text}"
-                        var run = new Run(part.text);
-
-                        if (part.textColor.ToTextColor() != NormalTextColor.ToTextColor())
-                        {
-                            run.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(part.textColor.A,
-                                part.textColor.R, part.textColor.G, part.textColor.B));
-                        }
-                        paragraph.Inlines.Add(run);
-                        paragraph.LineHeight = 1;
-                        //this.AppendText(part.text, part.textColor, false);
+                        run.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(part.textColor.A,
+                            part.textColor.R, part.textColor.G, part.textColor.B));
                     }
-
-                    tb.Document.Blocks.Add(paragraph);
-                    tb.ScrollToEnd();
-                });
-            }
+                    paragraph.Inlines.Add(run);
+                    paragraph.LineHeight = 1;
+                    //this.AppendText(part.text, part.textColor, false);
+                }
+                tb.Document.Blocks.Add(paragraph);
+                tb.ScrollToEnd();
+            }, DispatcherPriority.Send);
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
@@ -434,6 +431,23 @@ namespace AUCapture_WPF
             if (context.Settings.discordToken != "")
             {
                 App.handler.Init(context.Settings.discordToken);
+            }
+        }
+
+        private async void ReloadOffsetsButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            GameMemReader.getInstance().offMan.refreshLocal();
+            await GameMemReader.getInstance().offMan.RefreshIndex();
+            GameMemReader.getInstance().CurrentOffsets = GameMemReader.getInstance().offMan
+                .FetchForHash(GameMemReader.getInstance().GameHash);
+            if (GameMemReader.getInstance().CurrentOffsets is not null)
+            {
+                WriteConsoleLineFormatted("GameMemReader", Color.Lime, $"Loaded offsets: {GameMemReader.getInstance().CurrentOffsets.Description}");
+            }
+            else
+            {
+                WriteConsoleLineFormatted("GameMemReader", Color.Lime, $"No offsets found for: {Color.Aqua.ToTextColor()}{GameMemReader.getInstance().GameHash.ToString()}.");
+
             }
         }
     }

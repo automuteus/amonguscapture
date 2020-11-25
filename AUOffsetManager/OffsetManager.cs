@@ -113,7 +113,7 @@ namespace AUOffsetManager
 
         public int ServerManagerOffset { get; set; }
 
-        public int WinDataOffset { get; set; }
+        public int TempDataOffset { get; set; }
     }
 
 }

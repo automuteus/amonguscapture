@@ -12,7 +12,7 @@
             a.GameStartManagerOffset = GameStartManagerOffset;
             a.HudManagerOffset = HudManagerOffset;
             a.ServerManagerOffset = ServerManagerOffset;
-            a.WinDataOffset = WinDataOffset;
+            a.TempDataOffset = WinDataOffset;
 
             return a;
         }

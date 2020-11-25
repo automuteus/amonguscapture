@@ -12,6 +12,7 @@ namespace AmongUsCapture.Memory.Structs
 		ImpostorByKill,
 		ImpostorBySabotage,
 		ImpostorDisconnect,
-		HumansDisconnect
+		HumansDisconnect,
+		Unknown
 	}
 }

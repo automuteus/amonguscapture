@@ -59,7 +59,7 @@ namespace AmongUsCapture
         [Option(Alias = "Offsets.ServerManager", DefaultValue = 0x138FCD0)]
         int ServerManagerOffset { get; set; }
 
-        [Option(Alias = "Offsets.TempData", DefaultValue = 0x14B2AFC)]
+        [Option(Alias = "Offsets.TempData", DefaultValue = 0x143B7AC)]
         int TempDataOffset { get; set; }
     }
 }

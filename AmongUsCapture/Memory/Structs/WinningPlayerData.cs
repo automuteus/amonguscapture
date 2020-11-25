@@ -5,9 +5,9 @@ using System.Text;
 
 namespace AmongUsCapture.Memory.Structs
 {
-    [System.Runtime.InteropServices.StructLayout(LayoutKind.Explicit)]
-    public struct WinningPlayerData
-    {
+	[System.Runtime.InteropServices.StructLayout(LayoutKind.Explicit)]
+	public struct WinningPlayerData
+	{
 		[FieldOffset(0x8)]
 		public uint Name;
 		[FieldOffset(0xC)]
@@ -26,13 +26,13 @@ namespace AmongUsCapture.Memory.Structs
 		public bool IsYou;
 
 		public string GetPlayerName()
-        {
+		{
 			return ProcessMemory.getInstance().ReadString((IntPtr)this.Name);
 		}
 
 		public string Display()
-        {
-			return this.GetPlayerName() + ":"  + (this.IsImpostor ? "yes" : "no");
-        }
+		{
+			return this.GetPlayerName() + ":" + (this.IsImpostor ? "yes" : "no");
+		}
 	}
 }

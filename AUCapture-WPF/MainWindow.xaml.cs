@@ -450,5 +450,10 @@ namespace AUCapture_WPF
 
             }
         }
+
+        private void HelpDiscordButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            OpenBrowser("https://www.youtube.com/watch?v=jKcEW5qpk8E");
+        }
     }
 }

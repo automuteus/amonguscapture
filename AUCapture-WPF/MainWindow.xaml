@@ -101,9 +101,10 @@
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <StackPanel Orientation="Vertical">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Discord Token: " VerticalAlignment="Center" Margin="4 0 3 0" />
-                                        <TextBox VerticalAlignment="Center" MinWidth="150" IsReadOnly="False" Text="{Binding Settings.discordToken, Mode=TwoWay}"/>
-                                        <Button Content="Submit" x:Name="SubmitDiscordButton" Margin="20" Click="SubmitDiscordButton_OnClick"></Button>
+                                        <TextBlock Text="Discord Token: "  Margin="4 0 3 0" VerticalAlignment="Center"/>
+                                        <TextBox VerticalAlignment="Center" MinWidth="150" MaxWidth="400" Text="{Binding Settings.discordToken, Mode=TwoWay}" HorizontalContentAlignment="Stretch"/>
+                                        <Button Content="Submit" x:Name="SubmitDiscordButton" Margin="5 5 0 5" Click="SubmitDiscordButton_OnClick" IsDefault="True" HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" DockPanel.Dock="Top"/>
+                                        <Button Content="Help" x:Name="HelpButton" Margin="2 5 0 5" Click="HelpDiscordButton_OnClick" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" DockPanel.Dock="Top"/>
                                     </StackPanel>
                                 </StackPanel>
                             </ScrollViewer>
@@ -180,7 +181,7 @@
                                  mah:ScrollViewerHelper.IsHorizontalScrollWheelEnabled="True"
                                  VerticalScrollBarVisibility="Auto"
                                  MaxHeight="{Binding ActualHeight, ElementName=consoleDockPanel}"
-                                 Height="{Binding ActualHeight, ElementName=consoleDockPanel}" UseLayoutRounding="True" />
+                                 Height="{Binding ActualHeight, ElementName=consoleDockPanel}" UseLayoutRounding="True"/>
                     
                 </DockPanel>
             </mah:MetroTabItem>

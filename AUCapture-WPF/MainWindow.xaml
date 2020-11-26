@@ -210,7 +210,7 @@
                         <mah:MetroHeader Header="Game status:" Margin="0 0 0 5" Foreground="{DynamicResource MahApps.Brushes.Text}">
                             <TextBox x:Name="StatusBox" mah:TextBoxHelper.Watermark="UNKNOWN" 
                                      VerticalAlignment="Center" IsManipulationEnabled="True" Focusable="False"
-                                     IsHitTestVisible="False" AllowDrop="False" IsReadOnly="True" />
+                                     IsHitTestVisible="False" AllowDrop="False" IsReadOnly="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
                         </mah:MetroHeader>
             </StatusBarItem>
             <Separator Grid.Column="1" Style="{DynamicResource MahApps.Styles.Separator.StatusBar}" Foreground="{DynamicResource MahApps.Brushes.Text}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
@@ -218,7 +218,7 @@
                 <mah:MetroHeader Header="Game code:" Margin="0 0 0 5" Foreground="{DynamicResource MahApps.Brushes.Text}">
                     <TextBox x:Name="GameCodeBox" Text="" mah:TextBoxHelper.Watermark="UNKNOWN"
                              ToolTip="Click to copy" VerticalAlignment="Center" Focusable="False" IsHitTestVisible="True"
-                             AllowDrop="False" IsReadOnly="True" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" dialogs:TextBoxHelper.WatermarkAlignment="Right" />
+                             AllowDrop="False" IsReadOnly="True" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" dialogs:TextBoxHelper.WatermarkAlignment="Right" VerticalContentAlignment="Center" />
                 </mah:MetroHeader>
             </StatusBarItem>
         </StatusBar>

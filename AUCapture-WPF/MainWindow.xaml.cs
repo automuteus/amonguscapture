@@ -19,6 +19,8 @@ using Config.Net;
 using ControlzEx.Theming;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Color = System.Drawing.Color;
 
 namespace AUCapture_WPF
@@ -73,6 +75,7 @@ namespace AUCapture_WPF
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
             GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
+            GameMemReader.getInstance().GameOver += OnGameOver;
             IPCAdapter.getInstance().OnToken += (sender, token) => {
                 this.BeginInvoke((w) =>
                 {
@@ -109,7 +112,13 @@ namespace AUCapture_WPF
                     });
             //ApplyDarkMode();
         }
-        
+
+        private void OnGameOver(object? sender, GameOverEventArgs e)
+        {
+            WriteConsoleLineFormatted("GameOver", Color.BlueViolet, JsonConvert.SerializeObject(e, Formatting.None, new StringEnumConverter()));
+            Console.WriteLine(JsonConvert.SerializeObject(e, Formatting.Indented));
+        }
+
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
@@ -327,7 +336,7 @@ namespace AUCapture_WPF
                 }
                 tb.Document.Blocks.Add(paragraph);
                 tb.ScrollToEnd();
-            }, DispatcherPriority.Send);
+            }, DispatcherPriority.Input);
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)

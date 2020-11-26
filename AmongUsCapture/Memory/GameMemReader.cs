@@ -140,7 +140,7 @@ namespace AmongUsCapture
                                                 {
                                                     Settings.conInterface.WriteModuleTextColored("GameMemReader",
                                                         Color.Lime,
-                                                        $"No offsets found for: {Color.Aqua.ToTextColor()}{GameAssemblyhashSb.ToString()}.");
+                                                        $"No offsets found for: {Color.Aqua.ToTextColor()}{GameAssemblyhashSb.ToString()}{Settings.conInterface.getNormalColor().ToTextColor()}.");
 
                                                 }
 
@@ -168,9 +168,13 @@ namespace AmongUsCapture
 
                         try
                         {
-                            prevChatBubsVersion = ProcessMemory.getInstance().Read<int>(GameAssemblyPtr,
-                                CurrentOffsets.HudManagerOffset, 0x5C,
-                                0, 0x28, 0xC, 0x14, 0x10);
+                            if (CurrentOffsets is not null)
+                            {
+                                prevChatBubsVersion = ProcessMemory.getInstance().Read<int>(GameAssemblyPtr,
+                                    CurrentOffsets.HudManagerOffset, 0x5C,
+                                    0, 0x28, 0xC, 0x14, 0x10);
+                            }
+
                             // prevGameOverReason = ProcessMemory.getInstance().Read<GameOverReason>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5c, 4);
                         }
                         catch
@@ -191,6 +195,7 @@ namespace AmongUsCapture
                         continue;
                     }
 
+                    if (CurrentOffsets is null) continue;
                     GameState state;
                     //int meetingHudState = /*meetingHud_cachePtr == 0 ? 4 : */ProcessMemory.ReadWithDefault<int>(GameAssemblyPtr, 4, 0xDA58D0, 0x5C, 0, 0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
                     var meetingHud = ProcessMemory.getInstance()

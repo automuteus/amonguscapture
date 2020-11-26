@@ -8,6 +8,7 @@ using System.Threading;
 using AmongUsCapture.Memory.Structs;
 using AmongUsCapture.TextColorLibrary;
 using AUOffsetManager;
+using Newtonsoft.Json;
 
 namespace AmongUsCapture
 {
@@ -300,12 +301,19 @@ namespace AmongUsCapture
                         GameOverReason gameOverReason = (GameOverReason) rawGameOverReason;
 
                         bool humansWon = rawGameOverReason <= 1 || rawGameOverReason == 5;
-
-                        if (humansWon) // we will be reading humans data, so set all to imps
+                        if (humansWon) // we will be reading humans data, so set all to simps
                         {
                             foreach (string playerName in CachedPlayerInfos.Keys)
                             {
-                                CachedPlayerInfos[playerName].IsImpostor = true;
+                                try
+                                {
+                                    CachedPlayerInfos[playerName].IsImpostor = true;
+                                }
+                                catch (KeyNotFoundException e)
+                                {
+                                    Console.WriteLine($"Could not find User: \"{playerName}\" in CachedPlayerinfos");
+                                }
+                                
                             }
                         }
 
@@ -321,7 +329,15 @@ namespace AmongUsCapture
                             WinningPlayerData wpi = ProcessMemory.getInstance()
                                 .Read<WinningPlayerData>(winnerAddrPtr, 0, 0);
                             winnerAddrPtr += 4;
-                            CachedPlayerInfos[wpi.GetPlayerName()].IsImpostor = wpi.IsImpostor;
+                            try
+                            {
+                                CachedPlayerInfos[wpi.GetPlayerName()].IsImpostor = wpi.IsImpostor;
+                            }
+                            catch (KeyNotFoundException e)
+                            {
+                                Console.WriteLine($"Could not find player with name \"{wpi.GetPlayerName()}\" in CachedPlayerInfos. JSON: {JsonConvert.SerializeObject(CachedPlayerInfos, Formatting.Indented)}");
+                            }
+                            
                         }
 
                         ImmutablePlayer[] endingPlayerInfos = new ImmutablePlayer[CachedPlayerInfos.Count];

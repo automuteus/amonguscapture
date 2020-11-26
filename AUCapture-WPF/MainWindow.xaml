@@ -8,12 +8,13 @@
                  xmlns:dialogs="http://metro.mahapps.com/winfx/xaml/controls"
                  mc:Ignorable="d"
                  Style="{DynamicResource MahApps.Styles.MetroWindow.Clean}"
-                 ResizeMode="CanResizeWithGrip"
-                 Title="Among Us Capture" TitleAlignment="Center" Height="450" Width="800"
+                 ResizeMode="CanResize"
+                 Title="AUCapture" TitleAlignment="Center" Height="450" Width="800"
                  ShowInTaskbar="True"
                  TitleCharacterCasing="Normal"
                  ShowSystemMenu="False"
                  ShowSystemMenuOnRightClick="False"
+                 WindowStartupLocation="CenterScreen"
                  dialogs:DialogParticipation.Register="{Binding }"
                  ContentRendered="MainWindow_OnContentRendered" Loaded="MetroWindow_Loaded" TryToBeFlickerFree="True" MinWidth="300" MinHeight="200" >
     <mah:MetroWindow.Resources>
@@ -64,7 +65,7 @@
 
     <mah:MetroWindow.Flyouts>
         <mah:FlyoutsControl>
-            <mah:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right" Width="{Binding ActualWidth,ElementName=MainGrid}" Theme="Adapt"
+            <mah:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right" Width="{Binding ActualWidth,ElementName=MainGrid, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.51}" Theme="Adapt"
                         IsAutoCloseEnabled="False" AnimateOpacity="True" ExternalCloseButton="Left">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
@@ -72,19 +73,21 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TabControl Grid.Row="1" mah:TabControlHelper.Underlined="TabPanel">
+                    <TabControl Grid.ColumnSpan="2" Grid.Row="1" mah:TabControlHelper.Underlined="TabPanel" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
                         <mah:MetroTabItem Header="General">
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <StackPanel Orientation="Vertical">
                                     <mah:ToggleSwitch x:Name="Darkmode_toggleswitch" Header="Dark mode"
                                                       IsOn="{Binding Settings.DarkMode, Mode=TwoWay}"
                                                       Toggled="Darkmode_Toggled" />
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Font size: " VerticalAlignment="Center" Margin="4 0 0 0" />
-                                        <Slider Name="FontSlider" Maximum="72" Width="200" Minimum="1"
-                                                AutoToolTipPlacement="TopLeft"
-                                                Value="{Binding Settings.fontSize, Mode=TwoWay}" />
-                                    </StackPanel>
+                                    <mah:ToggleSwitch x:Name="TokenFocus_ToggleSwitch" Header="Focus window on connect" IsOn="{Binding Settings.FocusOnToken, Mode=TwoWay}"/>
+                                    <mah:MetroHeader Header="Font size">
+                                        <Slider Name="FontSlider" Maximum="72" Minimum="1"
+                                                AutoToolTipPlacement="TopLeft" HorizontalAlignment="Left"
+                                                Width="{Binding ActualWidth,ElementName=MainGrid, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.25}"
+                                                Value="{Binding Settings.fontSize, Mode=TwoWay}"/>
+                                    </mah:MetroHeader>
+                                    
                                 </StackPanel>
                             </ScrollViewer>
                         </mah:MetroTabItem>
@@ -93,33 +96,32 @@
                                 <StackPanel Orientation="Vertical">
                                     <mah:ToggleSwitch x:Name="DebugConsole_Toggle" Header="Debug mode"
                                                       IsOn="{Binding Settings.debug, Mode=TwoWay}"/>
-                                    <Button x:Name="ReloadOffsetsButton" Content="Reload offsets" Click="ReloadOffsetsButton_OnClick"/>
+                                    <Button x:Name="ReloadOffsetsButton" Content="Reload offsets" Click="ReloadOffsetsButton_OnClick" Style="{StaticResource MahApps.Styles.Button.Square.Accent}"/>
                                 </StackPanel>
                             </ScrollViewer>
                         </mah:MetroTabItem>
                         <mah:MetroTabItem Header="Discord" >
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                <StackPanel Orientation="Vertical">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Discord Token: "  Margin="4 0 3 0" VerticalAlignment="Center"/>
-                                        <TextBox VerticalAlignment="Center" MinWidth="150" MaxWidth="400" Text="{Binding Settings.discordToken, Mode=TwoWay}" HorizontalContentAlignment="Stretch"/>
-                                        <Button Content="Submit" x:Name="SubmitDiscordButton" Margin="5 5 0 5" Click="SubmitDiscordButton_OnClick" IsDefault="True" HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" DockPanel.Dock="Top"/>
-                                        <Button Content="Help" x:Name="HelpButton" Margin="2 5 0 5" Click="HelpDiscordButton_OnClick" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" DockPanel.Dock="Top"/>
-                                    </StackPanel>
+                                <StackPanel Orientation="Vertical" Name="DiscordPanel">
+                                    <mah:MetroHeader Header="Discord token: " VerticalAlignment="Top">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBox Text="{Binding Settings.discordToken, Mode=TwoWay}"  VerticalContentAlignment="Stretch" HorizontalAlignment="Left" Width="{Binding ActualWidth,ElementName=DiscordPanel, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.5}"/>
+                                            <Button Content="Submit" Style="{StaticResource MahApps.Styles.Button.Square.Accent}" x:Name="SubmitDiscordButton" Margin="5 0 0 0" Click="SubmitDiscordButton_OnClick" IsDefault="True" Width="{Binding ActualWidth,ElementName=DiscordPanel, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.3}"/>
+                                            <Button Content="Help" x:Name="HelpButton" Margin="5 0 0 0" Click="HelpDiscordButton_OnClick" Width="{Binding ActualWidth,ElementName=DiscordPanel, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.15}"/>
+                                        </StackPanel>
+                                    </mah:MetroHeader>
                                 </StackPanel>
                             </ScrollViewer>
                         </mah:MetroTabItem>
                         <mah:MetroTabItem Header="About" >
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <StackPanel Orientation="Vertical">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Version: " VerticalAlignment="Center" Margin="4 0 3 0" />
+                                    <mah:MetroHeader Header="App version:">
                                         <TextBox VerticalAlignment="Center" MinWidth="150" IsReadOnly="True" Text="{Binding Version, Mode=OneWay}"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Latest Version: " VerticalAlignment="Center" Margin="4 0 3 0" />
+                                    </mah:MetroHeader>
+                                    <mah:MetroHeader Header="Latest version:">
                                         <TextBox VerticalAlignment="Center" MinWidth="150" IsReadOnly="True" Text="{Binding LatestVersion, Mode=OneWay}"/>
-                                    </StackPanel>
+                                    </mah:MetroHeader>
                                 </StackPanel>
                             </ScrollViewer>
                         </mah:MetroTabItem>
@@ -127,7 +129,7 @@
 
                 </Grid>
             </mah:Flyout>
-            <mah:Flyout x:Name="ManualConnectionFlyout" Header="Manual Connection" Position="Right" Width="300" Theme="Adapt"
+            <mah:Flyout x:Name="ManualConnectionFlyout" Header="Manual Connection" Position="Right" Width="{Binding ActualWidth,ElementName=MainGrid, Converter={dialogs:MathDivideConverter}, ConverterParameter=3}" Theme="Adapt"
                         IsAutoCloseEnabled="False" AnimateOpacity="True" ExternalCloseButton="Right">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
@@ -171,7 +173,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
-        <TabControl Grid.Row="0" mah:TabControlHelper.Underlined="TabPanel">
+        <TabControl Grid.ColumnSpan="3" Grid.Row="0" mah:TabControlHelper.Underlined="TabPanel">
             <mah:MetroTabItem Header="Console">
                 
                 <DockPanel x:Name="consoleDockPanel" ScrollViewer.CanContentScroll="True" UseLayoutRounding="True">
@@ -180,6 +182,7 @@
                                  IsReadOnly="True" DockPanel.Dock="Top"
                                  mah:ScrollViewerHelper.IsHorizontalScrollWheelEnabled="True"
                                  VerticalScrollBarVisibility="Auto"
+                                 DataObject.Copying="ConsoleTextBox_OnCopying"
                                  MaxHeight="{Binding ActualHeight, ElementName=consoleDockPanel}"
                                  Height="{Binding ActualHeight, ElementName=consoleDockPanel}" UseLayoutRounding="True"/>
                     
@@ -188,27 +191,36 @@
         </TabControl>
 
 
-        <StatusBar Grid.Row="1" SnapsToDevicePixels="True">
-            <StackPanel Orientation="Horizontal">
-                <StatusBarItem>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Game status:" VerticalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Text}" Margin="4 0 0 0" />
-                        <TextBox x:Name="StatusBox" mah:TextBoxHelper.Watermark="UNKNOWN" Margin="4 0 0 0"
-                                 VerticalAlignment="Center" IsManipulationEnabled="True" Focusable="False"
-                                 IsHitTestVisible="False" AllowDrop="False" IsReadOnly="True" />
-                    </StackPanel>
-                </StatusBarItem>
-                <Separator Style="{DynamicResource MahApps.Styles.Separator.StatusBar}" Foreground="{DynamicResource MahApps.Brushes.Text}" />
-                <StatusBarItem>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Game code:" VerticalAlignment="Center" Foreground="{DynamicResource MahApps.Brushes.Text}" Margin="4 0 0 0" />
-                        <TextBox x:Name="GameCodeBox" Text="" mah:TextBoxHelper.Watermark="UNKNOWN"
-                                 ToolTip="Click to copy" Margin="4 0 0 0" VerticalAlignment="Center"
-                                 IsManipulationEnabled="True" Focusable="False" IsHitTestVisible="True"
-                                 AllowDrop="False" IsReadOnly="True" MouseLeftButtonUp="GameCodeBox_MouseLeftButtonUp" />
-                    </StackPanel>
-                </StatusBarItem>
-            </StackPanel>
+        <StatusBar Grid.ColumnSpan="3" Grid.Row="1" SnapsToDevicePixels="True">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem Grid.Column="0">
+                        <mah:MetroHeader Header="Game status:" Margin="0 0 0 5" Foreground="{DynamicResource MahApps.Brushes.Text}">
+                            <TextBox x:Name="StatusBox" mah:TextBoxHelper.Watermark="UNKNOWN" 
+                                     VerticalAlignment="Center" IsManipulationEnabled="True" Focusable="False"
+                                     IsHitTestVisible="False" AllowDrop="False" IsReadOnly="True" />
+                        </mah:MetroHeader>
+            </StatusBarItem>
+            <Separator Grid.Column="1" Style="{DynamicResource MahApps.Styles.Separator.StatusBar}" Foreground="{DynamicResource MahApps.Brushes.Text}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
+            <StatusBarItem Grid.Column="3" HorizontalAlignment="Right">
+                <mah:MetroHeader Header="Game code:" Margin="0 0 0 5" Foreground="{DynamicResource MahApps.Brushes.Text}">
+                    <TextBox x:Name="GameCodeBox" Text="" mah:TextBoxHelper.Watermark="UNKNOWN"
+                             ToolTip="Click to copy" VerticalAlignment="Center" Focusable="False" IsHitTestVisible="True"
+                             AllowDrop="False" IsReadOnly="True" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" dialogs:TextBoxHelper.WatermarkAlignment="Right" />
+                </mah:MetroHeader>
+            </StatusBarItem>
         </StatusBar>
     </Grid>
 </mah:MetroWindow>

@@ -74,8 +74,9 @@ namespace AUCapture_WPF
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
             GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
             IPCAdapter.getInstance().OnToken += (sender, token) => {
-                this.BeginInvoke((w) => 
+                this.BeginInvoke((w) =>
                 {
+                    if (!w.context.Settings.FocusOnToken) return;
                     if (!w.IsVisible)
                     {
                         w.Show();
@@ -87,11 +88,7 @@ namespace AUCapture_WPF
                     }
 
                     w.Activate();
-                    w.Topmost = true;  // important
-                    w.Topmost = false; // important
                     w.Focus();         // important
-
-                    w.Activate();
                 }); };
 
 
@@ -196,7 +193,7 @@ namespace AUCapture_WPF
                     //{
                     //    block.FontSize = config.fontSize;
                     //}
-                });
+                }, DispatcherPriority.Input);
         }
 
         private void SetDefaultThemeColor()
@@ -425,7 +422,6 @@ namespace AUCapture_WPF
                 GC.Collect();
             }
         }
-
         private void SubmitDiscordButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (context.Settings.discordToken != "")
@@ -454,6 +450,12 @@ namespace AUCapture_WPF
         private void HelpDiscordButton_OnClick(object sender, RoutedEventArgs e)
         {
             OpenBrowser("https://www.youtube.com/watch?v=jKcEW5qpk8E");
+        }
+
+
+        private void ConsoleTextBox_OnCopying(object sender, DataObjectCopyingEventArgs e)
+        {
+            e.CancelCommand();
         }
     }
 }

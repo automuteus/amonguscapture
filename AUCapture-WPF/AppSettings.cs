@@ -17,6 +17,9 @@ namespace AUCapture_WPF
         [Option(DefaultValue = false)]
         bool DarkMode { get; set; }
 
+        [Option(DefaultValue = true)]
+        bool FocusOnToken { get; set; }
+
         [Option(DefaultValue = 18d)]
         double fontSize { get; set; }
 

@@ -80,6 +80,9 @@
                                     <mah:ToggleSwitch x:Name="Darkmode_toggleswitch" Header="Dark mode"
                                                       IsOn="{Binding Settings.DarkMode, Mode=TwoWay}"
                                                       Toggled="Darkmode_Toggled" />
+                                    <mah:ToggleSwitch x:Name="APIserver_toggleswitch" Header="API server"
+                                                      IsOn="{Binding Settings.ApiServer, Mode=TwoWay}"
+                                                      Toggled="APIServerToggleSwitch_Toggled" />
                                     <mah:ToggleSwitch x:Name="TokenFocus_ToggleSwitch" Header="Focus window on connect" IsOn="{Binding Settings.FocusOnToken, Mode=TwoWay}"/>
                                     <mah:MetroHeader Header="Font size">
                                         <Slider Name="FontSlider" Maximum="72" Minimum="1"

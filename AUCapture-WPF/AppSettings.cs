@@ -12,6 +12,9 @@ namespace AUCapture_WPF
         string discordToken { get; set; }
 
         [Option(DefaultValue = false)]
+        bool ApiServer { get; set; }
+
+        [Option(DefaultValue = false)]
         bool ranBefore { get; set; }
 
         [Option(DefaultValue = false)]

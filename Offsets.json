@@ -18,5 +18,16 @@
     "HudManagerOffset": 20494844,
     "ServerManagerOffset": 20505884,
     "TempDataOffset": 0x143B7AC
+  },
+  "5ab7b3419ed29af0728e66ae8f1a207aedd6456280128060fedf74621b287be6": {
+    "Description": "2020.12.3",
+    "AmongUsClientOffset": 0x14B2C9C,
+    "GameDataOffset": 0x14B2E9C,
+    "MeetingHudOffset": 0x14B2A7C,
+    "GameStartManagerOffset": 0x1858970,
+    "HudManagerOffset": 0x1849100,
+    "ServerManagerOffset": 0x184C230,
+    "TempDataOffset": 0x14B2AFC,
+    'GameOptionsOffset': '0x14B2EAC'
   }
 }

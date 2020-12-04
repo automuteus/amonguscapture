@@ -20,14 +20,14 @@
     "TempDataOffset": 0x143B7AC
   },
   "5AB7B3419ED29AF0728E66AE8F1A207AEDD6456280128060FEDF74621B287BE6": {
-    "Description": "v2020.12.3",
-    "AmongUsClientOffset": 0x14B2C9C,
-    "GameDataOffset": 0x14B2E9C,
-    "MeetingHudOffset": 0x14B2A7C,
+    "Description": "v2020.12.3s",
+    "AmongUsClientOffset": 0x193C154,
+    "GameDataOffset": 0x193C054,
+    "MeetingHudOffset": 0x193BA9C,
     "GameStartManagerOffset": 0x1858970,
     "HudManagerOffset": 0x1849100,
     "ServerManagerOffset": 0x184C230,
-    "TempDataOffset": 0x14B2AFC,
-    "GameOptionsOffset": 0x14B2EAC
+    "TempDataOffset": 0x193C018,
+    "GameOptionsOffset": 0x193C4B4
   }
 }

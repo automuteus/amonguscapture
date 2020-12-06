@@ -544,10 +544,13 @@ namespace AmongUsCapture
                                 .Read<int>(GameAssemblyPtr, CurrentOffsets.ServerManagerOffset, 0x5c, 0, 0x10, 0x8,
                                     0x8) & 0b11)) % 3); // do NOT ask
 
+                            PlayMap map = (PlayMap) ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, CurrentOffsets.GameOptionsOffset, 0x5c, 0x4, 0x10);
+                            
                             this.latestLobbyEventArgs = new LobbyEventArgs()
                             {
                                 LobbyCode = split[1],
-                                Region = region
+                                Region = region,
+                                Map = map,
                             };
                             shouldReadLobby = false;
                             shouldTransmitLobby = true; // since this is probably new info
@@ -629,6 +632,13 @@ namespace AmongUsCapture
         Asia = 1,
         Europe = 2
     }
+    
+    public enum PlayMap
+    {
+        Skeld = 0,
+        Mira = 1,
+        Polus = 2
+    }
 
     public class PlayerChangedEventArgs : EventArgs
     {
@@ -650,6 +660,7 @@ namespace AmongUsCapture
     {
         public string LobbyCode { get; set; }
         public PlayRegion Region { get; set; }
+        public PlayMap Map { get; set; }
     }
 
     public class GameOverEventArgs : EventArgs

@@ -114,6 +114,8 @@ namespace AUOffsetManager
         public int ServerManagerOffset { get; set; }
 
         public int TempDataOffset { get; set; }
+        
+        public int GameOptionsOffset { get; set; }
     }
 
 }

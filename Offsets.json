@@ -37,6 +37,7 @@
     "GameStartManagerOffset": 0x1B5AB00,
     "HudManagerOffset": 0x1B4A0F0,
     "ServerManagerOffset": 0x1B4D7F0,
-    "TempDataOffset": 0x1BE10BC
+    "TempDataOffset": 0x1BE10BC,
+    "GameOptionsOffset": 0x1BE11CC,
   }
 }

@@ -543,7 +543,8 @@ namespace AmongUsCapture
                             PlayRegion region = (PlayRegion) ((4 - (ProcessMemory.getInstance()
                                 .Read<int>(GameAssemblyPtr, CurrentOffsets.ServerManagerOffset, 0x5c, 0, 0x10, 0x8,
                                     0x8) & 0b11)) % 3); // do NOT ask
-
+                            
+                            //Recheck for GameOptionsOffset
                             PlayMap map = (PlayMap) ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, CurrentOffsets.GameOptionsOffset, 0x5c, 0x4, 0x10);
                             
                             this.latestLobbyEventArgs = new LobbyEventArgs()

@@ -1,2 +1,6 @@
 builds:
 - skip: true
+
+release:
+    extra_files:
+        - glob: AmongUsCapture.exe

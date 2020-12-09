@@ -34,7 +34,7 @@ jobs:
       
       - name: Zip
         run: |
-          7z a AUCapture-WPF\bin\Release\netcoreapp3.1\publish\AmongUsCapture.zip AUCapture-WPF\bin\Release\netcoreapp3.1\publish\AmongUsCapture.exe -mx=9 -md32k
+          7z a \AUCapture-WPF\bin\Release\netcoreapp3.1\publish\AmongUsCapture.zip \AUCapture-WPF\bin\Release\netcoreapp3.1\publish\AmongUsCapture.exe -mx=9 -md32k
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1

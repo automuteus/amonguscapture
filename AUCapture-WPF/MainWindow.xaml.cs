@@ -466,5 +466,20 @@ namespace AUCapture_WPF
         {
             e.CancelCommand();
         }
+
+        private void APIServerToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is ToggleSwitch toggleSwitch)) return;
+            if (config.ApiServer)
+            {
+                WriteConsoleLineFormatted("APIServer", Color.Brown, "Starting server");
+                ServerSocket.instance.Start();
+            }
+            else
+            {
+                WriteConsoleLineFormatted("APIServer", Color.Brown, "Stopping server");
+                ServerSocket.instance.Stop();
+            }
+        }
     }
 }

@@ -12,11 +12,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - uses: actions/checkout@v2
       - name: 'Get Previous tag'
         id: previoustag
         uses: "WyriHaximus/github-action-get-previous-tag@master"
-        
-      - uses: actions/checkout@v2
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:

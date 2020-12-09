@@ -32,6 +32,9 @@ jobs:
         run: |
           mv AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AUCapture-WPF.exe AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AmongUsCapture.exe
       
+      - name: Zip
+        run: |
+          7z a AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AmongUsCapture.zip AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AmongUsCapture.exe -mx=9 -md32k
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -50,9 +53,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AmongUsCapture.exe
-          asset_name: AmongUsCapture.exe
-          asset_content_type: application/exe
+          asset_path: AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AmongUsCapture.zip
+          asset_name: AmongUsCapture.zip
+          asset_content_type: application/zip
       -
         name: Set up Go
         uses: actions/setup-go@v2

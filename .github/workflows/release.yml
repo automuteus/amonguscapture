@@ -9,6 +9,19 @@ jobs:
   goreleaser:
     runs-on: windows-latest
     steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.100
+      - name: Install dependencies
+        run: dotnet restore "AUCapture-WPF\AUCapture-WPF.csproj"
+      - name: Publish
+        run: |
+          dotnet publish "AUCapture-WPF\AUCapture-WPF.csproj" -p:PublishProfile=FolderProfile -p:AssemblyVersion=0.0.1
+      - name: Relocate
+        run: |
+          mv AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AUCapture-WPF.exe AmongUsCapture.exe
       -
         name: Checkout
         uses: actions/checkout@v2
@@ -25,6 +38,5 @@ jobs:
         with:
           version: latest
           args: release --rm-dist
-          workdir: amonguscapture
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

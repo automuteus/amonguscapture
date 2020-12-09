@@ -1,19 +1,20 @@
 ﻿using System;
 using System.IO;
+using System.Windows;
 using Config.Net;
 
 namespace AmongUsCapture
 {
     public static class Settings
     {
-        public static string StorageLocation = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "\\AmongUsCapture");
+        public static string StorageLocation = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AmongUsCapture");
 
-        public static ConsoleInterface conInterface;
+        public static IConsoleInterface conInterface;
 
-        public static UserForm form;
         //Global persistent settings that are saved to a json file. Limited Types
         public static IPersistentSettings PersistentSettings = new ConfigurationBuilder<IPersistentSettings>().UseJsonFile(Path.Join(StorageLocation, "Settings.json")).Build();
         public static IGameOffsets GameOffsets = new ConfigurationBuilder<IGameOffsets>().UseJsonFile(Path.Join(StorageLocation, "GameOffsets.json")).Build();
+
     }
 
 
@@ -23,9 +24,12 @@ namespace AmongUsCapture
         //DateTime is always converted to UTC
         [Option(Alias = "Host", DefaultValue = "http://localhost:8123")]
         string host { get; set; }
-        
+
         [Option(Alias = "DebugConsole", DefaultValue = false)]
-        bool debugConsole { get; }
+        bool debugConsole { get; set; }
+
+        [Option(Alias = "IndexURL", DefaultValue = "https://raw.githubusercontent.com/denverquane/amonguscapture/master/Offsets.json")]
+        string IndexURL { get; set; }
         
     }
 
@@ -34,25 +38,28 @@ namespace AmongUsCapture
         //Types allowed: bool, double, int, long, string, TimeSpan, DateTime, Uri, Guid
         //DateTime is always converted to UTC
         
-        [Option(Alias = "Version", DefaultValue = 1)]
-        int Version { get; set; }
-        
-        [Option(Alias = "Offsets.Client", DefaultValue = 0x1468840)]
+        [Option(Alias = "GameHash", DefaultValue = "FF1DAE62454312FCE09A39061999C26FD26440FDA5F36C1E6424290A34D05B08")]
+        string GameHash { get; }
+
+        [Option(Alias = "Offsets.Client", DefaultValue = 0x143BE9C)]
         int AmongUsClientOffset { get; set; }
-        
-        [Option(Alias = "Offsets.GameData", DefaultValue = 0x1468864)]
+
+        [Option(Alias = "Offsets.GameData", DefaultValue = 0x143BF38)]
         int GameDataOffset { get; set; }
-        
-        [Option(Alias = "Offsets.MeetingHud", DefaultValue = 0x14686A0)]
+
+        [Option(Alias = "Offsets.MeetingHud", DefaultValue = 0x143BBB4)]
         int MeetingHudOffset { get; set; }
-        
-        [Option(Alias = "Offsets.GameStartManager", DefaultValue = 0x13FB424)]
+
+        [Option(Alias = "Offsets.GameStartManager", DefaultValue = 0x1399BD0)]
         int GameStartManagerOffset { get; set; }
-        
-        [Option(Alias = "Offsets.HudManager", DefaultValue = 0x13EEB44)]
+
+        [Option(Alias = "Offsets.HudManager", DefaultValue = 0x1060AC0)]
         int HudManagerOffset { get; set; }
-        
-        [Option(Alias = "Offsets.ServerManager", DefaultValue = 0x13F14E4)]
+
+        [Option(Alias = "Offsets.ServerManager", DefaultValue = 0x138FCD0)]
         int ServerManagerOffset { get; set; }
+
+        [Option(Alias = "Offsets.TempData", DefaultValue = 0x143B7AC)]
+        int TempDataOffset { get; set; }
     }
 }

@@ -1,0 +1,71 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <RootNamespace>AUCapture_WPF</RootNamespace>
+    <UseWPF>true</UseWPF>
+    <UseWinForms>false</UseWinForms>
+    <StartupObject>AUCapture_WPF.App</StartupObject>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+    <AssemblyVersion>2.8.0.0</AssemblyVersion>
+    <FileVersion>2.8.0.0</FileVersion>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
+    <UseSystemResourceKeys>true</UseSystemResourceKeys>
+    <HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
+    <EventSourceSupport>false</EventSourceSupport>
+    <StartupHookSupport>false</StartupHookSupport>
+    <EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
+    <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+    <DebuggerSupport>false</DebuggerSupport>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+    <TrimMode>link</TrimMode>
+    <NoWin32Manifest>true</NoWin32Manifest>
+    <Nullable>disable</Nullable>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <TrimmerRootAssembly Include="System.Runtime" />
+    <TrimmerRootAssembly Include="System.Runtime.Extensions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Config.Net" Version="4.15.0" />
+    <PackageReference Include="Config.Net.Json" Version="4.15.0" />
+    <PackageReference Include="MahApps.Metro" Version="2.4.3" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Modern" Version="4.8.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Unicons" Version="4.8.0" />
+    <PackageReference Include="Octokit" Version="0.48.0" />
+    <PackageReference Include="SharedMemory" Version="2.2.3" />
+  </ItemGroup>
+
+  <Target Name="ConfigureTrimming" BeforeTargets="PrepareForILLink">
+    <ItemGroup>
+      <ManagedAssemblyToLink Condition="'%(Filename)' == 'System.Windows.Forms'">
+        <IsTrimmable>true</IsTrimmable>
+      </ManagedAssemblyToLink>
+      <ManagedAssemblyToLink Condition="'%(Filename)' == 'System.Windows.Forms.Design'">
+        <IsTrimmable>true</IsTrimmable>
+      </ManagedAssemblyToLink>
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AmongUsCapture\AmongUsCapture.csproj" />
+  </ItemGroup>
+
+</Project>

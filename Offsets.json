@@ -1,0 +1,43 @@
+{
+  "FF1DAE62454312FCE09A39061999C26FD26440FDA5F36C1E6424290A34D05B08": {
+    "Description": "v2020.11.17s (Release 2)",
+    "AmongUsClientOffset": 21216924,
+    "GameDataOffset": 21217080,
+    "MeetingHudOffset": 21216180,
+    "GameStartManagerOffset": 20552656,
+    "HudManagerOffset": 17173184,
+    "ServerManagerOffset": 20511952,
+    "TempDataOffset": 0x143B7AC
+  },
+  "38119B8551718D9016BAFEEDC105610D5B3AED5B0036D1A6060B8E2ABE523C02": {
+    "Description": "v2020.11.17s (Release 1)",
+    "AmongUsClientOffset": 21703836,
+    "GameDataOffset": 21704348,
+    "MeetingHudOffset": 21703292,
+    "GameStartManagerOffset": 20546524,
+    "HudManagerOffset": 20494844,
+    "ServerManagerOffset": 20505884,
+    "TempDataOffset": 0x143B7AC
+  },
+  "5AB7B3419ED29AF0728E66AE8F1A207AEDD6456280128060FEDF74621B287BE6": {
+    "Description": "v2020.12.3s",
+    "AmongUsClientOffset": 0x193C154,
+    "GameDataOffset": 0x193C054,
+    "MeetingHudOffset": 0x193BA9C,
+    "GameStartManagerOffset": 0x1858970,
+    "HudManagerOffset": 0x1849100,
+    "ServerManagerOffset": 0x184C230,
+    "TempDataOffset": 0x193C018
+  },
+  "9BD96553424D3313700E4CB06F0FFECA346B96F731DA57C00F6B78BC3CE81902": {
+    "Description": "v2020.12.5s",
+    "AmongUsClientOffset": 0x1BE1074,
+    "GameDataOffset": 0x1BE0BB8,
+    "MeetingHudOffset": 0x1BE0CB4,
+    "GameStartManagerOffset": 0x1B5AB00,
+    "HudManagerOffset": 0x1B4A0F0,
+    "ServerManagerOffset": 0x1B4D7F0,
+    "TempDataOffset": 0x1BE10BC,
+    "GameOptionsOffset": 0x1BE11CC,
+  }
+}

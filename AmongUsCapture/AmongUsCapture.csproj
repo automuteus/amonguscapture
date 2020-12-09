@@ -1,10 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <UseWindowsForms>false</UseWindowsForms>
+    <UseWPF>false</UseWPF>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -17,18 +20,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Config.Net" Version="4.15.0" />
-    <PackageReference Include="Config.Net.Json" Version="4.15.0" />
-    <PackageReference Include="Costura.Fody" Version="5.0.0-alpha0281">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="MetroModernUI" Version="1.4.0" />
-    <PackageReference Include="NamedPipeServerStream.NetFrameworkVersion" Version="1.0.2" />
-    <PackageReference Include="SocketIOClient" Version="2.0.2.6" />
+    <Compile Remove="UserForm.cs" />
+    <Compile Remove="UserForm.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="TextColorLibrary\" />
+    <EmbeddedResource Remove="UserForm.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Config.Net" Version="4.15.0" />
+    <PackageReference Include="Config.Net.Json" Version="4.15.0" />
+    <PackageReference Include="Discord.Net" Version="2.2.0" />
+    <PackageReference Include="SocketIOClient" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AUOffsetManager\AUOffsetManager.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,5 +55,21 @@
   </ItemGroup>
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>
+    <StartupObject></StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Optimize>true</Optimize>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Optimize>true</Optimize>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PlatformTarget>x86</PlatformTarget>
+    <Optimize>true</Optimize>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 </Project>

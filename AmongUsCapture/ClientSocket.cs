@@ -1,95 +1,154 @@
 using System;
-using System.Text.Json;
-using SocketIOClient;
 using System.Drawing;
-using MetroFramework;
-using TextColorLibrary;
+using AmongUsCapture.TextColorLibrary;
+using Newtonsoft.Json;
+using SocketIOClient;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace AmongUsCapture
 {
     public class ClientSocket
-    { 
+    {
         public event EventHandler<ConnectedEventArgs> OnConnected;
         public event EventHandler OnDisconnected;
 
         private SocketIO socket;
         private string ConnectCode;
-
+        private DiscordHandler handler;
         public void Init()
         {
             // Initialize a socket.io connection.
             socket = new SocketIO();
-
             // Handle tokens from protocol links.
-            IPCadapter.getInstance().OnToken += OnTokenHandler;
 
             // Register handlers for game-state change events.
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
             GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;
+            GameMemReader.getInstance().GameOver += GameOverHandler;
+
+
 
             // Handle socket connection events.
             socket.OnConnected += (sender, e) =>
             {
                 // Report the connection
-                Settings.form.setColor(MetroColorStyle.Green);
+                //Settings.form.setConnectionStatus(true);
                 Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, "Connected successfully!");
 
 
                 // Alert any listeners that the connection has occurred.
-                OnConnected?.Invoke(this, new ConnectedEventArgs() { Uri = socket.ServerUri.ToString() });
+                OnConnected?.Invoke(this, new ConnectedEventArgs() {Uri = socket.ServerUri.ToString()});
 
                 // On each (re)connection, send the connect code and then force-update everything.
                 socket.EmitAsync("connectCode", ConnectCode).ContinueWith((_) =>
                 {
-                    Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"Connection code ({Color.Red.ToTextColor()}{ConnectCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
+                    Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                        $"Connection code ({Color.Red.ToTextColor()}{ConnectCode}{Settings.conInterface.getNormalColor().ToTextColor()}) sent to server.");
                     GameMemReader.getInstance().ForceUpdatePlayers();
                     GameMemReader.getInstance().ForceTransmitState();
                     GameMemReader.getInstance().ForceTransmitLobby();
                 });
+                if (!(this.handler is null))
+                {
+                    socket.EmitAsync("botID", handler.DClient.CurrentUser.Id);
+                    Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                        $"{Color.Red.ToTextColor()}Sending BotID: {Color.LightGreen.ToTextColor()}{handler.DClient.CurrentUser.Id}");
+                }
             };
+            socket.On("modify", response =>
+            {
+                string jsonRequest = response.GetValue(0).ToString();
+                UpdateRequest update = JsonConvert.DeserializeObject<UpdateRequest>(jsonRequest);
+                Console.Write(JsonConvert.SerializeObject(update, Formatting.Indented));
+                if (handler is null)
+                {
+                    socket.EmitAsync("taskFailed", update.TaskId);
+                    return;
+                };
+                var paramString = "";
+                Settings.conInterface.WriteModuleTextColored("Discord", Color.Red,
+                    $"Galactus is asking me to update user {Color.LightGreen.ToTextColor()}{update.UserId}{Settings.conInterface.getNormalColor().ToTextColor()}" +
+                    $" in guild {Color.LightSkyBlue.ToTextColor()}{update.GuildId}{Settings.conInterface.getNormalColor().ToTextColor()}. Params: {JsonConvert.SerializeObject(update.Parameters)}.");
+                handler.UpdateUser(update.GuildId, update.UserId, update.Parameters.Mute, update.Parameters.Deaf).ContinueWith(x =>
+                {
+                    Settings.conInterface.WriteModuleTextColored("Discord", Color.Red,
+                        x.Result
+                            ? $"Telling Galactus Task: {Color.LightSkyBlue.ToTextColor()}{update.TaskId}{Color.LightGreen.ToTextColor()} worked!"
+                            : $"Telling Galactus Task: {Color.LightSkyBlue.ToTextColor()}{update.TaskId}{Color.LightCoral.ToTextColor()} failed!");
+                    socket.EmitAsync(x.Result ? "taskComplete" : "taskFailed", update.TaskId);
+                });
+
+            });
+            socket.On("killself", response =>
+            {
+                Environment.Exit(0);
+            });
 
             // Handle socket disconnection events.
             socket.OnDisconnected += (sender, e) =>
             {
-                // Report the disconnection.
-                Settings.form.setColor(MetroColorStyle.Red);
-                Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"{Color.Red.ToTextColor()}Connection lost!");
+                //Settings.form.setConnectionStatus(false);
+                //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Lost connection!");
+                Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                    $"{Color.Red.ToTextColor()}Connection lost!");
 
                 // Alert any listeners that the disconnection has occured.
                 OnDisconnected?.Invoke(this, EventArgs.Empty);
             };
+
+            socket.On("requestdata", OnRequestData);
         }
 
-        public void OnTokenHandler(object sender, StartToken token)
+        private void OnRequestData(SocketIOResponse resp)
         {
-            if (socket.Connected)
+            int requestedData = resp.GetValue<int>();
+            if ((requestedData & (int) GameDataType.GameState) > 0)
             {
-                // Disconnect from the existing host...
-                socket.DisconnectAsync().ContinueWith((t) =>
-                {
-                    // ...then connect to the new one.
-                    this.Connect(token.Host, token.ConnectCode);
-                });
-            } else
+                GameMemReader.getInstance().ForceTransmitState();
+            }
+            if ((requestedData & (int)GameDataType.LobbyCode) > 0)
             {
-                // Connect using the host and connect code specified by the token.
-                this.Connect(token.Host, token.ConnectCode);
+                GameMemReader.getInstance().ForceTransmitLobby();
+            }
+            if ((requestedData & (int)GameDataType.Players) > 0)
+            {
+                GameMemReader.getInstance().ForceUpdatePlayers();
             }
         }
 
+        public void AddHandler(DiscordHandler handler)
+        {
+            this.handler = handler;
+            if (socket.Connected)
+            {
+                try
+                {
+                    socket.EmitAsync("botID", handler.DClient.CurrentUser.Id);
+                    Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                        $"{Color.Red.ToTextColor()}Sending BotID: {Color.LightGreen.ToTextColor()}{handler.DClient.CurrentUser.Id}");
+                }
+                catch
+                {
+                    this.handler = null;
+                }
+            }
+            
+        }
         private void OnConnectionFailure(AggregateException e = null)
         {
-            string message = e != null ? e.Message : "A generic connection error occured.";
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, $"{Color.Red.ToTextColor()}{message}");
+            var message = e != null ? e.Message : "A generic connection error occured.";
+            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
+                $"{Color.Red.ToTextColor()}{message}");
         }
 
-        private void Connect(string url, string connectCode)
+        public void Connect(string url, string connectCode)
         {
             try
             {
                 ConnectCode = connectCode;
                 socket.ServerUri = new Uri(url);
+                if (socket.Connected) socket.DisconnectAsync().Wait();
                 socket.ConnectAsync().ContinueWith(t =>
                 {
                     if (!t.IsCompletedSuccessfully)
@@ -98,9 +157,13 @@ namespace AmongUsCapture
                         return;
                     }
                 });
-            } catch (ArgumentNullException) {
+            }
+            catch (ArgumentNullException)
+            {
                 Console.WriteLine("Invalid bot host, not connecting");
-            } catch (UriFormatException) {
+            }
+            catch (UriFormatException)
+            {
                 Console.WriteLine("Invalid bot host, not connecting");
             }
         }
@@ -108,13 +171,16 @@ namespace AmongUsCapture
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
         {
             if (!socket.Connected) return;
-            socket.EmitAsync("state", JsonSerializer.Serialize(e.NewState)); // could possibly use continueWith() w/ callback if result is needed
+            socket.EmitAsync("state",
+                JsonSerializer
+                    .Serialize(e.NewState)); // could possibly use continueWith() w/ callback if result is needed
         }
 
         private void PlayerChangedHandler(object sender, PlayerChangedEventArgs e)
         {
             if (!socket.Connected) return;
-            socket.EmitAsync("player", JsonSerializer.Serialize(e)); //Makes code wait for socket to emit before closing thread.
+            socket.EmitAsync("player",
+                JsonSerializer.Serialize(e)); //Makes code wait for socket to emit before closing thread.
         }
 
         private void JoinedLobbyHandler(object sender, LobbyEventArgs e)
@@ -122,12 +188,27 @@ namespace AmongUsCapture
             if (!socket.Connected) return;
             socket.EmitAsync("lobby", JsonSerializer.Serialize(e));
             Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
-                $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{UserForm.NormalTextColor.ToTextColor()}) sent to server.");
+                $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{Settings.conInterface.getNormalColor().ToTextColor()}) sent to server.");
+        }
+
+        private void GameOverHandler(object sender, GameOverEventArgs e)
+        {
+            if (!socket.Connected) return;
+            socket.EmitAsync("gameover",
+                JsonSerializer
+                    .Serialize(e)); // could possibly use continueWith() w/ callback if result is needed
         }
 
         public class ConnectedEventArgs : EventArgs
         {
             public string Uri { get; set; }
         }
+    }
+
+    enum GameDataType
+    {
+        GameState = 1,
+        Players = 2,
+        LobbyCode = 4
     }
 }

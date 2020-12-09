@@ -9,8 +9,7 @@ jobs:
   goreleaser:
     runs-on: windows-latest
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
@@ -30,11 +29,16 @@ jobs:
           dotnet publish "AUCapture-WPF\AUCapture-WPF.csproj" -p:PublishProfile=FolderProfile -p:AssemblyVersion=${{ steps.previoustag.outputs.tag }}.0
       - name: Relocate
         run: |
-          mv AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AUCapture-WPF.exe AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AmongUsCapture.exe
-      
+          mv AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AUCapture-WPF.exe AmongUsCapture.exe
+      - name: cd
+        run: |
+          cd
+      - name: dir
+        run: |
+          dir
       - name: Zip
         run: |
-          7z a \AUCapture-WPF\bin\Release\netcoreapp3.1\publish\AmongUsCapture.zip \AUCapture-WPF\bin\Release\netcoreapp3.1\publish\AmongUsCapture.exe -mx=9 -md32k
+          7z a AmongUsCapture.zip AmongUsCapture.exe -mx=9 -md32k
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -53,7 +57,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AmongUsCapture.zip
+          asset_path: AmongUsCapture.zip
           asset_name: AmongUsCapture.zip
           asset_content_type: application/zip
       -

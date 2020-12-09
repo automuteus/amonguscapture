@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AmongUsCapture;
@@ -26,7 +27,7 @@ namespace AUCapture_Console
 
         static void Main(string[] args)
         {
-
+            Console.WriteLine(Process.GetCurrentProcess().MainModule.ModuleName);
             var uriStart = IPCAdapter.getInstance().HandleURIStart(args);
             
             switch (uriStart)

@@ -61,7 +61,6 @@ namespace AUCapture_Console.IPC.RpcBuffer
         {
             // Literally code that only works under Windows. This isn't even included with the .NET Core 3 Linux runtime.
             // Consider handling protocol registration outside of this library.
-            //#if _WINDOWS
             using (var key = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Classes\\" + UriScheme))
             {
                 // Replace typeof(App) by the class that contains the Main method or any class located in the project that produces the exe.
@@ -81,7 +80,6 @@ namespace AUCapture_Console.IPC.RpcBuffer
                     commandKey.SetValue("", "\"" + applicationLocation + "\" \"%1\"");
                 }
             }
-            //#endif
         }
 
         public override Task RegisterMinion()

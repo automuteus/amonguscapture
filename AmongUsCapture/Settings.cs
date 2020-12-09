@@ -7,7 +7,7 @@ namespace AmongUsCapture
 {
     public static class Settings
     {
-        public static string StorageLocation = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "\\AmongUsCapture");
+        public static string StorageLocation = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AmongUsCapture");
 
         public static IConsoleInterface conInterface;
 

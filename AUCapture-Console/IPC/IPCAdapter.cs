@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using AmongUsCapture.DBus;
 using AUCapture_Console.IPC.RpcBuffer;
 
 namespace AUCapture_Console.IPC
@@ -18,7 +20,18 @@ namespace AUCapture_Console.IPC
 
         public static IPCAdapter getInstance()
         {
-            return instance ??= new IPCAdapterRpcBuffer();
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return instance ??= new IPCAdapterRpcBuffer();
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return instance ??= new IPCadapterDBus();
+            }
+            else
+            {
+                return null;
+            }
         }
         public event EventHandler<StartToken> OnToken;
         protected virtual void OnTokenEvent(StartToken e)

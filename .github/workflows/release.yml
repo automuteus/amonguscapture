@@ -9,16 +9,61 @@ jobs:
   goreleaser:
     runs-on: windows-latest
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      -
-        name: Set up Go
+          
+      - name: Set up Go
         uses: actions/setup-go@v2
         with:
           go-version: 1.15
+          
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.100
+          
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@master"
+        
+      - name: Install dependencies
+        run: dotnet restore "AUCapture-WPF\AUCapture-WPF.csproj"
+      - name: Publish
+        run: |
+          dotnet publish "AUCapture-WPF\AUCapture-WPF.csproj" -p:PublishProfile=PubProfile -p:AssemblyVersion=${{ steps.previoustag.outputs.tag }}.0
+          
+      - name: Relocate
+        run: |
+          mv AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AUCapture-WPF.exe ..\AmongUsCapture.exe
+          
+      - name: Zip
+        run: |
+          7z a ..\AmongUsCapture.zip ..\AmongUsCapture.exe -mx=9
+          
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: false
+          prerelease: false
+          
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ..\AmongUsCapture.zip
+          asset_name: AmongUsCapture.zip
+          asset_content_type: application/zip
+
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2

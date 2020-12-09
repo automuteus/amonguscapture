@@ -26,7 +26,7 @@ jobs:
           dotnet publish "AUCapture-WPF\AUCapture-WPF.csproj" -p:PublishProfile=FolderProfile -p:AssemblyVersion=0.0.1
       - name: Relocate
         run: |
-          mv AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AUCapture-WPF.exe AmongUsCapture.exe
+          mv AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AUCapture-WPF.exe AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AmongUsCapture.exe
       -
         name: Set up Go
         uses: actions/setup-go@v2

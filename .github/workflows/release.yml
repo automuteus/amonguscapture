@@ -14,10 +14,16 @@ jobs:
         with:
           fetch-depth: 0
           
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15
+          
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.100
+          
       - name: 'Get Previous tag'
         id: previoustag
         uses: "WyriHaximus/github-action-get-previous-tag@master"
@@ -26,19 +32,16 @@ jobs:
         run: dotnet restore "AUCapture-WPF\AUCapture-WPF.csproj"
       - name: Publish
         run: |
-          dotnet publish "AUCapture-WPF\AUCapture-WPF.csproj" -p:PublishProfile=FolderProfile -p:AssemblyVersion=${{ steps.previoustag.outputs.tag }}.0
+          dotnet publish "AUCapture-WPF\AUCapture-WPF.csproj" -p:PublishProfile=PubProfile -p:AssemblyVersion=${{ steps.previoustag.outputs.tag }}.0
+          
       - name: Relocate
         run: |
           mv AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AUCapture-WPF.exe ..\AmongUsCapture.exe
-      - name: cd
-        run: |
-          cd
-      - name: dir
-        run: |
-          dir
+          
       - name: Zip
         run: |
           7z a ..\AmongUsCapture.zip ..\AmongUsCapture.exe -mx=9
+          
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -60,11 +63,7 @@ jobs:
           asset_path: ..\AmongUsCapture.zip
           asset_name: AmongUsCapture.zip
           asset_content_type: application/zip
-      -
-        name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.15
+
       -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2

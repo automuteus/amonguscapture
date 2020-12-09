@@ -12,6 +12,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@master"
+        
       - uses: actions/checkout@v2
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -21,7 +25,7 @@ jobs:
         run: dotnet restore "AUCapture-WPF\AUCapture-WPF.csproj"
       - name: Publish
         run: |
-          dotnet publish "AUCapture-WPF\AUCapture-WPF.csproj" -p:PublishProfile=FolderProfile -p:AssemblyVersion=0.0.1
+          dotnet publish "AUCapture-WPF\AUCapture-WPF.csproj" -p:PublishProfile=DevProfile -p:AssemblyVersion=${{ steps.previoustag.outputs.tag }}.1
       - name: Relocate
         run: |
           mv AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AUCapture-WPF.exe AmongUsCapture.exe

@@ -8,8 +8,7 @@
     <UseWinForms>false</UseWinForms>
     <StartupObject>AUCapture_WPF.App</StartupObject>
     <Platforms>AnyCPU;x86;x64</Platforms>
-    <PublishTrimmed>false</PublishTrimmed>
-    <TrimmerRemoveSymbols>false</TrimmerRemoveSymbols>
+    <TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
     <UseSystemResourceKeys>true</UseSystemResourceKeys>
     <HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
     <EventSourceSupport>false</EventSourceSupport>

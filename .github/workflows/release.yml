@@ -9,7 +9,12 @@ jobs:
   goreleaser:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
@@ -22,11 +27,7 @@ jobs:
       - name: Relocate
         run: |
           mv AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AUCapture-WPF.exe AmongUsCapture.exe
-      -
-        name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+
       -
         name: Set up Go
         uses: actions/setup-go@v2

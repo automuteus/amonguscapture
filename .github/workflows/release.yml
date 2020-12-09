@@ -27,7 +27,7 @@ jobs:
         run: dotnet restore "AUCapture-WPF\AUCapture-WPF.csproj"
       - name: Publish
         run: |
-          dotnet publish "AUCapture-WPF\AUCapture-WPF.csproj" -p:PublishProfile=FolderProfile -p:AssemblyVersion=${{ steps.previoustag.outputs.tag }}
+          dotnet publish "AUCapture-WPF\AUCapture-WPF.csproj" -p:PublishProfile=FolderProfile -p:AssemblyVersion=${{ steps.previoustag.outputs.tag }}.0
       - name: Relocate
         run: |
           mv AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AUCapture-WPF.exe AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AmongUsCapture.exe

@@ -8,8 +8,6 @@
     <UseWinForms>false</UseWinForms>
     <StartupObject>AUCapture_WPF.App</StartupObject>
     <Platforms>AnyCPU;x86;x64</Platforms>
-    <AssemblyVersion>2.8.0.0</AssemblyVersion>
-    <FileVersion>2.8.0.0</FileVersion>
     <PublishTrimmed>false</PublishTrimmed>
     <TrimmerRemoveSymbols>false</TrimmerRemoveSymbols>
     <UseSystemResourceKeys>true</UseSystemResourceKeys>

@@ -4,4 +4,3 @@ builds:
 release:
     extra_files:
         - glob: ./AUCapture-WPF/bin/Release/netcoreapp3.1/publish/AmongUsCapture.exe
-        - glob: ./amonguscapture/AUCapture-WPF/bin/Release/netcoreapp3.1/publish/AmongUsCapture.exe

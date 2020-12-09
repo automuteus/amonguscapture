@@ -1,6 +1,2 @@
 builds:
 - skip: true
-
-release:
-    extra_files:
-        - glob: ./amonguscapture/AUCapture-WPF/bin/Release/netcoreapp3.1/publish/AmongUsCapture.exe

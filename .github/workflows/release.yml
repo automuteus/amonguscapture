@@ -19,14 +19,26 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.100
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@master"
+        
       - name: Install dependencies
         run: dotnet restore "AUCapture-WPF\AUCapture-WPF.csproj"
       - name: Publish
         run: |
-          dotnet publish "AUCapture-WPF\AUCapture-WPF.csproj" -p:PublishProfile=FolderProfile -p:AssemblyVersion=0.0.1
+          dotnet publish "AUCapture-WPF\AUCapture-WPF.csproj" -p:PublishProfile=FolderProfile -p:AssemblyVersion=${{ steps.previoustag.outputs.tag }}
       - name: Relocate
         run: |
           mv AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AUCapture-WPF.exe AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AmongUsCapture.exe
+      
+      - name: Release
+        uses: fnkr/github-action-ghr@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GHR_COMPRESS: zip
+          GHR_PATH: AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AmongUsCapture.exe
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       -
         name: Set up Go
         uses: actions/setup-go@v2

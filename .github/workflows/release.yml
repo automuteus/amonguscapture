@@ -27,7 +27,6 @@ jobs:
       - name: Relocate
         run: |
           mv AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AUCapture-WPF.exe AmongUsCapture.exe
-
       -
         name: Set up Go
         uses: actions/setup-go@v2

@@ -10,8 +10,8 @@
     <Platforms>AnyCPU;x86;x64</Platforms>
     <AssemblyVersion>2.8.0.0</AssemblyVersion>
     <FileVersion>2.8.0.0</FileVersion>
-    <PublishTrimmed>true</PublishTrimmed>
-    <TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
+    <PublishTrimmed>false</PublishTrimmed>
+    <TrimmerRemoveSymbols>false</TrimmerRemoveSymbols>
     <UseSystemResourceKeys>true</UseSystemResourceKeys>
     <HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
     <EventSourceSupport>false</EventSourceSupport>

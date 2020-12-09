@@ -3,4 +3,4 @@ builds:
 
 release:
     extra_files:
-        - glob: AmongUsCapture.exe
+        - glob: ./AmongUsCapture.exe

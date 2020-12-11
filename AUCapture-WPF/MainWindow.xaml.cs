@@ -99,7 +99,7 @@ namespace AUCapture_WPF
             Version version = new Version(context.Version);
             Version latestVersion = new Version(context.LatestVersion);
 
-            if (latestVersion.CompareTo(version) > 0)
+            if (latestVersion.CompareTo(version) > 0 && version.CompareTo(new Version(1,1,1,1)) != 0)
                 this.ShowMessageAsync("Caution",
                     $"We've detected you're using an older version of AmongUsCapture!\nYour version: {version}\nLatest version: {latestVersion}",
                     MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings{AffirmativeButtonText = "Download", NegativeButtonText = "No thanks", DefaultButtonFocus = MessageDialogResult.Affirmative}).ContinueWith(

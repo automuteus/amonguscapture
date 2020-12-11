@@ -22,6 +22,9 @@
     <NoWin32Manifest>true</NoWin32Manifest>
     <Nullable>disable</Nullable>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <NeutralLanguage />
+    <AssemblyVersion>1.1.1.1</AssemblyVersion>
+    <FileVersion>1.1.1.1</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

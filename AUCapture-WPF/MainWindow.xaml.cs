@@ -115,8 +115,7 @@ namespace AUCapture_WPF
 
         private void OnGameOver(object? sender, GameOverEventArgs e)
         {
-            WriteConsoleLineFormatted("GameOver", Color.BlueViolet, JsonConvert.SerializeObject(e, Formatting.None, new StringEnumConverter()));
-            Console.WriteLine(JsonConvert.SerializeObject(e, Formatting.Indented));
+            Console.WriteLine(JsonConvert.SerializeObject(e, Formatting.Indented, new StringEnumConverter()));
         }
 
 

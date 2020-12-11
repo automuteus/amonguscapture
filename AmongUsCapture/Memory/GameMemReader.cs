@@ -573,8 +573,9 @@ namespace AmongUsCapture
                 }
                 catch (Exception e)
                 {
-                    Settings.conInterface.WriteModuleTextColored("ERROR", Color.Red, $"Message: {e.Message} stack: {e.StackTrace}");
+                    Settings.conInterface.WriteModuleTextColored("ERROR", Color.Red, $"Message: {e.Message} | stack: {e.StackTrace} | Retrying in 1000ms.");
                     Console.WriteLine(e);
+                    Thread.Sleep(1000);
                 }
             }
         }

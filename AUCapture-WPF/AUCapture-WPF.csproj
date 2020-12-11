@@ -22,12 +22,15 @@
     <NoWin32Manifest>true</NoWin32Manifest>
     <Nullable>disable</Nullable>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <NeutralLanguage />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>embedded</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <AssemblyVersion>1.1.1.1</AssemblyVersion>
+    <FileVersion>1.1.1.1</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

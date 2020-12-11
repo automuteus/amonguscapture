@@ -41,7 +41,7 @@
     "GameOptionsOffset": 0x1BE11CC,
   },
   "0B010BD3195D39C089DC018D834B2EBD26BA67D2F49C4EBEA608A804FC0975B7": {
-    "Description": "2020.12.9s",
+    "Description": "v2020.12.9s",
     "AmongUsClientOffset": 0x1C57F54,
     "GameDataOffset": 0x1C57BE8,
     "MeetingHudOffset": 0x1C573A4,

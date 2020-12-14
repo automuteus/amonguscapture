@@ -77,10 +77,10 @@ namespace AmongUsCapture
                             ? $"Telling Galactus Task: {Color.LightSkyBlue.ToTextColor()}{update.TaskId}{Color.LightGreen.ToTextColor()} worked!"
                             : $"Telling Galactus Task: {Color.LightSkyBlue.ToTextColor()}{update.TaskId}{Color.LightCoral.ToTextColor()} failed!");
                     socket.EmitAsync(x.Result ? "taskComplete" : "taskFailed", update.TaskId);
-                });
+                }).Wait();
 
             });
-            socket.On("killself", response =>
+            socket.On("killself", response => // O: Suicide!! o no!
             {
                 Environment.Exit(0);
             });

@@ -18,6 +18,7 @@ namespace AmongUsCapture
         TASKS,
         DISCUSSION,
         MENU,
+        ENDED,
         UNKNOWN
     }
 
@@ -211,7 +212,7 @@ namespace AmongUsCapture
                     var gameState =
                         ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, CurrentOffsets.AmongUsClientOffset, 0x5C,
                             0,
-                            0x64); // 0 = NotJoined, 1 = Joined, 2 = Started, 3 = Ended (during "defeat" or "victory" screen only)
+                            0x64); // 0 = NotJoined, 1 = Joined, 2 = Started, 3 = ENDED (during "defeat" or "victory" screen only)
 
                     switch (gameState)
                     {
@@ -220,8 +221,11 @@ namespace AmongUsCapture
                             exileCausesEnd = false;
                             break;
                         case 1:
-                        case 3:
                             state = GameState.LOBBY;
+                            exileCausesEnd = false;
+                            break;
+                        case 3:
+                            state = GameState.ENDED;
                             exileCausesEnd = false;
                             break;
                         default:
@@ -298,8 +302,7 @@ namespace AmongUsCapture
                     }
 
 
-                    if ((oldState == GameState.DISCUSSION || oldState == GameState.TASKS) &&
-                        (state == GameState.LOBBY || state == GameState.MENU)) // game ended
+                    if (oldState == GameState.ENDED && (state == GameState.LOBBY || state == GameState.MENU)) // game ended
                     {
                         int rawGameOverReason = ProcessMemory.getInstance()
                             .Read<int>(GameAssemblyPtr, CurrentOffsets.TempDataOffset, 0x5c, 0x4);

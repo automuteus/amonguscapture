@@ -98,7 +98,8 @@ namespace AUCapture_WPF
             
             Version version = new Version(context.Version);
             Version latestVersion = new Version(context.LatestVersion);
-            #if DEBUG
+            Console.WriteLine(latestVersion.CompareTo(version));
+            #if PUBLISH
             if (latestVersion.CompareTo(version) > 0)
                 this.ShowMessageAsync("Caution",
                     $"We've detected you're using an older version of AmongUsCapture!\nYour version: {version}\nLatest version: {latestVersion}",

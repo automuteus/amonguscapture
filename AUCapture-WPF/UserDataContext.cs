@@ -23,7 +23,7 @@ namespace AUCapture_WPF
             Settings.PropertyChanged += SettingsOnPropertyChanged;
 
             FileVersionInfo v = FileVersionInfo.GetVersionInfo(App.GetExecutablePath());
-            Version = $"{v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}";
+            Version = $"{v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}";
             try
             {
                 GitHubClient client = new GitHubClient(new ProductHeaderValue("AmongUsCapture", Version));

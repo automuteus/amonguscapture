@@ -143,6 +143,7 @@ namespace AUCapture_WPF
         private void OnJoinedLobby(object sender, LobbyEventArgs e)
         {
             GameCodeBox.BeginInvoke(a => a.Text = e.LobbyCode);
+            MapBox.BeginInvoke(a=>a.Text = e.Map.ToString());
         }
 
         private Color PlayerColorToColorOBJ(PlayerColor pColor)
@@ -279,6 +280,11 @@ namespace AUCapture_WPF
             
             AmongUsCapture.Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
                 $"State changed to {Color.Cyan.ToTextColor()}{e.NewState}");
+            if (e.NewState == GameState.MENU)
+            {
+                setGameCode("");
+                MapBox.BeginInvoke(a=>a.Text = "");
+            }
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
         }
 

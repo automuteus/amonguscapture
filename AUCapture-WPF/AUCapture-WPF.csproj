@@ -44,6 +44,8 @@
   <ItemGroup>
     <TrimmerRootAssembly Include="System.Runtime" />
     <TrimmerRootAssembly Include="System.Runtime.Extensions" />
+    <TrimmerRootAssembly Include="System.Windows.Forms" />
+    <TrimmerRootAssembly Include="System.Runtime.InteropServices" />
   </ItemGroup>
 
   <ItemGroup>

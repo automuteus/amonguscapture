@@ -185,7 +185,6 @@
                                  IsReadOnly="True" DockPanel.Dock="Top"
                                  mah:ScrollViewerHelper.IsHorizontalScrollWheelEnabled="True"
                                  VerticalScrollBarVisibility="Auto"
-                                 DataObject.Copying="ConsoleTextBox_OnCopying"
                                  MaxHeight="{Binding ActualHeight, ElementName=consoleDockPanel}"
                                  Height="{Binding ActualHeight, ElementName=consoleDockPanel}" UseLayoutRounding="True"/>
                     
@@ -229,7 +228,7 @@
                 <mah:MetroHeader Header="Code:" Margin="0 0 0 5" Foreground="{DynamicResource MahApps.Brushes.Text}">
                     <TextBox x:Name="GameCodeBox" Text="" mah:TextBoxHelper.Watermark="UNKNOWN"
                              ToolTip="Click to copy" VerticalAlignment="Center" Focusable="False" IsHitTestVisible="True"
-                             AllowDrop="False" IsReadOnly="True" HorizontalAlignment="Center" HorizontalContentAlignment="Center" dialogs:TextBoxHelper.WatermarkAlignment="Right" VerticalContentAlignment="Center" />
+                             AllowDrop="False" IsReadOnly="True" MouseLeftButtonUp="GameCodeBox_MouseLeftButtonUp" HorizontalAlignment="Center" HorizontalContentAlignment="Center" dialogs:TextBoxHelper.WatermarkAlignment="Right" VerticalContentAlignment="Center" />
                 </mah:MetroHeader>
             </StatusBarItem>
         </StatusBar>

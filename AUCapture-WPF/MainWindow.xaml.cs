@@ -293,8 +293,8 @@ namespace AUCapture_WPF
 
         private async void GameCodeBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            await this.ShowMessageAsync("Gamecode copied to clipboard!", "", MessageDialogStyle.Affirmative);
             Clipboard.SetText(GameCodeBox.Text);
+            await this.ShowMessageAsync("Game code copied to clipboard!", "", MessageDialogStyle.Affirmative);
         }
 
         public void setGameCode(string gamecode)

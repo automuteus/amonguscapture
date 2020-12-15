@@ -73,4 +73,11 @@
     <ProjectReference Include="..\AmongUsCapture\AmongUsCapture.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Resource Include="SplashScreens\SplashScreenChristmas.png" />
+    <Resource Include="SplashScreens\SplashScreenNormal.png" />
+  </ItemGroup>
+
+
+
 </Project>

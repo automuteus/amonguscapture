@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
 using AUCapture_WPF.IPC;
@@ -54,36 +57,34 @@ namespace AUCapture_WPF
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
-            var splashScreen = new SplashScreenWindow();
-            this.MainWindow = splashScreen;
-            splashScreen.Show();
-            Task.Factory.StartNew(() =>
+            Console.Write(string.Join(", ",System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames()));
+            if (DateTime.Now.Month == 12)
             {
-                this.Dispatcher.Invoke(() =>
-                {
-                    //initialize the main window, set it as the application main window
-                    //and close the splash screen
-                    var mainWindow = new MainWindow();
-                    this.MainWindow = mainWindow;
-                    Settings.conInterface = new WPFLogger(mainWindow);
-                    IPCAdapter.getInstance().OnToken += OnTokenHandler;
-                    socket.Init();
-                    IPCAdapter.getInstance().RegisterMinion();
-                    mainWindow.Loaded += (sender, args2) =>
-                    {
-                        Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
-                        if (uriStart == URIStartResult.PARSE) IPCAdapter.getInstance().SendToken(args[0]);
-                    };
-                    mainWindow.Closing += (sender, args2) =>
-                    {
-                        Environment.Exit(0);
-                    };
-                    mainWindow.Show();
-                    splashScreen.Close();
-                });
-            });
+                new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenChristmas.png").Show(true);
+            }
+            else
+            {
+                new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenNormal.png").Show(true);
+            }
+
             
+            var mainWindow = new MainWindow();
+            this.MainWindow = mainWindow;
+            Settings.conInterface = new WPFLogger(mainWindow);
+            IPCAdapter.getInstance().OnToken += OnTokenHandler;
+            socket.Init();
+            IPCAdapter.getInstance().RegisterMinion();
+            mainWindow.Loaded += (sender, args2) =>
+            {
+                Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
+                if (uriStart == URIStartResult.PARSE) IPCAdapter.getInstance().SendToken(args[0]);
+            };
+            mainWindow.Closing += (sender, args2) =>
+            {
+                Environment.Exit(0);
+            };
+            mainWindow.Show();
+
         }
 
         public static string GetExecutablePath()

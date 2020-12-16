@@ -26,16 +26,16 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <!-- Theme setting -->
+
             </ResourceDictionary.MergedDictionaries>
+            
+            
+
         </ResourceDictionary>
     </mah:MetroWindow.Resources>
     <mah:MetroWindow.IconTemplate>
         <DataTemplate>
-            <iconPacks:PackIconUnicons Width="{TemplateBinding Width}"
-                                       Height="{TemplateBinding Height}"
-                                       Margin="4"
-                                       Foreground="{DynamicResource MahApps.Brushes.Text}"
-                                       Kind="Capture" />
+            <Image Source="logo/Logo.png" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Margin="4"/>
         </DataTemplate>
     </mah:MetroWindow.IconTemplate>
     <mah:MetroWindow.RightWindowCommands>
@@ -81,9 +81,7 @@
                         <mah:MetroTabItem Header="General">
                             <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <StackPanel Orientation="Vertical">
-                                    <mah:ToggleSwitch x:Name="Darkmode_toggleswitch" Header="Dark mode"
-                                                      IsOn="{Binding Settings.DarkMode, Mode=TwoWay}"
-                                                      Toggled="Darkmode_Toggled" />
+                                    
                                     <mah:ToggleSwitch x:Name="Copy_toggleswitch" Header="Always copy gamecode"
                                                       IsOn="{Binding Settings.AlwaysCopyGameCode, Mode=TwoWay}"
                                                       Toggled="Darkmode_Toggled" />
@@ -93,11 +91,44 @@
 
                                     <mah:ToggleSwitch x:Name="TokenFocus_ToggleSwitch" Header="Focus window on connect"
                                                       IsOn="{Binding Settings.FocusOnToken, Mode=TwoWay}" />
+                                    
+                                </StackPanel>
+                            </ScrollViewer>
+                        </mah:MetroTabItem>
+                        <mah:MetroTabItem Header="Theme">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True">
+                                <StackPanel Orientation="Vertical">
+                                    <mah:ToggleSwitch x:Name="Darkmode_toggleswitch" Header="Dark mode"
+                                                      IsOn="{Binding Settings.DarkMode, Mode=TwoWay}"
+                                                      Toggled="Darkmode_Toggled" />
                                     <mah:MetroHeader Header="Font size">
                                         <Slider Name="FontSlider" Maximum="72" Minimum="1"
                                                 AutoToolTipPlacement="TopLeft" HorizontalAlignment="Left"
                                                 Width="{Binding ActualWidth,ElementName=MainGrid, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.25}"
                                                 Value="{Binding Settings.fontSize, Mode=TwoWay}" />
+                                    </mah:MetroHeader>
+                                    <mah:MetroHeader Header="Accent">
+                                        <ListBox AlternationCount="2" x:Name="AccentSelector" SelectionChanged="Selector_OnSelectionChanged" BorderThickness="1" Style="{StaticResource MahApps.Styles.ListBox.Virtualized}" ItemsSource="{Binding AccentColors, Mode=OneWay}" MaxHeight="100" HorizontalContentAlignment="Stretch">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style BasedOn="{StaticResource MahApps.Styles.ListBoxItem}" TargetType="{x:Type ListBoxItem}">
+                                                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal" CanVerticallyScroll="True">
+                                                        <Ellipse Width="16" Height="16" Fill="{Binding ColorBrush, Mode=OneWay}" />
+                                                        <TextBlock Text="{Binding Name, Mode=OneWay}"></TextBlock>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
                                     </mah:MetroHeader>
 
                                 </StackPanel>

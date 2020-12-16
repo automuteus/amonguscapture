@@ -41,6 +41,10 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="logo\Logo.png" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <TrimmerRootAssembly Include="System.Runtime" />
@@ -76,6 +80,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="logo\Logo.png" />
     <Resource Include="SplashScreens\SplashScreenChristmas.png" />
     <Resource Include="SplashScreens\SplashScreenNormal.png" />
   </ItemGroup>

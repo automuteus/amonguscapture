@@ -1,8 +1,18 @@
-﻿using System;
+﻿using AmongUsCapture;
+using AmongUsCapture.TextColorLibrary;
+using AUCapture_WPF.IPC;
+using Config.Net;
+using ControlzEx.Theming;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Threading;
@@ -10,19 +20,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using AmongUsCapture;
-using AmongUsCapture.TextColorLibrary;
-using AUCapture_WPF.IPC;
-using Config.Net;
-using ControlzEx.Theming;
-using Discord;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Color = System.Drawing.Color;
 
 namespace AUCapture_WPF
@@ -34,18 +33,18 @@ namespace AUCapture_WPF
     {
         public Color NormalTextColor = Color.White;
 
-        private IAppSettings config;
+        private readonly IAppSettings config;
 
         public UserDataContext context;
-        private bool connected;
+        private readonly bool connected;
         private readonly object locker = new object();
-        private Queue<string> DeadMessages = new Queue<string>();
+        private readonly Queue<string> DeadMessages = new Queue<string>();
 
         public MainWindow()
         {
             InitializeComponent();
-            
-            var p = ConsoleTextBox.Document.Blocks.FirstBlock as Paragraph;
+
+            Paragraph p = ConsoleTextBox.Document.Blocks.FirstBlock as Paragraph;
             ConsoleTextBox.Document.Blocks.Clear();
             config = new ConfigurationBuilder<IAppSettings>()
                 .UseJsonFile(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -63,10 +62,15 @@ namespace AUCapture_WPF
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
             GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
             GameMemReader.getInstance().GameOver += OnGameOver;
-            IPCAdapter.getInstance().OnToken += (sender, token) => {
+            IPCAdapter.getInstance().OnToken += (sender, token) =>
+            {
                 this.BeginInvoke((w) =>
                 {
-                    if (!w.context.Settings.FocusOnToken) return;
+                    if (!w.context.Settings.FocusOnToken)
+                    {
+                        return;
+                    }
+
                     if (!w.IsVisible)
                     {
                         w.Show();
@@ -79,23 +83,33 @@ namespace AUCapture_WPF
 
                     w.Activate();
                     w.Focus();         // important
-                }); };
+                });
+            };
             if (!context.Settings.discordTokenEncrypted) //Encrypt discord token if it is not encrypted.
             {
                 context.Settings.discordToken = JsonConvert.SerializeObject(encryptToken(context.Settings.discordToken));
                 context.Settings.discordTokenEncrypted = true;
             }
-            var encryptedBuff = JsonConvert.DeserializeObject<Byte[]>(context.Settings.discordToken);
+            byte[] encryptedBuff = JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken);
             discordTokenBox.Password = decryptToken(encryptedBuff);
 
             Version version = new Version(context.Version);
             Version latestVersion = new Version(context.LatestVersion);
-            Console.WriteLine(latestVersion.CompareTo(version));
-            #if PUBLISH
+            try
+            {
+                AccentSelector.SelectedItem = context.AccentColors.Single(x => x.Name == context.Settings.SelectedAccent);
+            }
+            catch (System.InvalidOperationException)
+            {
+                AccentSelector.SelectedItem = null;
+            }
+
+#if PUBLISH
             if (latestVersion.CompareTo(version) > 0)
                 this.ShowMessageAsync("Caution",
                     $"We've detected you're using an older version of AmongUsCapture!\nYour version: {version}\nLatest version: {latestVersion}",
-                    MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings{AffirmativeButtonText = "Download", NegativeButtonText = "No thanks", DefaultButtonFocus = MessageDialogResult.Affirmative}).ContinueWith(
+                    MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings{AffirmativeButtonText =
+ "Download", NegativeButtonText = "No thanks", DefaultButtonFocus = MessageDialogResult.Affirmative}).ContinueWith(
                     task =>
                     {
                         if (task.Result == MessageDialogResult.Affirmative)
@@ -103,20 +117,20 @@ namespace AUCapture_WPF
                             OpenBrowser(@"https://github.com/denverquane/amonguscapture/releases/latest/");
                         }
                     });
-            #endif
+#endif
             //ApplyDarkMode();
         }
 
         private string decryptToken(byte[] EncryptedBytes)
         {
-            var protectedBytes = ProtectedData.Unprotect(EncryptedBytes, null, DataProtectionScope.CurrentUser);
+            byte[] protectedBytes = ProtectedData.Unprotect(EncryptedBytes, null, DataProtectionScope.CurrentUser);
             return System.Text.Encoding.UTF8.GetString(protectedBytes, 0, protectedBytes.Length);
         }
 
         private byte[] encryptToken(string token)
         {
             byte[] buffer = System.Text.Encoding.UTF8.GetBytes(token);
-            var protectedBytes = ProtectedData.Protect(buffer, null, DataProtectionScope.CurrentUser);
+            byte[] protectedBytes = ProtectedData.Protect(buffer, null, DataProtectionScope.CurrentUser);
             return protectedBytes;
         }
         private void OnGameOver(object? sender, GameOverEventArgs e)
@@ -133,9 +147,9 @@ namespace AUCapture_WPF
             }
             else
             {
-                AmongUsCapture.Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki,$"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
+                AmongUsCapture.Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
             }
-            
+
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
         }
 
@@ -151,17 +165,17 @@ namespace AUCapture_WPF
             GameCodeBox.BeginInvoke(a => a.Text = e.LobbyCode);
             this.BeginInvoke(a =>
             {
-                if (this.context.Settings.AlwaysCopyGameCode)
+                if (context.Settings.AlwaysCopyGameCode)
                 {
                     Clipboard.SetText(e.LobbyCode);
                 }
             });
-            MapBox.BeginInvoke(a=>a.Text = e.Map.ToString());
+            MapBox.BeginInvoke(a => a.Text = e.Map.ToString());
         }
 
         private Color PlayerColorToColorOBJ(PlayerColor pColor)
         {
-            var OutputCode = Color.White;
+            Color OutputCode = Color.White;
             switch (pColor)
             {
                 case PlayerColor.Red:
@@ -208,6 +222,7 @@ namespace AUCapture_WPF
         private void ConfigOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "fontSize")
+            {
                 ConsoleTextBox.BeginInvoke(tb =>
                 {
                     tb.Document.FontSize = config.fontSize;
@@ -216,15 +231,20 @@ namespace AUCapture_WPF
                     //    block.FontSize = config.fontSize;
                     //}
                 }, DispatcherPriority.Input);
+            }
         }
 
         private void SetDefaultThemeColor()
         {
-            if (config.ranBefore) return;
+            if (config.ranBefore)
+            {
+                return;
+            }
+
             config.ranBefore = true;
             ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncAll;
             ThemeManager.Current.SyncTheme();
-            var newTheme = ThemeManager.Current.DetectTheme();
+            Theme newTheme = ThemeManager.Current.DetectTheme();
             config.DarkMode = newTheme.BaseColorScheme == ThemeManager.BaseColorDark;
             Darkmode_toggleswitch.IsOn = config.DarkMode;
         }
@@ -254,7 +274,7 @@ namespace AUCapture_WPF
             {
                 ThemeManager.Current.ChangeThemeBaseColor(this, ThemeManager.BaseColorDark);
                 NormalTextColor = Color.White;
-                
+
             }
             else
             {
@@ -272,7 +292,11 @@ namespace AUCapture_WPF
 
         private void Darkmode_Toggled(object sender, RoutedEventArgs e)
         {
-            if (!(sender is ToggleSwitch toggleSwitch)) return;
+            if (!(sender is ToggleSwitch toggleSwitch))
+            {
+                return;
+            }
+
             ApplyDarkMode();
         }
 
@@ -280,7 +304,7 @@ namespace AUCapture_WPF
         {
             //Open up the manual connection flyout.
             ManualConnectionFlyout.IsOpen = true;
-            
+
         }
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
@@ -288,15 +312,15 @@ namespace AUCapture_WPF
             setCurrentState(e.NewState.ToString());
             while (DeadMessages.Count > 0)
             {
-                    AmongUsCapture.Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, DeadMessages.Dequeue());
+                AmongUsCapture.Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, DeadMessages.Dequeue());
             }
-            
+
             AmongUsCapture.Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
                 $"State changed to {Color.Cyan.ToTextColor()}{e.NewState}");
             if (e.NewState == GameState.MENU)
             {
                 setGameCode("");
-                MapBox.BeginInvoke(a=>a.Text = "");
+                MapBox.BeginInvoke(a => a.Text = "");
             }
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
         }
@@ -314,9 +338,13 @@ namespace AUCapture_WPF
         public void setConnectionStatus(bool connected)
         {
             if (connected)
+            {
                 ThemeManager.Current.ChangeThemeColorScheme(this, "Green");
+            }
             else
+            {
                 ThemeManager.Current.ChangeThemeColorScheme(this, "Red");
+            }
         }
 
         public void WriteConsoleLineFormatted(string moduleName, Color moduleColor, string message)
@@ -330,11 +358,11 @@ namespace AUCapture_WPF
         {
             ConsoleTextBox.BeginInvoke(tb =>
             {
-                var paragraph = new Paragraph();
-                foreach (var part in TextColor.toParts(ColoredText))
+                Paragraph paragraph = new Paragraph();
+                foreach (ColoredString part in TextColor.toParts(ColoredText))
                 {
                     //Foreground="{DynamicResource MahApps.Brushes.Text}"
-                    var run = new Run(part.text);
+                    Run run = new Run(part.text);
 
                     if (part.textColor.ToTextColor() != NormalTextColor.ToTextColor())
                     {
@@ -356,10 +384,10 @@ namespace AUCapture_WPF
 
         private void TestFillConsole(int entries) //Helper test method to see if filling console works.
         {
-            for (var i = 0; i < entries; i++)
+            for (int i = 0; i < entries; i++)
             {
-                var nonString = "Wow! Look at this pretty text!";
-                WriteConsoleLineFormatted("Rainbow", TextColor.Rainbow((float) i / entries),
+                string nonString = "Wow! Look at this pretty text!";
+                WriteConsoleLineFormatted("Rainbow", TextColor.Rainbow((float)i / entries),
                     TextColor.getRainbowText(nonString, i));
             }
 
@@ -376,11 +404,12 @@ namespace AUCapture_WPF
                 MessageDialogStyle.AffirmativeAndNegative,
                 new MetroDialogSettings
                 {
-                    AffirmativeButtonText = "I understand", NegativeButtonText = "Exit",
+                    AffirmativeButtonText = "I understand",
+                    NegativeButtonText = "Exit",
                     ColorScheme = MetroDialogColorScheme.Theme,
                     DefaultButtonFocus = MessageDialogResult.Negative
                 }).Result;
-            return x == MessageDialogResult.Affirmative; 
+            return x == MessageDialogResult.Affirmative;
         }
         public void PlayGotEm()
         {
@@ -389,8 +418,8 @@ namespace AUCapture_WPF
                 win.MemeFlyout.IsOpen = true;
                 win.MemePlayer.Position = TimeSpan.Zero;
             });
-            
-            
+
+
         }
 
         private void MainWindow_OnContentRendered(object? sender, EventArgs e)
@@ -401,11 +430,11 @@ namespace AUCapture_WPF
             SetDefaultThemeColor();
 
             ApplyDarkMode();
-            var encryptedBuff = JsonConvert.DeserializeObject<Byte[]>(context.Settings.discordToken);
+            byte[] encryptedBuff = JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken);
             if (decryptToken(encryptedBuff) != "")
             {
                 App.handler.Init(decryptToken(encryptedBuff));
-                
+
             }
             else
             {
@@ -432,7 +461,7 @@ namespace AUCapture_WPF
             if (MemeFlyout.IsOpen)
             {
                 MemePlayer.Play();
-                Task.Factory.StartNew(()=>
+                Task.Factory.StartNew(() =>
                 {
                     Thread.Sleep(5000);
                     MemeFlyout.Invoke(new Action(() =>
@@ -454,11 +483,11 @@ namespace AUCapture_WPF
         }
         private void SubmitDiscordButton_OnClick(object sender, RoutedEventArgs e)
         {
-            
+
             if (discordTokenBox.Password != "")
             {
                 context.Settings.discordToken = JsonConvert.SerializeObject(encryptToken(discordTokenBox.Password));
-                App.handler.Init(decryptToken(JsonConvert.DeserializeObject<Byte[]>(context.Settings.discordToken)));
+                App.handler.Init(decryptToken(JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken)));
             }
         }
 
@@ -492,7 +521,11 @@ namespace AUCapture_WPF
 
         private void APIServerToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
-            if (!(sender is ToggleSwitch toggleSwitch)) return;
+            if (!(sender is ToggleSwitch toggleSwitch))
+            {
+                return;
+            }
+
             if (config.ApiServer)
             {
                 WriteConsoleLineFormatted("APIServer", Color.Brown, "Starting server");
@@ -506,5 +539,10 @@ namespace AUCapture_WPF
         }
 
 
+        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            context.Settings.SelectedAccent = ((UserDataContext.AccentColorMenuData)e.AddedItems[0]).Name;
+            ThemeManager.Current.ChangeThemeColorScheme(this, ((UserDataContext.AccentColorMenuData)e.AddedItems[0]).Name);
+        }
     }
 }

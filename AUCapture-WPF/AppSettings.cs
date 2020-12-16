@@ -20,6 +20,9 @@ namespace AUCapture_WPF
         [Option(DefaultValue = false)]
         bool AlwaysCopyGameCode { get; set; }
 
+        [Option(DefaultValue = "")]
+        string SelectedAccent { get; set; }
+
         [Option(DefaultValue = false)]
         bool ranBefore { get; set; }
 

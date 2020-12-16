@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,6 +18,7 @@ using AmongUsCapture.TextColorLibrary;
 using AUCapture_WPF.IPC;
 using Config.Net;
 using ControlzEx.Theming;
+using Discord;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Newtonsoft.Json;
@@ -55,22 +57,7 @@ namespace AUCapture_WPF
             {
                 App.socket.AddHandler(App.handler);
             };
-            if (context.Settings.discordToken != "")
-            {
-                Task.Factory.StartNew(() =>
-                {
-                    Thread.Sleep(2000);
-                    App.handler.Init(context.Settings.discordToken);
-                });
-            }
-            else
-            {
-                Task.Factory.StartNew(() =>
-                {
-                    Thread.Sleep(2000);
-                    WriteConsoleLineFormatted("Discord", Color.Red, "You do not have a self-host discord token set. Enabling this in settings will increase performance.");
-                });
-            }
+
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
@@ -93,9 +80,14 @@ namespace AUCapture_WPF
                     w.Activate();
                     w.Focus();         // important
                 }); };
+            if (!context.Settings.discordTokenEncrypted) //Encrypt discord token if it is not encrypted.
+            {
+                context.Settings.discordToken = JsonConvert.SerializeObject(encryptToken(context.Settings.discordToken));
+                context.Settings.discordTokenEncrypted = true;
+            }
+            var encryptedBuff = JsonConvert.DeserializeObject<Byte[]>(context.Settings.discordToken);
+            discordTokenBox.Password = decryptToken(encryptedBuff);
 
-
-            
             Version version = new Version(context.Version);
             Version latestVersion = new Version(context.LatestVersion);
             Console.WriteLine(latestVersion.CompareTo(version));
@@ -115,6 +107,18 @@ namespace AUCapture_WPF
             //ApplyDarkMode();
         }
 
+        private string decryptToken(byte[] EncryptedBytes)
+        {
+            var protectedBytes = ProtectedData.Unprotect(EncryptedBytes, null, DataProtectionScope.CurrentUser);
+            return System.Text.Encoding.UTF8.GetString(protectedBytes, 0, protectedBytes.Length);
+        }
+
+        private byte[] encryptToken(string token)
+        {
+            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(token);
+            var protectedBytes = ProtectedData.Protect(buffer, null, DataProtectionScope.CurrentUser);
+            return protectedBytes;
+        }
         private void OnGameOver(object? sender, GameOverEventArgs e)
         {
             Console.WriteLine(JsonConvert.SerializeObject(e, Formatting.Indented, new StringEnumConverter()));
@@ -145,6 +149,13 @@ namespace AUCapture_WPF
         private void OnJoinedLobby(object sender, LobbyEventArgs e)
         {
             GameCodeBox.BeginInvoke(a => a.Text = e.LobbyCode);
+            this.BeginInvoke(a =>
+            {
+                if (this.context.Settings.AlwaysCopyGameCode)
+                {
+                    Clipboard.SetText(e.LobbyCode);
+                }
+            });
             MapBox.BeginInvoke(a=>a.Text = e.Map.ToString());
         }
 
@@ -290,13 +301,6 @@ namespace AUCapture_WPF
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
         }
 
-
-        private async void GameCodeBox_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            Clipboard.SetText(GameCodeBox.Text);
-            await this.ShowMessageAsync("Game code copied to clipboard!", "", MessageDialogStyle.Affirmative);
-        }
-
         public void setGameCode(string gamecode)
         {
             GameCodeBox.BeginInvoke(tb => { GameCodeBox.Text = gamecode; });
@@ -397,6 +401,16 @@ namespace AUCapture_WPF
             SetDefaultThemeColor();
 
             ApplyDarkMode();
+            var encryptedBuff = JsonConvert.DeserializeObject<Byte[]>(context.Settings.discordToken);
+            if (decryptToken(encryptedBuff) != "")
+            {
+                App.handler.Init(decryptToken(encryptedBuff));
+                
+            }
+            else
+            {
+                WriteConsoleLineFormatted("Discord", Color.Red, "You do not have a self-host discord token set. Enabling this in settings will increase performance.");
+            }
         }
 
         private void SubmitConnectButton_OnClick(object sender, RoutedEventArgs e)
@@ -440,9 +454,11 @@ namespace AUCapture_WPF
         }
         private void SubmitDiscordButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (context.Settings.discordToken != "")
+            
+            if (discordTokenBox.Password != "")
             {
-                App.handler.Init(context.Settings.discordToken);
+                context.Settings.discordToken = JsonConvert.SerializeObject(encryptToken(discordTokenBox.Password));
+                App.handler.Init(decryptToken(JsonConvert.DeserializeObject<Byte[]>(context.Settings.discordToken)));
             }
         }
 
@@ -488,5 +504,7 @@ namespace AUCapture_WPF
                 ServerSocket.instance.Stop();
             }
         }
+
+
     }
 }

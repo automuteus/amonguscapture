@@ -8,11 +8,17 @@ namespace AUCapture_WPF
 {
     public interface IAppSettings : INotifyPropertyChanged
     {
+        [Option(DefaultValue = false)]
+        bool discordTokenEncrypted { get; set; }
+
         [Option(DefaultValue = "")]
         string discordToken { get; set; }
 
         [Option(DefaultValue = false)]
         bool ApiServer { get; set; }
+
+        [Option(DefaultValue = false)]
+        bool AlwaysCopyGameCode { get; set; }
 
         [Option(DefaultValue = false)]
         bool ranBefore { get; set; }

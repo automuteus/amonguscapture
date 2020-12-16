@@ -11,6 +11,7 @@ using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
 using AUCapture_WPF.IPC;
 using ControlzEx.Theming;
+using WpfScreenHelper;
 using IPCAdapter = AUCapture_WPF.IPC.IPCAdapter;
 using URIStartResult = AUCapture_WPF.IPC.URIStartResult;
 
@@ -70,6 +71,10 @@ namespace AUCapture_WPF
             
             var mainWindow = new MainWindow();
             this.MainWindow = mainWindow;
+            Screen screen = Screen.PrimaryScreen;
+            mainWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+            mainWindow.Left = (screen.Bounds.Left + screen.Bounds.Right)/2 - mainWindow.Width/2;
+            mainWindow.Top = (screen.Bounds.Top + screen.Bounds.Bottom)/2 - mainWindow.Height/2;
             Settings.conInterface = new WPFLogger(mainWindow);
             IPCAdapter.getInstance().OnToken += OnTokenHandler;
             socket.Init();
@@ -92,6 +97,7 @@ namespace AUCapture_WPF
             return Process.GetCurrentProcess().MainModule.FileName;
         }
 
+        
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool AllocConsole();

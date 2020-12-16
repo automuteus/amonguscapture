@@ -260,7 +260,7 @@
                 </mah:MetroHeader>
             </StatusBarItem>
             <Separator Grid.Column="0" Style="{DynamicResource MahApps.Styles.Separator.StatusBar}"
-                       Foreground="{DynamicResource MahApps.Brushes.Text}" HorizontalContentAlignment="Center"
+                       Background="{DynamicResource MahApps.Brushes.Text}" HorizontalContentAlignment="Center"
                        VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Stretch" />
             <StatusBarItem Grid.Column="1" HorizontalAlignment="Center">
                 <mah:MetroHeader Header="Map:" Margin="0 0 0 5" Foreground="{DynamicResource MahApps.Brushes.Text}">
@@ -273,7 +273,8 @@
                 </mah:MetroHeader>
             </StatusBarItem>
             <Separator Grid.Column="2" Style="{DynamicResource MahApps.Styles.Separator.StatusBar}"
-                       Foreground="{DynamicResource MahApps.Brushes.Text}" HorizontalContentAlignment="Center"
+                       Background="{DynamicResource MahApps.Brushes.Text}"
+                       HorizontalContentAlignment="Center"
                        VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Stretch" />
             <StatusBarItem Grid.Column="2" HorizontalAlignment="Center">
                 <mah:MetroHeader Header="Code:" Margin="0 0 0 5" Foreground="{DynamicResource MahApps.Brushes.Text}">

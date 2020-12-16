@@ -67,7 +67,7 @@
     <mah:MetroWindow.Flyouts>
         <mah:FlyoutsControl>
             <mah:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right"
-                        Width="{Binding ActualWidth,ElementName=MainGrid, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.51}"
+                        Width="{Binding ActualWidth,ElementName=MainGrid, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.75}"
                         Theme="Adapt"
                         IsAutoCloseEnabled="False" AnimateOpacity="True" ExternalCloseButton="Left">
                 <Grid Margin="10">
@@ -96,7 +96,7 @@
                             </ScrollViewer>
                         </mah:MetroTabItem>
                         <mah:MetroTabItem Header="Theme">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="True">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
                                 <StackPanel Orientation="Vertical">
                                     <mah:ToggleSwitch x:Name="Darkmode_toggleswitch" Header="Dark mode"
                                                       IsOn="{Binding Settings.DarkMode, Mode=TwoWay}"
@@ -107,28 +107,10 @@
                                                 Width="{Binding ActualWidth,ElementName=MainGrid, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.25}"
                                                 Value="{Binding Settings.fontSize, Mode=TwoWay}" />
                                     </mah:MetroHeader>
-                                    <mah:MetroHeader Header="Accent">
-                                        <ListBox AlternationCount="2" x:Name="AccentSelector" SelectionChanged="Selector_OnSelectionChanged" BorderThickness="1" Style="{StaticResource MahApps.Styles.ListBox.Virtualized}" ItemsSource="{Binding AccentColors, Mode=OneWay}" MaxHeight="100" HorizontalContentAlignment="Stretch">
-                                            <ListBox.ItemContainerStyle>
-                                                <Style BasedOn="{StaticResource MahApps.Styles.ListBoxItem}" TargetType="{x:Type ListBoxItem}">
-                                                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                                    <Style.Triggers>
-                                                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                                                            <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Gray10}" />
-                                                        </Trigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </ListBox.ItemContainerStyle>
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Orientation="Horizontal" CanVerticallyScroll="True">
-                                                        <Ellipse Width="16" Height="16" Fill="{Binding ColorBrush, Mode=OneWay}" />
-                                                        <TextBlock Text="{Binding Name, Mode=OneWay}"></TextBlock>
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                        </ListBox>
+                                    <mah:MetroHeader Header="Color Picker">
+                                        <mah:ColorPicker x:Name="AccentColorPicker" SelectedColorChanged="AccentColorPicker_OnSelectedColorChanged" mah:TextBoxHelper.AutoWatermark="True"
+                                                         mah:TextBoxHelper.UseFloatingWatermark="True"
+                                                         mah:TextBoxHelper.Watermark="Select a color"/>
                                     </mah:MetroHeader>
 
                                 </StackPanel>

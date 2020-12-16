@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Color = System.Drawing.Color;
@@ -39,6 +40,7 @@ namespace AUCapture_WPF
         private readonly bool connected;
         private readonly object locker = new object();
         private readonly Queue<string> DeadMessages = new Queue<string>();
+        private Task ThemeGeneration;
 
         public MainWindow()
         {
@@ -95,15 +97,34 @@ namespace AUCapture_WPF
 
             Version version = new Version(context.Version);
             Version latestVersion = new Version(context.LatestVersion);
+            System.Windows.Media.Color savedColor;
             try
             {
-                AccentSelector.SelectedItem = context.AccentColors.Single(x => x.Name == context.Settings.SelectedAccent);
-            }
-            catch (System.InvalidOperationException)
-            {
-                AccentSelector.SelectedItem = null;
-            }
+                savedColor = JsonConvert.DeserializeObject<System.Windows.Media.Color>(context.Settings.SelectedAccent);
+                AccentColorPicker.SelectedColor = savedColor;
+                string BaseColor;
+                if (context.Settings.DarkMode)
+                {
+                    BaseColor = ThemeManager.BaseColorDark;
+                }
+                else
+                {
+                    BaseColor = ThemeManager.BaseColorLight;
+                }
+                Theme newTheme = new Theme(name: "CustomTheme",
+                    displayName: "CustomTheme",
+                    baseColorScheme: BaseColor,
+                    colorScheme: "CustomAccent",
+                    primaryAccentColor: savedColor,
+                    showcaseBrush: new SolidColorBrush(savedColor),
+                    isRuntimeGenerated: true,
+                    isHighContrast: false);
 
+                ThemeManager.Current.ChangeTheme(this, newTheme);
+            }
+            catch (Exception e)
+            { }
+            
 #if PUBLISH
             if (latestVersion.CompareTo(version) > 0)
                 this.ShowMessageAsync("Caution",
@@ -541,8 +562,37 @@ namespace AUCapture_WPF
 
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            context.Settings.SelectedAccent = ((UserDataContext.AccentColorMenuData)e.AddedItems[0]).Name;
-            ThemeManager.Current.ChangeThemeColorScheme(this, ((UserDataContext.AccentColorMenuData)e.AddedItems[0]).Name);
+            
+        }
+
+        private async void AccentColorPicker_OnSelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
+        {
+            if (e.NewValue.HasValue)
+            {
+
+                string BaseColor;
+                if (context.Settings.DarkMode)
+                {
+                    BaseColor = ThemeManager.BaseColorDark;
+                }
+                else
+                {
+                    BaseColor = ThemeManager.BaseColorLight;
+                }
+
+                context.Settings.SelectedAccent = JsonConvert.SerializeObject(e.NewValue.Value);
+
+                Theme newTheme = new Theme(name: "CustomTheme",
+                    displayName: "CustomTheme",
+                    baseColorScheme: BaseColor,
+                    colorScheme: "CustomAccent",
+                    primaryAccentColor: e.NewValue.Value,
+                    showcaseBrush: new SolidColorBrush(e.NewValue.Value),
+                    isRuntimeGenerated: true,
+                    isHighContrast: false);
+
+                ThemeManager.Current.ChangeTheme(this, newTheme);
+            }
         }
     }
 }

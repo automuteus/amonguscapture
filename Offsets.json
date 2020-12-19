@@ -50,5 +50,16 @@
     "ServerManagerOffset": 0x1AE4DEC,
     "TempDataOffset": 0x1C58048,
     "GameOptionsOffset": 0x1C57F7C
+  },
+  "0B010BD3195D39C089DC018D834B2EBD26BA67D2F49C4EBEA608A804FC0975B7": {
+    "Description": "2020.12.9 (Epic Games)",
+    "AmongUsClientOffset": 0x2651EC0,
+    "GameDataOffset": 0x2651450,
+    "MeetingHudOffset": 0x2651EE8,
+    "GameStartManagerOffset": 0x2552940,
+    "HudManagerOffset": 0x2533540,
+    "ServerManagerOffset": 0x2536FE0,
+    "TempDataOffset": 0x264D5F8,
+    'GameOptionsOffset': 0x2651D58
   }
 }

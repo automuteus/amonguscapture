@@ -58,7 +58,6 @@ namespace AUCapture_WPF
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            Console.Write(string.Join(", ",System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames()));
             if (DateTime.Now.Month == 12)
             {
                 new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenChristmas.png").Show(true);
@@ -72,9 +71,8 @@ namespace AUCapture_WPF
             var mainWindow = new MainWindow();
             this.MainWindow = mainWindow;
             Screen screen = Screen.PrimaryScreen;
-            mainWindow.WindowStartupLocation = WindowStartupLocation.Manual;
-            mainWindow.Left = (screen.Bounds.Left + screen.Bounds.Right)/2 - mainWindow.Width/2;
-            mainWindow.Top = (screen.Bounds.Top + screen.Bounds.Bottom)/2 - mainWindow.Height/2;
+            
+            mainWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             Settings.conInterface = new WPFLogger(mainWindow);
             IPCAdapter.getInstance().OnToken += OnTokenHandler;
             socket.Init();

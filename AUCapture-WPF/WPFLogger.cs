@@ -34,17 +34,16 @@ namespace AUCapture_WPF
                 FileName = "${specialfolder:folder=ApplicationData:cached=true}/AmongUsCapture/logs/latest.log",
                 ArchiveFileName= "${specialfolder:folder=ApplicationData:cached=true}/AmongUsCapture/logs/{#}.log",
                 ArchiveNumbering= ArchiveNumberingMode.Date,
-                Layout = "${time} | ${message}",
+                Layout = "${time:universalTime=True} | ${message}",
                 MaxArchiveFiles = 5,
                 ArchiveOldFileOnStartup = true,
                 ArchiveDateFormat= "yyyy-MM-dd HH_mm_ss",
-                Header = $"Capture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}",
-                Footer = $"Capture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}"
+                Header = $"Capture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}\n",
+                Footer = $"\nCapture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}"
             };
             LoggingConfig.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
             NLog.LogManager.Configuration = LoggingConfig;
             logger = LogManager.GetLogger("WPFLogger");
-            WriteLogLine("STARTUP", DateTime.UtcNow.ToLongTimeString());
         }
 
         public void WriteTextFormatted(string text, bool acceptNewLines = true)

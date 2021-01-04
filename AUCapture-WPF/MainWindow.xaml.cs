@@ -455,11 +455,10 @@ namespace AUCapture_WPF
             if (decryptToken(encryptedBuff) != "")
             {
                 App.handler.Init(decryptToken(encryptedBuff));
-
             }
             else
             {
-                WriteConsoleLineFormatted("Discord", Color.Red, "You do not have a self-host discord token set. Enabling this in settings will increase performance.");
+                AmongUsCapture.Settings.conInterface.WriteModuleTextColored("Discord", Color.Red, "You do not have a self-host discord token set. Enabling this in settings will increase performance.");
             }
         }
 

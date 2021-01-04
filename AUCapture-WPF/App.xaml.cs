@@ -11,6 +11,8 @@ using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
 using AUCapture_WPF.IPC;
 using ControlzEx.Theming;
+using NLog;
+using NLog.Targets;
 using WpfScreenHelper;
 using IPCAdapter = AUCapture_WPF.IPC.IPCAdapter;
 using URIStartResult = AUCapture_WPF.IPC.URIStartResult;
@@ -67,7 +69,6 @@ namespace AUCapture_WPF
                 new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenNormal.png").Show(true);
             }
 
-            
             var mainWindow = new MainWindow();
             this.MainWindow = mainWindow;
             Screen screen = Screen.PrimaryScreen;

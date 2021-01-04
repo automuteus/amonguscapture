@@ -8,23 +8,43 @@ using System.Threading.Tasks;
 using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
 using MahApps.Metro.Controls.Dialogs;
+using NLog;
+using NLog.Targets;
 
 namespace AUCapture_WPF
 {
     class WPFLogger : IConsoleInterface
     {
-        private StreamWriter logFile;
         public MainWindow form;
-        private static object locker = new Object();
+        private static Logger logger = LogManager.GetLogger("WPFLogger");
 
         public WPFLogger(MainWindow userForm)
         {
             form = userForm;
-            logFile = File.CreateText(Path.Combine(Directory.GetParent(App.GetExecutablePath()).FullName,
-                "CaptureLog.txt"));
-            logFile.AutoFlush = true;
+            //Cleanup old log
+            if (File.Exists(Path.Combine(Directory.GetParent(App.GetExecutablePath()).FullName, "CaptureLog.txt")))
+            {
+                File.Delete(Path.Combine(Directory.GetParent(App.GetExecutablePath()).FullName, "CaptureLog.txt"));
+            }
+
+            var LoggingConfig = new NLog.Config.LoggingConfiguration();
             FileVersionInfo v = FileVersionInfo.GetVersionInfo(App.GetExecutablePath());
-            WriteToLog($"Capture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}");
+            var logfile = new NLog.Targets.FileTarget("logfile")
+            {
+                FileName = "${specialfolder:folder=ApplicationData:cached=true}/AmongUsCapture/logs/latest.log",
+                ArchiveFileName= "${specialfolder:folder=ApplicationData:cached=true}/AmongUsCapture/logs/{#}.log",
+                ArchiveNumbering= ArchiveNumberingMode.Date,
+                Layout = "${time} | ${message}",
+                MaxArchiveFiles = 5,
+                ArchiveOldFileOnStartup = true,
+                ArchiveDateFormat= "yyyy-MM-dd HH_mm_ss",
+                Header = $"Capture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}",
+                Footer = $"Capture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}"
+            };
+            LoggingConfig.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
+            NLog.LogManager.Configuration = LoggingConfig;
+            logger = LogManager.GetLogger("WPFLogger");
+            WriteLogLine("STARTUP", DateTime.UtcNow.ToLongTimeString());
         }
 
         public void WriteTextFormatted(string text, bool acceptNewLines = true)
@@ -71,13 +91,13 @@ namespace AUCapture_WPF
         public void WriteModuleTextColored(string ModuleName, Color moduleColor, string text)
         {
             form.WriteConsoleLineFormatted(ModuleName, moduleColor, text);
-            WriteToLog($"[{ModuleName}]: {text}");
+            WriteLogLine(ModuleName, text);
         }
 
 
         public void WriteToLog(string textToLog)
         {
-            WriteLogLine(DateTime.UtcNow, textToLog);
+            WriteLogLine("UNKNOWN", textToLog);
         }
 
         private string StripColor(string text)
@@ -85,12 +105,9 @@ namespace AUCapture_WPF
             return TextColor.StripColor(text);
         }
 
-        private void WriteLogLine(DateTime time, string textToLog)
+        private void WriteLogLine(string ModuleName, string text)
         {
-            lock (locker)
-            {
-                logFile.WriteLine($"{time.ToLongTimeString()} | {StripColor(textToLog)}");
-            }
+            logger.Debug($"{StripColor(ModuleName).ToUpper()} | {StripColor(text)}");
         }
     }
 }

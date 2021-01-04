@@ -71,9 +71,6 @@ namespace AUCapture_WPF
 
             var mainWindow = new MainWindow();
             this.MainWindow = mainWindow;
-            Screen screen = Screen.PrimaryScreen;
-            
-            mainWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             Settings.conInterface = new WPFLogger(mainWindow);
             IPCAdapter.getInstance().OnToken += OnTokenHandler;
             socket.Init();

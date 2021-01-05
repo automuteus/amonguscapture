@@ -172,7 +172,7 @@ namespace AUCapture_WPF
         {
             Version version = new Version(context.Version);
             Version latestVersion = new Version(context.LatestVersion);
-//#if PUBLISH
+#if PUBLISH
             if (latestVersion.CompareTo(version) > 0)
             {
                 var selection = await context.DialogCoordinator.ShowMessageAsync(context, "Caution",
@@ -280,7 +280,7 @@ namespace AUCapture_WPF
                     }
                 }
             }
-//#endif
+#endif
         }
         private string decryptToken(byte[] EncryptedBytes)
         {

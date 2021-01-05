@@ -12,7 +12,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Threading;
@@ -24,6 +26,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Discord;
+using Humanizer;
 using Color = System.Drawing.Color;
 
 namespace AUCapture_WPF
@@ -42,11 +45,34 @@ namespace AUCapture_WPF
         private readonly object locker = new object();
         private readonly Queue<string> DeadMessages = new Queue<string>();
         private Task ThemeGeneration;
+        private bool Updated = false;
 
         public MainWindow()
         {
             InitializeComponent();
-
+            string appFolder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+            string appName = Path.GetFileNameWithoutExtension(Process.GetCurrentProcess().MainModule.FileName);
+            string appExtension = Path.GetExtension(Process.GetCurrentProcess().MainModule.FileName);
+            string archivePath = Path.Combine(appFolder, appName + "_Old" + appExtension);
+            if (File.Exists(archivePath))
+                try
+                { //Will wait for the other program to exit.
+                    var me = Process.GetCurrentProcess();
+                    Process[] aProcs = Process.GetProcessesByName(me.ProcessName);
+                    aProcs = aProcs.Where(x => x.Id != me.Id).ToArray();
+                    if (aProcs != null && aProcs.Length > 0)
+                    {
+                        aProcs[0].WaitForExit(1000);
+                    }
+                    File.Delete(archivePath);
+                    Updated = true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Could not delete old file.");
+                    Updated = true;
+                }
+                
             Paragraph p = ConsoleTextBox.Document.Blocks.FirstBlock as Paragraph;
             ConsoleTextBox.Document.Blocks.Clear();
             try
@@ -108,8 +134,7 @@ namespace AUCapture_WPF
             byte[] encryptedBuff = JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken);
             discordTokenBox.Password = decryptToken(encryptedBuff);
 
-            Version version = new Version(context.Version);
-            Version latestVersion = new Version(context.LatestVersion);
+
             System.Windows.Media.Color savedColor;
             try
             {
@@ -137,24 +162,126 @@ namespace AUCapture_WPF
             }
             catch (Exception e)
             { }
+
             
-#if PUBLISH
-            if (latestVersion.CompareTo(version) > 0)
-                this.ShowMessageAsync("Caution",
-                    $"We've detected you're using an older version of AmongUsCapture!\nYour version: {version}\nLatest version: {latestVersion}",
-                    MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings{AffirmativeButtonText =
- "Download", NegativeButtonText = "No thanks", DefaultButtonFocus = MessageDialogResult.Affirmative}).ContinueWith(
-                    task =>
-                    {
-                        if (task.Result == MessageDialogResult.Affirmative)
-                        {
-                            OpenBrowser(@"https://github.com/denverquane/amonguscapture/releases/latest/");
-                        }
-                    });
-#endif
+
             //ApplyDarkMode();
         }
 
+        public async void Update()
+        {
+            Version version = new Version(context.Version);
+            Version latestVersion = new Version(context.LatestVersion);
+//#if PUBLISH
+            if (latestVersion.CompareTo(version) > 0)
+            {
+                var selection = await context.DialogCoordinator.ShowMessageAsync(context, "Caution",
+                    $"We've detected you're using an older version of AmongUsCapture!\nYour version: {version}\nLatest version: {latestVersion}",
+                    MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings
+                    {
+                        AffirmativeButtonText =
+                            "Update",
+                        NegativeButtonText = "No thanks", DefaultButtonFocus = MessageDialogResult.Affirmative
+                    });
+                if (selection == MessageDialogResult.Affirmative)
+                {
+                    var DownloadProgress =
+                        await context.DialogCoordinator.ShowProgressAsync(context, "Step 1/3 - Downloading", "Percent: 0% (0/0)", isCancelable:false);
+                    DownloadProgress.Maximum = 100;
+                    using (var client = new WebClient())
+                    {
+                        var downloadPath = Path.GetTempFileName();
+                        client.DownloadProgressChanged += (sender, args) =>
+                        {
+                            DownloadProgress.SetProgress(args.ProgressPercentage);
+                            DownloadProgress.SetMessage($"Percent: {args.ProgressPercentage}% ({args.BytesReceived.Bytes().Humanize("#.##")}/{args.TotalBytesToReceive.Bytes().Humanize("#.##")})");
+                        };
+                        client.DownloadFileCompleted += async (sender, args) =>
+                        {
+                            if (args.Error is not null)
+                            {
+                                await DownloadProgress.CloseAsync();
+                                var errorBox = await context.DialogCoordinator.ShowMessageAsync(context, "ERROR",
+                                    args.Error.Message, MessageDialogStyle.AffirmativeAndNegative,
+                                    new MetroDialogSettings
+                                    {
+                                        AffirmativeButtonText = "retry",
+                                        NegativeButtonText = "cancel",
+                                        DefaultButtonFocus = MessageDialogResult.Affirmative
+                                    });
+                                if (errorBox == MessageDialogResult.Affirmative)
+                                {
+                                    await Task.Factory.StartNew(Update, TaskCreationOptions.LongRunning);
+                                }
+                            }
+                            else
+                            {
+                                DownloadProgress.SetTitle("Step 2/3 - Extracting");
+                                DownloadProgress.SetMessage("Please wait, we may go unresponsive but don't close the window, we will restart the program after.");
+                                DownloadProgress.SetIndeterminate();
+                                if (!Directory.Exists(Path.Join(
+                                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                    "\\AmongUsCapture\\AmongUsGUI\\Update")))
+                                {
+                                    Directory.CreateDirectory(Path.Join(
+                                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                        "\\AmongUsCapture\\AmongUsGUI\\Update"));
+                                }
+
+                                using (ZipArchive archive = ZipFile.OpenRead(downloadPath))
+                                {
+                                    try
+                                    {
+                                        var entry = archive.Entries.First(x => x.FullName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase));
+                                        entry.ExtractToFile(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                            "\\AmongUsCapture\\AmongUsGUI\\Update", "AmongUsCapture.exe"), true);
+
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        var errorBox = await context.DialogCoordinator.ShowMessageAsync(context, "ERROR",
+                                            e.Message, MessageDialogStyle.AffirmativeAndNegative,
+                                            new MetroDialogSettings
+                                            {
+                                                AffirmativeButtonText = "retry",
+                                                NegativeButtonText = "cancel",
+                                                DefaultButtonFocus = MessageDialogResult.Affirmative
+                                            });
+                                        if (errorBox == MessageDialogResult.Affirmative)
+                                        {
+                                            await Task.Factory.StartNew(Update, TaskCreationOptions.LongRunning);
+                                        }
+                                    }
+                                }
+
+
+                                //You can't delete a running application. But you can rename it.
+                                string appFolder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+                                string appName = Path.GetFileNameWithoutExtension(Process.GetCurrentProcess().MainModule.FileName);
+                                string appExtension = Path.GetExtension(Process.GetCurrentProcess().MainModule.FileName);
+                                string archivePath = Path.Combine(appFolder, appName + "_Old" + appExtension);
+
+                                DownloadProgress.SetTitle("Step 3/3 - Copying files");
+                                DownloadProgress.SetMessage("Finishing up..");
+                                File.Move(Process.GetCurrentProcess().MainModule.FileName, archivePath);
+
+                                File.Move(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "\\AmongUsCapture\\AmongUsGUI\\Update", "AmongUsCapture.exe"),
+                                    Path.Combine(appFolder, appName + appExtension), true);
+                                Application.Current.Invoke(()=>
+                                {
+                                    IPCAdapter.getInstance().mutex.ReleaseMutex(); //Release the mutex so the other app does not see us. 
+                                    Process.Start(Path.Combine(appFolder, appName + appExtension));
+                                    Environment.Exit(0);
+                                });
+
+                            }
+                        };
+                        var downloaderClient = client.DownloadFileTaskAsync(context.LatestReleaseAssetURL, downloadPath);
+                    }
+                }
+            }
+//#endif
+        }
         private string decryptToken(byte[] EncryptedBytes)
         {
             byte[] protectedBytes = ProtectedData.Unprotect(EncryptedBytes, null, DataProtectionScope.CurrentUser);
@@ -415,6 +542,9 @@ namespace AUCapture_WPF
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            Task.Factory.StartNew(Update, TaskCreationOptions.LongRunning);
+            this.ShowMessageAsync("Update successful!", "The update was successful. Happy auto-muting",
+                MessageDialogStyle.Affirmative);
         }
 
         private void TestFillConsole(int entries) //Helper test method to see if filling console works.

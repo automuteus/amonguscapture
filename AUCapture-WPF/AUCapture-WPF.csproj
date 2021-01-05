@@ -57,6 +57,7 @@
   <ItemGroup>
     <PackageReference Include="Config.Net" Version="4.15.0" />
     <PackageReference Include="Config.Net.Json" Version="4.15.0" />
+    <PackageReference Include="Humanizer.Core" Version="2.8.26" />
     <PackageReference Include="MahApps.Metro" Version="2.4.3" />
     <PackageReference Include="MahApps.Metro.IconPacks.Modern" Version="4.8.0" />
     <PackageReference Include="MahApps.Metro.IconPacks.Unicons" Version="4.8.0" />

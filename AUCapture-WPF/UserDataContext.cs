@@ -24,6 +24,7 @@ namespace AUCapture_WPF
         public IAppSettings Settings { get; set; }
 
         public string Version { get; set; }
+        public string LatestReleaseAssetURL { get; set; }
         public string LatestVersion { get; set; }
         private ICommand textBoxButtonCopyCmd;
         public List<AccentColorMenuData> AccentColors { get; set; }
@@ -103,6 +104,7 @@ namespace AUCapture_WPF
             {
                 GitHubClient client = new GitHubClient(new ProductHeaderValue("AmongUsCapture", Version));
                 Release latest = client.Repository.Release.GetLatest("denverquane", "amonguscapture").Result;
+                LatestReleaseAssetURL = latest.Assets.First(x => x.Name == "AmongUsCapture.zip").BrowserDownloadUrl;
                 LatestVersion = $"{latest.TagName}";
             }
             catch (Exception e)

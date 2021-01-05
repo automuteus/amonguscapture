@@ -23,6 +23,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Discord;
 using Color = System.Drawing.Color;
 
 namespace AUCapture_WPF
@@ -501,13 +502,49 @@ namespace AUCapture_WPF
                 GC.Collect();
             }
         }
-        private void SubmitDiscordButton_OnClick(object sender, RoutedEventArgs e)
+        private async void SubmitDiscordButton_OnClick(object sender, RoutedEventArgs e)
         {
-
             if (discordTokenBox.Password != "")
             {
+                var progressController = await context.DialogCoordinator.ShowProgressAsync(context, "Token Validation", "Validating discord token", false, new MetroDialogSettings{AnimateShow = true, AnimateHide = false, NegativeButtonText = "OK"});
+                progressController.SetIndeterminate();
+                try
+                {
+                    Discord.TokenUtils.ValidateToken(TokenType.Bot, discordTokenBox.Password);
+                    progressController.SetMessage("Token validated.");
+                    context.Settings.discordToken = JsonConvert.SerializeObject(encryptToken(discordTokenBox.Password));
+                    App.handler.Close(); //Anytime we change the token we wanna close the connection. (Will not error if connection already closed)
+                    App.handler.Init(
+                        decryptToken(JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken)));
+                    progressController.SetProgress(1);
+                }
+                catch (ArgumentException er)
+                {
+                    progressController.SetMessage(er.Message);
+                    progressController.SetProgress(0);
+                    discordTokenBox.Password = decryptToken(JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken)); //Roll back changes
+                }
+                progressController.SetCancelable(true);
+                progressController.Canceled += delegate(object? o, EventArgs args)
+                {
+                    progressController.CloseAsync(); //Close the dialog. 
+                };
+                
+            }
+            else if (discordTokenBox.Password == string.Empty)
+            {
+                if (context.Settings.discordToken == "") //If we don't have any password in the config(meaning unencrypted)
+                {
+                    context.Settings.discordTokenEncrypted = true;
+                    context.Settings.discordToken = JsonConvert.SerializeObject(encryptToken(discordTokenBox.Password));
+                }
+
+                if (decryptToken(JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken)) == discordTokenBox.Password) return;
+                //No reason to open the box if it didn't change.
                 context.Settings.discordToken = JsonConvert.SerializeObject(encryptToken(discordTokenBox.Password));
-                App.handler.Init(decryptToken(JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken)));
+                App.handler.Close(); //Close connection because token cleared.
+                await this.ShowMessageAsync("Success!", "Discord token cleared!", MessageDialogStyle.Affirmative);
+
             }
         }
 

@@ -13,6 +13,7 @@ namespace AmongUsCapture
     {
         public DiscordSocketClient DClient;
         public event EventHandler<ReadyEventArgs> OnReady;
+        
         public async void Init(string DiscordToken)
         {
             Settings.conInterface.WriteModuleTextColored("DiscordHandler", Color.Red,
@@ -32,10 +33,34 @@ namespace AmongUsCapture
             }
             
         }
+        public async void Close()
+        {
+            if (DClient is not null && (DClient.ConnectionState == ConnectionState.Connected || DClient.ConnectionState == ConnectionState.Connecting))
+            {
+                Settings.conInterface.WriteModuleTextColored("Discord.Net", Color.Red,
+                    $"{Color.LawnGreen.ToTextColor()}Disconnecting from discord");
+                Settings.conInterface.WriteModuleTextColored("WARNING", Color.Red,
+                    $"This {Color.Red.ToTextColor()}MAY{Settings.conInterface.getNormalColor().ToTextColor()} cause undesired behaviour if already connected to a server.");
+                try
+                {
+                    DClient.Log -= DClient_Log;
+                    DClient.Ready -= DClient_Ready;
+                    await DClient.StopAsync();
+                }
+                catch (Exception e)
+                {
+                    Settings.conInterface.WriteModuleTextColored("Discord.Net", Color.Red,
+                        $"{Color.Red.ToTextColor()}Error: {e}");
+                }
+
+            }
+            
+            
+        }
 
         private Task DClient_Ready()
         {
-            Settings.conInterface.WriteModuleTextColored("DiscordHandler", Color.Red,
+            Settings.conInterface.WriteModuleTextColored("Discord.Net", Color.Red,
                 $"{Color.Aqua.ToTextColor()}Connection successful! ID: {DClient.CurrentUser.Id}, name: {DClient.CurrentUser.Username}");
             var args = new ReadyEventArgs {BotID = DClient.CurrentUser.Id};
             OnReady?.Invoke(this, args);
@@ -71,7 +96,7 @@ namespace AmongUsCapture
             }
             catch (Exception e)
             {
-                Settings.conInterface.WriteModuleTextColored("DiscordHandler", Color.Red,
+                Settings.conInterface.WriteModuleTextColored("Discord.Net", Color.Red,
                     $"{Color.Red.ToTextColor()} Error: {e}");
                 return false;
             }

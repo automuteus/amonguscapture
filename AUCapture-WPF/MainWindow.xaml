@@ -132,12 +132,13 @@
                                 <StackPanel Orientation="Vertical" Name="DiscordPanel">
                                     <mah:MetroHeader Header="Discord token: " VerticalAlignment="Top">
                                         <StackPanel Orientation="Horizontal">
-                                            <PasswordBox x:Name="discordTokenBox" VerticalContentAlignment="Stretch" HorizontalAlignment="Left" Width="{Binding ActualWidth,ElementName=DiscordPanel, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.5}" />
+                                            <PasswordBox x:Name="discordTokenBox" mah:TextBoxHelper.ClearTextButton="True" VerticalContentAlignment="Stretch" HorizontalAlignment="Left" Width="{Binding ActualWidth,ElementName=DiscordPanel, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.5}" />
                                             <Button Content="Submit"
                                                     Style="{StaticResource MahApps.Styles.Button.Square.Accent}"
                                                     x:Name="SubmitDiscordButton" Margin="5 0 0 0"
                                                     Click="SubmitDiscordButton_OnClick" IsDefault="True"
                                                     Width="{Binding ActualWidth,ElementName=DiscordPanel, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.3}" />
+
                                             <Button Content="Help" x:Name="HelpButton" Margin="5 0 0 0"
                                                     Click="HelpDiscordButton_OnClick"
                                                     Width="{Binding ActualWidth,ElementName=DiscordPanel, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.15}" />

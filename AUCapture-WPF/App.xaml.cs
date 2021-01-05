@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
+using System.Media;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -68,7 +70,13 @@ namespace AUCapture_WPF
             {
                 new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenNormal.png").Show(true);
             }
-
+            //Console.WriteLine(string.Join(", ",Assembly.GetExecutingAssembly().GetManifestResourceNames())); //Gets all the embedded resources
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("AUCapture_WPF.SplashScreens.popcat.mp3"))
+            {
+                SoundPlayer myNewSound = new SoundPlayer(stream);
+                myNewSound.Load();
+                myNewSound.Play();
+            }
             var mainWindow = new MainWindow();
             this.MainWindow = mainWindow;
             Settings.conInterface = new WPFLogger(mainWindow);

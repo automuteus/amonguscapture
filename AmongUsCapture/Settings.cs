@@ -12,8 +12,22 @@ namespace AmongUsCapture
         public static IConsoleInterface conInterface;
 
         //Global persistent settings that are saved to a json file. Limited Types
-        public static IPersistentSettings PersistentSettings = new ConfigurationBuilder<IPersistentSettings>().UseJsonFile(Path.Join(StorageLocation, "Settings.json")).Build();
-        public static IGameOffsets GameOffsets = new ConfigurationBuilder<IGameOffsets>().UseJsonFile(Path.Join(StorageLocation, "GameOffsets.json")).Build();
+        public static IPersistentSettings PersistentSettings;
+
+        static Settings()
+        {
+            try
+            {
+                PersistentSettings = new ConfigurationBuilder<IPersistentSettings>().UseJsonFile(Path.Join(StorageLocation, "Settings.json")).Build();
+
+            }
+            catch (Newtonsoft.Json.JsonReaderException e) //Delete file and recreate config
+            {
+                Console.WriteLine($"Bad config. Clearing.");
+                File.Delete(Path.Join(StorageLocation, "Settings.json"));
+                PersistentSettings = new ConfigurationBuilder<IPersistentSettings>().UseJsonFile(Path.Join(StorageLocation, "Settings.json")).Build();
+            }
+        }
 
     }
 

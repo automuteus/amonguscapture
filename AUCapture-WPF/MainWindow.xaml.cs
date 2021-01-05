@@ -49,9 +49,21 @@ namespace AUCapture_WPF
 
             Paragraph p = ConsoleTextBox.Document.Blocks.FirstBlock as Paragraph;
             ConsoleTextBox.Document.Blocks.Clear();
-            config = new ConfigurationBuilder<IAppSettings>()
-                .UseJsonFile(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    "\\AmongUsCapture\\AmongUsGUI", "Settings.json")).Build();
+            try
+            {
+                config = new ConfigurationBuilder<IAppSettings>()
+                    .UseJsonFile(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                        "\\AmongUsCapture\\AmongUsGUI", "Settings.json")).Build();
+            }
+            catch (Newtonsoft.Json.JsonReaderException e) //Delete file and recreate config
+            {
+                Console.WriteLine($"Bad config. Clearing.");
+                File.Delete(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "\\AmongUsCapture\\AmongUsGUI", "Settings.json"));
+                config = new ConfigurationBuilder<IAppSettings>()
+                    .UseJsonFile(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                        "\\AmongUsCapture\\AmongUsGUI", "Settings.json")).Build();
+            }
+            
             context = new UserDataContext(DialogCoordinator.Instance, config);
             DataContext = context;
             config.PropertyChanged += ConfigOnPropertyChanged;

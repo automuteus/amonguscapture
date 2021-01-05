@@ -62,19 +62,23 @@ namespace AUCapture_WPF
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            if (DateTime.Now.Month == 12)
+            var r = new Random();
+            var goingToPop = r.Next(101) < 5;
+            if (!goingToPop)
             {
-                new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenChristmas.png").Show(true);
+                if (DateTime.Now.Month == 12)
+                {
+                    new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenChristmas.png").Show(true);
+                }
+                else
+                {
+                    new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenNormal.png").Show(true);
+                }
+                //Console.WriteLine(string.Join(", ",Assembly.GetExecutingAssembly().GetManifestResourceNames())); //Gets all the embedded resources
             }
             else
             {
-                new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenNormal.png").Show(true);
-            }
-            //Console.WriteLine(string.Join(", ",Assembly.GetExecutingAssembly().GetManifestResourceNames())); //Gets all the embedded resources
-            var r = new Random();
-
-            if (r.Next(101) < 5)
-            {
+                new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenPop.png").Show(true);
                 try
                 {
                     var req = System.Net.WebRequest.Create(
@@ -90,7 +94,6 @@ namespace AUCapture_WPF
                 {
                     Console.WriteLine("Minor error");
                 }
-
             }
             
             var mainWindow = new MainWindow();

@@ -44,6 +44,7 @@
 
   <ItemGroup>
     <None Remove="logo\Logo.png" />
+    <None Remove="SplashScreens\SplashScreenPop.png" />
   </ItemGroup>
 
 
@@ -86,6 +87,7 @@
     <Resource Include="logo\Logo.png" />
     <Resource Include="SplashScreens\SplashScreenChristmas.png" />
     <Resource Include="SplashScreens\SplashScreenNormal.png" />
+    <Resource Include="SplashScreens\SplashScreenPop.png" />
   </ItemGroup>
 
 

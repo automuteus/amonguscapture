@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -55,6 +56,8 @@ namespace AUCapture_WPF
             string appExtension = Path.GetExtension(Process.GetCurrentProcess().MainModule.FileName);
             string archivePath = Path.Combine(appFolder, appName + "_Old" + appExtension);
             if (File.Exists(archivePath))
+            {
+                Updated = true;
                 try
                 { //Will wait for the other program to exit.
                     var me = Process.GetCurrentProcess();
@@ -65,13 +68,19 @@ namespace AUCapture_WPF
                         aProcs[0].WaitForExit(1000);
                     }
                     File.Delete(archivePath);
-                    Updated = true;
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("Could not delete old file.");
-                    Updated = true;
+                    
                 }
+            }
+            else
+            {
+                Updated = false;
+            }
+                
+        
                 
             Paragraph p = ConsoleTextBox.Document.Blocks.FirstBlock as Paragraph;
             ConsoleTextBox.Document.Blocks.Clear();
@@ -554,8 +563,12 @@ namespace AUCapture_WPF
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Task.Factory.StartNew(Update, TaskCreationOptions.LongRunning);
-            this.ShowMessageAsync("Update successful!", "The update was successful. Happy auto-muting",
-                MessageDialogStyle.Affirmative);
+            if (Updated)
+            {
+                this.ShowMessageAsync("Update successful!", "The update was successful. Happy auto-muting",
+                    MessageDialogStyle.Affirmative);
+            }
+
         }
 
         private void TestFillConsole(int entries) //Helper test method to see if filling console works.

@@ -91,7 +91,9 @@
 
                                     <mah:ToggleSwitch x:Name="TokenFocus_ToggleSwitch" Header="Focus window on connect"
                                                       IsOn="{Binding Settings.FocusOnToken, Mode=TwoWay}" />
-                                    
+
+                                    <Button HorizontalAlignment="Left" Margin="0,10,0,0" Content="Reset Config" Style="{StaticResource MahApps.Styles.Button.Square.Accent}" Background="#FFDC3545" Click="ResetConfigButton_OnClick"/>
+
                                 </StackPanel>
                             </ScrollViewer>
                         </mah:MetroTabItem>

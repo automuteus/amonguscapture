@@ -14,7 +14,7 @@ namespace AUCapture_WPF.IPC
         public const string appName = "AmongUsCapture";
         protected const string UriScheme = "aucapture";
         protected const string FriendlyName = "AmongUsCapture";
-        protected Mutex mutex;
+        public Mutex mutex;
         private static IPCAdapter instance;
 
         public static IPCAdapter getInstance()

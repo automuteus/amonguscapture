@@ -193,6 +193,7 @@ namespace AUCapture_WPF
                 $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Sender}{NormalTextColor.ToTextColor()}: {e.Message}");
             //WriteLineToConsole($"[CHAT] {e.Sender}: {e.Message}");
         }
+        
 
         private void OnJoinedLobby(object sender, LobbyEventArgs e)
         {
@@ -640,6 +641,57 @@ namespace AUCapture_WPF
                     isHighContrast: false);
 
                 ThemeManager.Current.ChangeTheme(this, newTheme);
+            }
+        }
+
+
+        private async void ResetConfigButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var result = await this.ShowMessageAsync("Are you sure?",
+                "This action will reset your config.\nThis cannot be undone.",
+                MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings{AnimateShow = true, AnimateHide = false});
+            if (result == MessageDialogResult.Affirmative)
+            {
+                var progressBar = await this.context.DialogCoordinator.ShowProgressAsync(context, "Resetting config",
+                    "Please wait....", false, new MetroDialogSettings {AnimateHide = false, AnimateShow = false});
+                progressBar.Minimum = 0;
+                progressBar.Maximum = 1;
+                if (File.Exists(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "\\AmongUsCapture\\AmongUsGUI", "Settings.json")))
+                {
+                    File.Delete(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "\\AmongUsCapture\\AmongUsGUI", "Settings.json"));
+                }
+
+                if (File.Exists(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "AmongUsCapture", "Settings.json")))
+                {
+                    File.Delete(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AmongUsCapture", "Settings.json"));
+                }
+                for (int i = 0; i < 100; i++) //Useless loading to make the user think we are doing a big task
+                {
+                    var currentPercent = i / 100d;
+                    progressBar.SetProgress(currentPercent);
+                    await Task.Delay(10);
+                }
+
+                await progressBar.CloseAsync();
+                var selection = await this.ShowMessageAsync("Config reset",
+                    "Your config was reset successfully.",
+                    MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings{AnimateHide = true, AffirmativeButtonText = "Restart", NegativeButtonText = "Exit"});
+                if (selection == MessageDialogResult.Affirmative)
+                {
+                    IPCAdapter.getInstance().mutex.ReleaseMutex(); //Release the mutex so the other app does not see us. 
+                    Process.Start(Process.GetCurrentProcess().MainModule.FileName);  
+                    Application.Current.Shutdown(0);
+                }
+                else
+                {
+
+                    Application.Current.Shutdown(0);
+                }
+                
+
+
             }
         }
     }

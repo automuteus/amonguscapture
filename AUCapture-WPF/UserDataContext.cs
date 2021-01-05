@@ -7,10 +7,14 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using AUCapture_WPF.IPC;
+using MahApps.Metro.Controls;
+using Application = System.Windows.Application;
 
 namespace AUCapture_WPF
 {
@@ -119,6 +123,32 @@ namespace AUCapture_WPF
             if (e.PropertyName == nameof(Settings.debug))
             {
                 AmongUsCapture.Settings.PersistentSettings.debugConsole = Settings.debug;
+                Task.Factory.StartNew((() =>
+                {
+                    var selection = this.DialogCoordinator.ShowMessageAsync(this, "Restart required",
+                        $"To {(Settings.debug ? "enable" : "disable")} debug mode, we need to restart.",
+                        MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary,
+                        new MetroDialogSettings
+                        {
+                            AnimateHide = true, AffirmativeButtonText = "Restart", NegativeButtonText = "Exit",
+                            FirstAuxiliaryButtonText = "Later", DefaultButtonFocus = MessageDialogResult.Affirmative
+                        }).Result;
+                    if (selection == MessageDialogResult.Affirmative)
+                    {
+                        Application.Current.Invoke(()=>
+                        {
+                            IPCAdapter.getInstance().mutex.ReleaseMutex(); //Release the mutex so the other app does not see us. 
+                            Process.Start(Process.GetCurrentProcess().MainModule.FileName);
+                            Application.Current.Shutdown(0);
+                        });
+                    }
+                    else if(selection == MessageDialogResult.Negative)
+                    {
+                        Application.Current.Invoke(() => { Application.Current.Shutdown(0); });
+                    }
+                }));
+
+
             }
         }
 

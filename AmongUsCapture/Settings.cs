@@ -16,6 +16,11 @@ namespace AmongUsCapture
 
         static Settings()
         {
+            reloadSettings();
+        }
+
+        public static void reloadSettings()
+        {
             try
             {
                 PersistentSettings = new ConfigurationBuilder<IPersistentSettings>().UseJsonFile(Path.Join(StorageLocation, "Settings.json")).Build();

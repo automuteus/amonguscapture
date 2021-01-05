@@ -183,6 +183,17 @@ namespace AUCapture_WPF
                             "Update",
                         NegativeButtonText = "No thanks", DefaultButtonFocus = MessageDialogResult.Affirmative
                     });
+                if (selection == MessageDialogResult.Negative)
+                {
+                    selection = await context.DialogCoordinator.ShowMessageAsync(context, "Warning",
+                        $"Having an older version could cause compatibility issues with AutoMuteUs.\nWe can automagically update you to {latestVersion}.",
+                        MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings
+                        {
+                            AffirmativeButtonText =
+                                "Update",
+                            NegativeButtonText = "no ty", DefaultButtonFocus = MessageDialogResult.Affirmative
+                        });
+                }
                 if (selection == MessageDialogResult.Affirmative)
                 {
                     var DownloadProgress =

@@ -71,12 +71,28 @@ namespace AUCapture_WPF
                 new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenNormal.png").Show(true);
             }
             //Console.WriteLine(string.Join(", ",Assembly.GetExecutingAssembly().GetManifestResourceNames())); //Gets all the embedded resources
-            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("AUCapture_WPF.SplashScreens.popcat.mp3"))
+            var r = new Random();
+
+            if (r.Next(101) < 5)
             {
-                SoundPlayer myNewSound = new SoundPlayer(stream);
-                myNewSound.Load();
-                myNewSound.Play();
+                try
+                {
+                    var req = System.Net.WebRequest.Create(
+                        "https://github.com/denverquane/amonguscapture/raw/master/AUCapture-WPF/SplashScreens/popcat.wav");
+                    using (Stream stream = req.GetResponse().GetResponseStream())
+                    {
+                        SoundPlayer myNewSound = new SoundPlayer(stream);
+                        myNewSound.Load();
+                        myNewSound.Play();
+                    }
+                }
+                catch (Exception errrr)
+                {
+                    Console.WriteLine("Minor error");
+                }
+
             }
+            
             var mainWindow = new MainWindow();
             this.MainWindow = mainWindow;
             Settings.conInterface = new WPFLogger(mainWindow);

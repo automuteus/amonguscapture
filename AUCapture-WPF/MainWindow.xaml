@@ -14,7 +14,7 @@
                  TitleCharacterCasing="Normal"
                  ShowSystemMenu="False"
                  ShowSystemMenuOnRightClick="False"
-                 SaveWindowPosition="True"
+                 SaveWindowPosition="false"
                  dialogs:DialogParticipation.Register="{Binding }"
                  ContentRendered="MainWindow_OnContentRendered" Loaded="MetroWindow_Loaded" TryToBeFlickerFree="True"
                  MinWidth="300" MinHeight="200">

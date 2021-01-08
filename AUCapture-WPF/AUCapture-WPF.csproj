@@ -43,7 +43,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="logo\Logo.ico" />
     <None Remove="logo\Logo.png" />
     <None Remove="Resources\AUFont.ttf" />
     <None Remove="Resources\Players\aublack.png" />
@@ -71,25 +70,6 @@
     <None Remove="Resources\Players\auyellow.png" />
     <None Remove="Resources\Players\auyellowdead.png" />
     <None Remove="SplashScreens\SplashScreenPop.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <COMReference Include="IWshRuntimeLibrary.dll">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>1</VersionMajor>
-      <Guid>f935dc20-1cf0-11d0-adb9-00c04fd58a0b</Guid>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-    </COMReference>
-    <COMReference Include="Shell32.dll">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>1</VersionMajor>
-      <Guid>50a7e9b0-70ef-11d1-b75a-00a0c90564fe</Guid>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-    </COMReference>
   </ItemGroup>
 
 
@@ -129,7 +109,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="logo\Logo.ico" />
     <Resource Include="logo\Logo.png" />
     <Resource Include="Resources\AUFont.ttf" />
     <Resource Include="Resources\Players\aublack.png" />

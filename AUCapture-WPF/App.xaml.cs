@@ -4,9 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Media;
 using System.Reflection;
-using System.Resources;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,9 +17,6 @@ using NLog;
 using NLog.Targets;
 using WpfScreenHelper;
 using IPCAdapter = AUCapture_WPF.IPC.IPCAdapter;
-using IWshRuntimeLibrary;
-using NLog.Fluent;
-using File = IWshRuntimeLibrary.File;
 using URIStartResult = AUCapture_WPF.IPC.URIStartResult;
 
 namespace AUCapture_WPF
@@ -41,17 +36,6 @@ namespace AUCapture_WPF
             socket.Connect(token.Host, token.ConnectCode);
         }
 
-        public static void CreateShortcut(string shortcutName, string shortcutPath, string targetFileLocation, string description, string iconPath)
-        {
-            string shortcutLocation = System.IO.Path.Combine(shortcutPath, shortcutName + ".lnk");
-            WshShell shell = new WshShell();
-            IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutLocation);
- 
-            shortcut.Description = description;   // The description of the shortcut
-            shortcut.IconLocation = iconPath;           // The icon of the shortcut
-            shortcut.TargetPath = targetFileLocation;                 // The path of the file that will launch when the shortcut is run
-            shortcut.Save();                                    // Save the shortcut
-        }
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -127,22 +111,6 @@ namespace AUCapture_WPF
             {
                 Environment.Exit(0);
             };
-            var logoResource = Application.GetResourceStream(new Uri("/logo/Logo.ico", UriKind.Relative)).Stream; //Load this stream
-            if (logoResource is not null)
-            {
-                var logoPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AmongUsCapture", "AmongUsGUI", "Logo.ico");
-                FileStream fileStream = System.IO.File.Open(logoPath, FileMode.Create);
-                fileStream.Seek(0, SeekOrigin.Begin);
-                logoResource.CopyTo(fileStream);
-                logoResource.Flush();
-            }
-            CreateShortcut("AutoMuteUs Capture",
-                Environment.GetFolderPath(Environment.SpecialFolder.StartMenu),
-                GetExecutablePath(),
-                "AutoMuteUs Capture Program",
-                Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AmongUsCapture", "AmongUsGUI", "Logo.ico"));
-            
-
             mainWindow.Show();
 
         }

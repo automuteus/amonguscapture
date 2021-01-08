@@ -3,6 +3,7 @@ using MahApps.Metro.Controls.Dialogs;
 using Octokit;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -12,7 +13,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using AmongUsCapture;
 using AUCapture_WPF.IPC;
+using AUCapture_WPF.Models;
+using Humanizer;
 using MahApps.Metro.Controls;
 using Application = System.Windows.Application;
 
@@ -86,7 +90,73 @@ namespace AUCapture_WPF
                 }
             }
         };
+        private ObservableCollection<Player> _players = new ObservableCollection<Player>();
+        public ObservableCollection<Player> Players
+        {
+            get => _players;
+            set
+            {
+                _players = value;
+                OnPropertyChanged();
+            }
+        }
 
+        private AmongUsCapture.PlayMap _gameMap;
+        public AmongUsCapture.PlayMap GameMap
+        {
+            get => _gameMap;
+            set
+            {
+                _gameMap = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _gameCode;
+        public string GameCode
+        {
+            get => _gameCode;
+            set
+            {
+                _gameCode = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private AmongUsCapture.GameState _gameState;
+        public AmongUsCapture.GameState GameState
+        {
+            get => _gameState;
+            set
+            {
+                _gameState = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private static void Shuffle<T>(List<T> list)
+        {
+            Random rng = new Random(); 
+            int n = list.Count;  
+            while (n > 1) {  
+                n--;  
+                int k = rng.Next(n + 1);  
+                T value = list[k];  
+                list[k] = list[n];  
+                list[n] = value;  
+            }
+        }
+        public void GeneratePlayers(int numOfPlayers)
+        {
+            var nums = Enumerable.Range(0, 12).ToList();
+            Shuffle(nums);
+            var colors  = nums.Cast<PlayerColor>().Where(x=>!Players.Select(y=>y.Color).Contains(x)).Take(numOfPlayers).ToList();
+            foreach (var color in colors)
+            {
+                var newPlayer = new Player(color.Humanize(), color, true);
+                Players.Add(newPlayer);
+            }
+        }
         public UserDataContext(IDialogCoordinator dialogCoordinator, IAppSettings settings)
         {
             DialogCoordinator = dialogCoordinator;

@@ -9,6 +9,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <!-- Theme setting -->
             </ResourceDictionary.MergedDictionaries>
+            <FontFamily x:Key="AUFont">./Resources/AUFont.ttf#AUFont</FontFamily>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

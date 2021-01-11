@@ -103,12 +103,18 @@ namespace AUCapture_WPF
             {
                 App.socket.AddHandler(App.handler);
             };
-
+            context.ConnectionStatuses.Add(new ConnectionStatus{Connected = false, ConnectionName = "Galactus"});
+            context.ConnectionStatuses.Add(new ConnectionStatus{Connected = false, ConnectionName = "Among us"});
+            context.ConnectionStatuses.Add(new ConnectionStatus{Connected = false, ConnectionName = "User bot"});
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
+            GameMemReader.getInstance().ProcessHook += OnProcessHook;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
+            App.handler.OnReady += HandlerOnOnReady;
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
             GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
             GameMemReader.getInstance().GameOver += OnGameOver;
+            App.socket.OnConnected += SocketOnOnConnected;
+            App.socket.OnDisconnected += SocketOnOnDisconnected;
             IPCAdapter.getInstance().OnToken += (sender, token) =>
             {
                 this.BeginInvoke((w) =>
@@ -170,8 +176,28 @@ namespace AUCapture_WPF
             { }
 
             
-
+           
             //ApplyDarkMode();
+        }
+
+        private void SocketOnOnDisconnected(object? sender, EventArgs e)
+        {
+            context.ConnectionStatuses.First(x => x.ConnectionName == "Galactus").Connected = false;
+        }
+
+        private void SocketOnOnConnected(object? sender, ClientSocket.ConnectedEventArgs e)
+        {
+            context.ConnectionStatuses.First(x => x.ConnectionName == "Galactus").Connected = true;
+        }
+
+        private void HandlerOnOnReady(object? sender, DiscordHandler.ReadyEventArgs e)
+        {
+            context.ConnectionStatuses.First(x => x.ConnectionName == "User bot").Connected = true;
+        }
+
+        private void OnProcessHook(object? sender, ProcessHookArgs e)
+        {
+            context.ConnectionStatuses.First(x => x.ConnectionName == "Among us").Connected = true;
         }
 
         public async void Update()

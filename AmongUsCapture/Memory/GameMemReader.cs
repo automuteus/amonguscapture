@@ -68,7 +68,8 @@ namespace AmongUsCapture
         public event EventHandler<ChatMessageEventArgs> ChatMessageAdded;
 
         public event EventHandler<LobbyEventArgs> JoinedLobby;
-
+        public event EventHandler<ProcessHookArgs> ProcessHook;
+        public event EventHandler<ProcessHookArgs> ProcessUnHook;
         public event EventHandler<GameOverEventArgs> GameOver;
 
 
@@ -136,6 +137,7 @@ namespace AmongUsCapture
                                                 {
                                                     Settings.conInterface.WriteModuleTextColored("GameMemReader",
                                                         Color.Lime, $"Loaded offsets: {CurrentOffsets.Description}");
+                                                    ProcessHook?.Invoke(this, new ProcessHookArgs{PID = ProcessMemory.getInstance().process.Id});
                                                 }
                                                 else
                                                 {
@@ -672,5 +674,9 @@ namespace AmongUsCapture
     {
         public GameOverReason GameOverReason { get; set; }
         public ImmutablePlayer[] PlayerInfos { get; set; }
+    }
+    public class ProcessHookArgs : EventArgs
+    {
+        public int PID { get; set; }
     }
 }

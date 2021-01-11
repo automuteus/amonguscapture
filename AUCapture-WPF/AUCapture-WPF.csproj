@@ -140,11 +140,6 @@
     <Resource Include="SplashScreens\SplashScreenPop.png" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Converters\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 
 
 </Project>

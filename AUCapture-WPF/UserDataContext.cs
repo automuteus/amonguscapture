@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,6 +32,7 @@ namespace AUCapture_WPF
         public string LatestReleaseAssetURL { get; set; }
         public string LatestVersion { get; set; }
         private ICommand textBoxButtonCopyCmd;
+        private ICommand textBoxButtonHelpCmd;
         public List<AccentColorMenuData> AccentColors { get; set; }
         public class AccentColorMenuData
         {
@@ -90,6 +92,29 @@ namespace AUCapture_WPF
                 }
             }
         };
+        public ICommand TextBoxButtonHelpCmd => textBoxButtonHelpCmd ??= new SimpleCommand
+        {
+            CanExecuteDelegate = x => true,
+            ExecuteDelegate = async x =>
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    Process.Start(new ProcessStartInfo("https://www.youtube.com/watch?v=jKcEW5qpk8E") { UseShellExecute = true });
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Process.Start("xdg-open", "https://www.youtube.com/watch?v=jKcEW5qpk8E");
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    Process.Start("open", "https://www.youtube.com/watch?v=jKcEW5qpk8E");
+                }
+                else
+                {
+                    // throw 
+                }
+            }
+        };
         private ObservableCollection<Player> _players = new ObservableCollection<Player>();
         public ObservableCollection<Player> Players
         {
@@ -101,8 +126,19 @@ namespace AUCapture_WPF
             }
         }
 
-        private AmongUsCapture.PlayMap _gameMap;
-        public AmongUsCapture.PlayMap GameMap
+        private ObservableCollection<ConnectionStatus> _connectionStatuses = new ObservableCollection<ConnectionStatus>();
+        public ObservableCollection<ConnectionStatus> ConnectionStatuses
+        {
+            get => _connectionStatuses;
+            set
+            {
+                _connectionStatuses = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private PlayMap? _gameMap;
+        public PlayMap? GameMap
         {
             get => _gameMap;
             set
@@ -123,8 +159,8 @@ namespace AUCapture_WPF
             }
         }
 
-        private AmongUsCapture.GameState _gameState;
-        public AmongUsCapture.GameState GameState
+        private GameState? _gameState;
+        public GameState? GameState
         {
             get => _gameState;
             set

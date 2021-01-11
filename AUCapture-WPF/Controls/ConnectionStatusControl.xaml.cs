@@ -22,15 +22,15 @@ namespace AUCapture_WPF.Controls
     {
         public static readonly DependencyProperty ConnectedProperty = 
             DependencyProperty.Register("ConnectionStatus", 
-                typeof(bool), typeof(ConnectionStatusControl));
+                typeof(string), typeof(ConnectionStatusControl));
 
         public static readonly DependencyProperty NameProperty = 
             DependencyProperty.Register("ConnectionName", 
                 typeof(string), typeof(ConnectionStatusControl));
 
-        public bool ConnectionStatus
+        public string ConnectionStatus
         {
-            get => (bool)GetValue(ConnectedProperty);
+            get => (string)GetValue(ConnectedProperty);
             set => SetValue(ConnectedProperty, value);
         }
         public string ConnectionName

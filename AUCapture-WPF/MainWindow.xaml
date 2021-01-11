@@ -32,15 +32,8 @@
 
             </ResourceDictionary.MergedDictionaries>
             <converters:PlayerToImage x:Key="PlayerToImage" />
-
-            <LinearGradientBrush
-                x:Key="HeaderBackgroundOpacityMask"
-                StartPoint="0,1"
-                EndPoint="0,0">
-                <GradientStop Color="#FFFFFFFF" Offset="0"/>
-                <GradientStop Color="#FFFFFFFF" Offset="0.667"/>
-                <GradientStop Color="#00FFFFFF" Offset="1"/>
-            </LinearGradientBrush>
+            <converters:BoolToString x:Key="BoolToString" />
+            <converters:EnumToStringConverter x:Key="EnumToStringConverter"/>
 
 
         </ResourceDictionary>
@@ -70,30 +63,39 @@
                     <StackPanel Orientation="Vertical">
                         <Grid>
                             <mah:MetroAnimatedTabControl TabStripMargin="0 0 10 0" TabStripPlacement="Left"
-                                                          mah:TabControlHelper.UnderlinePlacement="Right"
-                                                          mah:TabControlHelper.Transition="LeftReplace"
-                                                          mah:TabControlHelper.Underlined="TabPanel">
+                                                         mah:TabControlHelper.UnderlinePlacement="Right"
+                                                         mah:TabControlHelper.Transition="LeftReplace"
+                                                         mah:TabControlHelper.Underlined="TabPanel">
                                 <mah:MetroTabItem Header="General">
                                     <StackPanel Orientation="Vertical">
-                                        <mah:ToggleSwitch Header="Always copy game code" IsOn="{Binding Settings.AlwaysCopyGameCode, Mode=TwoWay}"/>
-                                        <mah:ToggleSwitch Header="Focus window on connect" IsOn="{Binding Settings.FocusOnToken, Mode=TwoWay}" />
-                                        <mah:ToggleSwitch Header="API Server" IsOn="{Binding Settings.ApiServer, Mode=TwoWay}" Toggled="APIServerToggleSwitch_Toggled"/>
+                                        <mah:ToggleSwitch Header="Always copy game code"
+                                                          IsOn="{Binding Settings.AlwaysCopyGameCode, Mode=TwoWay}" />
+                                        <mah:ToggleSwitch Header="Focus window on connect"
+                                                          IsOn="{Binding Settings.FocusOnToken, Mode=TwoWay}" />
+                                        <mah:ToggleSwitch Header="API Server"
+                                                          IsOn="{Binding Settings.ApiServer, Mode=TwoWay}"
+                                                          Toggled="APIServerToggleSwitch_Toggled" />
                                     </StackPanel>
                                 </mah:MetroTabItem>
                                 <mah:MetroTabItem Header="Theme">
                                     <StackPanel Orientation="Vertical">
-                                        <mah:ToggleSwitch x:Name="DarkMode_Toggleswitch" Header="Dark mode" IsOn="{Binding Settings.DarkMode, Mode=TwoWay}" Toggled="Darkmode_Toggled"/>
+                                        <mah:ToggleSwitch x:Name="DarkMode_Toggleswitch" Header="Dark mode"
+                                                          IsOn="{Binding Settings.DarkMode, Mode=TwoWay}"
+                                                          Toggled="Darkmode_Toggled" />
                                         <mah:MetroHeader Header="Color Picker">
-                                            <mah:ColorPicker x:Name="AccentColorPicker" SelectedColorChanged="AccentColorPicker_OnSelectedColorChanged" mah:TextBoxHelper.AutoWatermark="True"
+                                            <mah:ColorPicker x:Name="AccentColorPicker"
+                                                             SelectedColorChanged="AccentColorPicker_OnSelectedColorChanged"
+                                                             mah:TextBoxHelper.AutoWatermark="True"
                                                              mah:TextBoxHelper.UseFloatingWatermark="True"
-                                                             mah:TextBoxHelper.Watermark="Select a color"/>
+                                                             mah:TextBoxHelper.Watermark="Select a color" />
                                         </mah:MetroHeader>
                                     </StackPanel>
                                 </mah:MetroTabItem>
                                 <mah:MetroTabItem Header="Debug" x:Name="DebugTab">
                                     <Grid Margin="0 10 0 0">
                                         <StackPanel Orientation="Vertical">
-                                            <mah:ToggleSwitch Header="Debug mode" IsOn="{Binding Settings.debug, Mode=TwoWay}"/>
+                                            <mah:ToggleSwitch Header="Debug mode"
+                                                              IsOn="{Binding Settings.debug, Mode=TwoWay}" />
                                             <Button x:Name="ReloadOffsetsButton" Content="Reload offsets"
                                                     Click="ReloadOffsetsButton_OnClick"
                                                     Style="{StaticResource MahApps.Styles.Button.Square.Accent}" />
@@ -109,7 +111,6 @@
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <PasswordBox x:Name="discordTokenBox"
-                                                     mah:TextBoxHelper.ClearTextButton="True"
                                                      VerticalContentAlignment="Center" VerticalAlignment="Center"
                                                      HorizontalAlignment="Stretch"
                                                      Grid.Row="1"
@@ -117,19 +118,20 @@
                                                      mah:ControlsHelper.FocusBorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                                                      mah:TextBoxHelper.SelectAllOnFocus="True"
                                                      mah:TextBoxHelper.Watermark="Paste token here"
-                                                     mah:TextBoxHelper.ButtonCommand="{Binding TextBoxButtonCmd, Mode=OneWay}"
-                                                     mah:TextBoxHelper.ButtonContent="s"
+                                                     mah:TextBoxHelper.ButtonContent="{iconPacks:Unicons Kind=Question}"
+                                                     Style="{DynamicResource MahApps.Styles.PasswordBox.Button}"
+                                                     mah:TextBoxHelper.ButtonCommand="{Binding TextBoxButtonHelpCmd, Mode=OneWay}"
                                                      mah:TextBoxHelper.ButtonsAlignment="Right" />
                                         <StackPanel Grid.Row="3"
                                                     MinHeight="85"
                                                     HorizontalAlignment="Right"
                                                     Orientation="Horizontal">
-                                            <Button Grid.Column="1"  Content="Submit"
+                                            <Button Grid.Column="1" Content="Submit"
                                                     x:Name="SubmitDiscordButton" Margin="5 0 5 0"
                                                     IsDefault="True"
                                                     HorizontalAlignment="Center"
                                                     Click="SubmitDiscordButton_OnClick"
-                                                    Style="{DynamicResource MahApps.Styles.Button.Dialogs.Accent}"/>
+                                                    Style="{DynamicResource MahApps.Styles.Button.Dialogs.Accent}" />
                                         </StackPanel>
                                     </Grid>
                                 </mah:MetroTabItem>
@@ -158,66 +160,99 @@
     </mah:MetroWindow.Flyouts>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBox Grid.Column="0" Grid.Row="3" x:Name="GameCodeBox" Text="{Binding GameCode}" mah:TextBoxHelper.Watermark="Game code"
-                 VerticalAlignment="Center"
-                 IsHitTestVisible="True"
-                 Focusable="False"
-                 IsManipulationEnabled="False"
-                 AllowDrop="False"
-                 ToolTip="Game code"
-                 HorizontalAlignment="Center" HorizontalContentAlignment="Center"
-                 mah:TextBoxHelper.ButtonContent="{iconPacks:Unicons Kind=Copy}"
-                 Style="{DynamicResource MahApps.Styles.TextBox.Button}"
-                 mah:TextBoxHelper.ButtonCommand="{Binding TextBoxButtonCopyCmd, Mode=OneWay}"
-                 dialogs:TextBoxHelper.WatermarkAlignment="Right" VerticalContentAlignment="Stretch" dialogs:TextBoxHelper.AutoWatermark="True"/>
-        
-        <ItemsControl Grid.ColumnSpan="3" Grid.RowSpan="4" Name="PlayersList" ItemsSource="{Binding Players}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <controls:PlayerControl PlayerName="{Binding Name}" Color="{Binding Color}" AliveStatus="{Binding Alive}"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Rows="4" Columns="3" IsItemsHost="True" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
-        <Rectangle Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="3" Fill="Aqua" OpacityMask="{StaticResource HeaderBackgroundOpacityMask}"></Rectangle>
-        <StatusBar x:Name="StatusBar" Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="5" SnapsToDevicePixels="True">
-            <StatusBar.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                    </Grid>
-                </ItemsPanelTemplate>
-            </StatusBar.ItemsPanel>
-            <StatusBarItem Grid.Column="0" HorizontalAlignment="Center">
-                <mah:MetroHeader Header="Status:" Margin="0 0 0 5" Foreground="{DynamicResource MahApps.Brushes.Text}">
-                    <TextBox x:Name="StatusBox" mah:TextBoxHelper.Watermark="UNKNOWN"
-                             VerticalAlignment="Center" IsManipulationEnabled="False" Focusable="False"
-                             IsHitTestVisible="True" AllowDrop="False" IsReadOnly="True" ToolTip="Current status"
-                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-                </mah:MetroHeader>
-            </StatusBarItem>
-        </StatusBar>
+        <GroupBox Grid.ColumnSpan="3" Grid.RowSpan="4" Header="Players">
+            <ItemsControl Grid.ColumnSpan="3" Grid.RowSpan="4" Name="PlayersList" ItemsSource="{Binding Players}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <controls:PlayerControl PlayerName="{Binding Name}" Color="{Binding Color}"
+                                                AliveStatus="{Binding Alive}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="4" Columns="3" IsItemsHost="True" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </GroupBox>
+        <Expander Grid.Column="2" Grid.Row="3" Header="Status"  ExpandDirection="Up" Margin="0" Panel.ZIndex="1" >
+            <DataGrid ItemsSource="{Binding ConnectionStatuses}" HeadersVisibility="None" AutoGenerateColumns="False" CanUserSortColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False">
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="IsHitTestVisible" Value="False"/>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <iconPacks:PackIconUnicons VerticalAlignment="Center" VerticalContentAlignment="Center">
+                                    <iconPacks:PackIconUnicons.Style>
+                                        <Style TargetType="iconPacks:PackIconUnicons">
+                                            <Setter Property="Kind" Value="Multiply" />
+                                            <Setter Property="Foreground" Value="Red" />
+                                            <Style.Triggers>
+                                                <DataTrigger
+                                                    Binding="{Binding Path=Connected, Converter={StaticResource BoolToString}}"
+                                                    Value="True">
+                                                    <Setter Property="Kind" Value="Check" />
+                                                    <Setter Property="Foreground" Value="LimeGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </iconPacks:PackIconUnicons.Style>
+                                </iconPacks:PackIconUnicons>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn >
+                    <DataGridTextColumn Binding="{Binding ConnectionName}" Width="*" IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="HorizontalAlignment" Value="Right" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Expander>
+        <Expander ExpandDirection="Up" VerticalAlignment="Bottom" Grid.Column="0" Grid.Row="3" Grid.RowSpan="1" Header="Info" Margin="0">
+            <StackPanel Orientation="Vertical">
+                <TextBox x:Name="StatusBox" mah:TextBoxHelper.Watermark="State" Text="{Binding GameState, Converter={StaticResource EnumToStringConverter}}"
+                         VerticalAlignment="Center" IsManipulationEnabled="False" Focusable="False"
+                         IsHitTestVisible="True" AllowDrop="False" IsReadOnly="True" ToolTip="Current status"
+                         HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                <TextBox  x:Name="GameCodeBox" Text="{Binding GameCode}"
+                         mah:TextBoxHelper.Watermark="Game code"
+                         VerticalAlignment="Center"
+                         IsHitTestVisible="True"
+                         Focusable="False"
+                         IsManipulationEnabled="False"
+                         AllowDrop="False"
+                         ToolTip="Game code"
+                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                         mah:TextBoxHelper.ButtonContent="{iconPacks:Unicons Kind=Copy}"
+                         Style="{DynamicResource MahApps.Styles.TextBox.Button}"
+                         mah:TextBoxHelper.ButtonCommand="{Binding TextBoxButtonCopyCmd, Mode=OneWay}"
+                         dialogs:TextBoxHelper.WatermarkAlignment="Right" VerticalContentAlignment="Stretch"
+                         dialogs:TextBoxHelper.AutoWatermark="True" />
+                <TextBox x:Name="MapBox" mah:TextBoxHelper.Watermark="Map" Text="{Binding GameMap, Converter={StaticResource EnumToStringConverter}}"
+                         VerticalAlignment="Center" IsManipulationEnabled="False" Focusable="False"
+                         IsHitTestVisible="True" AllowDrop="False" IsReadOnly="True" ToolTip="Current map"
+                         HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            </StackPanel>
+            
+        </Expander>
+
     </Grid>
 </mah:MetroWindow>

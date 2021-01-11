@@ -112,6 +112,7 @@ namespace AUCapture_WPF
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
             GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
             GameMemReader.getInstance().GameOver += OnGameOver;
+            GameMemReader.getInstance().PlayerCosmeticChanged += OnCosmeticChanged;
             IPCAdapter.getInstance().OnToken += (sender, token) =>
             {
                 this.BeginInvoke((w) =>
@@ -175,6 +176,11 @@ namespace AUCapture_WPF
             
 
             //ApplyDarkMode();
+        }
+
+        private void OnCosmeticChanged(object sender, PlayerCosmeticChangedEventArgs e)
+        {
+            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("Cosmetic (Debug)", Color.DarkKhaki, $"{e.Name}{NormalTextColor.ToTextColor()}: {e.HatId} {e.SkinId}");
         }
 
         public async void Update()

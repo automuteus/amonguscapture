@@ -72,6 +72,8 @@ namespace AmongUsCapture
         public event EventHandler<ProcessHookArgs> ProcessUnHook;
         public event EventHandler<GameOverEventArgs> GameOver;
 
+        public event EventHandler<PlayerCosmeticChangedEventArgs> PlayerCosmeticChanged;
+
 
         private bool cracked = false;
 
@@ -423,6 +425,14 @@ namespace AmongUsCapture
                                     Disconnected = pi.GetIsDisconnected(),
                                     Color = pi.GetPlayerColor()
                                 });
+
+                            if (oldPlayerInfo.HatId != pi.HatId || oldPlayerInfo.SkinId != pi.SkinId)
+                                PlayerCosmeticChanged?.Invoke(this, new PlayerCosmeticChangedEventArgs
+                                {
+                                    Name = playerName,
+                                    HatId = pi.HatId,
+                                    SkinId = pi.SkinId
+                                });
                         }
                     }
 
@@ -645,6 +655,13 @@ namespace AmongUsCapture
         Skeld = 0,
         Mira = 1,
         Polus = 2
+    }
+
+    public class PlayerCosmeticChangedEventArgs : EventArgs
+    {
+        public string Name { get; set; }
+        public uint HatId { get; set; } 
+        public uint SkinId { get; set; }
     }
 
     public class PlayerChangedEventArgs : EventArgs

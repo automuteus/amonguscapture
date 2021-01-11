@@ -34,6 +34,16 @@ namespace AUCapture_WPF
         private ICommand textBoxButtonCopyCmd;
         private ICommand textBoxButtonHelpCmd;
         public List<AccentColorMenuData> AccentColors { get; set; }
+        private bool? _connected = false;
+        public bool? Connected
+        {
+            get => _connected;
+            set
+            {
+                _connected = value;
+                OnPropertyChanged();
+            }
+        }
         public class AccentColorMenuData
         {
             public string Name { get; set; }

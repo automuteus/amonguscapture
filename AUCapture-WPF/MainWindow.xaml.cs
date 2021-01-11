@@ -197,6 +197,7 @@ namespace AUCapture_WPF
 
         private void OnProcessHook(object? sender, ProcessHookArgs e)
         {
+            context.Connected = true;
             context.ConnectionStatuses.First(x => x.ConnectionName == "Among us").Connected = true;
         }
 

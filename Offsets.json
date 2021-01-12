@@ -49,7 +49,22 @@
     "HudManagerOffset": 0x117996A0,
     "ServerManagerOffset": 0x11799C70,
     "TempDataOffset": 0x11FB564,
-    "GameOptionsOffset": 0x11FB684
+    "GameOptionsOffset": 0x11FB684,
+    "MeetingHudPtr": [0x11FB2FC, 0x5c, 0x0],
+    "MeetingHudCachePtrOffsets": [0x8],
+    "MeetingHudStateOffsets": [0x84],
+    "GameStateOffsets": [0x11FB384, 0x5c, 0x0, 0x64],
+    "AllPlayerPtrOffsets": [0x11FB5D8, 0x5c, 0x0, 0x24],
+    "AllPlayersOffsets": [0x8],
+    "PlayerCountOffsets": [0xc],
+    "ExiledPlayerIdOffsets": [0x11FB2FC, 0x5c, 0x0, 0x94, 0x8],
+    "RawGameOverReasonOffsets": [0x11FB564, 0x5c, 0x4],
+    "WinningPlayersPtrOffsets": [0x11FB564, 0x5c, 0xc],
+    "WinningPlayersOffsets": [0x8],
+    "WinningPlayerCountOffsets": [0xc],
+    "GameCodeOffsets": [0x117990D0, 0x5c, 0x0, 0x20, 0x28],
+    "PlayRegionOffsets": [0x11799C70, 0x5c, 0x0, 0x10, 0x8, 0x8],
+    "PlayMapOffsets": [0x11FB684, 0x5c, 0x4, 0x10]
   },
   "0B010BD3195D39C089DC018D834B2EBD26BA67D2F49C4EBEA608A804FC0975B7": {
     "Description": "v2020.12.9s",

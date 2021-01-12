@@ -481,7 +481,7 @@ namespace AmongUsCapture
                     {
                         var gameCode = ProcessMemory.getInstance().ReadString(ProcessMemory.getInstance().Read<IntPtr>(
                             GameAssemblyPtr,
-                            CurrentOffsets.GameCodeOffsets));
+                            CurrentOffsets.GameCodeOffsets), CurrentOffsets.StringOffsets[0], CurrentOffsets.StringOffsets[1]);
                         string[] split;
                         if (!string.IsNullOrEmpty(gameCode) && (split = gameCode.Split('\n')).Length == 2)
                         {

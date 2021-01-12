@@ -92,7 +92,7 @@ namespace AmongUsCapture
             }
         }
 
-        public override string ReadString(IntPtr address)
+        public override string ReadString(IntPtr address, int lengthOffset = 0x8, int rawOffset = 0xC)
         {
             if (process == null || address == IntPtr.Zero)
                 return default;

@@ -179,13 +179,13 @@
             <ItemsControl Grid.ColumnSpan="3" Grid.RowSpan="4" Name="PlayersList" ItemsSource="{Binding Players}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <controls:PlayerControl PlayerName="{Binding Name}" Color="{Binding Color}"
+                        <controls:PlayerControl  PlayerName="{Binding Name}" Color="{Binding Color}"
                                                 AliveStatus="{Binding Alive}"  PlayerPantsID="{Binding PantsID}" PlayerHatID="{Binding HatID}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Rows="4" Columns="3" IsItemsHost="True" />
+                        <UniformGrid IsItemsHost="True" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>

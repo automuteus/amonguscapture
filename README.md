@@ -6,7 +6,7 @@
 
 ### ❌**Capture only works with the Official Steam Version of Among Us**❌
 
-AmongUsCapture reads game data of Among Us and comunicates with 
+AmongUsCapture reads game data of Among Us and communicates with 
 [Galactus](https://github.com/automuteus/galactus)
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/denverquane/amonguscapture/Beta%20releases/master?label=Beta%20Releases&logo=github)
@@ -24,7 +24,7 @@ Download the latest version of AmongUsCapture here: <a href="https://capture.aut
 3) Run AmongUsCapture
 
 
-## Extra
+## Note
 
 Windows Defender may flag this executable as Trojan:Win32/Emali.A!cl, you can make an exception for this file depending on your version of Windows
 

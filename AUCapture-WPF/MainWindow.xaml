@@ -27,7 +27,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/clean/Controls.xaml" />
                 <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                
                 <!-- Theme setting -->
 
             </ResourceDictionary.MergedDictionaries>
@@ -173,9 +173,14 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         
+        <StackPanel VerticalAlignment="Center" Grid.RowSpan="4" Grid.ColumnSpan="3" Orientation="Vertical" >
+            <TextBlock  HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}">
+                <Run FontSize="32" FontFamily="{StaticResource AUFont}">Waiting for among us</Run><LineBreak/>
+            </TextBlock>
+            <mah:ProgressRing Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}"/>
+        </StackPanel>
         
-        
-        <GroupBox Name="ItemBox" Visibility="{Binding Connected, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.ColumnSpan="3" Grid.RowSpan="4" Header="Players">
+        <GroupBox Name="ItemBox" Visibility="{Binding Connected, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.ColumnSpan="3" Grid.RowSpan="4" Header="Players" ScrollViewer.VerticalScrollBarVisibility="Disabled">
             <ItemsControl Grid.ColumnSpan="3" Grid.RowSpan="4" Name="PlayersList" ItemsSource="{Binding Players}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -190,13 +195,7 @@
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
         </GroupBox>
-        <StackPanel VerticalAlignment="Center" Grid.RowSpan="4" Grid.ColumnSpan="3" Orientation="Vertical" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}">
-            <TextBlock  HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Run FontSize="32" FontFamily="{StaticResource AUFont}">Waiting for among us</Run><LineBreak/>
-            </TextBlock>
-            <mah:ProgressRing IsActive="True" />
-        </StackPanel>
-        <Expander Grid.Column="2" Grid.Row="3" Header="Status" Visibility="{Binding ElementName=ItemBox, Path=Visibility}" ExpandDirection="Up" Margin="0" Panel.ZIndex="1" >
+        <Expander Grid.Column="2" IsExpanded="True" Grid.Row="3" Header="Status" Visibility="{Binding ElementName=ItemBox, Path=Visibility}" ExpandDirection="Up" Margin="0" Panel.ZIndex="1" >
             <DataGrid ItemsSource="{Binding ConnectionStatuses}" HeadersVisibility="None" AutoGenerateColumns="False" CanUserSortColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False">
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow">
@@ -236,7 +235,7 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Expander>
-        <Expander ExpandDirection="Up" VerticalAlignment="Bottom" Visibility="{Binding ElementName=ItemBox, Path=Visibility}" Grid.Column="0" Grid.Row="3" Grid.RowSpan="1" Header="Info" Margin="0">
+        <Expander ExpandDirection="Up" IsExpanded="True" VerticalAlignment="Bottom" Visibility="{Binding ElementName=ItemBox, Path=Visibility}" Grid.Column="0" Grid.Row="3" Grid.RowSpan="1" Header="Info" Margin="0">
             <StackPanel Orientation="Vertical">
                 <TextBox x:Name="StatusBox" mah:TextBoxHelper.Watermark="State" Text="{Binding GameState, Converter={StaticResource EnumToStringConverter}}"
                          VerticalAlignment="Center" IsManipulationEnabled="False" Focusable="False"

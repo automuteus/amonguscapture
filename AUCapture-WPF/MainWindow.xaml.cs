@@ -562,7 +562,11 @@ namespace AUCapture_WPF
             if (e.NewState == GameState.MENU)
             {
                 setGameCode("");
-                context.GameState = e.NewState;
+                Dispatcher.Invoke((Action) (() =>
+                {
+                    context.GameState = e.NewState;
+                    context.Players.Clear(); //Clear players because game is over
+                }));
             }
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
         }

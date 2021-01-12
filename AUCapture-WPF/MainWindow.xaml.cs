@@ -103,7 +103,7 @@ namespace AUCapture_WPF
             {
                 App.socket.AddHandler(App.handler);
             };
-            context.ConnectionStatuses.Add(new ConnectionStatus{Connected = false, ConnectionName = "Galactus"});
+            context.ConnectionStatuses.Add(new ConnectionStatus{Connected = false, ConnectionName = "AutoMuteUs"});
             context.ConnectionStatuses.Add(new ConnectionStatus{Connected = false, ConnectionName = "Among us"});
             context.ConnectionStatuses.Add(new ConnectionStatus{Connected = false, ConnectionName = "User bot"});
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
@@ -194,12 +194,12 @@ namespace AUCapture_WPF
 
         private void SocketOnOnDisconnected(object? sender, EventArgs e)
         {
-            context.ConnectionStatuses.First(x => x.ConnectionName == "Galactus").Connected = false;
+            context.ConnectionStatuses.First(x => x.ConnectionName == "AutoMuteUs").Connected = false;
         }
 
         private void SocketOnOnConnected(object? sender, ClientSocket.ConnectedEventArgs e)
         {
-            context.ConnectionStatuses.First(x => x.ConnectionName == "Galactus").Connected = true;
+            context.ConnectionStatuses.First(x => x.ConnectionName == "AutoMuteUs").Connected = true;
         }
 
         private void HandlerOnOnReady(object? sender, DiscordHandler.ReadyEventArgs e)

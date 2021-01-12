@@ -141,6 +141,7 @@ namespace AUCapture_WPF
                     w.Focus();         // important
                 });
             };
+            
             if (!context.Settings.discordTokenEncrypted) //Encrypt discord token if it is not encrypted.
             {
                 context.Settings.discordToken = JsonConvert.SerializeObject(encryptToken(context.Settings.discordToken));
@@ -222,6 +223,17 @@ namespace AUCapture_WPF
         {
             context.Connected = true;
             context.ConnectionStatuses.First(x => x.ConnectionName == "Among us").Connected = true;
+            ProcessMemory.getInstance().process.Exited += ProcessOnExited;
+        }
+
+        private void ProcessOnExited(object? sender, EventArgs e)
+        {
+            Dispatcher.Invoke((Action) (() =>
+            {
+                context.Connected = false;
+                context.ConnectionStatuses.First(x => x.ConnectionName == "Among us").Connected = false;
+            }));
+            ProcessMemory.getInstance().process.Exited -= ProcessOnExited;
         }
 
         public async void Update()

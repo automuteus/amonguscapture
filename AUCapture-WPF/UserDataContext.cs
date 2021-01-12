@@ -33,6 +33,7 @@ namespace AUCapture_WPF
         public string LatestVersion { get; set; }
         private ICommand textBoxButtonCopyCmd;
         private ICommand textBoxButtonHelpCmd;
+        private ICommand openAmongUsCMD;
         public List<AccentColorMenuData> AccentColors { get; set; }
         private bool? _connected = false;
         public bool? Connected
@@ -99,6 +100,29 @@ namespace AUCapture_WPF
                 else if (x is PasswordBox p)
                 {
                     Clipboard.SetText(p.Password);
+                }
+            }
+        };
+        public ICommand OpenAmongUsCMD => openAmongUsCMD ??= new SimpleCommand
+        {
+            CanExecuteDelegate = x => true,
+            ExecuteDelegate = async x =>
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    Process.Start(new ProcessStartInfo("steam://rungameid/945360") { UseShellExecute = true });
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Process.Start("xdg-open", "steam://rungameid/945360");
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    Process.Start("open", "steam://rungameid/945360");
+                }
+                else
+                {
+                    // throw 
                 }
             }
         };

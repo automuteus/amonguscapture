@@ -180,7 +180,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <controls:PlayerControl PlayerName="{Binding Name}" Color="{Binding Color}"
-                                                AliveStatus="{Binding Alive}" />
+                                                AliveStatus="{Binding Alive}"  PlayerPantsID="{Binding PantsID}" PlayerHatID="{Binding HatID}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>

@@ -109,6 +109,7 @@ namespace AUCapture_WPF
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().ProcessHook += OnProcessHook;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
+            GameMemReader.getInstance().PlayerCosmeticChanged += OnPlayerCosmeticChanged;
             App.handler.OnReady += HandlerOnOnReady;
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
             GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
@@ -178,6 +179,17 @@ namespace AUCapture_WPF
             
            
             //ApplyDarkMode();
+        }
+
+        private void OnPlayerCosmeticChanged(object? sender, PlayerCosmeticChangedEventArgs e)
+        {
+            var player = context.Players.First(x => x.Name == e.Name);
+            Console.WriteLine("Cosmetic change");
+            Dispatcher.Invoke((Action) (() =>
+            {
+                player.HatID = e.HatId;
+                player.PantsID = e.SkinId;
+            }));
         }
 
         private void SocketOnOnDisconnected(object? sender, EventArgs e)
@@ -385,7 +397,7 @@ namespace AUCapture_WPF
                 {
                     Dispatcher.Invoke((Action) (() =>
                     {
-                        context.Players.Add(new Player(e.Name, e.Color, !e.IsDead));
+                        context.Players.Add(new Player(e.Name, e.Color, !e.IsDead, 0, 0));
                     }));
                 }
             }

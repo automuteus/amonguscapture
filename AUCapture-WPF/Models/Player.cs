@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.CodeDom;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using AmongUsCapture;
 
@@ -14,6 +15,28 @@ namespace AUCapture_WPF.Models
             set
             {
                 _alive = value;
+                OnPropertyChanged();
+
+            }
+        }
+        private uint _hatID;
+        public uint HatID
+        {
+            get => _hatID;
+            set
+            {
+                _hatID = value;
+                OnPropertyChanged();
+
+            }
+        }
+        private uint _pantsID;
+        public uint PantsID
+        {
+            get => _pantsID;
+            set
+            {
+                _pantsID = value;
                 OnPropertyChanged();
 
             }
@@ -43,11 +66,13 @@ namespace AUCapture_WPF.Models
             }
         }
 
-        public Player(string name, PlayerColor color, bool alive)
+        public Player(string name, PlayerColor color, bool alive, uint PantsID, uint HatID)
         {
             Name = name;
             Color = color;
             Alive = alive;
+            this.PantsID = PantsID;
+            this.HatID = HatID;
         }
 
 

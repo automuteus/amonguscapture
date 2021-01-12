@@ -116,6 +116,23 @@ namespace AUOffsetManager
         public int TempDataOffset { get; set; }
         
         public int GameOptionsOffset { get; set; }
+
+        public int[] MeetingHudPtr { get; set; }
+        public int[] MeetingHudCachePtrOffsets { get; set; }
+        public int[] MeetingHudStateOffsets { get; set; }
+        public int[] GameStateOffsets { get; set; }
+        public int[] AllPlayerPtrOffsets { get; set; }
+        public int[] AllPlayersOffsets { get; set; }
+        public int[] PlayerCountOffsets { get; set; }
+        public int[] ExiledPlayerIdOffsets { get; set; }
+        public int[] RawGameOverReasonOffsets { get; set; }
+        public int[] WinningPlayersPtrOffsets { get; set; }
+        public int[] WinningPlayersOffsets { get; set; }
+        public int[] WinningPlayerCountOffsets { get; set; }
+        public int[] GameCodeOffsets { get; set; }
+        public int[] PlayRegionOffsets { get; set; }
+        public int[] PlayMapOffsets { get; set; }
+        
     }
 
 }

@@ -175,9 +175,6 @@ namespace AmongUsCapture
                         {
                             if (CurrentOffsets is not null)
                             {
-                                prevChatBubsVersion = ProcessMemory.getInstance().Read<int>(GameAssemblyPtr,
-                                    CurrentOffsets.HudManagerOffset, 0x5C,
-                                    0, 0x28, 0xC, 0x14, 0x10);
                             }
 
                             // prevGameOverReason = ProcessMemory.getInstance().Read<GameOverReason>(GameAssemblyPtr, _gameOffsets.TempDataOffset, 0x5c, 4);
@@ -204,19 +201,17 @@ namespace AmongUsCapture
                     GameState state;
                     //int meetingHudState = /*meetingHud_cachePtr == 0 ? 4 : */ProcessMemory.ReadWithDefault<int>(GameAssemblyPtr, 4, 0xDA58D0, 0x5C, 0, 0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
                     var meetingHud = ProcessMemory.getInstance()
-                        .Read<IntPtr>(GameAssemblyPtr, CurrentOffsets.MeetingHudOffset, 0x5C, 0);
+                        .Read<IntPtr>(GameAssemblyPtr, CurrentOffsets.MeetingHudPtr);
                     var meetingHud_cachePtr = meetingHud == IntPtr.Zero
                         ? 0
-                        : ProcessMemory.getInstance().Read<uint>(meetingHud, 0x8);
+                        : ProcessMemory.getInstance().Read<uint>(meetingHud, CurrentOffsets.MeetingHudCachePtrOffsets);
                     var meetingHudState =
                         meetingHud_cachePtr == 0
                             ? 4
-                            : ProcessMemory.getInstance().ReadWithDefault(meetingHud, 4,
-                                0x84); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
+                            : ProcessMemory.getInstance().ReadWithDefault(meetingHud, 4, CurrentOffsets.MeetingHudStateOffsets
+                                ); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
                     var gameState =
-                        ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, CurrentOffsets.AmongUsClientOffset, 0x5C,
-                            0,
-                            0x64); // 0 = NotJoined, 1 = Joined, 2 = Started, 3 = ENDED (during "defeat" or "victory" screen only)
+                        ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, CurrentOffsets.GameStateOffsets); // 0 = NotJoined, 1 = Joined, 2 = Started, 3 = ENDED (during "defeat" or "victory" screen only)
 
                     switch (gameState)
                     {
@@ -249,9 +244,9 @@ namespace AmongUsCapture
 
                     var allPlayersPtr =
                         ProcessMemory.getInstance()
-                            .Read<IntPtr>(GameAssemblyPtr, CurrentOffsets.GameDataOffset, 0x5C, 0, 0x24);
-                    var allPlayers = ProcessMemory.getInstance().Read<IntPtr>(allPlayersPtr, 0x08);
-                    var playerCount = ProcessMemory.getInstance().Read<int>(allPlayersPtr, 0x0C);
+                            .Read<IntPtr>(GameAssemblyPtr, CurrentOffsets.AllPlayerPtrOffsets);
+                    var allPlayers = ProcessMemory.getInstance().Read<IntPtr>(allPlayersPtr, CurrentOffsets.AllPlayersOffsets);
+                    var playerCount = ProcessMemory.getInstance().Read<int>(allPlayersPtr, CurrentOffsets.PlayerCountOffsets);
 
                     var playerAddrPtr = allPlayers + 0x10;
 
@@ -259,7 +254,7 @@ namespace AmongUsCapture
                     if (oldState == GameState.DISCUSSION && state == GameState.TASKS)
                     {
                         var exiledPlayerId = ProcessMemory.getInstance().ReadWithDefault<byte>(GameAssemblyPtr, 255,
-                            CurrentOffsets.MeetingHudOffset, 0x5C, 0, 0x94, 0x08);
+                            CurrentOffsets.ExiledPlayerIdOffsets);
                         int impostorCount = 0, innocentCount = 0;
 
                         for (var i = 0; i < playerCount; i++)
@@ -309,7 +304,7 @@ namespace AmongUsCapture
                     if (oldState == GameState.ENDED && (state == GameState.LOBBY || state == GameState.MENU)) // game ended
                     {
                         int rawGameOverReason = ProcessMemory.getInstance()
-                            .Read<int>(GameAssemblyPtr, CurrentOffsets.TempDataOffset, 0x5c, 0x4);
+                            .Read<int>(GameAssemblyPtr, CurrentOffsets.RawGameOverReasonOffsets);
                         GameOverReason gameOverReason = (GameOverReason) rawGameOverReason;
 
                         bool humansWon = rawGameOverReason <= 1 || rawGameOverReason == 5;
@@ -330,9 +325,9 @@ namespace AmongUsCapture
                         }
 
                         var winningPlayersPtr = ProcessMemory.getInstance()
-                            .Read<IntPtr>(GameAssemblyPtr, CurrentOffsets.TempDataOffset, 0x5C, 0xC);
-                        var winningPlayers = ProcessMemory.getInstance().Read<IntPtr>(winningPlayersPtr, 0x08);
-                        var winningPlayerCount = ProcessMemory.getInstance().Read<int>(winningPlayersPtr, 0x0C);
+                            .Read<IntPtr>(GameAssemblyPtr, CurrentOffsets.WinningPlayersPtrOffsets);
+                        var winningPlayers = ProcessMemory.getInstance().Read<IntPtr>(winningPlayersPtr, CurrentOffsets.WinningPlayersOffsets);
+                        var winningPlayerCount = ProcessMemory.getInstance().Read<int>(winningPlayersPtr, CurrentOffsets.WinningPlayerCountOffsets);
 
                         var winnerAddrPtr = winningPlayers + 0x10;
 
@@ -500,73 +495,20 @@ namespace AmongUsCapture
                             });
                     }
 
-                    var chatBubblesPtr = ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr,
-                        CurrentOffsets.HudManagerOffset, 0x5C, 0,
-                        0x28, 0xC, 0x14);
-
-                    var poolSize = 20; // = ProcessMemory.Read<int>(GameAssemblyPtr, 0xD0B25C, 0x5C, 0, 0x28, 0xC, 0xC)
-
-                    var numChatBubbles = ProcessMemory.getInstance().Read<int>(chatBubblesPtr, 0xC);
-                    var chatBubsVersion = ProcessMemory.getInstance().Read<int>(chatBubblesPtr, 0x10);
-                    var chatBubblesAddr = ProcessMemory.getInstance().Read<IntPtr>(chatBubblesPtr, 0x8) + 0x10;
-                    var chatBubblePtrs = ProcessMemory.getInstance().ReadArray(chatBubblesAddr, numChatBubbles);
-
-                    var newMsgs = 0;
-
-                    if (chatBubsVersion > prevChatBubsVersion) // new message has been sent
-                    {
-                        if (chatBubsVersion > poolSize) // increments are twofold (push to and pop from pool)
-                        {
-                            if (prevChatBubsVersion > poolSize)
-                                newMsgs = (chatBubsVersion - prevChatBubsVersion) >> 1;
-                            else
-                                newMsgs = poolSize - prevChatBubsVersion + ((chatBubsVersion - poolSize) >> 1);
-                        }
-                        else // single increments
-                        {
-                            newMsgs = chatBubsVersion - prevChatBubsVersion;
-                        }
-                    }
-                    else if (chatBubsVersion < prevChatBubsVersion) // reset
-                    {
-                        if (chatBubsVersion > poolSize) // increments are twofold (push to and pop from pool)
-                            newMsgs = poolSize + ((chatBubsVersion - poolSize) >> 1);
-                        else // single increments
-                            newMsgs = chatBubsVersion;
-                    }
-
-                    prevChatBubsVersion = chatBubsVersion;
-
-                    for (var i = numChatBubbles - newMsgs; i < numChatBubbles; i++)
-                    {
-                        var msgText = ProcessMemory.getInstance()
-                            .ReadString(ProcessMemory.getInstance().Read<IntPtr>(chatBubblePtrs[i], 0x20, 0x28));
-                        if (msgText.Length == 0) continue;
-                        var msgSender = ProcessMemory.getInstance()
-                            .ReadString(ProcessMemory.getInstance().Read<IntPtr>(chatBubblePtrs[i], 0x1C, 0x28));
-                        var oldPlayerInfo = oldPlayerInfos[msgSender];
-                        ChatMessageAdded?.Invoke(this, new ChatMessageEventArgs
-                        {
-                            Sender = msgSender,
-                            Message = msgText,
-                            Color = oldPlayerInfo.GetPlayerColor()
-                        });
-                    }
-
                     if (shouldReadLobby)
                     {
                         var gameCode = ProcessMemory.getInstance().ReadString(ProcessMemory.getInstance().Read<IntPtr>(
                             GameAssemblyPtr,
-                            CurrentOffsets.GameStartManagerOffset, 0x5c, 0, 0x20, 0x28));
+                            CurrentOffsets.GameCodeOffsets));
                         string[] split;
-                        if (gameCode != null && gameCode.Length > 0 && (split = gameCode.Split('\n')).Length == 2)
+                        if (!string.IsNullOrEmpty(gameCode) && (split = gameCode.Split('\n')).Length == 2)
                         {
                             PlayRegion region = (PlayRegion) ((4 - (ProcessMemory.getInstance()
                                 .Read<int>(GameAssemblyPtr, CurrentOffsets.ServerManagerOffset, 0x5c, 0, 0x10, 0x8,
                                     0x8) & 0b11)) % 3); // do NOT ask
                             
                             //Recheck for GameOptionsOffset
-                            PlayMap map = (PlayMap) ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, CurrentOffsets.GameOptionsOffset, 0x5c, 0x4, 0x10);
+                            PlayMap map = (PlayMap) ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, CurrentOffsets.PlayMapOffsets);
                             
                             this.latestLobbyEventArgs = new LobbyEventArgs()
                             {

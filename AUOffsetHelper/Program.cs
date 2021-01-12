@@ -8,23 +8,24 @@ namespace AUOffsetHelper
 {
     static class Program
     {
-        public static string hash = "38119B8551718D9016BAFEEDC105610D5B3AED5B0036D1A6060B8E2ABE523C02";
-        public static string description = "v2020.11.17s (Release 1)";
+        public static string hash = "0B010BD3195D39C089DC018D834B2EBD26BA67D2F49C4EBEA608A804FC0975B7";
+        public static string description = "v2020.12.9s";
 
-        public static int AmongUsClientOffset = 0x14B2C9C;
+        public static int AmongUsClientOffset = 0x1C57F54;
 
-        public static int GameDataOffset = 0x14B2E9C;
+        public static int GameDataOffset = 0x1C57BE8;
 
-        public static int MeetingHudOffset = 0x14B2A7C;
+        public static int MeetingHudOffset = 0x1C573A4;
 
-        public static int GameStartManagerOffset = 0x13983DC;
+        public static int GameStartManagerOffset = 0x1AF20FC;
 
-        public static int HudManagerOffset = 0x138B9FC;
+        public static int HudManagerOffset = 0x1AE16EC;
 
 
-        public static int ServerManagerOffset = 0x138E51C;
+        public static int ServerManagerOffset = 0x1AE4DEC;
 
-        public static int TempDataOffset = 0x143B7AC;
+        public static int TempDataOffset = 0x1C58048;
+        public static int GameOptionsOffset = 0x1C57F7C;
 
         static void Main(string[] args)
         {
@@ -37,7 +38,25 @@ namespace AUOffsetHelper
                 GameStartManagerOffset = GameStartManagerOffset,
                 HudManagerOffset = HudManagerOffset,
                 ServerManagerOffset = ServerManagerOffset,
-                TempDataOffset = TempDataOffset
+                TempDataOffset = TempDataOffset,
+                GameOptionsOffset = GameOptionsOffset,
+
+                MeetingHudPtr = new []{MeetingHudOffset, 0x5C, 0},
+                MeetingHudCachePtrOffsets = new []{0x8},
+                MeetingHudStateOffsets = new []{0x84},
+                GameStateOffsets = new []{ AmongUsClientOffset, 0x5C, 0, 0x64 },
+                AllPlayerPtrOffsets = new []{ GameDataOffset, 0x5C, 0, 0x24},
+                AllPlayersOffsets = new []{0x08},
+                PlayerCountOffsets = new []{0x0C},
+                ExiledPlayerIdOffsets = new []{MeetingHudOffset, 0x5C, 0, 0x94, 0x08},
+                RawGameOverReasonOffsets = new []{TempDataOffset, 0x5c, 0x4},
+                WinningPlayersPtrOffsets = new []{TempDataOffset, 0x5C, 0xC},
+                WinningPlayersOffsets = new []{0x08},
+                WinningPlayerCountOffsets = new []{0x0C},
+                GameCodeOffsets = new []{GameStartManagerOffset, 0x5c, 0, 0x20, 0x28 },
+                PlayRegionOffsets = new []{ServerManagerOffset, 0x5c, 0, 0x10, 0x8, 0x8},
+                PlayMapOffsets = new []{GameOptionsOffset, 0x5c, 0x4, 0x10}
+
             };
             Console.Write(JsonConvert.SerializeObject(a, Formatting.Indented));
             var b = new OffsetManager("");

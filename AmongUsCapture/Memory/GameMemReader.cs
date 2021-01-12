@@ -486,8 +486,7 @@ namespace AmongUsCapture
                         if (!string.IsNullOrEmpty(gameCode) && (split = gameCode.Split('\n')).Length == 2)
                         {
                             PlayRegion region = (PlayRegion) ((4 - (ProcessMemory.getInstance()
-                                .Read<int>(GameAssemblyPtr, CurrentOffsets.ServerManagerOffset, 0x5c, 0, 0x10, 0x8,
-                                    0x8) & 0b11)) % 3); // do NOT ask
+                                .Read<int>(GameAssemblyPtr, CurrentOffsets.PlayRegionOffsets) & 0b11)) % 3); // do NOT ask
                             
                             //Recheck for GameOptionsOffset
                             PlayMap map = (PlayMap) ProcessMemory.getInstance().Read<int>(GameAssemblyPtr, CurrentOffsets.PlayMapOffsets);

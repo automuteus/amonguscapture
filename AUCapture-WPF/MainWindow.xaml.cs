@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
@@ -116,6 +117,7 @@ namespace AUCapture_WPF
             GameMemReader.getInstance().GameOver += OnGameOver;
             App.socket.OnConnected += SocketOnOnConnected;
             App.socket.OnDisconnected += SocketOnOnDisconnected;
+            context.Players.CollectionChanged += PlayersOnCollectionChanged;
             IPCAdapter.getInstance().OnToken += (sender, token) =>
             {
                 this.BeginInvoke((w) =>
@@ -181,15 +183,24 @@ namespace AUCapture_WPF
             //ApplyDarkMode();
         }
 
+        private void PlayersOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("Players", Color.Aqua, JsonConvert.SerializeObject(e, Formatting.None,new StringEnumConverter()));
+        }
+
         private void OnPlayerCosmeticChanged(object? sender, PlayerCosmeticChangedEventArgs e)
         {
-            var player = context.Players.First(x => x.Name == e.Name);
-            Console.WriteLine("Cosmetic change");
-            Dispatcher.Invoke((Action) (() =>
+            if (context.Players.Any(x => x.Name == e.Name))
             {
-                player.HatID = e.HatId;
-                player.PantsID = e.SkinId;
-            }));
+                var player = context.Players.First(x => x.Name == e.Name);
+                Console.WriteLine("Cosmetic change");
+                Dispatcher.Invoke((Action) (() =>
+                {
+                    player.HatID = e.HatId;
+                    player.PantsID = e.SkinId;
+                }));
+            }
+
         }
 
         private void SocketOnOnDisconnected(object? sender, EventArgs e)
@@ -354,7 +365,10 @@ namespace AUCapture_WPF
         {
             Dispatcher.Invoke((Action) (() =>
             {
-                context.Players.Clear(); //Clear players because game is over
+                foreach (var player in context.Players)
+                {
+                    player.Alive = true;
+                }
             }));
         }
 
@@ -370,9 +384,9 @@ namespace AUCapture_WPF
             }
             else
             {
-                if (e.Action != PlayerAction.Joined && context.Players.Any(x => x.Name == e.Name))
+                if (e.Action != PlayerAction.Joined && context.Players.Any(x => x.Name == e.Name || x.Color==e.Color))
                 {
-                    var player = context.Players.First(x => x.Name == e.Name);
+                    var player = context.Players.First(x => x.Name == e.Name || x.Color == e.Color);
                     Dispatcher.Invoke((Action) (() =>
                     {
                         switch (e.Action)
@@ -395,14 +409,19 @@ namespace AUCapture_WPF
                 }
                 else
                 {
-                    Dispatcher.Invoke((Action) (() =>
+                    if (e.Action == PlayerAction.Joined)
                     {
-                        context.Players.Add(new Player(e.Name, e.Color, !e.IsDead, 0, 0));
-                    }));
+                        Dispatcher.Invoke((Action) (() =>
+                        {
+                            context.Players.Add(new Player(e.Name, e.Color, !e.IsDead, 0, 0));
+
+                        }));
+                    }
+                    
                 }
             }
 
-            //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
+            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
         }
 
         private void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
@@ -565,7 +584,13 @@ namespace AUCapture_WPF
                 Dispatcher.Invoke((Action) (() =>
                 {
                     context.GameState = e.NewState;
-                    context.Players.Clear(); //Clear players because game is over
+                }));
+            }
+            else if (e.NewState == GameState.LOBBY)
+            {
+                Dispatcher.Invoke((Action) (() =>
+                {
+                    context.GameState = e.NewState;
                 }));
             }
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);

@@ -10,6 +10,7 @@
     <UserControl.Resources>
         <converters1:PlayerToImage x:Key="PlayerToImage" />
         <converters1:PantsConverter x:Key="PantsConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
     <Grid>
 
@@ -29,7 +30,10 @@
                 </Image>
                 <Image Grid.Row="1" Margin="0 0 0 10" Stretch="Uniform">
                     <Image.Source>
-                        <Binding ElementName="PlayerControlWindow" Path="PlayerPantsID" Converter="{StaticResource PantsConverter}"/>  
+                        <MultiBinding Converter="{StaticResource PantsConverter}">  
+                            <Binding ElementName="PlayerControlWindow" Path="PlayerPantsID"></Binding>  
+                            <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
+                        </MultiBinding>
                     </Image.Source>
                 </Image>
                 <Viewbox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"

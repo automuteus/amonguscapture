@@ -118,38 +118,12 @@
       0x5c,
       0x4
     ],
-    "WinningPlayersPtrOffsets": [
-      0x1c58048,
-      0x5c,
-      0xc
-    ],
-    "WinningPlayersOffsets": [
-      0x8
-    ],
-    "WinningPlayerCountOffsets": [
-      0xc
-    ],
-    "GameCodeOffsets": [
-      0x1af20fc,
-      0x5c,
-      0x0,
-      0x20,
-      0x28
-    ],
-    "PlayRegionOffsets": [
-      0x1ae4dec,
-      0x5c,
-      0x0,
-      0x10,
-      0x8,
-      0x8
-    ],
-    "PlayMapOffsets": [
-      0x1c57f7c,
-      0x5c,
-      0x4,
-      0x10
-    ],
+    "WinningPlayersPtrOffsets": [0x1c58048,0x5c,0xc],
+    "WinningPlayersOffsets": [0x8],
+    "WinningPlayerCountOffsets": [0xc],
+    "GameCodeOffsets": [0x1af20fc,0x5c,0x0,0x20,0x28],
+    "PlayRegionOffsets": [0x1ae4dec,0x5c,0x0,0x10,0x8,0x8],
+    "PlayMapOffsets": [0x1c57f7c,0x5c,0x4,0x10],
     "StringOffsets": [0x8, 0xC]
   }
 }

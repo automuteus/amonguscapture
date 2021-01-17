@@ -322,7 +322,7 @@ namespace AUCapture_WPF
 
         private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
         {
-            if (e.Action == PlayerAction.Died || e.Action == PlayerAction.Reborn)
+            if (e.Action == PlayerAction.Died)
             {
                 DeadMessages.Enqueue($"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
             }

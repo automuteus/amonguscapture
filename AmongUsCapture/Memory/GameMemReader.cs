@@ -391,16 +391,7 @@ namespace AmongUsCapture
                                 PlayerChanged?.Invoke(this, new PlayerChangedEventArgs
                                 {
                                     Action = PlayerAction.Died,
-                                    Name = pi.GetPlayerName(),
-                                    IsDead = pi.GetIsDead(),
-                                    Disconnected = pi.GetIsDisconnected(),
-                                    Color = pi.GetPlayerColor()
-                                });
-                            if (oldPlayerInfo.GetIsDead() && !pi.GetIsDead()) // player just became alive
-                                PlayerChanged?.Invoke(this, new PlayerChangedEventArgs
-                                {
-                                    Action = PlayerAction.Reborn,
-                                    Name = pi.GetPlayerName(),
+                                    Name = playerName,
                                     IsDead = pi.GetIsDead(),
                                     Disconnected = pi.GetIsDisconnected(),
                                     Color = pi.GetPlayerColor()
@@ -562,8 +553,7 @@ namespace AmongUsCapture
         ChangedColor,
         ForceUpdated,
         Disconnected,
-        Exiled,
-        Reborn
+        Exiled
     }
 
     public enum PlayerColor

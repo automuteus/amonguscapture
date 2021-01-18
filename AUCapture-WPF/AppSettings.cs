@@ -29,7 +29,7 @@ namespace AUCapture_WPF
         [Option(DefaultValue = false)]
         bool DarkMode { get; set; }
 
-        [Option(DefaultValue = true)]
+        [Option(DefaultValue = false)]
         bool FocusOnToken { get; set; }
 
         [Option(DefaultValue = 18d)]

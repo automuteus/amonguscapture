@@ -132,6 +132,7 @@ namespace AUOffsetManager
         public int[] GameCodeOffsets { get; set; }
         public int[] PlayRegionOffsets { get; set; }
         public int[] PlayMapOffsets { get; set; }
+        public int[] StringOffsets { get; set; }
         
     }
 

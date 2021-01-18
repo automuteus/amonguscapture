@@ -154,12 +154,12 @@ namespace AmongUsCapture
             }
         }
 
-        public override string ReadString(IntPtr address)
+        public override string ReadString(IntPtr address, int lengthOffset = 0x8, int rawOffset = 0xC)
         {
             if (process == null || address == IntPtr.Zero)
                 return default;
-            int stringLength = Read<int>(address + 0x8);
-            byte[] rawString = Read(address + 0xC, stringLength << 1);
+            int stringLength = Read<int>(address + lengthOffset);
+            byte[] rawString = Read(address + rawOffset, stringLength << 1);
             return Encoding.Unicode.GetString(rawString);
         }
 

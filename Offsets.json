@@ -40,6 +40,33 @@
     "TempDataOffset": 0x1BE10BC,
     "GameOptionsOffset": 0x1BE11CC,
   },
+  "1393240B74D9E27741E7FBA13D67C843E5CE0C3D0EF7ABBEE24179CB97C29918": {
+    "Description": "v2020.11.17i",
+    "AmongUsClientOffset": 0x11FB384,
+    "GameDataOffset": 0x11FB5D8,
+    "MeetingHudOffset": 0x11FB2FC,
+    "GameStartManagerOffset": 0x117990D0,
+    "HudManagerOffset": 0x117996A0,
+    "ServerManagerOffset": 0x11799C70,
+    "TempDataOffset": 0x11FB564,
+    "GameOptionsOffset": 0x11FB684,
+    "MeetingHudPtr": [0x11FB2FC, 0x5c, 0x0],
+    "MeetingHudCachePtrOffsets": [0x8],
+    "MeetingHudStateOffsets": [0x84],
+    "GameStateOffsets": [0x11FB384, 0x5c, 0x0, 0x64],
+    "AllPlayerPtrOffsets": [0x11FB5D8, 0x5c, 0x0, 0x24],
+    "AllPlayersOffsets": [0x8],
+    "PlayerCountOffsets": [0xc],
+    "ExiledPlayerIdOffsets": [0x11FB2FC, 0x5c, 0x0, 0x94, 0x8],
+    "RawGameOverReasonOffsets": [0x11FB564, 0x5c, 0x4],
+    "WinningPlayersPtrOffsets": [0x11FB564, 0x5c, 0xc],
+    "WinningPlayersOffsets": [0x8],
+    "WinningPlayerCountOffsets": [0xc],
+    "GameCodeOffsets": [0x117990D0, 0x5c, 0x0, 0x20, 0x28],
+    "PlayRegionOffsets": [0x11799C70, 0x5c, 0x0, 0x10, 0x8, 0x8],
+    "PlayMapOffsets": [0x11FB684, 0x5c, 0x4, 0x10],
+    "StringOffsets": [0x8, 0xC]
+  },  
   "0B010BD3195D39C089DC018D834B2EBD26BA67D2F49C4EBEA608A804FC0975B7": {
     "Description": "v2020.12.9s",
     "AmongUsClientOffset": 0x1c57f54,
@@ -50,79 +77,22 @@
     "ServerManagerOffset": 0x1ae4dec,
     "TempDataOffset": 0x1c58048,
     "GameOptionsOffset": 0x1c57f7c,
-    "MeetingHudPtr": [
-      0x1c573a4,
-      0x5c,
-      0x0
-    ],
-    "MeetingHudCachePtrOffsets": [
-      0x8
-    ],
-    "MeetingHudStateOffsets": [
-      0x84
-    ],
-    "GameStateOffsets": [
-      0x1c57f54,
-      0x5c,
-      0x0,
-      0x64
-    ],
-    "AllPlayerPtrOffsets": [
-      0x1c57be8,
-      0x5c,
-      0x0,
-      0x24
-    ],
-    "AllPlayersOffsets": [
-      0x8
-    ],
-    "PlayerCountOffsets": [
-      0xc
-    ],
-    "ExiledPlayerIdOffsets": [
-      0x1c573a4,
-      0x5c,
-      0x0,
-      0x94,
-      0x8
-    ],
-    "RawGameOverReasonOffsets": [
-      0x1c58048,
-      0x5c,
-      0x4
-    ],
-    "WinningPlayersPtrOffsets": [
-      0x1c58048,
-      0x5c,
-      0xc
-    ],
-    "WinningPlayersOffsets": [
-      0x8
-    ],
-    "WinningPlayerCountOffsets": [
-      0xc
-    ],
-    "GameCodeOffsets": [
-      0x1af20fc,
-      0x5c,
-      0x0,
-      0x20,
-      0x28
-    ],
-    "PlayRegionOffsets": [
-      0x1ae4dec,
-      0x5c,
-      0x0,
-      0x10,
-      0x8,
-      0x8
-    ],
-    "PlayMapOffsets": [
-      0x1c57f7c,
-      0x5c,
-      0x4,
-      0x10
-    ]
+    "MeetingHudPtr": [0x1c573a4,0x5c,0x0],
+    "MeetingHudCachePtrOffsets": [0x8],
+    "MeetingHudStateOffsets": [0x84],
+    "GameStateOffsets": [0x1c57f54,0x5c,0x0,0x64],
+    "AllPlayerPtrOffsets": [0x1c57be8,0x5c,0x0,0x24],
+    "AllPlayersOffsets": [0x8],
+    "PlayerCountOffsets": [0xc],
+    "ExiledPlayerIdOffsets": [0x1c573a4,0x5c,0x0,0x94,0x8],
+    "RawGameOverReasonOffsets": [0x1c58048,0x5c,0x4],
+    "WinningPlayersPtrOffsets": [0x1c58048,0x5c,0xc],
+    "WinningPlayersOffsets": [0x8],
+    "WinningPlayerCountOffsets": [0xc],
+    "GameCodeOffsets": [0x1af20fc,0x5c,0x0,0x20,0x28],
+    "PlayRegionOffsets": [0x1ae4dec,0x5c,0x0,0x10,0x8,0x8],
+    "PlayMapOffsets": [0x1c57f7c,0x5c,0x4,0x10],
+    "StringOffsets": [0x8, 0xC]
   }
 }
 

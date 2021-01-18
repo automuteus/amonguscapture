@@ -13,15 +13,17 @@ AmongUsCapture reads game data of Among Us and communicates with
 ![GitHub all releases](https://img.shields.io/github/downloads/denverquane/amonguscapture/total?label=Total%20Downloads)
 
 ## Installation
-Download the latest version of AmongUsCapture here: <a href="https://capture.automute.us"><img src="https://img.shields.io/github/v/release/denverquane/amonguscapture?label=Download"></a>
-
-[//]: # (Requires [.NET Desktop Runtime 5.0.1]https://dotnet.microsoft.com/download/dotnet/5.0#runtime-desktop-5.0.1)
+<h4>Download the latest version of the CaptureInstaller here:
+<a href="https://github.com/Wolfhound905/CaptureInstaller/releases/latest/download/CaptureInstaller.bat" target="_blank">
+<img alt="GitHub release" src="https://img.shields.io/github/v/release/wolfhound905/captureinstaller?color=blue&label=Download&style=flat">
+</a></h4>
 
 ## Usage
 
-1) Download the the capture with the blue button above or [here](https://capture.automute.us)
-2) Extract the zip file after the download
-3) Run AmongUsCapture
+1. Click [here](https://github.com/Wolfhound905/CaptureInstaller/releases/latest/download/CaptureInstaller.bat) or the button above to download the [CaptureInstaller](https://github.com/Wolfhound905/CaptureInstaller)
+2. Your browser may say this file can be harmful to your device, press keep file or, whatever is asked to keep the file on your browser. (Examples: [Edge](https://docs.google.com/document/d/1-JiCfXqoax9iC-h5TMiB2gnR8LLvB1tIB_lt-FGYeZY/view), ~~[Chrome](https://github.com/Wolfhound905/CaptureInstaller)~~, ~~[Firefox](https://github.com/Wolfhound905/CaptureInstaller)~~)
+3. Once you have the CaptureInstaller.bat double click to run the file and a Windows Smart Screen message may pop up, if so click `More Info` and `Run Anyway` [example](https://media.discordapp.net/attachments/780435741650059268/798023233186168863/smartscreen.png)
+4. .NET 5 Desktop Runtime will start to install and you will be prompted to press `Allow` once it has been installed. Then the rest is done for you!
 
 
 ## Note

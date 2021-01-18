@@ -51,6 +51,16 @@
                     </DataTemplate>
                 </Button.ContentTemplate>
             </Button>
+            <Button Click="ManualConnect_Click" x:Name="ManualConnectButton"
+                    ToolTip="Open the manual connection window">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconModern Width="22" Height="22" VerticalAlignment="Center" Kind="Connect" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
         </mah:WindowCommands>
     </mah:MetroWindow.LeftWindowCommands>
     <mah:MetroWindow.Flyouts>
@@ -158,6 +168,34 @@
 
                 </ScrollViewer>
 
+            </mah:Flyout>
+            <mah:Flyout x:Name="ManualConnectionFlyout" Header="Manual Connection" Position="Left"
+                        Width="{Binding ActualWidth,ElementName=window, Converter={dialogs:MathDivideConverter}, ConverterParameter=2}"
+                        Theme="Adapt"
+                        IsAutoCloseEnabled="False" AnimateOpacity="True" ExternalCloseButton="Left">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Host: " VerticalAlignment="Center" Margin="4 0 3 0" />
+                                <TextBox x:Name="Host" VerticalAlignment="Center" MinWidth="150"
+                                         Text="{Binding Settings.host, Mode=TwoWay}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Code: " VerticalAlignment="Center" Margin="4 0 0 0" />
+                                <TextBox x:Name="Code" VerticalAlignment="Center" MinWidth="150"
+                                         Text="{Binding Settings.connectCode, Mode=TwoWay}" />
+                            </StackPanel>
+                            <Button Content="Submit" x:Name="SubmitConnectButton" Margin="20"
+                                    Click="SubmitConnectButton_OnClick" />
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
             </mah:Flyout>
         </mah:FlyoutsControl>
     </mah:MetroWindow.Flyouts>

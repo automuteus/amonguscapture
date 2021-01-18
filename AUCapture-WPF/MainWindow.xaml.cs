@@ -219,6 +219,8 @@ namespace AUCapture_WPF
             context.ConnectionStatuses.First(x => x.ConnectionName == "User bot").Connected = true;
         }
 
+
+
         private void OnProcessHook(object? sender, ProcessHookArgs e)
         {
             context.Connected = true;
@@ -572,7 +574,7 @@ namespace AUCapture_WPF
         private void ManualConnect_Click(object sender, RoutedEventArgs e)
         {
             //Open up the manual connection flyout.
-            //ManualConnectionFlyout.IsOpen = true;
+            ManualConnectionFlyout.IsOpen = true;
 
         }
 
@@ -669,8 +671,8 @@ namespace AUCapture_WPF
 
         private void SubmitConnectButton_OnClick(object sender, RoutedEventArgs e)
         {
-            //IPCAdapter.getInstance().SendToken(config.host, config.connectCode);
-            //ManualConnectionFlyout.IsOpen = false;
+            IPCAdapter.getInstance().SendToken(config.host, config.connectCode);
+            ManualConnectionFlyout.IsOpen = false;
         }
 
         private void MemePlayer_OnMediaEnded(object sender, RoutedEventArgs e)

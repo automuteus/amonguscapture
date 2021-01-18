@@ -13,9 +13,9 @@ AmongUsCapture reads game data of Among Us and communicates with
 ![GitHub all releases](https://img.shields.io/github/downloads/denverquane/amonguscapture/total?label=Total%20Downloads)
 
 ## Installation
-Download the latest version of AmongUsCapture here: <a href="https://capture.automute.us"><img src="https://img.shields.io/github/v/release/denverquane/amonguscapture?label=Download"></a>
+1) Download [.NET Desktop Runtime 5.0.1](https://dotnet.microsoft.com/download/dotnet/5.0#runtime-desktop-5.0.1)
+2) Download the latest version of AmongUsCapture here: <a href="https://capture.automute.us"><img src="https://img.shields.io/github/v/release/denverquane/amonguscapture?label=Download"></a>
 
-[//]: # (Requires [.NET Desktop Runtime 5.0.1]https://dotnet.microsoft.com/download/dotnet/5.0#runtime-desktop-5.0.1)
 
 ## Usage
 
@@ -23,7 +23,10 @@ Download the latest version of AmongUsCapture here: <a href="https://capture.aut
 2) Extract the zip file after the download
 3) Run AmongUsCapture
 
+## Troubleshooting 
+![Image1](https://cdn.discordapp.com/attachments/759195945044017234/800786824502575124/unknown.png)
 
+This is caused by not having dotnet 5 installed, You can install it [here](https://dotnet.microsoft.com/download/dotnet/5.0#runtime-desktop-5.0.1)
 ## Note
 
 Windows Defender may flag this executable as Trojan:Win32/Emali.A!cl, you can make an exception for this file depending on your version of Windows

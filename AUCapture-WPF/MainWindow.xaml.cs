@@ -596,6 +596,10 @@ namespace AUCapture_WPF
                 Dispatcher.Invoke((Action) (() =>
                 {
                     context.GameState = e.NewState;
+                    foreach (var player in context.Players)
+                    {
+                        player.Alive = true;
+                    }
                 }));
             }
             else if (e.NewState == GameState.LOBBY)
@@ -603,6 +607,10 @@ namespace AUCapture_WPF
                 Dispatcher.Invoke((Action) (() =>
                 {
                     context.GameState = e.NewState;
+                    foreach (var player in context.Players)
+                    {
+                        player.Alive = true;
+                    }
                 }));
             }
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);

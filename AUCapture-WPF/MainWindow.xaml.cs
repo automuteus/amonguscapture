@@ -399,9 +399,9 @@ namespace AUCapture_WPF
             }
             else
             {
-                if (e.Action != PlayerAction.Joined && context.Players.Any(x => x.Name == e.Name || x.Color==e.Color))
+                if (e.Action != PlayerAction.Joined && context.Players.Any(x => String.Equals(x.Name, e.Name, StringComparison.CurrentCultureIgnoreCase) && x.Color==e.Color))
                 {
-                    var player = context.Players.First(x => x.Name == e.Name || x.Color == e.Color);
+                    var player = context.Players.First(x =>  String.Equals(x.Name, e.Name, StringComparison.CurrentCultureIgnoreCase) && x.Color == e.Color);
                     Dispatcher.Invoke((Action) (() =>
                     {
                         switch (e.Action)

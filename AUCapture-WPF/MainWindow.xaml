@@ -11,7 +11,7 @@
                  mc:Ignorable="d"
                  Style="{DynamicResource MahApps.Styles.MetroWindow.Clean}"
                  ResizeMode="CanResize"
-                 Title="AUCapture" TitleAlignment="Center" Height="544" Width="544"
+                 Title="AUCapture" TitleAlignment="Center" Height="544" Width="366"
                  ShowInTaskbar="True"
                  TitleCharacterCasing="Normal"
                  ShowSystemMenu="False"
@@ -231,7 +231,7 @@
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid IsItemsHost="True" />
+                        <UniformGrid IsItemsHost="True" Rows="3" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>

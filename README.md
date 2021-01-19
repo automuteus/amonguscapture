@@ -12,7 +12,15 @@ AmongUsCapture reads game data of Among Us and communicates with
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/denverquane/amonguscapture/Beta%20releases/master?label=Beta%20Releases&logo=github)
 ![GitHub all releases](https://img.shields.io/github/downloads/denverquane/amonguscapture/total?label=Total%20Downloads)
 
-## Installation
+
+## Automatic Installation
+
+1) Download the latest version of the CaptureInstaller here: <a href="https://github.com/Wolfhound905/CaptureInstaller/releases/latest/download/CaptureInstaller.bat"><img alt="GitHub release" src="https://img.shields.io/github/v/release/wolfhound905/captureinstaller?color=blue&label=download&style=flat"></a>
+2) Once you have the CaptureInstaller.bat run the file and a Windows Smart Screen message may pop up, if so click `More Info` and `Run Anyway` [example](https://media.discordapp.net/attachments/780435741650059268/798023233186168863/smartscreen.png)
+3) NET 5 Desktop Runtime will start to install and you will be prompted to press `Allow` once it has been installed. Then the rest is done for you!
+
+
+## Manual Installation
 1) Download [.NET Desktop Runtime 5.0.1](https://download.visualstudio.microsoft.com/download/pr/c6a74d6b-576c-4ab0-bf55-d46d45610730/f70d2252c9f452c2eb679b8041846466/windowsdesktop-runtime-5.0.1-win-x64.exe)
 2) Download the latest version of AmongUsCapture here: <a href="https://capture.automute.us"><img src="https://img.shields.io/github/v/release/denverquane/amonguscapture?label=Download"></a>
 

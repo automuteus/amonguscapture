@@ -10,6 +10,8 @@
     <UserControl.Resources>
         <converters1:PlayerToImage x:Key="PlayerToImage" />
         <converters1:PantsConverter x:Key="PantsConverter" />
+        <converters1:HatToImageBackground x:Key="HatToImageB" />
+        <converters1:HatToImageForeGround x:Key="HatToImageF" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
     <Grid>
@@ -18,30 +20,65 @@
             <Grid Margin="0 0 0 0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="16*"/>
                 </Grid.RowDefinitions>
-                <Image Grid.Row="1" Margin="0 0 0 10" Stretch="Uniform">
+                <Image Grid.Row="1" Grid.RowSpan="2" Width="148" Margin="0 0 0 10" Stretch="Uniform" VerticalAlignment="Bottom">
                     <Image.Source>
-                        <MultiBinding Converter="{StaticResource PlayerToImage}">  
-                            <Binding ElementName="PlayerControlWindow" Path="Color"></Binding>  
+                        <MultiBinding Converter="{StaticResource HatToImageB}">  
+                            <Binding ElementName="PlayerControlWindow" Path="PlayerHatID"></Binding>  
                             <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
                         </MultiBinding>
                     </Image.Source>
                 </Image>
-                <Image Grid.Row="1" Margin="0 0 0 10" Stretch="Uniform">
+                <Viewbox Grid.Row="2">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="16*"/>
+                        </Grid.RowDefinitions>
+                        <Viewbox Grid.Row="1" VerticalAlignment="Bottom">
+                            <Grid Margin="0 0 0 0">
+                                <Image  Margin="0 0 0 0" Width="148" Height="198" Stretch="Uniform">
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource PlayerToImage}">  
+                                            <Binding ElementName="PlayerControlWindow" Path="Color"></Binding>  
+                                            <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
+                                        </MultiBinding>
+                                    </Image.Source>
+                                </Image>
+                                <Image Margin="0 0 0 0" Width="148" Height="198" Stretch="Uniform">
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource PantsConverter}">  
+                                            <Binding ElementName="PlayerControlWindow" Path="PlayerPantsID"></Binding>  
+                                            <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
+                                        </MultiBinding>
+                                    </Image.Source>
+                                </Image>
+                            </Grid>
+                        </Viewbox>
+                
+                        
+                    </Grid>
+                </Viewbox>
+                <Image Grid.Row="1" Grid.RowSpan="2" Width="148" Margin="0 0 0 10" Stretch="Uniform" VerticalAlignment="Bottom">
                     <Image.Source>
-                        <MultiBinding Converter="{StaticResource PantsConverter}">  
-                            <Binding ElementName="PlayerControlWindow" Path="PlayerPantsID"></Binding>  
+                        <MultiBinding Converter="{StaticResource HatToImageF}">  
+                            <Binding ElementName="PlayerControlWindow" Path="PlayerHatID"></Binding>  
                             <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
                         </MultiBinding>
                     </Image.Source>
                 </Image>
+                
                 <Viewbox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center"
-                         VerticalAlignment="Bottom" Margin="0">
-                    <Label HorizontalAlignment="Center" Padding="0" Margin="0" VerticalAlignment="Center"
-                           FontFamily="{StaticResource AUFont}" Content="{Binding ElementName=PlayerControlWindow, Path=PlayerName}" FontSize="74"
-                           FontStyle="Normal" VerticalContentAlignment="Center" >
-                    </Label>
+                         VerticalAlignment="Top" Margin="0">
+                    <Grid>
+                        <TextBlock HorizontalAlignment="Center" Padding="0" Margin="0" VerticalAlignment="Center"
+                                   FontFamily="{StaticResource AUFont}" Text="{Binding ElementName=PlayerControlWindow, Path=PlayerName}" FontSize="74"
+                                   FontStyle="Normal"/>
+                        
+                    </Grid>
+                    
                 </Viewbox>
             </Grid>
         </Viewbox>

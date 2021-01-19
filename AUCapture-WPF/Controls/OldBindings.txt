@@ -1,0 +1,22 @@
+﻿
+<MultiBinding Converter="{StaticResource HatToImageB}">  
+    <Binding ElementName="PlayerControlWindow" Path="PlayerHatID"></Binding>  
+    <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
+</MultiBinding>
+
+<MultiBinding Converter="{StaticResource HatToImageF}">  
+    <Binding ElementName="PlayerControlWindow" Path="PlayerHatID"></Binding>  
+    <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
+</MultiBinding>
+
+<MultiBinding Converter="{StaticResource PlayerToImage}">  
+    <Binding ElementName="PlayerControlWindow" Path="Color"></Binding>  
+    <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
+</MultiBinding>
+
+<MultiBinding Converter="{StaticResource PantsConverter}">  
+    <Binding ElementName="PlayerControlWindow" Path="PlayerPantsID"></Binding>  
+    <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
+</MultiBinding>
+
+{Binding ElementName=PlayerControlWindow, Path=PlayerName}

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -10,7 +12,7 @@ using System.Windows.Media.Imaging;
 
 namespace AUCapture_WPF.Converters
 {
-    public class HatToImageForeGround : IMultiValueConverter
+    public class HatToImage : IMultiValueConverter
     {
 
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
@@ -28,7 +30,14 @@ namespace AUCapture_WPF.Converters
             }
             catch (Exception e)
             {
-                return new BitmapImage();
+                try
+                {
+                    return new BitmapImage(new Uri($"pack://application:,,,/Resources/hats/{hatID}-0.png"));
+                }
+                catch (Exception er)
+                {
+                    return new BitmapImage();
+                }
             }
             
         }
@@ -38,30 +47,38 @@ namespace AUCapture_WPF.Converters
             throw new NotImplementedException();
         }
     }
-    public class HatToImageBackground : IMultiValueConverter
+    public class HatToZ : IValueConverter
     {
-
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public static string[] GetResourceNames()
         {
-            var hatID = values[0] as uint? ?? 0;
-            var alive = values[1] as bool? ?? false;
-            if (!alive)
+            var assembly = Assembly.GetExecutingAssembly();
+            string resName = assembly.GetName().Name + ".g.resources";
+            using (var stream = assembly.GetManifestResourceStream(resName))
             {
-                return new BitmapImage();
+                using (var reader = new System.Resources.ResourceReader(stream))
+                {
+                    return reader.Cast<DictionaryEntry>().Select(entry => 
+                        (string)entry.Key).ToArray();
+                }
             }
+        }
 
-            try
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var hatID = value as uint? ?? 0;
+
+            if (GetResourceNames().Any(x => x == $"resources/hats/{hatID}-0.png"))
             {
-                return new BitmapImage(new Uri($"pack://application:,,,/Resources/hats/{hatID}-0.png"));
+                return -1;
             }
-            catch (Exception e)
+            else
             {
-                return new BitmapImage();
+                return 1;
             }
             
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

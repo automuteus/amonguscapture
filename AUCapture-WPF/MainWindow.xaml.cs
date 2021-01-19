@@ -8,6 +8,7 @@ using MahApps.Metro.Controls.Dialogs;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -17,6 +18,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Threading;
@@ -178,12 +180,24 @@ namespace AUCapture_WPF
             }
             catch (Exception e)
             { }
-
+            Console.WriteLine(String.Join(", ", GetResourceNames()));
             
            
             //ApplyDarkMode();
         }
-
+        public static string[] GetResourceNames()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            string resName = assembly.GetName().Name + ".g.resources";
+            using (var stream = assembly.GetManifestResourceStream(resName))
+            {
+                using (var reader = new System.Resources.ResourceReader(stream))
+                {
+                    return reader.Cast<DictionaryEntry>().Select(entry => 
+                        (string)entry.Key).ToArray();
+                }
+            }
+        }
         private void PlayersOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             AmongUsCapture.Settings.conInterface.WriteModuleTextColored("Players", Color.Aqua, JsonConvert.SerializeObject(e, Formatting.None,new StringEnumConverter()));

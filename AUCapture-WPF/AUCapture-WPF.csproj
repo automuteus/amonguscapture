@@ -157,6 +157,8 @@
     <None Remove="Resources\Pants\7.png" />
     <None Remove="Resources\Pants\8.png" />
     <None Remove="Resources\Pants\9.png" />
+    <None Remove="Resources\TestHats\48-1.png" />
+    <None Remove="Resources\TestHats\49-1.png" />
     <None Remove="SplashScreens\SplashScreenPop.png" />
   </ItemGroup>
 
@@ -332,6 +334,8 @@
     <Resource Include="Resources\Players\auwhitedead.png" />
     <Resource Include="Resources\Players\auyellow.png" />
     <Resource Include="Resources\Players\auyellowdead.png" />
+    <Resource Include="Resources\TestHats\48-1.png" />
+    <Resource Include="Resources\TestHats\49-1.png" />
     <Resource Include="SplashScreens\SplashScreenChristmas.png" />
     <Resource Include="SplashScreens\SplashScreenNormal.png" />
     <Resource Include="SplashScreens\SplashScreenPop.png" />

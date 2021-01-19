@@ -9,13 +9,13 @@
 AmongUsCapture reads game data of Among Us and communicates with 
 [Galactus](https://github.com/automuteus/galactus)
 
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/denverquane/amonguscapture/Beta%20releases/master?label=Beta%20Releases&logo=github)
-![GitHub all releases](https://img.shields.io/github/downloads/denverquane/amonguscapture/total?label=Total%20Downloads)
-![Github Latest release](https://img.shields.io/github/downloads/denverquane/amonguscapture/latest/total)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/automuteus/amonguscapture/Beta%20releases/master?label=Beta%20Releases&logo=github)
+![GitHub all releases](https://img.shields.io/github/downloads/automuteusamonguscapture/total?label=Total%20Downloads)
+![Github Latest release](https://img.shields.io/github/downloads/automuteus/amonguscapture/latest/total)
 
 ## Manual Installation
 1) Download [.NET Desktop Runtime 5.0.1](https://download.visualstudio.microsoft.com/download/pr/c6a74d6b-576c-4ab0-bf55-d46d45610730/f70d2252c9f452c2eb679b8041846466/windowsdesktop-runtime-5.0.1-win-x64.exe)
-2) Download the latest version of AmongUsCapture here: <a href="https://capture.automute.us"><img src="https://img.shields.io/github/v/release/denverquane/amonguscapture?label=Download"></a>
+2) Download the latest version of AmongUsCapture here: <a href="https://capture.automute.us"><img src="https://img.shields.io/github/v/release/automuteus/amonguscapture?label=Download"></a>
 
 
 ## Usage

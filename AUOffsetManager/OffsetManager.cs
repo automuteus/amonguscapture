@@ -43,10 +43,22 @@ namespace AUOffsetManager
             try
             {
                 using var httpClient = new HttpClient();
-                var json = await httpClient.GetStringAsync(indexURL);
-                OffsetIndex = JsonConvert.DeserializeObject<Dictionary<string, GameOffsets>>(json);
-                await using StreamWriter sw = File.CreateText(StorageLocationCache);
-                await sw.WriteAsync(JsonConvert.SerializeObject(OffsetIndex, Formatting.Indented));
+                try
+                {
+                    var json = await httpClient.GetStringAsync(indexURL);
+                    OffsetIndex = JsonConvert.DeserializeObject<Dictionary<string, GameOffsets>>(json);
+                    await using StreamWriter sw = File.CreateText(StorageLocationCache);
+                    await sw.WriteAsync(JsonConvert.SerializeObject(OffsetIndex, Formatting.Indented));
+                }
+                catch (Exception e)
+                {
+                    indexURL = "https://raw.githubusercontent.com/denverquane/amonguscapture/master/Offsets.json";
+                    var json = await httpClient.GetStringAsync(indexURL);
+                    OffsetIndex = JsonConvert.DeserializeObject<Dictionary<string, GameOffsets>>(json);
+                    await using StreamWriter sw = File.CreateText(StorageLocationCache);
+                    await sw.WriteAsync(JsonConvert.SerializeObject(OffsetIndex, Formatting.Indented));
+                }
+                
             }
             catch (Exception e)
             {

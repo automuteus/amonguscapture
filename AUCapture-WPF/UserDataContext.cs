@@ -243,7 +243,17 @@ namespace AUCapture_WPF
             try
             {
                 GitHubClient client = new GitHubClient(new ProductHeaderValue("AmongUsCapture", Version));
-                Release latest = client.Repository.Release.GetLatest("denverquane", "amonguscapture").Result;
+                Release latest = new Release();
+                try
+                {
+                    latest = client.Repository.Release.GetLatest("automuteus", "amonguscapture").Result;
+                    
+                }
+                catch (Exception e)
+                {
+                    latest = client.Repository.Release.GetLatest("denverquane", "amonguscapture").Result;
+                }
+                
                 LatestReleaseAssetURL = latest.Assets.First(x => x.Name == "AmongUsCapture.zip").BrowserDownloadUrl;
                 LatestVersion = $"{latest.TagName}";
             }

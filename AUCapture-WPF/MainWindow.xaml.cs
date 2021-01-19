@@ -180,24 +180,9 @@ namespace AUCapture_WPF
             }
             catch (Exception e)
             { }
-            Console.WriteLine(String.Join(", ", GetResourceNames()));
-            
-           
             //ApplyDarkMode();
         }
-        public static string[] GetResourceNames()
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            string resName = assembly.GetName().Name + ".g.resources";
-            using (var stream = assembly.GetManifestResourceStream(resName))
-            {
-                using (var reader = new System.Resources.ResourceReader(stream))
-                {
-                    return reader.Cast<DictionaryEntry>().Select(entry => 
-                        (string)entry.Key).ToArray();
-                }
-            }
-        }
+        
         private void PlayersOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             AmongUsCapture.Settings.conInterface.WriteModuleTextColored("Players", Color.Aqua, JsonConvert.SerializeObject(e, Formatting.None,new StringEnumConverter()));

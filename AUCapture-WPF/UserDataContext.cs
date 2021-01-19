@@ -3,16 +3,21 @@ using MahApps.Metro.Controls.Dialogs;
 using Octokit;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using AmongUsCapture;
 using AUCapture_WPF.IPC;
+using AUCapture_WPF.Models;
+using Humanizer;
 using MahApps.Metro.Controls;
 using Application = System.Windows.Application;
 
@@ -27,7 +32,19 @@ namespace AUCapture_WPF
         public string LatestReleaseAssetURL { get; set; }
         public string LatestVersion { get; set; }
         private ICommand textBoxButtonCopyCmd;
+        private ICommand textBoxButtonHelpCmd;
+        private ICommand openAmongUsCMD;
         public List<AccentColorMenuData> AccentColors { get; set; }
+        private bool? _connected = false;
+        public bool? Connected
+        {
+            get => _connected;
+            set
+            {
+                _connected = value;
+                OnPropertyChanged();
+            }
+        }
         public class AccentColorMenuData
         {
             public string Name { get; set; }
@@ -86,7 +103,130 @@ namespace AUCapture_WPF
                 }
             }
         };
+        public ICommand OpenAmongUsCMD => openAmongUsCMD ??= new SimpleCommand
+        {
+            CanExecuteDelegate = x => true,
+            ExecuteDelegate = async x =>
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    Process.Start(new ProcessStartInfo("steam://rungameid/945360") { UseShellExecute = true });
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Process.Start("xdg-open", "steam://rungameid/945360");
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    Process.Start("open", "steam://rungameid/945360");
+                }
+                else
+                {
+                    // throw 
+                }
+            }
+        };
+        public ICommand TextBoxButtonHelpCmd => textBoxButtonHelpCmd ??= new SimpleCommand
+        {
+            CanExecuteDelegate = x => true,
+            ExecuteDelegate = async x =>
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    Process.Start(new ProcessStartInfo("https://www.youtube.com/watch?v=jKcEW5qpk8E") { UseShellExecute = true });
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Process.Start("xdg-open", "https://www.youtube.com/watch?v=jKcEW5qpk8E");
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    Process.Start("open", "https://www.youtube.com/watch?v=jKcEW5qpk8E");
+                }
+                else
+                {
+                    // throw 
+                }
+            }
+        };
+        private ObservableCollection<Player> _players = new ObservableCollection<Player>();
+        public ObservableCollection<Player> Players
+        {
+            get => _players;
+            set
+            {
+                _players = value;
+                OnPropertyChanged();
+            }
+        }
 
+        private ObservableCollection<ConnectionStatus> _connectionStatuses = new ObservableCollection<ConnectionStatus>();
+        public ObservableCollection<ConnectionStatus> ConnectionStatuses
+        {
+            get => _connectionStatuses;
+            set
+            {
+                _connectionStatuses = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private PlayMap? _gameMap;
+        public PlayMap? GameMap
+        {
+            get => _gameMap;
+            set
+            {
+                _gameMap = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _gameCode;
+        public string GameCode
+        {
+            get => _gameCode;
+            set
+            {
+                _gameCode = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private GameState? _gameState;
+        public GameState? GameState
+        {
+            get => _gameState;
+            set
+            {
+                _gameState = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private static void Shuffle<T>(List<T> list)
+        {
+            Random rng = new Random(); 
+            int n = list.Count;  
+            while (n > 1) {  
+                n--;  
+                int k = rng.Next(n + 1);  
+                T value = list[k];  
+                list[k] = list[n];  
+                list[n] = value;  
+            }
+        }
+        public void GeneratePlayers(int numOfPlayers)
+        {
+            var nums = Enumerable.Range(0, 12).ToList();
+            Shuffle(nums);
+            var colors  = nums.Cast<PlayerColor>().Where(x=>!Players.Select(y=>y.Color).Contains(x)).Take(numOfPlayers).ToList();
+            foreach (var color in colors)
+            {
+                var newPlayer = new Player(color.Humanize(), color, true, 0 ,0);
+                Players.Add(newPlayer);
+            }
+        }
         public UserDataContext(IDialogCoordinator dialogCoordinator, IAppSettings settings)
         {
             DialogCoordinator = dialogCoordinator;

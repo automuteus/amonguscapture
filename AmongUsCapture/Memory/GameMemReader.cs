@@ -68,8 +68,11 @@ namespace AmongUsCapture
         public event EventHandler<ChatMessageEventArgs> ChatMessageAdded;
 
         public event EventHandler<LobbyEventArgs> JoinedLobby;
-
+        public event EventHandler<ProcessHookArgs> ProcessHook;
+        public event EventHandler<ProcessHookArgs> ProcessUnHook;
         public event EventHandler<GameOverEventArgs> GameOver;
+
+        public event EventHandler<PlayerCosmeticChangedEventArgs> PlayerCosmeticChanged;
 
 
         private bool cracked = false;
@@ -136,6 +139,7 @@ namespace AmongUsCapture
                                                 {
                                                     Settings.conInterface.WriteModuleTextColored("GameMemReader",
                                                         Color.Lime, $"Loaded offsets: {CurrentOffsets.Description}");
+                                                    ProcessHook?.Invoke(this, new ProcessHookArgs{PID = ProcessMemory.getInstance().process.Id});
                                                 }
                                                 else
                                                 {
@@ -382,6 +386,12 @@ namespace AmongUsCapture
                                 Disconnected = pi.GetIsDisconnected(),
                                 Color = pi.GetPlayerColor()
                             });
+                            PlayerCosmeticChanged?.Invoke(this, new PlayerCosmeticChangedEventArgs
+                            {
+                                Name = playerName,
+                                HatId = pi.HatId,
+                                SkinId = pi.SkinId
+                            });
                         }
                         else
                         {
@@ -415,6 +425,14 @@ namespace AmongUsCapture
                                     IsDead = pi.GetIsDead(),
                                     Disconnected = pi.GetIsDisconnected(),
                                     Color = pi.GetPlayerColor()
+                                });
+
+                            if (oldPlayerInfo.HatId != pi.HatId || oldPlayerInfo.SkinId != pi.SkinId)
+                                PlayerCosmeticChanged?.Invoke(this, new PlayerCosmeticChangedEventArgs
+                                {
+                                    Name = playerName,
+                                    HatId = pi.HatId,
+                                    SkinId = pi.SkinId
                                 });
                         }
                     }
@@ -586,6 +604,13 @@ namespace AmongUsCapture
         Polus = 2
     }
 
+    public class PlayerCosmeticChangedEventArgs : EventArgs
+    {
+        public string Name { get; set; }
+        public uint HatId { get; set; } 
+        public uint SkinId { get; set; }
+    }
+
     public class PlayerChangedEventArgs : EventArgs
     {
         public PlayerAction Action { get; set; }
@@ -613,5 +638,9 @@ namespace AmongUsCapture
     {
         public GameOverReason GameOverReason { get; set; }
         public ImmutablePlayer[] PlayerInfos { get; set; }
+    }
+    public class ProcessHookArgs : EventArgs
+    {
+        public int PID { get; set; }
     }
 }

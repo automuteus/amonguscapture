@@ -53,7 +53,6 @@ namespace AUCapture_WPF
 
         public void WriteColoredText(string ColoredText)
         {
-            form.WriteColoredText(ColoredText);
             WriteToLog(ColoredText);
         }
 
@@ -89,7 +88,7 @@ namespace AUCapture_WPF
 
         public void WriteModuleTextColored(string ModuleName, Color moduleColor, string text)
         {
-            form.WriteConsoleLineFormatted(ModuleName, moduleColor, text);
+            //form.WriteConsoleLineFormatted(ModuleName, moduleColor, text);
             WriteLogLine(ModuleName, text);
         }
 

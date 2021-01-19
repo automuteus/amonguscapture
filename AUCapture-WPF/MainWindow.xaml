@@ -6,14 +6,17 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                  xmlns:dialogs="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:converters="clr-namespace:AUCapture_WPF.Converters"
+                 xmlns:controls="clr-namespace:AUCapture_WPF.Controls"
                  mc:Ignorable="d"
                  Style="{DynamicResource MahApps.Styles.MetroWindow.Clean}"
                  ResizeMode="CanResize"
-                 Title="AUCapture" TitleAlignment="Center" Height="450" Width="800"
+                 Title="AUCapture" TitleAlignment="Center" Height="544" Width="544"
                  ShowInTaskbar="True"
                  TitleCharacterCasing="Normal"
                  ShowSystemMenu="False"
                  ShowSystemMenuOnRightClick="False"
+                 Name="window"
                  SaveWindowPosition="false"
                  dialogs:DialogParticipation.Register="{Binding }"
                  ContentRendered="MainWindow_OnContentRendered" Loaded="MetroWindow_Loaded" TryToBeFlickerFree="True"
@@ -24,32 +27,20 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/clean/Controls.xaml" />
                 <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                
                 <!-- Theme setting -->
 
             </ResourceDictionary.MergedDictionaries>
-            
-            
+            <converters:PlayerToImage x:Key="PlayerToImage" />
+            <converters:BoolToString x:Key="BoolToString" />
+            <converters:EnumToStringConverter x:Key="EnumToStringConverter"/>
+            <converters:VisabilityInverterConverter x:Key="VisabilityInverterConverter"/>
+            <converters:BoolToVisibilityConverterInverted x:Key="BoolToVisibilityConverterInverted"/>
 
         </ResourceDictionary>
     </mah:MetroWindow.Resources>
-    <mah:MetroWindow.IconTemplate>
-        <DataTemplate>
-            <Image Source="logo/Logo.png" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Margin="4"/>
-        </DataTemplate>
-    </mah:MetroWindow.IconTemplate>
-    <mah:MetroWindow.RightWindowCommands>
+    <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
-            <Button Click="ManualConnect_Click" x:Name="ManualConnectButton"
-                    ToolTip="Open the manual connection window">
-                <Button.ContentTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconModern Width="22" Height="22" VerticalAlignment="Center" Kind="Connect" />
-                        </StackPanel>
-                    </DataTemplate>
-                </Button.ContentTemplate>
-            </Button>
             <Button Click="Settings" ToolTip="Open the settings window">
                 <Button.ContentTemplate>
                     <DataTemplate>
@@ -60,117 +51,128 @@
                     </DataTemplate>
                 </Button.ContentTemplate>
             </Button>
+            <Button Click="ManualConnect_Click" x:Name="ManualConnectButton"
+                    ToolTip="Open the manual connection window">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconModern Width="22" Height="22" VerticalAlignment="Center" Kind="Connect" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
         </mah:WindowCommands>
-    </mah:MetroWindow.RightWindowCommands>
-
-
+    </mah:MetroWindow.LeftWindowCommands>
     <mah:MetroWindow.Flyouts>
         <mah:FlyoutsControl>
-            <mah:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right"
-                        Width="{Binding ActualWidth,ElementName=MainGrid, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.75}"
+            <mah:Flyout x:Name="SettingsFlyout" Header="Settings"
+                        Position="Left"
+                        Width="{Binding ActualWidth, ElementName=window, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.75}"
+                        Theme="Adapt"
+                        IsAutoCloseEnabled="False" AnimateOpacity="True" Opacity="0.90">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Orientation="Vertical">
+                        <Grid>
+                            <mah:MetroAnimatedTabControl TabStripMargin="0 0 10 0" TabStripPlacement="Left"
+                                                         mah:TabControlHelper.UnderlinePlacement="Right"
+                                                         mah:TabControlHelper.Transition="LeftReplace"
+                                                         mah:TabControlHelper.Underlined="TabPanel">
+                                <mah:MetroTabItem Header="General">
+                                    <StackPanel Orientation="Vertical">
+                                        <mah:ToggleSwitch Header="Always copy game code"
+                                                          IsOn="{Binding Settings.AlwaysCopyGameCode, Mode=TwoWay}" />
+                                        <mah:ToggleSwitch Header="Focus window on connect"
+                                                          IsOn="{Binding Settings.FocusOnToken, Mode=TwoWay}" />
+                                        <mah:ToggleSwitch Header="API Server"
+                                                          IsOn="{Binding Settings.ApiServer, Mode=TwoWay}"
+                                                          Toggled="APIServerToggleSwitch_Toggled" />
+                                    </StackPanel>
+                                </mah:MetroTabItem>
+                                <mah:MetroTabItem Header="Theme">
+                                    <StackPanel Orientation="Vertical">
+                                        <mah:ToggleSwitch x:Name="DarkMode_Toggleswitch" Header="Dark mode"
+                                                          IsOn="{Binding Settings.DarkMode, Mode=TwoWay}"
+                                                          Toggled="Darkmode_Toggled" />
+                                        <mah:MetroHeader Header="Color Picker">
+                                            <mah:ColorPicker x:Name="AccentColorPicker"
+                                                             SelectedColorChanged="AccentColorPicker_OnSelectedColorChanged"
+                                                             mah:TextBoxHelper.AutoWatermark="True"
+                                                             mah:TextBoxHelper.UseFloatingWatermark="True"
+                                                             mah:TextBoxHelper.Watermark="Select a color" />
+                                        </mah:MetroHeader>
+                                    </StackPanel>
+                                </mah:MetroTabItem>
+                                <mah:MetroTabItem Header="Debug" x:Name="DebugTab">
+                                    <Grid Margin="0 10 0 0">
+                                        <StackPanel Orientation="Vertical">
+                                            <mah:ToggleSwitch Header="Debug mode"
+                                                              IsOn="{Binding Settings.debug, Mode=TwoWay}" />
+                                            <Button x:Name="ReloadOffsetsButton" Content="Reload offsets"
+                                                    Click="ReloadOffsetsButton_OnClick"
+                                                    Style="{StaticResource MahApps.Styles.Button.Square.Accent}" />
+                                            <Button Margin="0,10,0,0" Content="Reset Config" Style="{StaticResource MahApps.Styles.Button.Square.Accent}" Background="#FFDC3545" Click="ResetConfigButton_OnClick"/>
+
+                                        </StackPanel>
+                                    </Grid>
+                                </mah:MetroTabItem>
+                                <mah:MetroTabItem Header="Discord" x:Name="DiscordTokenTab">
+                                    <Grid Margin="0 10 0 0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" MinHeight="20" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <PasswordBox x:Name="discordTokenBox"
+                                                     VerticalContentAlignment="Center" VerticalAlignment="Center"
+                                                     HorizontalAlignment="Stretch"
+                                                     Grid.Row="1"
+                                                     Margin="0 5 5 0"
+                                                     mah:ControlsHelper.FocusBorderBrush="{DynamicResource MahApps.Brushes.Accent}"
+                                                     mah:TextBoxHelper.SelectAllOnFocus="True"
+                                                     mah:TextBoxHelper.Watermark="Paste token here"
+                                                     mah:TextBoxHelper.ButtonContent="{iconPacks:Unicons Kind=Question}"
+                                                     Style="{DynamicResource MahApps.Styles.PasswordBox.Button}"
+                                                     mah:TextBoxHelper.ButtonCommand="{Binding TextBoxButtonHelpCmd, Mode=OneWay}"
+                                                     mah:TextBoxHelper.ButtonsAlignment="Right" />
+                                        <StackPanel Grid.Row="3"
+                                                    MinHeight="85"
+                                                    HorizontalAlignment="Right"
+                                                    Orientation="Horizontal">
+                                            <Button Grid.Column="1" Content="Submit"
+                                                    x:Name="SubmitDiscordButton" Margin="5 0 5 0"
+                                                    IsDefault="True"
+                                                    HorizontalAlignment="Center"
+                                                    Click="SubmitDiscordButton_OnClick"
+                                                    Style="{DynamicResource MahApps.Styles.Button.Dialogs.Accent}" />
+                                        </StackPanel>
+                                    </Grid>
+                                </mah:MetroTabItem>
+                                <mah:MetroTabItem Header="About">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                        <StackPanel Orientation="Vertical">
+                                            <mah:MetroHeader Header="App version:">
+                                                <TextBox VerticalAlignment="Center" MinWidth="150" IsReadOnly="True"
+                                                         Text="{Binding Version, Mode=OneWay}" />
+                                            </mah:MetroHeader>
+                                            <mah:MetroHeader Header="Latest version:">
+                                                <TextBox VerticalAlignment="Center" MinWidth="150" IsReadOnly="True"
+                                                         Text="{Binding LatestVersion, Mode=OneWay}" />
+                                            </mah:MetroHeader>
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </mah:MetroTabItem>
+                            </mah:MetroAnimatedTabControl>
+                        </Grid>
+                    </StackPanel>
+
+                </ScrollViewer>
+
+            </mah:Flyout>
+            <mah:Flyout x:Name="ManualConnectionFlyout" Header="Manual Connection" Position="Left"
+                        Width="{Binding ActualWidth,ElementName=window, Converter={dialogs:MathDivideConverter}, ConverterParameter=2}"
                         Theme="Adapt"
                         IsAutoCloseEnabled="False" AnimateOpacity="True" ExternalCloseButton="Left">
-                <Grid Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <TabControl Grid.ColumnSpan="2" Grid.Row="1" mah:TabControlHelper.Underlined="TabPanel"
-                                ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                        <mah:MetroTabItem Header="General">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                <StackPanel Orientation="Vertical">
-                                    
-                                    <mah:ToggleSwitch x:Name="Copy_toggleswitch" Header="Always copy gamecode"
-                                                      IsOn="{Binding Settings.AlwaysCopyGameCode, Mode=TwoWay}"
-                                                      Toggled="Darkmode_Toggled" />
-                                    <mah:ToggleSwitch x:Name="APIserver_toggleswitch" Header="API server"
-                                                      IsOn="{Binding Settings.ApiServer, Mode=TwoWay}"
-                                                      Toggled="APIServerToggleSwitch_Toggled" />
-
-                                    <mah:ToggleSwitch x:Name="TokenFocus_ToggleSwitch" Header="Focus window on connect"
-                                                      IsOn="{Binding Settings.FocusOnToken, Mode=TwoWay}" />
-
-                                    <Button HorizontalAlignment="Left" Margin="0,10,0,0" Content="Reset Config" Style="{StaticResource MahApps.Styles.Button.Square.Accent}" Background="#FFDC3545" Click="ResetConfigButton_OnClick"/>
-
-                                </StackPanel>
-                            </ScrollViewer>
-                        </mah:MetroTabItem>
-                        <mah:MetroTabItem Header="Theme">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                <StackPanel Orientation="Vertical">
-                                    <mah:ToggleSwitch x:Name="Darkmode_toggleswitch" Header="Dark mode"
-                                                      IsOn="{Binding Settings.DarkMode, Mode=TwoWay}"
-                                                      Toggled="Darkmode_Toggled" />
-                                    <mah:MetroHeader Header="Font size">
-                                        <Slider Name="FontSlider" Maximum="72" Minimum="1"
-                                                AutoToolTipPlacement="TopLeft" HorizontalAlignment="Left"
-                                                Width="{Binding ActualWidth,ElementName=MainGrid, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.25}"
-                                                Value="{Binding Settings.fontSize, Mode=TwoWay}" />
-                                    </mah:MetroHeader>
-                                    <mah:MetroHeader Header="Color Picker">
-                                        <mah:ColorPicker x:Name="AccentColorPicker" SelectedColorChanged="AccentColorPicker_OnSelectedColorChanged" mah:TextBoxHelper.AutoWatermark="True"
-                                                         mah:TextBoxHelper.UseFloatingWatermark="True"
-                                                         mah:TextBoxHelper.Watermark="Select a color"/>
-                                    </mah:MetroHeader>
-
-                                </StackPanel>
-                            </ScrollViewer>
-                        </mah:MetroTabItem>
-                        <mah:MetroTabItem Header="Debug">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                <StackPanel Orientation="Vertical">
-                                    <mah:ToggleSwitch x:Name="DebugConsole_Toggle" Header="Debug mode"
-                                                      IsOn="{Binding Settings.debug, Mode=TwoWay}" />
-                                    <Button x:Name="ReloadOffsetsButton" Content="Reload offsets"
-                                            Click="ReloadOffsetsButton_OnClick"
-                                            Style="{StaticResource MahApps.Styles.Button.Square.Accent}" />
-                                </StackPanel>
-                            </ScrollViewer>
-                        </mah:MetroTabItem>
-                        <mah:MetroTabItem Header="Discord">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                <StackPanel Orientation="Vertical" Name="DiscordPanel">
-                                    <mah:MetroHeader Header="Discord token: " VerticalAlignment="Top">
-                                        <StackPanel Orientation="Horizontal">
-                                            <PasswordBox x:Name="discordTokenBox" mah:TextBoxHelper.ClearTextButton="True" VerticalContentAlignment="Stretch" HorizontalAlignment="Left" Width="{Binding ActualWidth,ElementName=DiscordPanel, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.5}" />
-                                            <Button Content="Submit"
-                                                    Style="{StaticResource MahApps.Styles.Button.Square.Accent}"
-                                                    x:Name="SubmitDiscordButton" Margin="5 0 0 0"
-                                                    Click="SubmitDiscordButton_OnClick" IsDefault="True"
-                                                    Width="{Binding ActualWidth,ElementName=DiscordPanel, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.3}" />
-
-                                            <Button Content="Help" x:Name="HelpButton" Margin="5 0 0 0"
-                                                    Click="HelpDiscordButton_OnClick"
-                                                    Width="{Binding ActualWidth,ElementName=DiscordPanel, Converter={dialogs:MathMultiplyConverter}, ConverterParameter=0.15}" />
-                                        </StackPanel>
-                                    </mah:MetroHeader>
-                                </StackPanel>
-                            </ScrollViewer>
-                        </mah:MetroTabItem>
-                        <mah:MetroTabItem Header="About">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                                <StackPanel Orientation="Vertical">
-                                    <mah:MetroHeader Header="App version:">
-                                        <TextBox VerticalAlignment="Center" MinWidth="150" IsReadOnly="True"
-                                                 Text="{Binding Version, Mode=OneWay}" />
-                                    </mah:MetroHeader>
-                                    <mah:MetroHeader Header="Latest version:">
-                                        <TextBox VerticalAlignment="Center" MinWidth="150" IsReadOnly="True"
-                                                 Text="{Binding LatestVersion, Mode=OneWay}" />
-                                    </mah:MetroHeader>
-                                </StackPanel>
-                            </ScrollViewer>
-                        </mah:MetroTabItem>
-                    </TabControl>
-
-                </Grid>
-            </mah:Flyout>
-            <mah:Flyout x:Name="ManualConnectionFlyout" Header="Manual Connection" Position="Right"
-                        Width="{Binding ActualWidth,ElementName=MainGrid, Converter={dialogs:MathDivideConverter}, ConverterParameter=3}"
-                        Theme="Adapt"
-                        IsAutoCloseEnabled="False" AnimateOpacity="True" ExternalCloseButton="Right">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -195,109 +197,112 @@
                     </ScrollViewer>
                 </Grid>
             </mah:Flyout>
-            <mah:Flyout x:Name="MemeFlyout" Header="Crack Detected" Position="Right"
-                        Width="{Binding ActualWidth,ElementName=MainGrid}" Theme="Adapt"
-                        IsAutoCloseEnabled="False" AnimateOpacity="True" CloseButtonVisibility="Hidden"
-                        ExternalCloseButton="Right" IsOpenChanged="MemeFlyout_OnIsOpenChanged">
-                <Grid Margin="10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <MediaElement x:Name="MemePlayer"
-                                  Source="https://ia800803.us.archive.org/29/items/MacArthur_Foundation_100andChange_dQw4w9WgXcQ/Rick_Astley_-_Never_Gonna_Give_You_Up_dQw4w9WgXcQ.mp4"
-                                  LoadedBehavior="Manual" MediaEnded="MemePlayer_OnMediaEnded"
-                                  UseLayoutRounding="True" DockPanel.Dock="Top" HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Stretch" />
-                </Grid>
-            </mah:Flyout>
         </mah:FlyoutsControl>
-
     </mah:MetroWindow.Flyouts>
-
-
-    <Grid x:Name="MainGrid">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        
+        <StackPanel VerticalAlignment="Center" Grid.RowSpan="4" Grid.ColumnSpan="3" Orientation="Vertical" >
+            <TextBlock  HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}">
+                <Run FontSize="32" FontFamily="{StaticResource AUFont}">Waiting for among us</Run><LineBreak/>
+            </TextBlock>
+            <mah:ProgressRing Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}"/>
+            <Button Style="{DynamicResource MahApps.Styles.Button.Square.Accent}" Margin="0 10 0 0" Content="Open Among us" HorizontalAlignment="Center" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}" Command="{Binding OpenAmongUsCMD, Mode=OneWay}"/>
+        </StackPanel>
+        
+        <GroupBox Name="ItemBox" Visibility="{Binding Connected, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.ColumnSpan="3" Grid.RowSpan="3" Header="Players" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+            <ItemsControl Grid.ColumnSpan="3" Grid.RowSpan="4" Name="PlayersList" ItemsSource="{Binding Players}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <controls:PlayerControl  PlayerName="{Binding Name}" Color="{Binding Color}"
+                                                AliveStatus="{Binding Alive}"  PlayerPantsID="{Binding PantsID}" PlayerHatID="{Binding HatID}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid IsItemsHost="True" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </GroupBox>
+        <Expander Grid.Column="2" IsExpanded="True" Grid.Row="3" Header="Status" Visibility="{Binding ElementName=ItemBox, Path=Visibility}" ExpandDirection="Up" Margin="0" Panel.ZIndex="1" >
+            <DataGrid ItemsSource="{Binding ConnectionStatuses}" HeadersVisibility="None" AutoGenerateColumns="False" CanUserSortColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False">
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="IsHitTestVisible" Value="False"/>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <iconPacks:PackIconUnicons VerticalAlignment="Center" VerticalContentAlignment="Center">
+                                    <iconPacks:PackIconUnicons.Style>
+                                        <Style TargetType="iconPacks:PackIconUnicons">
+                                            <Setter Property="Kind" Value="Multiply" />
+                                            <Setter Property="Foreground" Value="Red" />
+                                            <Style.Triggers>
+                                                <DataTrigger
+                                                    Binding="{Binding Path=Connected, Converter={StaticResource BoolToString}}"
+                                                    Value="True">
+                                                    <Setter Property="Kind" Value="Check" />
+                                                    <Setter Property="Foreground" Value="LimeGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </iconPacks:PackIconUnicons.Style>
+                                </iconPacks:PackIconUnicons>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn >
+                    <DataGridTextColumn Binding="{Binding ConnectionName}" Width="*" IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="HorizontalAlignment" Value="Right" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Expander>
+        <Expander ExpandDirection="Up" IsExpanded="True" VerticalAlignment="Bottom" Visibility="{Binding ElementName=ItemBox, Path=Visibility}" Grid.Column="0" Grid.Row="3" Grid.RowSpan="1" Header="Info" Margin="0">
+            <StackPanel Orientation="Vertical">
+                <TextBox x:Name="StatusBox" mah:TextBoxHelper.Watermark="State" Text="{Binding GameState, Converter={StaticResource EnumToStringConverter}}"
+                         VerticalAlignment="Center" IsManipulationEnabled="False" Focusable="False"
+                         IsHitTestVisible="True" AllowDrop="False" IsReadOnly="True" ToolTip="Current status"
+                         HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                <TextBox  x:Name="GameCodeBox" Text="{Binding GameCode}"
+                         mah:TextBoxHelper.Watermark="Game code"
+                         VerticalAlignment="Center"
+                         IsHitTestVisible="True"
+                         Focusable="False"
+                         IsManipulationEnabled="False"
+                         AllowDrop="False"
+                         ToolTip="Game code"
+                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                         mah:TextBoxHelper.ButtonContent="{iconPacks:Unicons Kind=Copy}"
+                         Style="{DynamicResource MahApps.Styles.TextBox.Button}"
+                         mah:TextBoxHelper.ButtonCommand="{Binding TextBoxButtonCopyCmd, Mode=OneWay}"
+                         dialogs:TextBoxHelper.WatermarkAlignment="Right" VerticalContentAlignment="Stretch"
+                         dialogs:TextBoxHelper.AutoWatermark="True" />
+                <TextBox x:Name="MapBox" mah:TextBoxHelper.Watermark="Map" Text="{Binding GameMap, Converter={StaticResource EnumToStringConverter}}"
+                         VerticalAlignment="Center" IsManipulationEnabled="False" Focusable="False"
+                         IsHitTestVisible="True" AllowDrop="False" IsReadOnly="True" ToolTip="Current map"
+                         HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            </StackPanel>
+            
+        </Expander>
 
-        <TabControl Grid.ColumnSpan="3" Grid.Row="0" mah:TabControlHelper.Underlined="TabPanel">
-            <mah:MetroTabItem Header="Console">
-
-                <DockPanel x:Name="consoleDockPanel" ScrollViewer.CanContentScroll="True" UseLayoutRounding="True">
-
-                    <RichTextBox Name="ConsoleTextBox" FontFamily="Consolas" Visibility="Visible"
-                                 FontSize="{Binding Settings.fontSize, Mode=OneWay}"
-                                 IsReadOnly="True" DockPanel.Dock="Top"
-                                 mah:ScrollViewerHelper.IsHorizontalScrollWheelEnabled="True"
-                                 VerticalScrollBarVisibility="Auto"
-                                 MaxHeight="{Binding ActualHeight, ElementName=consoleDockPanel}"
-                                 Height="{Binding ActualHeight, ElementName=consoleDockPanel}" UseLayoutRounding="True" />
-
-                </DockPanel>
-            </mah:MetroTabItem>
-        </TabControl>
-
-
-        <StatusBar x:Name="StatusBar" Grid.ColumnSpan="3" Grid.Row="1" SnapsToDevicePixels="True">
-            <StatusBar.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                    </Grid>
-                </ItemsPanelTemplate>
-            </StatusBar.ItemsPanel>
-            <StatusBarItem Grid.Column="0" HorizontalAlignment="Center">
-                <mah:MetroHeader Header="Status:" Margin="0 0 0 5" Foreground="{DynamicResource MahApps.Brushes.Text}">
-                    <TextBox x:Name="StatusBox" mah:TextBoxHelper.Watermark="UNKNOWN"
-                             VerticalAlignment="Center" IsManipulationEnabled="False" Focusable="False"
-                             IsHitTestVisible="True" AllowDrop="False" IsReadOnly="True" ToolTip="Current status"
-                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-                </mah:MetroHeader>
-            </StatusBarItem>
-            <Separator Grid.Column="0" Style="{DynamicResource MahApps.Styles.Separator.StatusBar}"
-                       Background="{DynamicResource MahApps.Brushes.Text}" HorizontalContentAlignment="Center"
-                       VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Stretch" />
-            <StatusBarItem Grid.Column="1" HorizontalAlignment="Center">
-                <mah:MetroHeader Header="Map:" Margin="0 0 0 5" Foreground="{DynamicResource MahApps.Brushes.Text}">
-                    <TextBox x:Name="MapBox" Text="" mah:TextBoxHelper.Watermark="UNKNOWN"
-                             IsManipulationEnabled="False"
-                             ToolTip="Current map" VerticalAlignment="Center" Focusable="False" IsHitTestVisible="True"
-                             AllowDrop="False" IsReadOnly="True" HorizontalAlignment="Center"
-                             HorizontalContentAlignment="Center" dialogs:TextBoxHelper.WatermarkAlignment="Right"
-                             VerticalContentAlignment="Center" />
-                </mah:MetroHeader>
-            </StatusBarItem>
-            <Separator Grid.Column="2" Style="{DynamicResource MahApps.Styles.Separator.StatusBar}"
-                       Background="{DynamicResource MahApps.Brushes.Text}"
-                       HorizontalContentAlignment="Center"
-                       VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Stretch" />
-            <StatusBarItem Grid.Column="2" HorizontalAlignment="Center">
-                <mah:MetroHeader Header="Code:" Margin="0 0 0 5" Foreground="{DynamicResource MahApps.Brushes.Text}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBox x:Name="GameCodeBox" Text="" mah:TextBoxHelper.Watermark="UNKNOWN"
-                                 VerticalAlignment="Center"
-                                 IsHitTestVisible="True"
-                                 Focusable="False"
-                                 IsManipulationEnabled="False"
-                                 AllowDrop="False"
-                                 ToolTip="Game code"
-                                 HorizontalAlignment="Center" HorizontalContentAlignment="Center"
-                                 mah:TextBoxHelper.ButtonContent="{iconPacks:Unicons Kind=Copy}"
-                                 Style="{DynamicResource MahApps.Styles.TextBox.Button}"
-                                 mah:TextBoxHelper.ButtonCommand="{Binding TextBoxButtonCopyCmd, Mode=OneWay}"
-                                 dialogs:TextBoxHelper.WatermarkAlignment="Right" VerticalContentAlignment="Stretch" dialogs:TextBoxHelper.AutoWatermark="True">
-                        </TextBox>
-                    </StackPanel>
-                </mah:MetroHeader>
-            </StatusBarItem>
-        </StatusBar>
     </Grid>
 </mah:MetroWindow>

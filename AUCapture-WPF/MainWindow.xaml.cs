@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
@@ -26,9 +27,11 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using AUCapture_WPF.Models;
 using Discord;
 using Humanizer;
 using Color = System.Drawing.Color;
+using PlayerColor = AmongUsCapture.PlayerColor;
 
 namespace AUCapture_WPF
 {
@@ -44,7 +47,7 @@ namespace AUCapture_WPF
         public UserDataContext context;
         private readonly bool connected;
         private readonly object locker = new object();
-        private readonly Queue<string> DeadMessages = new Queue<string>();
+        private readonly Queue<Player> DeadMessages = new Queue<Player>();
         private Task ThemeGeneration;
         private bool Updated = false;
 
@@ -79,11 +82,7 @@ namespace AUCapture_WPF
             {
                 Updated = false;
             }
-                
-        
-                
-            Paragraph p = ConsoleTextBox.Document.Blocks.FirstBlock as Paragraph;
-            ConsoleTextBox.Document.Blocks.Clear();
+            
             try
             {
                 config = new ConfigurationBuilder<IAppSettings>()
@@ -101,17 +100,24 @@ namespace AUCapture_WPF
             
             context = new UserDataContext(DialogCoordinator.Instance, config);
             DataContext = context;
-            config.PropertyChanged += ConfigOnPropertyChanged;
             App.handler.OnReady += (sender, args) =>
             {
                 App.socket.AddHandler(App.handler);
             };
-
+            context.ConnectionStatuses.Add(new ConnectionStatus{Connected = false, ConnectionName = "AutoMuteUs"});
+            context.ConnectionStatuses.Add(new ConnectionStatus{Connected = false, ConnectionName = "Among us"});
+            context.ConnectionStatuses.Add(new ConnectionStatus{Connected = false, ConnectionName = "User bot"});
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
+            GameMemReader.getInstance().ProcessHook += OnProcessHook;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
+            GameMemReader.getInstance().PlayerCosmeticChanged += OnPlayerCosmeticChanged;
+            App.handler.OnReady += HandlerOnOnReady;
             GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
             GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
             GameMemReader.getInstance().GameOver += OnGameOver;
+            App.socket.OnConnected += SocketOnOnConnected;
+            App.socket.OnDisconnected += SocketOnOnDisconnected;
+            context.Players.CollectionChanged += PlayersOnCollectionChanged;
             IPCAdapter.getInstance().OnToken += (sender, token) =>
             {
                 this.BeginInvoke((w) =>
@@ -135,6 +141,7 @@ namespace AUCapture_WPF
                     w.Focus();         // important
                 });
             };
+            
             if (!context.Settings.discordTokenEncrypted) //Encrypt discord token if it is not encrypted.
             {
                 context.Settings.discordToken = JsonConvert.SerializeObject(encryptToken(context.Settings.discordToken));
@@ -173,8 +180,62 @@ namespace AUCapture_WPF
             { }
 
             
-
+           
             //ApplyDarkMode();
+        }
+
+        private void PlayersOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("Players", Color.Aqua, JsonConvert.SerializeObject(e, Formatting.None,new StringEnumConverter()));
+        }
+
+        private void OnPlayerCosmeticChanged(object? sender, PlayerCosmeticChangedEventArgs e)
+        {
+            if (context.Players.Any(x => x.Name == e.Name))
+            {
+                var player = context.Players.First(x => x.Name == e.Name);
+                Console.WriteLine("Cosmetic change");
+                Dispatcher.Invoke((Action) (() =>
+                {
+                    player.HatID = e.HatId;
+                    player.PantsID = e.SkinId;
+                }));
+            }
+
+        }
+
+        private void SocketOnOnDisconnected(object? sender, EventArgs e)
+        {
+            context.ConnectionStatuses.First(x => x.ConnectionName == "AutoMuteUs").Connected = false;
+        }
+
+        private void SocketOnOnConnected(object? sender, ClientSocket.ConnectedEventArgs e)
+        {
+            context.ConnectionStatuses.First(x => x.ConnectionName == "AutoMuteUs").Connected = true;
+        }
+
+        private void HandlerOnOnReady(object? sender, DiscordHandler.ReadyEventArgs e)
+        {
+            context.ConnectionStatuses.First(x => x.ConnectionName == "User bot").Connected = true;
+        }
+
+
+
+        private void OnProcessHook(object? sender, ProcessHookArgs e)
+        {
+            context.Connected = true;
+            context.ConnectionStatuses.First(x => x.ConnectionName == "Among us").Connected = true;
+            ProcessMemory.getInstance().process.Exited += ProcessOnExited;
+        }
+
+        private void ProcessOnExited(object? sender, EventArgs e)
+        {
+            Dispatcher.Invoke((Action) (() =>
+            {
+                context.Connected = false;
+                context.ConnectionStatuses.First(x => x.ConnectionName == "Among us").Connected = false;
+            }));
+            ProcessMemory.getInstance().process.Exited -= ProcessOnExited;
         }
 
         public async void InstallDotnet()
@@ -382,7 +443,13 @@ namespace AUCapture_WPF
         }
         private void OnGameOver(object? sender, GameOverEventArgs e)
         {
-            Console.WriteLine(JsonConvert.SerializeObject(e, Formatting.Indented, new StringEnumConverter()));
+            Dispatcher.Invoke((Action) (() =>
+            {
+                foreach (var player in context.Players)
+                {
+                    player.Alive = true;
+                }
+            }));
         }
 
 
@@ -390,14 +457,51 @@ namespace AUCapture_WPF
         {
             if (e.Action == PlayerAction.Died)
             {
-                DeadMessages.Enqueue($"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
+                if (context.Players.Any(x => x.Name == e.Name))
+                {
+                    DeadMessages.Enqueue(context.Players.First(x=>x.Name == e.Name));
+                }
             }
             else
             {
-                AmongUsCapture.Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Name}{NormalTextColor.ToTextColor()}: {e.Action}");
+                if (e.Action != PlayerAction.Joined && context.Players.Any(x => x.Name == e.Name || x.Color==e.Color))
+                {
+                    var player = context.Players.First(x => x.Name == e.Name || x.Color == e.Color);
+                    Dispatcher.Invoke((Action) (() =>
+                    {
+                        switch (e.Action)
+                        {
+                            case PlayerAction.ChangedColor:
+                                player.Color = e.Color;
+                                break;
+
+                            case PlayerAction.Disconnected:
+                            case PlayerAction.Left:
+                                context.Players.Remove(player);
+                                break;
+
+                            case PlayerAction.Exiled:
+                            case PlayerAction.Died:
+                                player.Alive = false;
+                                break;
+                        }
+                    }));
+                }
+                else
+                {
+                    if (e.Action == PlayerAction.Joined)
+                    {
+                        Dispatcher.Invoke((Action) (() =>
+                        {
+                            context.Players.Add(new Player(e.Name, e.Color, !e.IsDead, 0, 0));
+
+                        }));
+                    }
+                    
+                }
             }
 
-            //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
+            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
         }
 
         private void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
@@ -410,7 +514,8 @@ namespace AUCapture_WPF
 
         private void OnJoinedLobby(object sender, LobbyEventArgs e)
         {
-            GameCodeBox.BeginInvoke(a => a.Text = e.LobbyCode);
+            context.GameCode = e.LobbyCode;
+            context.GameMap = e.Map;
             this.BeginInvoke(a =>
             {
                 if (context.Settings.AlwaysCopyGameCode)
@@ -418,7 +523,6 @@ namespace AUCapture_WPF
                     Clipboard.SetText(e.LobbyCode);
                 }
             });
-            MapBox.BeginInvoke(a => a.Text = e.Map.ToString());
         }
 
         private Color PlayerColorToColorOBJ(PlayerColor pColor)
@@ -467,21 +571,6 @@ namespace AUCapture_WPF
             return OutputCode;
         }
 
-        private void ConfigOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "fontSize")
-            {
-                ConsoleTextBox.BeginInvoke(tb =>
-                {
-                    tb.Document.FontSize = config.fontSize;
-                    //foreach (var block in tb.Document.Blocks)
-                    //{
-                    //    block.FontSize = config.fontSize;
-                    //}
-                }, DispatcherPriority.Input);
-            }
-        }
-
         private void SetDefaultThemeColor()
         {
             if (config.ranBefore)
@@ -494,7 +583,7 @@ namespace AUCapture_WPF
             ThemeManager.Current.SyncTheme();
             Theme newTheme = ThemeManager.Current.DetectTheme();
             config.DarkMode = newTheme.BaseColorScheme == ThemeManager.BaseColorDark;
-            Darkmode_toggleswitch.IsOn = config.DarkMode;
+            DarkMode_Toggleswitch.IsOn = config.DarkMode;
         }
 
         public static void OpenBrowser(string url)
@@ -557,10 +646,14 @@ namespace AUCapture_WPF
 
         private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
         {
-            setCurrentState(e.NewState.ToString());
+            setCurrentState(e.NewState);
             while (DeadMessages.Count > 0)
             {
-                AmongUsCapture.Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, DeadMessages.Dequeue());
+                var playerToKill = DeadMessages.Dequeue();
+                if (context.Players.Contains(playerToKill))
+                {
+                    playerToKill.Alive = false;
+                }
             }
 
             AmongUsCapture.Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
@@ -568,62 +661,37 @@ namespace AUCapture_WPF
             if (e.NewState == GameState.MENU)
             {
                 setGameCode("");
-                MapBox.BeginInvoke(a => a.Text = "");
+                Dispatcher.Invoke((Action) (() =>
+                {
+                    context.GameState = e.NewState;
+                    foreach (var player in context.Players)
+                    {
+                        player.Alive = true;
+                    }
+                }));
+            }
+            else if (e.NewState == GameState.LOBBY)
+            {
+                Dispatcher.Invoke((Action) (() =>
+                {
+                    context.GameState = e.NewState;
+                    foreach (var player in context.Players)
+                    {
+                        player.Alive = true;
+                    }
+                }));
             }
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
         }
 
         public void setGameCode(string gamecode)
         {
-            GameCodeBox.BeginInvoke(tb => { GameCodeBox.Text = gamecode; });
+            context.GameCode = gamecode;
         }
 
-        public void setCurrentState(string state)
+        public void setCurrentState(GameState state)
         {
-            StatusBox.BeginInvoke(tb => { tb.Text = state; });
-        }
-
-        public void setConnectionStatus(bool connected)
-        {
-            if (connected)
-            {
-                ThemeManager.Current.ChangeThemeColorScheme(this, "Green");
-            }
-            else
-            {
-                ThemeManager.Current.ChangeThemeColorScheme(this, "Red");
-            }
-        }
-
-        public void WriteConsoleLineFormatted(string moduleName, Color moduleColor, string message)
-        {
-            //Outputs a message like this: [{ModuleName}]: {Message}
-            WriteColoredText(
-                $"{NormalTextColor.ToTextColor()}[{moduleColor.ToTextColor()}{moduleName}{NormalTextColor.ToTextColor()}]: {message}");
-        }
-
-        public void WriteColoredText(string ColoredText)
-        {
-            ConsoleTextBox.BeginInvoke(tb =>
-            {
-                Paragraph paragraph = new Paragraph();
-                foreach (ColoredString part in TextColor.toParts(ColoredText))
-                {
-                    //Foreground="{DynamicResource MahApps.Brushes.Text}"
-                    Run run = new Run(part.text);
-
-                    if (part.textColor.ToTextColor() != NormalTextColor.ToTextColor())
-                    {
-                        run.Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(part.textColor.A,
-                            part.textColor.R, part.textColor.G, part.textColor.B));
-                    }
-                    paragraph.Inlines.Add(run);
-                    paragraph.LineHeight = 1;
-                    //this.AppendText(part.text, part.textColor, false);
-                }
-                tb.Document.Blocks.Add(paragraph);
-                tb.ScrollToEnd();
-            }, DispatcherPriority.Input);
+            context.GameState = state;
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
@@ -637,41 +705,12 @@ namespace AUCapture_WPF
 
         }
 
-        private void TestFillConsole(int entries) //Helper test method to see if filling console works.
-        {
-            for (int i = 0; i < entries; i++)
-            {
-                string nonString = "Wow! Look at this pretty text!";
-                WriteConsoleLineFormatted("Rainbow", TextColor.Rainbow((float)i / entries),
-                    TextColor.getRainbowText(nonString, i));
-            }
-
-            ;
-            //this.WriteColoredText(getRainbowText("This is a Pre-Release from Carbon's branch."));
-        }
-
-        public bool Cracked()
-        {
-            PlayGotEm();
-            MessageDialogResult x = MessageDialogResult.Affirmative;
-            x = this.ShowMessageAsync("Uh oh.",
-                "We have detected that you are running an unsupported version of the game. This may or may not work.",
-                MessageDialogStyle.AffirmativeAndNegative,
-                new MetroDialogSettings
-                {
-                    AffirmativeButtonText = "I understand",
-                    NegativeButtonText = "Exit",
-                    ColorScheme = MetroDialogColorScheme.Theme,
-                    DefaultButtonFocus = MessageDialogResult.Negative
-                }).Result;
-            return x == MessageDialogResult.Affirmative;
-        }
         public void PlayGotEm()
         {
             this.BeginInvoke((win) =>
             {
-                win.MemeFlyout.IsOpen = true;
-                win.MemePlayer.Position = TimeSpan.Zero;
+                //win.MemeFlyout.IsOpen = true;
+                //win.MemePlayer.Position = TimeSpan.Zero;
             });
 
 
@@ -706,35 +745,35 @@ namespace AUCapture_WPF
         {
             this.BeginInvoke((win) =>
             {
-                win.MemeFlyout.IsOpen = false;
+                //win.MemeFlyout.IsOpen = false;
             });
         }
 
-        private void MemeFlyout_OnIsOpenChanged(object sender, RoutedEventArgs e)
-        {
-            if (MemeFlyout.IsOpen)
-            {
-                MemePlayer.Play();
-                Task.Factory.StartNew(() =>
-                {
-                    Thread.Sleep(5000);
-                    MemeFlyout.Invoke(new Action(() =>
-                    {
-                        if (MemeFlyout.IsOpen)
-                        {
-                            MemeFlyout.CloseButtonVisibility = Visibility.Visible;
-                        }
-                    }));
-
-                });
-            }
-            else
-            {
-                MemeFlyout.CloseButtonVisibility = Visibility.Hidden;
-                MemePlayer.Close();
-                GC.Collect();
-            }
-        }
+        //private void MemeFlyout_OnIsOpenChanged(object sender, RoutedEventArgs e)
+        //{
+            //if (MemeFlyout.IsOpen)
+            //{
+            //    MemePlayer.Play();
+            //    Task.Factory.StartNew(() =>
+             //   {
+             //       Thread.Sleep(5000);
+            //        MemeFlyout.Invoke(new Action(() =>
+            //        {
+            //            if (MemeFlyout.IsOpen)
+           //             {
+           //                 MemeFlyout.CloseButtonVisibility = Visibility.Visible;
+           //             }
+           //        }));
+        //
+          //      });
+           // }
+           // else
+           // {
+            //    MemeFlyout.CloseButtonVisibility = Visibility.Hidden;
+            //    MemePlayer.Close();
+            //    GC.Collect();
+           // }
+        //}
         private async void SubmitDiscordButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (discordTokenBox.Password != "")
@@ -789,11 +828,11 @@ namespace AUCapture_WPF
                 .FetchForHash(GameMemReader.getInstance().GameHash);
             if (GameMemReader.getInstance().CurrentOffsets is not null)
             {
-                WriteConsoleLineFormatted("GameMemReader", Color.Lime, $"Loaded offsets: {GameMemReader.getInstance().CurrentOffsets.Description}");
+                //WriteConsoleLineFormatted("GameMemReader", Color.Lime, $"Loaded offsets: {GameMemReader.getInstance().CurrentOffsets.Description}");
             }
             else
             {
-                WriteConsoleLineFormatted("GameMemReader", Color.Lime, $"No offsets found for: {Color.Aqua.ToTextColor()}{GameMemReader.getInstance().GameHash.ToString()}.");
+                //WriteConsoleLineFormatted("GameMemReader", Color.Lime, $"No offsets found for: {Color.Aqua.ToTextColor()}{GameMemReader.getInstance().GameHash.ToString()}.");
 
             }
         }
@@ -801,12 +840,6 @@ namespace AUCapture_WPF
         private void HelpDiscordButton_OnClick(object sender, RoutedEventArgs e)
         {
             OpenBrowser("https://www.youtube.com/watch?v=jKcEW5qpk8E");
-        }
-
-
-        private void ConsoleTextBox_OnCopying(object sender, DataObjectCopyingEventArgs e)
-        {
-            e.CancelCommand();
         }
 
         private void APIServerToggleSwitch_Toggled(object sender, RoutedEventArgs e)
@@ -818,20 +851,14 @@ namespace AUCapture_WPF
 
             if (config.ApiServer)
             {
-                WriteConsoleLineFormatted("APIServer", Color.Brown, "Starting server");
+                AmongUsCapture.Settings.conInterface.WriteModuleTextColored("APIServer", Color.Brown, "Starting server");
                 ServerSocket.instance.Start();
             }
             else
             {
-                WriteConsoleLineFormatted("APIServer", Color.Brown, "Stopping server");
+                AmongUsCapture.Settings.conInterface.WriteModuleTextColored("APIServer", Color.Brown, "Stopping server");
                 ServerSocket.instance.Stop();
             }
-        }
-
-
-        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            
         }
 
         private async void AccentColorPicker_OnSelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)

@@ -10,6 +10,7 @@
                  xmlns:converters="clr-namespace:AUCapture_WPF.Converters"
                  xmlns:controls="clr-namespace:AUCapture_WPF.Controls"
                  xmlns:wpf="clr-namespace:LoadingIndicators.WPF;assembly=LoadingIndicators.WPF"
+                 xmlns:hc="https://handyorg.github.io/handycontrol"
                  mc:Ignorable="d"
                  Style="{DynamicResource MahApps.Styles.MetroWindow.Clean}"
                  ResizeMode="CanResize"
@@ -39,6 +40,7 @@
             <converters:VisabilityInverterConverter x:Key="VisabilityInverterConverter" />
             <converters:BoolToVisibilityConverterInverted x:Key="BoolToVisibilityConverterInverted" />
             <converters:BoolInverter x:Key="BoolInverter" />
+            <converters:GameStateToVisability x:Key="GameStateToVisability"/>
             <BitmapImage UriSource="Resources/Misc/status-connected.png" x:Key="status-connected"/>
             <BitmapImage UriSource="Resources/Misc/status-disconnected.png" x:Key="status-disconnected"/>
         </ResourceDictionary>
@@ -243,7 +245,7 @@
                   Visibility="{Binding Connected, Converter={StaticResource BooleanToVisibilityConverter}}"
                   Grid.ColumnSpan="3" Grid.RowSpan="3" Header="Players"
                   ScrollViewer.VerticalScrollBarVisibility="Disabled">
-            <ItemsControl Grid.ColumnSpan="3" Grid.RowSpan="4" Name="PlayersList" ItemsSource="{Binding Players}">
+            <ItemsControl Visibility="{Binding GameState, Converter={StaticResource GameStateToVisability}}" Grid.ColumnSpan="3" Grid.RowSpan="4" Name="PlayersList" ItemsSource="{Binding Players}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <controls:PlayerControl PlayerName="{Binding Name}" Color="{Binding Color}"
@@ -253,7 +255,7 @@
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid IsItemsHost="True" Rows="3" />
+                        <UniformGrid IsItemsHost="True" Rows="3" hc:PanelElement.FluidMoveBehavior="{StaticResource BehaviorXY400}" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>

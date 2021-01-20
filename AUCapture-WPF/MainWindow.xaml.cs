@@ -598,6 +598,7 @@ namespace AUCapture_WPF
                 setGameCode("");
                 Dispatcher.Invoke((Action) (() =>
                 {
+
                     context.GameState = e.NewState;
                     foreach (var player in context.Players)
                     {

@@ -6,8 +6,10 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                  xmlns:dialogs="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:li="http://github.com/zeluisping/loadingIndicators/xaml/controls"
                  xmlns:converters="clr-namespace:AUCapture_WPF.Converters"
                  xmlns:controls="clr-namespace:AUCapture_WPF.Controls"
+                 xmlns:wpf="clr-namespace:LoadingIndicators.WPF;assembly=LoadingIndicators.WPF"
                  mc:Ignorable="d"
                  Style="{DynamicResource MahApps.Styles.MetroWindow.Clean}"
                  ResizeMode="CanResize"
@@ -27,16 +29,16 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/clean/Controls.xaml" />
                 <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-                
+                <ResourceDictionary Source="pack://application:,,,/LoadingIndicators.WPF;component/styles/LoadingThreeDots.xaml"/>
                 <!-- Theme setting -->
 
             </ResourceDictionary.MergedDictionaries>
             <converters:PlayerToImage x:Key="PlayerToImage" />
             <converters:BoolToString x:Key="BoolToString" />
-            <converters:EnumToStringConverter x:Key="EnumToStringConverter"/>
-            <converters:VisabilityInverterConverter x:Key="VisabilityInverterConverter"/>
-            <converters:BoolToVisibilityConverterInverted x:Key="BoolToVisibilityConverterInverted"/>
-
+            <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
+            <converters:VisabilityInverterConverter x:Key="VisabilityInverterConverter" />
+            <converters:BoolToVisibilityConverterInverted x:Key="BoolToVisibilityConverterInverted" />
+            <converters:BoolInverter x:Key="BoolInverter" />
         </ResourceDictionary>
     </mah:MetroWindow.Resources>
     <mah:MetroWindow.LeftWindowCommands>
@@ -110,7 +112,9 @@
                                             <Button x:Name="ReloadOffsetsButton" Content="Reload offsets"
                                                     Click="ReloadOffsetsButton_OnClick"
                                                     Style="{StaticResource MahApps.Styles.Button.Square.Accent}" />
-                                            <Button Margin="0,10,0,0" Content="Reset Config" Style="{StaticResource MahApps.Styles.Button.Square.Accent}" Background="#FFDC3545" Click="ResetConfigButton_OnClick"/>
+                                            <Button Margin="0,10,0,0" Content="Reset Config"
+                                                    Style="{StaticResource MahApps.Styles.Button.Square.Accent}"
+                                                    Background="#FFDC3545" Click="ResetConfigButton_OnClick" />
 
                                         </StackPanel>
                                     </Grid>
@@ -210,51 +214,55 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
-        <StackPanel VerticalAlignment="Center" Grid.RowSpan="4" Grid.ColumnSpan="3" Orientation="Vertical" >
-            <TextBlock  HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}">
-                <Run FontSize="32" FontFamily="{StaticResource AUFont}">Waiting for among us</Run><LineBreak/>
+
+        <StackPanel VerticalAlignment="Center" Grid.RowSpan="4" Grid.ColumnSpan="3" Orientation="Vertical" IsEnabled="{Binding Connected, Converter={StaticResource BoolInverter}}">
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}">
+                <Run FontSize="32" FontFamily="{StaticResource AUFont}">Waiting for among us</Run><LineBreak />
             </TextBlock>
-            <mah:ProgressRing Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}"/>
-            <Button Padding="10" Margin="0 10 0 0" HorizontalAlignment="Center" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}" Command="{Binding OpenAmongUsCMD, Mode=OneWay}">
+            <mah:ProgressRing IsActive="{Binding Connected, Converter={StaticResource BoolInverter}}" IsEnabled="{Binding Connected, Converter={StaticResource BoolInverter}}" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}" />
+            
+            <Button Padding="10" Margin="0 10 0 0" HorizontalAlignment="Center"
+                    Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}"
+                    Command="{Binding OpenAmongUsCMD, Mode=OneWay}">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
                         <iconPacks:PackIconUnicons Kind="Rocket" />
                         <TextBlock Margin="5 0 0 0"> Launch Among Us</TextBlock>
                     </StackPanel>
-                    
+
                 </Button.Content>
             </Button>
         </StackPanel>
-        
-        <GroupBox Name="ItemBox" Visibility="{Binding Connected, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.ColumnSpan="3" Grid.RowSpan="3" Header="Players" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+
+        <GroupBox Name="ItemBox"
+                  Visibility="{Binding Connected, Converter={StaticResource BooleanToVisibilityConverter}}"
+                  Grid.ColumnSpan="3" Grid.RowSpan="3" Header="Players"
+                  ScrollViewer.VerticalScrollBarVisibility="Disabled">
             <ItemsControl Grid.ColumnSpan="3" Grid.RowSpan="4" Name="PlayersList" ItemsSource="{Binding Players}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <controls:PlayerControl  PlayerName="{Binding Name}" Color="{Binding Color}"
-                                                AliveStatus="{Binding Alive}"  PlayerPantsID="{Binding PantsID}" PlayerHatID="{Binding HatID}"/>
+                        <controls:PlayerControl PlayerName="{Binding Name}" Color="{Binding Color}"
+                                                AliveStatus="{Binding Alive}" PlayerPantsID="{Binding PantsID}"
+                                                PlayerHatID="{Binding HatID}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid IsItemsHost="True" Rows="3"/>
+                        <UniformGrid IsItemsHost="True" Rows="3" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
         </GroupBox>
-        <Expander Grid.Column="2" IsExpanded="True" Grid.Row="3" Header="Status" Visibility="{Binding ElementName=ItemBox, Path=Visibility}" ExpandDirection="Up" Margin="0" Panel.ZIndex="1" >
-            <DataGrid ItemsSource="{Binding ConnectionStatuses}" HeadersVisibility="None" AutoGenerateColumns="False" CanUserSortColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False">
-                <DataGrid.RowStyle>
-                    <Style TargetType="DataGridRow">
-                        <Setter Property="IsHitTestVisible" Value="False"/>
-                    </Style>
-                </DataGrid.RowStyle>
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn IsReadOnly="True">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
+        <StackPanel Orientation="Vertical" Grid.Row="3" Grid.ColumnSpan="3"
+                    Visibility="{Binding ElementName=ItemBox, Path=Visibility}">
+            <ItemsControl Grid.Row="3" Grid.ColumnSpan="3" ItemsSource="{Binding ConnectionStatuses}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+
+                        <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="1">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                 <iconPacks:PackIconUnicons VerticalAlignment="Center" VerticalContentAlignment="Center">
                                     <iconPacks:PackIconUnicons.Style>
                                         <Style TargetType="iconPacks:PackIconUnicons">
@@ -271,46 +279,53 @@
                                         </Style>
                                     </iconPacks:PackIconUnicons.Style>
                                 </iconPacks:PackIconUnicons>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn >
-                    <DataGridTextColumn Binding="{Binding ConnectionName}" Width="*" IsReadOnly="True">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="HorizontalAlignment" Value="Right" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Expander>
-        <Expander ExpandDirection="Up" IsExpanded="True" VerticalAlignment="Bottom" Visibility="{Binding ElementName=ItemBox, Path=Visibility}" Grid.Column="0" Grid.Row="3" Grid.RowSpan="1" Header="Info" Margin="0">
-            <StackPanel Orientation="Vertical">
-                <TextBox x:Name="StatusBox" mah:TextBoxHelper.Watermark="State" Text="{Binding GameState, Converter={StaticResource EnumToStringConverter}}"
-                         VerticalAlignment="Center" IsManipulationEnabled="False" Focusable="False"
-                         IsHitTestVisible="True" AllowDrop="False" IsReadOnly="True" ToolTip="Current status"
-                         HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-                <TextBox  x:Name="GameCodeBox" Text="{Binding GameCode}"
-                         mah:TextBoxHelper.Watermark="Game code"
-                         VerticalAlignment="Center"
-                         IsHitTestVisible="True"
-                         Focusable="False"
-                         IsManipulationEnabled="False"
-                         AllowDrop="False"
-                         ToolTip="Game code"
-                         HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-                         mah:TextBoxHelper.ButtonContent="{iconPacks:Unicons Kind=Copy}"
-                         Style="{DynamicResource MahApps.Styles.TextBox.Button}"
-                         mah:TextBoxHelper.ButtonCommand="{Binding TextBoxButtonCopyCmd, Mode=OneWay}"
-                         dialogs:TextBoxHelper.WatermarkAlignment="Right" VerticalContentAlignment="Stretch"
-                         dialogs:TextBoxHelper.AutoWatermark="True" />
-                <TextBox x:Name="MapBox" mah:TextBoxHelper.Watermark="Map" Text="{Binding GameMap, Converter={StaticResource EnumToStringConverter}}"
-                         VerticalAlignment="Center" IsManipulationEnabled="False" Focusable="False"
-                         IsHitTestVisible="True" AllowDrop="False" IsReadOnly="True" ToolTip="Current map"
-                         HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                                <Label Content="{Binding ConnectionName}" HorizontalContentAlignment="Right" />
+                            
+                            </StackPanel>
+
+                        </Border>
+                        
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid IsItemsHost="True" Columns="3" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+            <Grid Visibility="{Binding ElementName=ItemBox, Path=Visibility}" Grid.Row="4" Grid.ColumnSpan="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" x:Name="StatusBox" mah:TextBoxHelper.Watermark="State"
+                             Text="{Binding GameState, Converter={StaticResource EnumToStringConverter}}"
+                             VerticalAlignment="Center" IsManipulationEnabled="False" Focusable="False"
+                             IsHitTestVisible="True" AllowDrop="False" IsReadOnly="True" ToolTip="Current status"
+                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderBrush="{DynamicResource MahApps.Brushes.Accent}"/>
+                    <TextBox Grid.Column="1"  x:Name="GameCodeBox" Text="{Binding GameCode}"
+                             mah:TextBoxHelper.Watermark="Game code"
+                             VerticalAlignment="Center"
+                             IsHitTestVisible="True"
+                             Focusable="False"
+                             IsManipulationEnabled="False"
+                             AllowDrop="False"
+                             ToolTip="Game code"
+                             HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                             mah:TextBoxHelper.ButtonContent="{iconPacks:Unicons Kind=Copy}"
+                             Style="{DynamicResource MahApps.Styles.TextBox.Button}"
+                             mah:TextBoxHelper.ButtonCommand="{Binding TextBoxButtonCopyCmd, Mode=OneWay}"
+                             dialogs:TextBoxHelper.WatermarkAlignment="Right" VerticalContentAlignment="Stretch"
+                             dialogs:TextBoxHelper.AutoWatermark="True" BorderBrush="{DynamicResource MahApps.Brushes.Accent}"/>
+                    <TextBox Grid.Column="2"  x:Name="MapBox" mah:TextBoxHelper.Watermark="Map"
+                             Text="{Binding GameMap, Converter={StaticResource EnumToStringConverter}}"
+                             VerticalAlignment="Center" IsManipulationEnabled="False" Focusable="False"
+                             IsHitTestVisible="True" AllowDrop="False" IsReadOnly="True" ToolTip="Current map"
+                             HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderBrush="{DynamicResource MahApps.Brushes.Accent}"/>
+                </Grid>
+
             </StackPanel>
-            
-        </Expander>
 
     </Grid>
 </mah:MetroWindow>

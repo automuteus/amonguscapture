@@ -14,7 +14,6 @@
         <converters1:HatToImage x:Key="HatToImage" />
         <converters1:HatToZ x:Key="HatToZ" />
         <converters1:PetToImageConverter x:Key="PetToIm" />
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
     </UserControl.Resources>
     <Viewbox Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,0,0">

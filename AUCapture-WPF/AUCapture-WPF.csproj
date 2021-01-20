@@ -45,6 +45,10 @@
   <ItemGroup>
     <None Remove="Resources\Hats\103-1.png" />
     <None Remove="Resources\Hats\94-1.png" />
+    <None Remove="Resources\Misc\status-connected.png" />
+    <None Remove="Resources\Misc\status-disconnected.png" />
+    <None Remove="Resources\Misc\voteCancel.png" />
+    <None Remove="Resources\Misc\voteConfirm.png" />
     <None Remove="Resources\Pets\1.png" />
     <None Remove="Resources\Pets\10.png" />
     <None Remove="Resources\Pets\11.png" />
@@ -191,6 +195,8 @@
     <Resource Include="Resources\Hats\92-1.png" />
     <Resource Include="Resources\Hats\93-1.png" />
     <Resource Include="Resources\Hats\94-1.png" />
+    <Resource Include="Resources\Misc\status-connected.png" />
+    <Resource Include="Resources\Misc\status-disconnected.png" />
     <Resource Include="Resources\Pants\0.png" />
     <Resource Include="Resources\Pants\1.png" />
     <Resource Include="Resources\Pants\10.png" />

@@ -39,6 +39,8 @@
             <converters:VisabilityInverterConverter x:Key="VisabilityInverterConverter" />
             <converters:BoolToVisibilityConverterInverted x:Key="BoolToVisibilityConverterInverted" />
             <converters:BoolInverter x:Key="BoolInverter" />
+            <BitmapImage UriSource="Resources/Misc/status-connected.png" x:Key="status-connected"/>
+            <BitmapImage UriSource="Resources/Misc/status-disconnected.png" x:Key="status-disconnected"/>
         </ResourceDictionary>
     </mah:MetroWindow.Resources>
     <mah:MetroWindow.LeftWindowCommands>
@@ -263,23 +265,24 @@
 
                         <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}" BorderThickness="1">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <iconPacks:PackIconUnicons VerticalAlignment="Center" VerticalContentAlignment="Center">
-                                    <iconPacks:PackIconUnicons.Style>
-                                        <Style TargetType="iconPacks:PackIconUnicons">
-                                            <Setter Property="Kind" Value="Multiply" />
-                                            <Setter Property="Foreground" Value="Red" />
+                                
+                                <Image VerticalAlignment="Center" Stretch="None" HorizontalAlignment="Center">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Setter Property="Source" Value="{StaticResource status-disconnected}" />
                                             <Style.Triggers>
                                                 <DataTrigger
                                                     Binding="{Binding Path=Connected, Converter={StaticResource BoolToString}}"
                                                     Value="True">
-                                                    <Setter Property="Kind" Value="Check" />
-                                                    <Setter Property="Foreground" Value="LimeGreen" />
+                                                    <Setter Property="Source" Value="{StaticResource status-connected}" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
-                                    </iconPacks:PackIconUnicons.Style>
-                                </iconPacks:PackIconUnicons>
-                                <Label Content="{Binding ConnectionName}" HorizontalContentAlignment="Right" />
+                                    </Image.Style>
+                                </Image>
+
+                                
+                                <Label Content="{Binding ConnectionName}" HorizontalContentAlignment="Right" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
                             
                             </StackPanel>
 
@@ -289,7 +292,7 @@
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid IsItemsHost="True" Columns="3" />
+                        <UniformGrid IsItemsHost="True" Rows="1" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>

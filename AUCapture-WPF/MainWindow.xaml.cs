@@ -107,7 +107,6 @@ namespace AUCapture_WPF
                 App.socket.AddHandler(App.handler);
             };
             context.ConnectionStatuses.Add(new ConnectionStatus{Connected = false, ConnectionName = "AutoMuteUs"});
-            context.ConnectionStatuses.Add(new ConnectionStatus{Connected = false, ConnectionName = "Among us"});
             context.ConnectionStatuses.Add(new ConnectionStatus{Connected = false, ConnectionName = "User bot"});
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().ProcessHook += OnProcessHook;
@@ -224,7 +223,7 @@ namespace AUCapture_WPF
         private void OnProcessHook(object? sender, ProcessHookArgs e)
         {
             context.Connected = true;
-            context.ConnectionStatuses.First(x => x.ConnectionName == "Among us").Connected = true;
+            //context.ConnectionStatuses.First(x => x.ConnectionName == "Among us").Connected = true;
             ProcessMemory.getInstance().process.Exited += ProcessOnExited;
         }
 
@@ -233,7 +232,7 @@ namespace AUCapture_WPF
             Dispatcher.Invoke((Action) (() =>
             {
                 context.Connected = false;
-                context.ConnectionStatuses.First(x => x.ConnectionName == "Among us").Connected = false;
+                //context.ConnectionStatuses.First(x => x.ConnectionName == "Among us").Connected = false;
             }));
             ProcessMemory.getInstance().process.Exited -= ProcessOnExited;
         }

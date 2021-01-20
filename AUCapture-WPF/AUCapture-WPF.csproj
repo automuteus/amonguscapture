@@ -43,6 +43,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Hats\103-1.png" />
+    <None Remove="Resources\Hats\94-1.png" />
+    <None Remove="Resources\Pets\1.png" />
+    <None Remove="Resources\Pets\10.png" />
+    <None Remove="Resources\Pets\11.png" />
+    <None Remove="Resources\Pets\2.png" />
+    <None Remove="Resources\Pets\3.png" />
+    <None Remove="Resources\Pets\4.png" />
+    <None Remove="Resources\Pets\5.png" />
+    <None Remove="Resources\Pets\6.png" />
+    <None Remove="Resources\Pets\7.png" />
+    <None Remove="Resources\Pets\8.png" />
+    <None Remove="Resources\Pets\9.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <TrimmerRootAssembly Include="System.Runtime" />
     <TrimmerRootAssembly Include="System.Runtime.Extensions" />
     <TrimmerRootAssembly Include="System.Windows.Forms" />
@@ -174,6 +190,7 @@
     <Resource Include="Resources\Hats\91-1.png" />
     <Resource Include="Resources\Hats\92-1.png" />
     <Resource Include="Resources\Hats\93-1.png" />
+    <Resource Include="Resources\Hats\94-1.png" />
     <Resource Include="Resources\Pants\0.png" />
     <Resource Include="Resources\Pants\1.png" />
     <Resource Include="Resources\Pants\10.png" />
@@ -190,6 +207,17 @@
     <Resource Include="Resources\Pants\7.png" />
     <Resource Include="Resources\Pants\8.png" />
     <Resource Include="Resources\Pants\9.png" />
+    <Resource Include="Resources\Pets\1.png" />
+    <Resource Include="Resources\Pets\10.png" />
+    <Resource Include="Resources\Pets\11.png" />
+    <Resource Include="Resources\Pets\2.png" />
+    <Resource Include="Resources\Pets\3.png" />
+    <Resource Include="Resources\Pets\4.png" />
+    <Resource Include="Resources\Pets\5.png" />
+    <Resource Include="Resources\Pets\6.png" />
+    <Resource Include="Resources\Pets\7.png" />
+    <Resource Include="Resources\Pets\8.png" />
+    <Resource Include="Resources\Pets\9.png" />
     <Resource Include="Resources\Players\aublack.png" />
     <Resource Include="Resources\Players\aublackdead.png" />
     <Resource Include="Resources\Players\aublue.png" />

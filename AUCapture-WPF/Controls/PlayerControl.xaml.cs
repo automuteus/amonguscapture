@@ -22,6 +22,10 @@ namespace AUCapture_WPF.Controls
             DependencyProperty.Register("PlayerHatID", 
                 typeof(uint), typeof(PlayerControl));
 
+        public static readonly DependencyProperty PlayerPetDependencyProperty = 
+            DependencyProperty.Register("PlayerPetID", 
+                typeof(uint), typeof(PlayerControl));
+
         public static readonly DependencyProperty PlayerPantsDependencyProperty = 
             DependencyProperty.Register("PlayerPantsID", 
                 typeof(uint), typeof(PlayerControl));
@@ -41,6 +45,12 @@ namespace AUCapture_WPF.Controls
             set => SetValue(AliveProperty, value);
         }
         public uint PlayerHatID
+        {
+            get => (uint)GetValue(PlayerHatDependencyProperty);
+            set => SetValue(PlayerHatDependencyProperty, value);
+        }
+
+        public uint PlayerPetID
         {
             get => (uint)GetValue(PlayerHatDependencyProperty);
             set => SetValue(PlayerHatDependencyProperty, value);

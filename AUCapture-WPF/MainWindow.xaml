@@ -245,7 +245,7 @@
                     <DataTemplate>
                         <controls:PlayerControl PlayerName="{Binding Name}" Color="{Binding Color}"
                                                 AliveStatus="{Binding Alive}" PlayerPantsID="{Binding PantsID}"
-                                                PlayerHatID="{Binding HatID}" />
+                                                PlayerHatID="{Binding HatID}" PlayerPetID="{Binding PetID}" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>

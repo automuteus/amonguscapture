@@ -36,6 +36,11 @@
                             ../Resources/TestHats/48-1.png
                         </Image.Source>
                     </Image>
+                    <Image Margin="0,0,0,0" Stretch="Uniform" VerticalAlignment="Bottom" Width="212" Panel.ZIndex="0">
+                        <Image.Source>
+                            ../Resources/Pets/9.png
+                        </Image.Source>
+                    </Image>
                 </Grid>
             </Viewbox>
             <Viewbox Grid.Row="0" StretchDirection="DownOnly" Stretch="Uniform" VerticalAlignment="Center">

@@ -390,7 +390,8 @@ namespace AmongUsCapture
                             {
                                 Name = playerName,
                                 HatId = pi.HatId,
-                                SkinId = pi.SkinId
+                                SkinId = pi.SkinId,
+                                PetId = pi.PetId
                             });
                         }
                         else
@@ -427,12 +428,13 @@ namespace AmongUsCapture
                                     Color = pi.GetPlayerColor()
                                 });
 
-                            if (oldPlayerInfo.HatId != pi.HatId || oldPlayerInfo.SkinId != pi.SkinId)
+                            if (oldPlayerInfo.HatId != pi.HatId || oldPlayerInfo.SkinId != pi.SkinId || oldPlayerInfo.PetId != pi.PetId)
                                 PlayerCosmeticChanged?.Invoke(this, new PlayerCosmeticChangedEventArgs
                                 {
                                     Name = playerName,
                                     HatId = pi.HatId,
-                                    SkinId = pi.SkinId
+                                    SkinId = pi.SkinId,
+                                    PetId = pi.PetId
                                 });
                         }
                     }
@@ -609,6 +611,7 @@ namespace AmongUsCapture
         public string Name { get; set; }
         public uint HatId { get; set; } 
         public uint SkinId { get; set; }
+        public uint PetId { get; set; }
     }
 
     public class PlayerChangedEventArgs : EventArgs

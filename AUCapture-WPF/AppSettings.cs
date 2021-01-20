@@ -11,6 +11,9 @@ namespace AUCapture_WPF
         [Option(DefaultValue = false)]
         bool discordTokenEncrypted { get; set; }
 
+        [Option(DefaultValue = false)]
+        bool alwaysOnTop { get; set; }
+
         [Option(DefaultValue = "")]
         string discordToken { get; set; }
 

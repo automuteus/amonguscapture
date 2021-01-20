@@ -90,6 +90,7 @@
                                         <mah:ToggleSwitch Header="API Server"
                                                           IsOn="{Binding Settings.ApiServer, Mode=TwoWay}"
                                                           Toggled="APIServerToggleSwitch_Toggled" />
+                                        <mah:ToggleSwitch x:Name="AlwaysOnTopSwitch" Header="Always on top" IsOn="{Binding Settings.alwaysOnTop, Mode=TwoWay}" Toggled="AlwaysOnTopSwitch_OnToggled"></mah:ToggleSwitch>
                                     </StackPanel>
                                 </mah:MetroTabItem>
                                 <mah:MetroTabItem Header="Theme">

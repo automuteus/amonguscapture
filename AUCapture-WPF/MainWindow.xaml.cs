@@ -108,6 +108,7 @@ namespace AUCapture_WPF
             };
             context.ConnectionStatuses.Add(new ConnectionStatus{Connected = false, ConnectionName = "AutoMuteUs"});
             context.ConnectionStatuses.Add(new ConnectionStatus{Connected = false, ConnectionName = "User bot"});
+            window.Topmost = context.Settings.alwaysOnTop;
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().ProcessHook += OnProcessHook;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
@@ -874,6 +875,11 @@ namespace AUCapture_WPF
 
 
             }
+        }
+
+        private void AlwaysOnTopSwitch_OnToggled(object sender, RoutedEventArgs e)
+        {
+            window.Topmost = context.Settings.alwaysOnTop;
         }
     }
 }

@@ -279,11 +279,11 @@ namespace AUCapture_WPF
                 {
                     var selection = this.DialogCoordinator.ShowMessageAsync(this, "Restart required",
                         $"To {(Settings.debug ? "enable" : "disable")} debug mode, we need to restart.",
-                        MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary,
+                        MessageDialogStyle.AffirmativeAndNegative,
                         new MetroDialogSettings
                         {
-                            AnimateHide = true, AffirmativeButtonText = "Restart", NegativeButtonText = "Exit",
-                            FirstAuxiliaryButtonText = "Later", DefaultButtonFocus = MessageDialogResult.Affirmative
+                            AnimateHide = true, AffirmativeButtonText = "Restart", NegativeButtonText = "Later",
+                            DefaultButtonFocus = MessageDialogResult.Affirmative, 
                         }).Result;
                     if (selection == MessageDialogResult.Affirmative)
                     {
@@ -294,10 +294,7 @@ namespace AUCapture_WPF
                             Application.Current.Shutdown(0);
                         });
                     }
-                    else if(selection == MessageDialogResult.Negative)
-                    {
-                        Application.Current.Invoke(() => { Application.Current.Shutdown(0); });
-                    }
+                    
                 }));
 
 

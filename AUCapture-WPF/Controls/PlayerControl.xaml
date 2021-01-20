@@ -13,6 +13,7 @@
         <converters1:PantsConverter x:Key="PantsConverter" />
         <converters1:HatToImage x:Key="HatToImage" />
         <converters1:HatToZ x:Key="HatToZ" />
+        <converters1:PetToImageConverter x:Key="PetToIm" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
     </UserControl.Resources>
@@ -48,6 +49,14 @@
                         <Image.Source>
                             <MultiBinding Converter="{StaticResource HatToImage}">  
                                 <Binding ElementName="PlayerControlWindow" Path="PlayerHatID"></Binding>  
+                                <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
+                            </MultiBinding>
+                        </Image.Source>
+                    </Image>
+                    <Image Margin="0,0,0,0" Stretch="Uniform" VerticalAlignment="Bottom" Width="212" Panel.ZIndex="0">
+                        <Image.Source>
+                            <MultiBinding Converter="{StaticResource PetToIm}">  
+                                <Binding ElementName="PlayerControlWindow" Path="PlayerPetID"></Binding>  
                                 <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
                             </MultiBinding>
                         </Image.Source>

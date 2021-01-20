@@ -41,6 +41,17 @@ namespace AUCapture_WPF.Models
 
             }
         }
+        private uint _petID;
+        public uint PetID
+        {
+            get => _petID;
+            set
+            {
+                _petID = value;
+                OnPropertyChanged();
+
+            }
+        }
         private PlayerColor _color;
 
         public PlayerColor Color

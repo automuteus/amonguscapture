@@ -26,7 +26,7 @@
                             ../Resources/Players/aured.png
                         </Image.Source>
                     </Image>
-                    <Image Margin="20 0 0 0" Width="148" Height="198" Stretch="Uniform" VerticalAlignment="Bottom">
+                    <Image Margin="0 0 0 0" Width="148" Height="198" Stretch="Uniform" VerticalAlignment="Bottom">
                         <Image.Source>
                             ../Resources/Pants/6.png
                         </Image.Source>
@@ -34,6 +34,11 @@
                     <Image x:Name="hatImage" Margin="0,0,0,0" Stretch="Uniform" VerticalAlignment="Bottom" Width="212" Panel.ZIndex="0">
                         <Image.Source>
                             ../Resources/TestHats/48-1.png
+                        </Image.Source>
+                    </Image>
+                    <Image Margin="0,0,0,0" Stretch="Uniform" VerticalAlignment="Bottom" Width="212" Panel.ZIndex="0">
+                        <Image.Source>
+                            ../Resources/Pets/9.png
                         </Image.Source>
                     </Image>
                 </Grid>

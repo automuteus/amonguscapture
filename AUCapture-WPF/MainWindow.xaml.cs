@@ -193,11 +193,12 @@ namespace AUCapture_WPF
             if (context.Players.Any(x => x.Name == e.Name))
             {
                 var player = context.Players.First(x => x.Name == e.Name);
-                Console.WriteLine("Cosmetic change");
+                Console.WriteLine("Cosmetic change "+JsonConvert.SerializeObject(e));
                 Dispatcher.Invoke((Action) (() =>
                 {
                     player.HatID = e.HatId;
                     player.PantsID = e.SkinId;
+                    player.PetID = e.PetId;
                 }));
             }
 

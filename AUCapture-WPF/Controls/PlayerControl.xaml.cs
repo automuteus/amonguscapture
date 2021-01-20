@@ -2,22 +2,74 @@
 using System.Windows;
 using System.Windows.Controls;
 using AmongUsCapture;
-using Bindables;
 
 namespace AUCapture_WPF.Controls
 {
     /// <summary>
     /// Interaction logic for PlayerControl.xaml
     /// </summary>
-    [DependencyProperty]
     public partial class PlayerControl : UserControl
     {
-        public bool AliveStatus { get; set; }
-        public uint PlayerHatID { get; set; }
-        public uint PlayerPetID { get; set; }
-        public uint PlayerPantsID { get; set; }
-        public string PlayerName { get;set; }
-        public PlayerColor Color { get; set; }
+        public static readonly DependencyProperty AliveProperty = 
+            DependencyProperty.Register("AliveStatus", 
+                typeof(bool), typeof(PlayerControl));
+
+        public static readonly DependencyProperty PlayerNameProperty = 
+            DependencyProperty.Register("PlayerName", 
+                typeof(string), typeof(PlayerControl));
+
+        public static readonly DependencyProperty PlayerHatDependencyProperty = 
+            DependencyProperty.Register("PlayerHatID", 
+                typeof(uint), typeof(PlayerControl));
+
+        public static readonly DependencyProperty PlayerPetDependencyProperty = 
+            DependencyProperty.Register("PlayerPetID", 
+                typeof(uint), typeof(PlayerControl));
+
+        public static readonly DependencyProperty PlayerPantsDependencyProperty = 
+            DependencyProperty.Register("PlayerPantsID", 
+                typeof(uint), typeof(PlayerControl));
+
+        public static readonly DependencyProperty ColorProperty = 
+            DependencyProperty.Register("Color", 
+                typeof(PlayerColor), typeof(PlayerControl));
+
+        private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Console.WriteLine("Prop changed");
+        }
+
+        public bool AliveStatus
+        {
+            get => (bool)GetValue(AliveProperty);
+            set => SetValue(AliveProperty, value);
+        }
+        public uint PlayerHatID
+        {
+            get => (uint)GetValue(PlayerHatDependencyProperty);
+            set => SetValue(PlayerHatDependencyProperty, value);
+        }
+
+        public uint PlayerPetID
+        {
+            get => (uint)GetValue(PlayerHatDependencyProperty);
+            set => SetValue(PlayerHatDependencyProperty, value);
+        }
+        public uint PlayerPantsID
+        {
+            get => (uint)GetValue(PlayerPantsDependencyProperty);
+            set => SetValue(PlayerPantsDependencyProperty, value);
+        }
+        public string PlayerName
+        {
+            get => (string)GetValue(PlayerNameProperty);
+            set => SetValue(PlayerNameProperty, value);
+        }
+        public PlayerColor Color
+        {
+            get => (PlayerColor)GetValue(ColorProperty);
+            set => SetValue(ColorProperty, value);
+        }
         public PlayerControl()
         {
             InitializeComponent();

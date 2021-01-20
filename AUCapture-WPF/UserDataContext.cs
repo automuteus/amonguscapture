@@ -35,7 +35,16 @@ namespace AUCapture_WPF
         private ICommand textBoxButtonHelpCmd;
         private ICommand openAmongUsCMD;
         public List<AccentColorMenuData> AccentColors { get; set; }
-        public bool? Connected { get; set; } = false;
+        private bool? _connected = false;
+        public bool? Connected
+        {
+            get => _connected;
+            set
+            {
+                _connected = value;
+                OnPropertyChanged();
+            }
+        }
         public class AccentColorMenuData
         {
             public string Name { get; set; }
@@ -140,19 +149,60 @@ namespace AUCapture_WPF
                 }
             }
         };
+        private ObservableCollection<Player> _players = new ObservableCollection<Player>();
+        public ObservableCollection<Player> Players
+        {
+            get => _players;
+            set
+            {
+                _players = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public ObservableCollection<Player> Players { get; set; } = new ObservableCollection<Player>();
+        private ObservableCollection<ConnectionStatus> _connectionStatuses = new ObservableCollection<ConnectionStatus>();
+        public ObservableCollection<ConnectionStatus> ConnectionStatuses
+        {
+            get => _connectionStatuses;
+            set
+            {
+                _connectionStatuses = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public ObservableCollection<ConnectionStatus> ConnectionStatuses { get; set; } = new ObservableCollection<ConnectionStatus>();
+        private PlayMap? _gameMap;
+        public PlayMap? GameMap
+        {
+            get => _gameMap;
+            set
+            {
+                _gameMap = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public PlayMap? GameMap { get; set; }
+        private string _gameCode;
+        public string GameCode
+        {
+            get => _gameCode;
+            set
+            {
+                _gameCode = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public string GameCode { get; set; }
-        
-
-        
-        public GameState? GameState { get; set; }
-        
+        private GameState? _gameState;
+        public GameState? GameState
+        {
+            get => _gameState;
+            set
+            {
+                _gameState = value;
+                OnPropertyChanged();
+            }
+        }
 
         private static void Shuffle<T>(List<T> list)
         {
@@ -212,6 +262,9 @@ namespace AUCapture_WPF
                 Console.WriteLine(e);
                 LatestVersion = "ERROR";
             }
+            OnPropertyChanged(nameof(LatestVersion));
+            OnPropertyChanged(nameof(Version));
+            OnPropertyChanged(nameof(AccentColors));
 
 
 

@@ -599,7 +599,6 @@ namespace AUCapture_WPF
                 Dispatcher.Invoke((Action) (() =>
                 {
                     context.GameState = e.NewState;
-                    context.GameMap = null;
                     foreach (var player in context.Players)
                     {
                         player.Alive = true;

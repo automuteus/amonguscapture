@@ -53,7 +53,7 @@ jobs:
       - name: Output Signature
         shell: bash
         run: |
-          echo ${{ steps.sign.outputs.encrypted-text }} > ..\AmongUsCapture-Beta.zip.sig
+          echo "${{ steps.sign.outputs.encrypted-text }}" > ..\AmongUsCapture-Beta.zip.sig
 
       - name: AmongUsCapture-beta
         uses: actions/upload-artifact@v2

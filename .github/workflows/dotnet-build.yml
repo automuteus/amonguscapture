@@ -41,13 +41,15 @@ jobs:
       
       - name: Sign
         uses: oplik0/openpgp-action@v1
+        env: 
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         id: sign
         with:
           text: ..\AmongUsCapture-Beta.zip
           key: ${{ secrets.PUBLIC_KEY }}
           privateKey: ${{ secrets.PRIVATE_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
-          
+
       - name: Output Signature
         run: |
           echo ${{ steps.sign.outputs.encrypted-text }} > ..\AmongUsCapture-Beta.zip.sig

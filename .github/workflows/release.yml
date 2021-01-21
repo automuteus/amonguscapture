@@ -43,11 +43,20 @@ jobs:
           7z a ..\AmongUsCapture.zip ..\AmongUsCapture.exe -mx=9
 
       - name: Sign
-        uses: thomaso-mirodin/minisign-action@v1
+        uses: carbonneuron/GHActionSignHash@v4
+        env: 
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        id: sign
         with:
-          args: -Sm ..\AmongUsCapture.zip
-          minisign_key: ${{ secrets.minisign_key }}
-          password: ${{ secrets.minisign_password }}
+          path: ../AmongUsCapture.zip
+          key: ${{ secrets.PRIVATE_KEY }}
+          privateKey: ${{ secrets.PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+
+      - name: Output Signature
+        shell: bash
+        run: |
+          echo "${{ steps.sign.outputs.encrypted-text }}" > ..\AmongUsCapture.zip.sha256.pgp
 
       - name: Create Release
         id: create_release
@@ -78,9 +87,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ..\AmongUsCapture.zip.minisig
-          asset_name: AmongUsCapture.zip.minisig
+          asset_path: ..\AmongUsCapture.zip.sha256.pgp
+          asset_name: AmongUsCapture.zip.sha256.pgp
           asset_content_type: text/plain
+
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:

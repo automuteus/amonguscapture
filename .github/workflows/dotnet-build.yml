@@ -37,7 +37,7 @@ jobs:
 
       - name: Zip
         run: |
-          7z a ..\AmongUsCapture-Beta.zip ..\AmongUsCapture-Beta.exe -mx=9
+          7z a ..\AmongUsCapture-Beta.zip AmongUsCapture-Beta.exe -mx=9
       
       - name: Sign
         uses: oplik0/openpgp-action@v1
@@ -53,16 +53,16 @@ jobs:
       - name: Output Signature
         shell: bash
         run: |
-          echo "${{ steps.sign.outputs.encrypted-text }}" > ..\AmongUsCapture-Beta.zip.sig
+          echo "${{ steps.sign.outputs.encrypted-text }}" > AmongUsCapture-Beta.zip.sig
 
       - name: AmongUsCapture-beta
         uses: actions/upload-artifact@v2
         with:
           name: AmongUsCapture-beta
-          path: ..\AmongUsCapture-Beta.zip
+          path: AmongUsCapture-Beta.zip
 
       - name: Upload the signature
         uses: actions/upload-artifact@v1
         with:
-          name: AmongUsCapture-Beta.zip.sig
-          path: ..\AmongUsCapture-Beta.zip.sig
+          name: AmongUsCapture-Beta.sig
+          path: AmongUsCapture-Beta.zip.sig

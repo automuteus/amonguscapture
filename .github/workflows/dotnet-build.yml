@@ -22,16 +22,37 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 5.0.100
+
       - name: Install dependencies
         run: dotnet restore "AUCapture-WPF\AUCapture-WPF.csproj"
+
       - name: Publish
         run: |
           dotnet publish "AUCapture-WPF\AUCapture-WPF.csproj" -p:PublishProfile=DevProfile -p:AssemblyVersion=${{ steps.previoustag.outputs.tag }}.1
+
       - name: Relocate
         run: |
-          mv AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AUCapture-WPF.exe AmongUsCapture.exe
+          mv AUCapture-WPF\\bin\\Release\\netcoreapp3.1\\publish\\AUCapture-WPF.exe ..\AmongUsCapture-Beta.exe
+
+      - name: Zip
+        run: |
+          7z a ..\AmongUsCapture-Beta.zip ..\AmongUsCapture-Beta.exe -mx=9
+
+      - name: Sign
+        uses: thomaso-mirodin/minisign-action@v1
+        with: 
+          args: -Sm ..\AmongUsCapture-Beta.zip
+          minisign_key: ${{ secrets.minisign_key }}
+          password: ${{ secrets.minisign_password }}
+
       - name: AmongUsCapture-beta
         uses: actions/upload-artifact@v2
         with:
           name: AmongUsCapture-beta
-          path: AmongUsCapture.exe
+          path: ..\AmongUsCapture-Beta.zip
+
+      - name: Upload the signature
+      uses: actions/upload-artifact@v1
+      with:
+        name: AmongUsCapture-Beta.zip.minisig
+        path: ..\AmongUsCapture-Beta.zip.minisig

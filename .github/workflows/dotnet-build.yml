@@ -37,7 +37,7 @@ jobs:
 
       - name: Zip
         run: |
-          7z a ..\AmongUsCapture-Beta.zip AmongUsCapture-Beta.exe -mx=9
+          7z a AmongUsCapture-Beta.zip ..\AmongUsCapture-Beta.exe -mx=9
       
       - name: Sign
         uses: oplik0/openpgp-action@v1

@@ -56,7 +56,7 @@ jobs:
       - name: Output Signature
         shell: bash
         run: |
-          echo "${{ steps.sign.outputs.encrypted-text }}" > ..\AmongUsCapture.zip.sha256.pgp
+          echo "${{ steps.sign.outputs.encrypted-text }}" > ../AmongUsCapture.zip.sha256.pgp
 
       - name: Create Release
         id: create_release

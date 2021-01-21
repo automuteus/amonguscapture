@@ -51,6 +51,7 @@ jobs:
           passphrase: ${{ secrets.PASSPHRASE }}
 
       - name: Output Signature
+        shell: bash
         run: |
           echo ${{ steps.sign.outputs.encrypted-text }} > ..\AmongUsCapture-Beta.zip.sig
 

@@ -43,6 +43,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\AutoMuteUs_PK.asc" />
     <None Remove="Resources\Hats\103-1.png" />
     <None Remove="Resources\Hats\94-1.png" />
     <None Remove="Resources\Misc\status-connected.png" />
@@ -80,6 +81,7 @@
     <PackageReference Include="MahApps.Metro.IconPacks.Unicons" Version="4.8.0" />
     <PackageReference Include="NLog" Version="4.7.6" />
     <PackageReference Include="Octokit" Version="0.48.0" />
+    <PackageReference Include="PgpCore" Version="4.0.1" />
     <PackageReference Include="SharedMemory" Version="2.2.3" />
     <PackageReference Include="WpfScreenHelper" Version="1.0.0" />
   </ItemGroup>
@@ -102,6 +104,7 @@
   <ItemGroup>
     <Resource Include="logo\Logo.png" />
     <Resource Include="Resources\AUFont.ttf" />
+    <EmbeddedResource Include="Resources\AutoMuteUs_PK.asc" />
     <Resource Include="Resources\Hats\1-1.png" />
     <Resource Include="Resources\Hats\10-1.png" />
     <Resource Include="Resources\Hats\11-1.png" />

@@ -30,6 +30,7 @@ namespace AUCapture_WPF
 
         public string Version { get; set; }
         public string LatestReleaseAssetURL { get; set; }
+        public string LatestReleaseAssetSignedHashURL { get; set; }
         public string LatestVersion { get; set; }
         private ICommand textBoxButtonCopyCmd;
         private ICommand textBoxButtonHelpCmd;
@@ -246,15 +247,19 @@ namespace AUCapture_WPF
                 Release latest = new Release();
                 try
                 {
-                    latest = client.Repository.Release.GetLatest("automuteus", "amonguscapture").Result;
-                    
+                    //TODO: latest = client.Repository.Release.GetLatest("automuteus", "amonguscapture").Result;
+                    latest = client.Repository.Release.GetLatest("CarbonNeuron", "AmongUsCapture").Result;
+
                 }
                 catch (Exception e)
                 {
-                    latest = client.Repository.Release.GetLatest("denverquane", "amonguscapture").Result;
+                    //latest = client.Repository.Release.GetLatest("denverquane", "amonguscapture").Result;
                 }
                 
                 LatestReleaseAssetURL = latest.Assets.First(x => x.Name == "AmongUsCapture.zip").BrowserDownloadUrl;
+                if (latest.Assets.Any(x => x.Name == "AmongUsCapture.zip.sha256.pgp"))
+                    LatestReleaseAssetSignedHashURL = latest.Assets.First(x => x.Name == "AmongUsCapture.zip.sha256.pgp").BrowserDownloadUrl;
+
                 LatestVersion = $"{latest.TagName}";
             }
             catch (Exception e)

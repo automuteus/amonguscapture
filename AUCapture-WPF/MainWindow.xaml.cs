@@ -280,6 +280,7 @@ namespace AUCapture_WPF
             {
                 return false;
             }
+
         }
 
         public async void ShowErrorBox(string errorMessage)

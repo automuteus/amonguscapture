@@ -38,13 +38,19 @@ jobs:
       - name: Zip
         run: |
           7z a ..\AmongUsCapture-Beta.zip ..\AmongUsCapture-Beta.exe -mx=9
-
+      
       - name: Sign
-        uses: thomaso-mirodin/minisign-action@v1
+        uses: oplik0/openpgp-action@v1
+        id: sign
         with:
-          args: -Sm ..\AmongUsCapture-Beta.zip
-          minisign_key: ${{ secrets.minisign_key }}
-          password: ${{ secrets.minisign_password }}
+          text: ..\AmongUsCapture-Beta.zip
+          key: ${{ secrets.PUBLIC_KEY }}
+          privateKey: ${{ secrets.PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          
+      - name: Output Signature
+        run: |
+          echo ${{ steps.sign.outputs.encrypted-text }} > ..\AmongUsCapture-Beta.zip.sig
 
       - name: AmongUsCapture-beta
         uses: actions/upload-artifact@v2
@@ -55,5 +61,5 @@ jobs:
       - name: Upload the signature
         uses: actions/upload-artifact@v1
         with:
-          name: AmongUsCapture-Beta.zip.minisig
-          path: ..\AmongUsCapture-Beta.zip.minisig
+          name: AmongUsCapture-Beta.zip.sig
+          path: ..\AmongUsCapture-Beta.zip.sig

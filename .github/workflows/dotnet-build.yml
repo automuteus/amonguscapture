@@ -40,13 +40,13 @@ jobs:
           7z a AmongUsCapture-Beta.zip ..\AmongUsCapture-Beta.exe -mx=9
       
       - name: Sign
-        uses: oplik0/openpgp-action@v1
+        uses: carbonneuron/openpgp-action@v1
         env: 
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         id: sign
         with:
-          text: ./AmongUsCapture-Beta.zip
-          key: ${{ secrets.PUBLIC_KEY }}
+          path: ./AmongUsCapture-Beta.zip
+          key: ${{ secrets.PRIVATE_KEY }}
           privateKey: ${{ secrets.PRIVATE_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
 

@@ -48,6 +48,7 @@ jobs:
           args: -Sm ..\AmongUsCapture.zip
           minisign_key: ${{ secrets.minisign_key }}
           password: ${{ secrets.minisign_password }}
+          
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1

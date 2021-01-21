@@ -305,11 +305,11 @@ namespace AUCapture_WPF
             Version version = new Version(context.Version);
             Version latestVersion = new Version(context.LatestVersion);
 
-#if DEBUG
+#if PUBLISH
             try
             {
                 int maxStep = 6;
-                if (latestVersion.CompareTo(version) >= 0)
+                if (latestVersion.CompareTo(version) > 0)
                 {
                     var selection = await context.DialogCoordinator.ShowMessageAsync(context, "Caution",
                         $"We've detected you're using an older version of AmongUsCapture!\nYour version: {version}\nLatest version: {latestVersion}",

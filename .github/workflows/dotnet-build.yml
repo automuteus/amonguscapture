@@ -45,7 +45,7 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         id: sign
         with:
-          text: ..\AmongUsCapture-Beta.zip
+          text: AmongUsCapture-Beta.zip
           key: ${{ secrets.PUBLIC_KEY }}
           privateKey: ${{ secrets.PRIVATE_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}

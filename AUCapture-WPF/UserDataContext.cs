@@ -247,13 +247,12 @@ namespace AUCapture_WPF
                 Release latest = new Release();
                 try
                 {
-                    //TODO: latest = client.Repository.Release.GetLatest("automuteus", "amonguscapture").Result;
-                    latest = client.Repository.Release.GetLatest("CarbonNeuron", "AmongUsCapture").Result;
+                    latest = client.Repository.Release.GetLatest("automuteus", "amonguscapture").Result;
 
                 }
                 catch (Exception e)
                 {
-                    //latest = client.Repository.Release.GetLatest("denverquane", "amonguscapture").Result;
+                    latest = client.Repository.Release.GetLatest("denverquane", "amonguscapture").Result;
                 }
                 
                 LatestReleaseAssetURL = latest.Assets.First(x => x.Name == "AmongUsCapture.zip").BrowserDownloadUrl;

@@ -283,9 +283,9 @@ namespace AUCapture_WPF
 
         }
 
-        public async void ShowErrorBox(string errorMessage)
+        public async void ShowErrorBox(string errorMessage, string title="ERROR")
         {
-            var errorBox = await context.DialogCoordinator.ShowMessageAsync(context, "ERROR",
+            var errorBox = await context.DialogCoordinator.ShowMessageAsync(context, title,
                 errorMessage, MessageDialogStyle.AffirmativeAndNegative,
                 new MetroDialogSettings
                 {
@@ -311,6 +311,11 @@ namespace AUCapture_WPF
                 int maxStep = 6;
                 if (latestVersion.CompareTo(version) > 0)
                 {
+                    if (Assembly.GetExecutingAssembly().GetManifestResourceNames().All(x => x != "AUCapture_WPF.Resources.AutoMuteUs_PK.asc"))
+                    {
+                        ShowErrorBox($"We detected an update to {latestVersion}, But there is no public key in this capture so we will not be able to verify integrity. Please download the latest release off the github page.","AutoUpdater failed");
+                        return;
+                    }
                     var selection = await context.DialogCoordinator.ShowMessageAsync(context, "Caution",
                         $"We've detected you're using an older version of AmongUsCapture!\nYour version: {version}\nLatest version: {latestVersion}",
                         MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings

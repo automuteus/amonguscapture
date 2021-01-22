@@ -64,6 +64,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\AutoMuteUs_PK.asc" />
+  </ItemGroup>
+
+  <ItemGroup>
     <TrimmerRootAssembly Include="System.Runtime" />
     <TrimmerRootAssembly Include="System.Runtime.Extensions" />
     <TrimmerRootAssembly Include="System.Windows.Forms" />
@@ -104,7 +108,6 @@
   <ItemGroup>
     <Resource Include="logo\Logo.png" />
     <Resource Include="Resources\AUFont.ttf" />
-    <EmbeddedResource Include="Resources\AutoMuteUs_PK.asc" />
     <Resource Include="Resources\Hats\1-1.png" />
     <Resource Include="Resources\Hats\10-1.png" />
     <Resource Include="Resources\Hats\11-1.png" />

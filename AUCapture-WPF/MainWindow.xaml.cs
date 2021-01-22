@@ -31,6 +31,8 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using AUCapture_WPF.Models;
 using Discord;
+using HandyControl.Tools;
+using HandyControl.Tools.Extension;
 using Humanizer;
 using Color = System.Drawing.Color;
 using PlayerColor = AmongUsCapture.PlayerColor;
@@ -129,18 +131,14 @@ namespace AUCapture_WPF
                         return;
                     }
 
-                    if (!w.IsVisible)
-                    {
-                        w.Show();
-                    }
-
-                    if (w.WindowState == WindowState.Minimized)
+                    if (w.WindowState.Equals(WindowState.Minimized))
                     {
                         w.WindowState = WindowState.Normal;
                     }
 
+                    w.Show();
                     w.Activate();
-                    w.Focus();         // important
+                    w.Focus(); // important
                 });
             };
             

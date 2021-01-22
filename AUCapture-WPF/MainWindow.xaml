@@ -49,6 +49,15 @@
     </mah:MetroWindow.Resources>
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
+            <Button x:Name="ContributorsButton" Click="ContributorsButton_OnClick" ToolTip="Show contributors">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconModern Width="22" Height="22" VerticalAlignment="Center" Kind="Heart" Foreground="Red"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
             <Button Click="Settings" ToolTip="Open the settings window">
                 <Button.ContentTemplate>
                     <DataTemplate>
@@ -69,7 +78,9 @@
                     </DataTemplate>
                 </Button.ContentTemplate>
             </Button>
+            
         </mah:WindowCommands>
+
     </mah:MetroWindow.LeftWindowCommands>
     <mah:MetroWindow.Flyouts>
         <mah:FlyoutsControl>
@@ -183,7 +194,7 @@
 
             </mah:Flyout>
             <mah:Flyout x:Name="ManualConnectionFlyout" Header="Manual Connection" Position="Left"
-                        Width="{Binding ActualWidth,ElementName=window, Converter={dialogs:MathDivideConverter}, ConverterParameter=2}"
+                        Width="{Binding ActualWidth,ElementName=window, Converter={dialogs:MathDivideConverter}, ConverterParameter=1.5}"
                         Theme="Adapt"
                         IsAutoCloseEnabled="False" AnimateOpacity="True" ExternalCloseButton="Left">
                 <Grid Margin="10">
@@ -224,16 +235,13 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
         <StackPanel VerticalAlignment="Center" Grid.RowSpan="4" Grid.ColumnSpan="3" Orientation="Vertical"
                     IsEnabled="{Binding Connected, Converter={StaticResource BoolInverter}}">
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
                        Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}">
                 <Run FontSize="32" FontFamily="{StaticResource AUFont}">Waiting for among us</Run><LineBreak />
             </TextBlock>
-            <mah:ProgressRing IsActive="{Binding Connected, Converter={StaticResource BoolInverter}}"
-                              IsEnabled="{Binding Connected, Converter={StaticResource BoolInverter}}"
-                              Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}" />
+            <hc:LoadingCircle IsEnabled="{Binding Connected, Converter={StaticResource BoolInverter}}" Foreground="{DynamicResource MahApps.Brushes.Accent}" Style="{StaticResource LoadingCircleLarge}" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}" IsRunning="{Binding Connected, Converter={StaticResource BoolInverter}}"/>
 
             <Button Padding="10" Margin="0 10 0 0" HorizontalAlignment="Center"
                     Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}"

@@ -880,5 +880,11 @@ namespace AUCapture_WPF
         {
             window.Topmost = context.Settings.alwaysOnTop;
         }
+
+        private void ContributorsButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Contributors c = new Contributors(context.Settings.DarkMode);
+            c.Show();
+        }
     }
 }

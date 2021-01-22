@@ -238,8 +238,16 @@ namespace AUCapture_WPF
 
         public async void Update()
         {
-            Version version = new Version(context.Version);
-            Version latestVersion = new Version(context.LatestVersion);
+            try
+            {
+                Version version = new Version(context.Version);
+                Version latestVersion = new Version(context.LatestVersion);
+            }
+            catch (Exception e)
+            {
+                return;
+            }
+            
 
 #if PUBLISH
             if (latestVersion.CompareTo(version) > 0)

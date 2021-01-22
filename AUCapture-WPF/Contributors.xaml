@@ -16,7 +16,7 @@
                  xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
                  xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
                  mc:Ignorable="d"
-                 Title="Contributors" Height="450" Width="450">
+                 Title="Contributors" Height="450" Width="450" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip" TitleCharacterCasing="Normal" TryToBeFlickerFree="True">
     <mah:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -30,12 +30,21 @@
     </mah:MetroWindow.Resources>
     <Grid>
         <GroupBox Header="The special people that make capture possible">
-            <Border Background="{DynamicResource RegionBrush}" CornerRadius="4,4,0,0" Width="{Binding Width, RelativeSource={RelativeSource AncestorType=GroupBox}}" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=GroupBox}}">
+            <Border Background="{DynamicResource RegionBrush}" CornerRadius="4,4,4,4" Width="{Binding Width, RelativeSource={RelativeSource AncestorType=GroupBox}}" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=GroupBox}}">
                 <Viewbox Stretch="Uniform">
-                    <ListBox BorderThickness="0" Style="{StaticResource ListBoxCustom}" ItemsSource="{Binding }">
-
+                    <ListBox BorderThickness="0" Style="{StaticResource ListBoxCustom}">
+                        <ListBox.Resources>
+                            <CollectionViewSource x:Key="ContributorsSorted" Source="{Binding }">
+                                <CollectionViewSource.SortDescriptions>
+                                    <componentModel:SortDescription PropertyName="Contributions" Direction="Descending" />
+                                </CollectionViewSource.SortDescriptions>
+                            </CollectionViewSource>
+                        </ListBox.Resources>
+                        <ListBox.ItemsSource>
+                            <Binding Source="{StaticResource ContributorsSorted}"/>
+                        </ListBox.ItemsSource>
                         
-                        <ListBox.ItemTemplate>
+                            <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <hc:Gravatar Source="{Binding AvatarUrl}" Style="{StaticResource GravatarCircleImg}"  ToolTip="{Binding Login}" MouseDown="Gravatar_MouseDown" Cursor="Hand"/>
                             </DataTemplate>

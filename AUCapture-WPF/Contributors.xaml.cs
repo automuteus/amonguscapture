@@ -48,6 +48,7 @@ namespace AUCapture_WPF
 
         public async void AddContributors()
         {
+            List<long> BlockedIDs = new List<long> {25180681, 49699333};
             GitHubClient client = new GitHubClient(new ProductHeaderValue("AmongUsCapture"));
             var autoMuteUsOrgRepos = new List<int>{294825566, 295776544};
             var ListOfContribs = new List<BetterRepoContributor>();
@@ -67,13 +68,14 @@ namespace AUCapture_WPF
                     }
                 }
             }
-            var tempList = ListOfContribs.Where(x => x.Id != 49699333).OrderBy(x=>x.Contributions).ToList();
+
+            var tempList = ListOfContribs.Where(x => !BlockedIDs.Contains(x.Id)).OrderByDescending(x=>x.Contributions).ToList();
             RepoContributorsToBeAdded = new Queue<BetterRepoContributor>(tempList);
             CurrentContributors.Add(RepoContributorsToBeAdded.Dequeue());
             
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += dispatcherTimer_Tick;
-            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(100);
+            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(1);
             dispatcherTimer.Start();
         }
         private void dispatcherTimer_Tick(object sender, EventArgs e)
@@ -83,9 +85,6 @@ namespace AUCapture_WPF
             {
                 var c = RepoContributorsToBeAdded.Dequeue();
                 CurrentContributors.Add(c);
-                Console.WriteLine(c.Login);
-                
-                
             }
             else
             {
@@ -117,8 +116,20 @@ namespace AUCapture_WPF
         private void Gravatar_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var tar = sender as Gravatar;
-            var tarContext = tar.DataContext as RepositoryContributor;
-            OpenBrowser(tarContext.HtmlUrl);
+            try
+            {
+                var tarContext = tar.DataContext as BetterRepoContributor;
+                if(tarContext is not null)
+                {
+                    OpenBrowser(tarContext.HtmlUrl);
+                }
+                
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+            
         }
     }
 

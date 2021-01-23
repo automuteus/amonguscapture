@@ -16,7 +16,7 @@
                  xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
                  xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
                  mc:Ignorable="d"
-                 Title="Contributors" Height="450" Width="450" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip" TitleCharacterCasing="Normal" TryToBeFlickerFree="True">
+                 Title="Contributors" Height="800" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip" TitleCharacterCasing="Normal" TryToBeFlickerFree="True">
     <mah:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

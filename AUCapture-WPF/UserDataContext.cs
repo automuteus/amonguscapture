@@ -205,6 +205,17 @@ namespace AUCapture_WPF
             }
         }
 
+        private bool _autoUpdaterEnabled;
+
+        public bool AutoUpdaterEnabled
+        {
+            get => _autoUpdaterEnabled;
+            set
+            {
+                _autoUpdaterEnabled = value;
+                OnPropertyChanged();
+            }
+        }
         private static void Shuffle<T>(List<T> list)
         {
             Random rng = new Random(); 

@@ -164,6 +164,9 @@
                                 <mah:MetroTabItem Header="About">
                                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                                         <StackPanel Orientation="Vertical">
+                                            <mah:MetroHeader Header="Auto updater">
+                                                <CheckBox IsChecked="{Binding AutoUpdaterEnabled, Mode=OneWay}" IsEnabled="False"/>
+                                            </mah:MetroHeader>
                                             <mah:MetroHeader Header="App version:">
                                                 <TextBox VerticalAlignment="Center" MinWidth="150" IsReadOnly="True"
                                                          Text="{Binding Version, Mode=OneWay}" />

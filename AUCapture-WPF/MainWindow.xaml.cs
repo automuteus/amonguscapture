@@ -304,8 +304,17 @@ namespace AUCapture_WPF
         {
             Version version = new Version(context.Version);
             Version latestVersion = new Version(context.LatestVersion);
-
+            context.AutoUpdaterEnabled = false;
 #if PUBLISH
+            try
+            {
+                var PublicKey = Assembly.GetExecutingAssembly().GetManifestResourceStream("AUCapture_WPF.Resources.AutoMuteUs_PK.asc");
+                context.AutoUpdaterEnabled = PublicKey is not null;
+            }
+            catch (Exception)
+            {
+                context.AutoUpdaterEnabled = false;
+            }
             try
             {
                 int maxStep = 6;

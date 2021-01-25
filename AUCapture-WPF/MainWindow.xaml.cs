@@ -32,6 +32,8 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using AUCapture_WPF.Models;
 using Discord;
+using HandyControl.Tools;
+using HandyControl.Tools.Extension;
 using Humanizer;
 using PgpCore;
 using Color = System.Drawing.Color;
@@ -129,16 +131,12 @@ namespace AUCapture_WPF
                         return;
                     }
 
-                    if (!w.IsVisible)
-                    {
-                        w.Show();
-                    }
-
-                    if (w.WindowState == WindowState.Minimized)
+                    if (w.WindowState.Equals(WindowState.Minimized))
                     {
                         w.WindowState = WindowState.Normal;
                     }
 
+                    w.Show();
                     w.Activate();
                     w.Focus(); // important
                 });
@@ -302,9 +300,20 @@ namespace AUCapture_WPF
 
         public async void Update()
         {
-            Version version = new Version(context.Version);
-            Version latestVersion = new Version(context.LatestVersion);
+            Version version = new Version();
+            Version latestVersion = new Version();
             context.AutoUpdaterEnabled = false;
+            try
+            {
+               version = new Version(context.Version);
+               latestVersion = new Version(context.LatestVersion);
+            }
+            catch (Exception e)
+            {
+                return;
+            }
+            
+
 #if PUBLISH
             try
             {
@@ -314,7 +323,13 @@ namespace AUCapture_WPF
             catch (Exception)
             {
                 context.AutoUpdaterEnabled = false;
+                return;
             }
+            if(!context.AutoUpdaterEnabled)
+            {
+              return;
+            }
+          
             try
             {
                 int maxStep = 6;
@@ -991,6 +1006,12 @@ namespace AUCapture_WPF
         private void AlwaysOnTopSwitch_OnToggled(object sender, RoutedEventArgs e)
         {
             window.Topmost = context.Settings.alwaysOnTop;
+        }
+
+        private void ContributorsButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Contributors c = new Contributors(context.Settings.DarkMode);
+            c.Show();
         }
     }
 }

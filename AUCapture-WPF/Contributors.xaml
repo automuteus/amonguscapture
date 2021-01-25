@@ -1,0 +1,66 @@
+﻿<mah:MetroWindow x:Class="AUCapture_WPF.Contributors"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                 xmlns:dialogs="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:li="http://github.com/zeluisping/loadingIndicators/xaml/controls"
+                 xmlns:converters="clr-namespace:AUCapture_WPF.Converters"
+                 xmlns:controls="clr-namespace:AUCapture_WPF.Controls"
+                 xmlns:wpf="clr-namespace:LoadingIndicators.WPF;assembly=LoadingIndicators.WPF"
+                 xmlns:hc="https://handyorg.github.io/handycontrol"
+                 xmlns:local="clr-namespace:AUCapture_WPF"
+                 Style="{DynamicResource MahApps.Styles.MetroWindow.Clean}"
+                 xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+                 xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+                 mc:Ignorable="d"
+                 Title="Contributors" Height="800" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip" TitleCharacterCasing="Normal" TryToBeFlickerFree="True">
+    <mah:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/clean/Controls.xaml" />
+                <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <!-- Theme setting -->
+                <hc:Theme Name="HandyTheme"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </mah:MetroWindow.Resources>
+    <Grid>
+        <GroupBox Header="The special people that make capture possible">
+            <Border Background="{DynamicResource RegionBrush}" CornerRadius="4,4,4,4" Width="{Binding Width, RelativeSource={RelativeSource AncestorType=GroupBox}}" Height="{Binding Height, RelativeSource={RelativeSource AncestorType=GroupBox}}">
+                <Viewbox Stretch="Uniform">
+                    <ListBox BorderThickness="0" Style="{StaticResource ListBoxCustom}">
+                        <ListBox.Resources>
+                            <CollectionViewSource x:Key="ContributorsSorted" Source="{Binding }">
+                                <CollectionViewSource.SortDescriptions>
+                                    <componentModel:SortDescription PropertyName="Contributions" Direction="Descending" />
+                                </CollectionViewSource.SortDescriptions>
+                            </CollectionViewSource>
+                        </ListBox.Resources>
+                        <ListBox.ItemsSource>
+                            <Binding Source="{StaticResource ContributorsSorted}"/>
+                        </ListBox.ItemsSource>
+                        
+                            <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <hc:Gravatar Source="{Binding AvatarUrl}" Style="{StaticResource GravatarCircleImg}"  ToolTip="{Binding Login}" MouseDown="Gravatar_MouseDown" Cursor="Hand"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <hc:HoneycombPanel IsItemsHost="True" Margin="10" hc:PanelElement.FluidMoveBehavior="{StaticResource BehaviorXY400}"/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+            
+
+                </Viewbox>
+            </Border>
+            
+        </GroupBox>
+        
+    </Grid>
+</mah:MetroWindow>

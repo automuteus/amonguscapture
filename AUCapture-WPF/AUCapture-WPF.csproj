@@ -44,6 +44,7 @@
 
   <ItemGroup>
     <None Remove="Resources\AutoMuteUs_PK.asc" />
+    <None Remove="Icon.ico" />
     <None Remove="Resources\Hats\103-1.png" />
     <None Remove="Resources\Hats\94-1.png" />
     <None Remove="Resources\Misc\status-connected.png" />
@@ -106,6 +107,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Icon.ico" />
     <Resource Include="logo\Logo.png" />
     <Resource Include="Resources\AUFont.ttf" />
     <Resource Include="Resources\Hats\1-1.png" />

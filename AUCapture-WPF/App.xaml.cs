@@ -81,9 +81,11 @@ namespace AUCapture_WPF
                     throw new ArgumentOutOfRangeException();
             }
             var r = new Random();
-            var goingToPop = r.Next(101) <= 3;
-            var goingToDouche = r.Next(101) == 6;
-            if (!goingToPop && !goingToDouche)
+            var rValue = r.Next(101);
+            var goingToPop = rValue <= 3;
+            var goingToDouche = rValue == 4;
+            var goingToMonke = rValue <= 7 && rValue > 4;
+            if (!goingToPop && !goingToDouche && !goingToMonke)
             {
                 if (DateTime.Now.Month == 12)
                 {
@@ -100,10 +102,15 @@ namespace AUCapture_WPF
                 new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenPop.png").Show(true);
                 PlaySound("https://github.com/automuteus/amonguscapture/raw/master/AUCapture-WPF/SplashScreens/popcat.wav");
             }
-            else
+            else if(goingToDouche)
             {
                 new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenDouche.png").Show(true);
                 PlaySound("https://github.com/automuteus/amonguscapture/raw/master/AUCapture-WPF/SplashScreens/douchebag.wav");
+            }
+            else
+            {
+                new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenMonke.png").Show(true);
+                PlaySound("https://github.com/automuteus/amonguscapture/raw/master/AUCapture-WPF/SplashScreens/stinky.wav");
             }
             
             var mainWindow = new MainWindow();

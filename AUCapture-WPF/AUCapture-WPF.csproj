@@ -62,6 +62,7 @@
     <None Remove="Resources\Pets\8.png" />
     <None Remove="Resources\Pets\9.png" />
     <None Remove="SplashScreens\SplashScreenDouche.png" />
+    <None Remove="SplashScreens\SplashScreenMonke.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -256,6 +257,7 @@
     <Resource Include="Resources\TestHats\49-1.png" />
     <Resource Include="SplashScreens\SplashScreenChristmas.png" />
     <Resource Include="SplashScreens\SplashScreenDouche.png" />
+    <Resource Include="SplashScreens\SplashScreenMonke.png" />
     <Resource Include="SplashScreens\SplashScreenNormal.png" />
     <Resource Include="SplashScreens\SplashScreenPop.png" />
   </ItemGroup>

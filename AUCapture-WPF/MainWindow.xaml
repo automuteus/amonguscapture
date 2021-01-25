@@ -70,11 +70,11 @@
                     </DataTemplate>
                 </Button.ContentTemplate>
             </Button>
-            <Button x:Name="ContributorsButton" Click="ContributorsButton_OnClick" ToolTip="Show contributors">
+            <Button x:Name="PremiumButton" Click="PremiumButton_OnClick" ToolTip="Get AutoMuteUs premium">
                 <Button.ContentTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <iconPacks:PackIconModern Width="22" Height="22" VerticalAlignment="Center" Kind="Heart" Foreground="Red"/>
+                            <iconPacks:PackIconModern Width="22" Height="22" VerticalAlignment="Center" Kind="Crown" Foreground="#FFD700"/>
                         </StackPanel>
                     </DataTemplate>
                 </Button.ContentTemplate>
@@ -183,6 +183,18 @@
                                                 <TextBox VerticalAlignment="Center" MinWidth="150" IsReadOnly="True"
                                                          Text="{Binding LatestVersion, Mode=OneWay}" />
                                             </mah:MetroHeader>
+                                            <mah:MetroHeader Header="Contributors: ">
+                                                <Button Click="ContributorsButton_OnClick" ToolTip="Show contributors">
+                                                    <Button.ContentTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <iconPacks:PackIconModern Width="22" Height="22" VerticalAlignment="Center" Kind="Heart" Foreground="Red"/>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </Button.ContentTemplate>
+                                                </Button>
+                                            </mah:MetroHeader>
+                                            
                                         </StackPanel>
                                     </ScrollViewer>
                                 </mah:MetroTabItem>
@@ -241,9 +253,9 @@
                        Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}">
                 <Run FontSize="32" FontFamily="{StaticResource AUFont}">Waiting for among us</Run><LineBreak />
             </TextBlock>
-            <hc:LoadingCircle IsEnabled="{Binding Connected, Converter={StaticResource BoolInverter}}" Foreground="{DynamicResource MahApps.Brushes.Accent}" Style="{StaticResource LoadingCircleLarge}" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}" IsRunning="{Binding Connected, Converter={StaticResource BoolInverter}}"/>
+            <hc:LoadingCircle Margin="15" IsEnabled="{Binding Connected, Converter={StaticResource BoolInverter}}" Foreground="{DynamicResource MahApps.Brushes.Accent}" Style="{StaticResource LoadingCircleLarge}" Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}" IsRunning="{Binding Connected, Converter={StaticResource BoolInverter}}"/>
 
-            <Button Padding="10" Margin="0 10 0 0" HorizontalAlignment="Center"
+            <Button Padding="13" Margin="30" HorizontalAlignment="Center"
                     Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}"
                     Command="{Binding OpenAmongUsCMD, Mode=OneWay}">
                 <Button.Content>

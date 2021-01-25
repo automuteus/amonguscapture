@@ -896,5 +896,11 @@ namespace AUCapture_WPF
             Contributors c = new Contributors(context.Settings.DarkMode);
             c.Show();
         }
+
+        private void PremiumButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            OpenBrowser("https://automute.us/premium");
+        }
+
     }
 }

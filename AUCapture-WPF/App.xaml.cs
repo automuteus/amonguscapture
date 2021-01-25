@@ -82,7 +82,7 @@ namespace AUCapture_WPF
             }
             var r = new Random();
             var goingToPop = r.Next(101) <= 3;
-            var goingToDouche = r.Next(101) == 1;
+            var goingToDouche = r.Next(101) == 6;
             if (!goingToPop && !goingToDouche)
             {
                 if (DateTime.Now.Month == 12)
@@ -98,7 +98,7 @@ namespace AUCapture_WPF
             else if(goingToPop)
             {
                 new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenPop.png").Show(true);
-                PlaySound("https://github.com/denverquane/amonguscapture/raw/master/AUCapture-WPF/SplashScreens/popcat.wav");
+                PlaySound("https://github.com/automuteus/amonguscapture/raw/master/AUCapture-WPF/SplashScreens/popcat.wav");
             }
             else
             {

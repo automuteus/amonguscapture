@@ -79,8 +79,6 @@
     <PackageReference Include="Humanizer.Core" Version="2.8.26" />
     <PackageReference Include="LoadingIndicators.WPF.Core" Version="1.0.1" />
     <PackageReference Include="MahApps.Metro" Version="2.4.3" />
-    <PackageReference Include="MahApps.Metro.IconPacks.Modern" Version="4.8.0" />
-    <PackageReference Include="MahApps.Metro.IconPacks.Unicons" Version="4.8.0" />
     <PackageReference Include="NLog" Version="4.7.6" />
     <PackageReference Include="Octokit" Version="0.48.0" />
     <PackageReference Include="SharedMemory" Version="2.2.3" />

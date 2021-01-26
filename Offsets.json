@@ -66,7 +66,9 @@
     "PlayRegionOffsets": [0x11799C70, 0x5c, 0x0, 0x10, 0x8, 0x8],
     "PlayMapOffsets": [0x11FB684, 0x5c, 0x4, 0x10],
     "StringOffsets": [0x8, 0xC],
-    "isEpic": false
+    "isEpic": false,
+    "AddPlayerPtr": 4,
+    "PlayerListPtr": 0x20
   },  
   "0B010BD3195D39C089DC018D834B2EBD26BA67D2F49C4EBEA608A804FC0975B7": {
     "Description": "v2020.12.9s",
@@ -95,7 +97,8 @@
     "PlayMapOffsets": [0x1c57f7c,0x5c,0x4,0x10],
     "StringOffsets": [0x8, 0xC],
     "isEpic": false,
-    "AddPlayerPtr": 4
+    "AddPlayerPtr": 4,
+    "PlayerListPtr": 0x20
   }
 }
 

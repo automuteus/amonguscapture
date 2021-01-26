@@ -68,6 +68,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://github.com/varedz"><img src="https://avatars.githubusercontent.com/u/56739551?v=4?s=100" width="100px;" alt=""/><br /><sub><b>varedz</b></sub></a><br /><a href="https://github.com/automuteus/amonguscapture/commits?author=varedz" title="Code">💻</a></td>
     <td align="center"><a href="https://wolfhound.xyz"><img src="https://avatars.githubusercontent.com/u/58155937?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Aiden</b></sub></a><br /><a href="#design-Wolfhound905" title="Design">🎨</a> <a href="#ideas-Wolfhound905" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://automute.us"><img src="https://avatars.githubusercontent.com/u/9044037?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Denver Quane</b></sub></a><br /><a href="#ideas-denverquane" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-denverquane" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-denverquane" title="Maintenance">🚧</a></td>
     <td align="center"><a href="https://github.com/Aspen-Cyborg"><img src="https://avatars.githubusercontent.com/u/78032877?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Aspen-Cyborg</b></sub></a><br /><a href="#design-Aspen-Cyborg" title="Design">🎨</a> <a href="#content-Aspen-Cyborg" title="Content">🖋</a></td>
   </tr>
 </table>

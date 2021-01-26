@@ -126,7 +126,7 @@ namespace AUCapture_WPF.Converters
                 return new BitmapImage();
             }
             var finalName = hatID + "-" + Hats[hatID.ToString()];
-            return new BitmapImage(new Uri($"https://raw.githubusercontent.com/automuteus/amonguscapture/master/AUCapture-WPF/Resources/Hats/{finalName}.png"));
+            return new BitmapImage(new Uri($"https://automuteus.nyc3.cdn.digitaloceanspaces.com/Hats/{finalName}.png"));
 
             
         }

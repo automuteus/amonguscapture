@@ -100,17 +100,17 @@ namespace AUCapture_WPF
             else if(goingToPop)
             {
                 new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenPop.png").Show(true);
-                PlaySound("https://github.com/automuteus/amonguscapture/raw/master/AUCapture-WPF/SplashScreens/popcat.wav");
+                PlaySound("https://automuteus.nyc3.cdn.digitaloceanspaces.com/Eggs/popcat.wav");
             }
             else if(goingToDouche)
             {
                 new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenDouche.png").Show(true);
-                PlaySound("https://github.com/automuteus/amonguscapture/raw/master/AUCapture-WPF/SplashScreens/douchebag.wav");
+                PlaySound("https://automuteus.nyc3.cdn.digitaloceanspaces.com/Eggs/douchebag.wav");
             }
             else
             {
                 new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenMonke.png").Show(true);
-                PlaySound("https://github.com/automuteus/amonguscapture/raw/master/AUCapture-WPF/SplashScreens/stinky.wav");
+                PlaySound("https://automuteus.nyc3.cdn.digitaloceanspaces.com/Eggs/stinky.wav");
             }
             
             var mainWindow = new MainWindow();

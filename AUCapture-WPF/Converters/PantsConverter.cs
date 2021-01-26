@@ -18,16 +18,12 @@ namespace AUCapture_WPF.Converters
             {
                 var pantID = values[0] as uint? ?? 0;
                 var alive = values[1] as bool? ?? false;
-                if (!alive)
-                {
-                    return new BitmapImage(new Uri($"pack://application:,,,/Resources/Pants/0.png"));
-                }
-
-                return new BitmapImage(new Uri($"pack://application:,,,/Resources/Pants/{pantID}.png"));
-
+                return !alive
+                    ? new BitmapImage()
+                    : new BitmapImage(new Uri($"https://automuteus.nyc3.cdn.digitaloceanspaces.com/Pants/{pantID}.png"));
             } 
             
-            return new BitmapImage(new Uri($"pack://application:,,,/Resources/Pants/0.png"));
+            return new BitmapImage();
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

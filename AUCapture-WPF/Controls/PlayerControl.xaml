@@ -35,16 +35,16 @@
                     <Image Margin="0 0 0 0" Width="148" Height="198" Stretch="Uniform" VerticalAlignment="Bottom">
                         <Image.Source>
                             <MultiBinding Converter="{StaticResource PlayerToImage}">  
-                                <Binding ElementName="PlayerControlWindow" Path="Color"></Binding>  
-                                <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
+                                <Binding IsAsync="True" ElementName="PlayerControlWindow" Path="Color"></Binding>  
+                                <Binding IsAsync="True" ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
                             </MultiBinding>
                         </Image.Source>
                     </Image>
                     <Image Margin="0 0 0 0" Width="148" Height="198" Stretch="Uniform" VerticalAlignment="Bottom">
                         <Image.Source>
                             <MultiBinding Converter="{StaticResource PantsConverter}">  
-                                <Binding ElementName="PlayerControlWindow" Path="PlayerPantsID"></Binding>  
-                                <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
+                                <Binding IsAsync="True" ElementName="PlayerControlWindow" Path="PlayerPantsID"></Binding>  
+                                <Binding IsAsync="True" ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
                             </MultiBinding>
                         </Image.Source>
                     </Image>
@@ -59,8 +59,8 @@
                     <Image Margin="0,0,0,0" Stretch="Uniform" VerticalAlignment="Bottom" Width="212" Panel.ZIndex="0">
                         <Image.Source>
                             <MultiBinding Converter="{StaticResource PetToIm}">  
-                                <Binding ElementName="PlayerControlWindow" Path="PlayerPetID"></Binding>  
-                                <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
+                                <Binding IsAsync="True" ElementName="PlayerControlWindow" Path="PlayerPetID"></Binding>  
+                                <Binding IsAsync="True" ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
                             </MultiBinding>
                         </Image.Source>
                     </Image>

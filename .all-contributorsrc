@@ -34,6 +34,16 @@
         "infra",
         "maintenance"
       ]
+    },
+    {
+      "login": "Aspen-Cyborg",
+      "name": "Aspen-Cyborg",
+      "avatar_url": "https://avatars.githubusercontent.com/u/78032877?v=4",
+      "profile": "https://github.com/Aspen-Cyborg",
+      "contributions": [
+        "design",
+        "content"
+      ]
     }
   ],
   "contributorsPerLine": 7,

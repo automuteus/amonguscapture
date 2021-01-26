@@ -23,6 +23,17 @@
         "design",
         "ideas"
       ]
+    },
+    {
+      "login": "denverquane",
+      "name": "Denver Quane",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9044037?v=4",
+      "profile": "http://automute.us",
+      "contributions": [
+        "ideas",
+        "infra",
+        "maintenance"
+      ]
     }
   ],
   "contributorsPerLine": 7,

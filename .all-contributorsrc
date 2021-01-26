@@ -25,6 +25,18 @@
       ]
     },
     {
+      "login": "CarbonNeuron",
+      "name": "CarbonNeuron",
+      "avatar_url": "https://avatars.githubusercontent.com/u/16768821?v=4",
+      "profile": "https://github.com/CarbonNeuron",
+      "contributions": [
+        "code",
+        "design",
+        "infra",
+        "security"
+      ]
+    },
+    {
       "login": "ph0t0shop",
       "name": "ph0t0shop",
       "avatar_url": "https://avatars.githubusercontent.com/u/14372001?v=4",

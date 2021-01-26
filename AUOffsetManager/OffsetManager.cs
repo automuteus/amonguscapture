@@ -57,6 +57,7 @@ namespace AUOffsetManager
                     OffsetIndex = JsonConvert.DeserializeObject<Dictionary<string, GameOffsets>>(json);
                     await using StreamWriter sw = File.CreateText(StorageLocationCache);
                     await sw.WriteAsync(JsonConvert.SerializeObject(OffsetIndex, Formatting.Indented));
+                    Console.WriteLine(e);
                 }
                 
             }

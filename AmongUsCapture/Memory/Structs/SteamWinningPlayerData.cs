@@ -11,7 +11,7 @@ namespace AmongUsCapture.Memory.Structs
     public struct SteamWinningPlayerData : WinningPlayerData
     {
         [FieldOffset(0x8)]
-        public long Name;
+        public uint Name;
         [FieldOffset(0xC)]
         public bool IsDead;
         [FieldOffset(0xD)]

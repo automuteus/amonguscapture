@@ -249,7 +249,6 @@ namespace AmongUsCapture
                     var playerCount = ProcessMemory.getInstance().Read<int>(allPlayersPtr, CurrentOffsets.PlayerCountOffsets);
 
                     var playerAddrPtr = allPlayers + CurrentOffsets.PlayerListPtr;
-
                     // check if exile causes end
                     if (oldState == GameState.DISCUSSION && state == GameState.TASKS)
                     {
@@ -259,7 +258,10 @@ namespace AmongUsCapture
 
                         for (var i = 0; i < playerCount; i++)
                         {
-                            var pi = ProcessMemory.getInstance().Read<PlayerInfo>(playerAddrPtr, 0, 0);
+                            var pi = CurrentOffsets.isEpic
+                                ? (PlayerInfo) ProcessMemory.getInstance().Read<EpicPlayerInfo>(playerAddrPtr, 0, 0)
+                                : ProcessMemory.getInstance().Read<SteamPlayerInfo>(playerAddrPtr, 0, 0);
+
                             playerAddrPtr += CurrentOffsets.AddPlayerPtr;
 
                             if (pi.PlayerId == exiledPlayerId)
@@ -273,7 +275,7 @@ namespace AmongUsCapture
                                 });
 
                             // skip invalid, dead and exiled players
-                            if (pi.PlayerName == 0 || pi.PlayerId == exiledPlayerId || pi.IsDead == 1 ||
+                            if (pi.PlayerName == IntPtr.Zero || pi.PlayerId == exiledPlayerId || pi.IsDead == 1 ||
                                 pi.Disconnected == 1) continue;
 
                             if (pi.IsImpostor == 1)
@@ -333,9 +335,12 @@ namespace AmongUsCapture
 
                         for (var i = 0; i < winningPlayerCount; i++)
                         {
-                            WinningPlayerData wpi = ProcessMemory.getInstance()
-                                .Read<WinningPlayerData>(winnerAddrPtr, 0, 0);
+                            WinningPlayerData wpi = CurrentOffsets.isEpic ?
+                                (WinningPlayerData) ProcessMemory.getInstance().Read<EpicWinningPlayerData>(winnerAddrPtr, 0, 0)
+                                : ProcessMemory.getInstance().Read<SteamWinningPlayerData>(winnerAddrPtr, 0, 0);
                             winnerAddrPtr += CurrentOffsets.AddPlayerPtr;
+                            Console.WriteLine(winnerAddrPtr);
+                            Console.WriteLine(JsonConvert.SerializeObject(wpi, Formatting.Indented));
                             try
                             {
                                 CachedPlayerInfos[wpi.GetPlayerName()].IsImpostor = wpi.IsImpostor;
@@ -368,9 +373,12 @@ namespace AmongUsCapture
 
                     for (var i = 0; i < playerCount; i++)
                     {
-                        var pi = ProcessMemory.getInstance().Read<PlayerInfo>(playerAddrPtr, 0, 0);
+                        PlayerInfo pi;
+                        pi = CurrentOffsets.isEpic
+                            ? (PlayerInfo) ProcessMemory.getInstance().Read<EpicPlayerInfo>(playerAddrPtr, 0, 0)
+                            : ProcessMemory.getInstance().Read<SteamPlayerInfo>(playerAddrPtr, 0, 0);
                         playerAddrPtr += CurrentOffsets.AddPlayerPtr;
-                        if (pi.PlayerName == 0) continue;
+                        if (pi.PlayerName == IntPtr.Zero) continue;
                         var playerName = pi.GetPlayerName();
                         if (playerName.Length == 0) continue;
 

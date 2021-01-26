@@ -5,25 +5,25 @@ using System.Text;
 
 namespace AmongUsCapture.Memory.Structs
 {
-	[System.Runtime.InteropServices.StructLayout(LayoutKind.Explicit)]
-	public struct WinningPlayerData
+	
+	public interface WinningPlayerData
 	{
-		[FieldOffset(0x8)]
-		public uint Name;
-		[FieldOffset(0xC)]
-		public bool IsDead;
-		[FieldOffset(0xD)]
-		public bool IsImpostor;
-		[FieldOffset(0x10)]
-		public int ColorId;
-		[FieldOffset(0x14)]
-		public uint SkinId;
-		[FieldOffset(0x18)]
-		public uint HatId;
-		[FieldOffset(0x1C)]
-		public uint PetId;
-		[FieldOffset(0x20)]
-		public bool IsYou;
+		
+        public abstract long Name {get;}
+		
+        public abstract bool IsDead{get;}
+		
+        public abstract bool IsImpostor{get;}
+		
+        public abstract int ColorId{get;}
+		
+        public abstract uint SkinId{get;}
+		
+        public abstract uint HatId{get;}
+		
+        public abstract uint PetId{get;}
+		
+        public abstract bool IsYou{get;}
 
 		public string GetPlayerName()
 		{

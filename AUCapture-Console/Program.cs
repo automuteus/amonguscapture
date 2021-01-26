@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
 using AUCapture_Console.IPC;
+using Newtonsoft.Json;
 
 namespace AUCapture_Console
 {
@@ -51,6 +52,7 @@ namespace AUCapture_Console
                 GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
                 GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
                 GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
+                GameMemReader.getInstance().GameOver += OnGameOver;
                 GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
                 var gameReader = Task.Factory.StartNew(() => GameMemReader.getInstance().RunLoop()); // run loop in background
                 
@@ -61,6 +63,11 @@ namespace AUCapture_Console
                 gameReader.Wait();
             });
             foreverTask.Wait();
+        }
+
+        private static void OnGameOver(object? sender, GameOverEventArgs e)
+        {
+            Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, $"{JsonConvert.SerializeObject(e.PlayerInfos)}");
         }
 
         private static void OnJoinedLobby(object? sender, LobbyEventArgs e)

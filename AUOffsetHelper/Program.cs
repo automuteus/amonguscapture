@@ -56,8 +56,10 @@ namespace AUOffsetHelper
                 GameCodeOffsets = new []{GameStartManagerOffset, 0x5c, 0, 0x20, 0x28 },
                 PlayRegionOffsets = new []{ServerManagerOffset, 0x5c, 0, 0x10, 0x8, 0x8},
                 PlayMapOffsets = new []{GameOptionsOffset, 0x5c, 0x4, 0x10},
-                StringOffsets = new []{0x8, 0xC}
-
+                StringOffsets = new []{0x8, 0xC},
+                isEpic = false,
+                AddPlayerPtr = 4,
+                PlayerListPtr = 0x10
 
             };
             Console.Write(JsonConvert.SerializeObject(a, Formatting.Indented));

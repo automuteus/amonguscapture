@@ -145,6 +145,9 @@ namespace AUOffsetManager
         public int[] PlayRegionOffsets { get; set; }
         public int[] PlayMapOffsets { get; set; }
         public int[] StringOffsets { get; set; }
+        public bool isEpic { get; set; }
+        public int AddPlayerPtr { get; set; }
+        public int PlayerListPtr { get; set; }
         
     }
 

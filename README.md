@@ -12,6 +12,8 @@ AmongUsCapture reads game data of Among Us and communicates with
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/automuteus/amonguscapture/Beta%20releases/master?label=Beta%20Releases&logo=github) 
 ![GitHub all releases](https://img.shields.io/github/downloads/automuteus/amonguscapture/total?label=Total%20Downloads)
 ![GitHub release (by tag)](https://img.shields.io/github/downloads/automuteus/amonguscapture/latest/total?label=Latest%20Version%20Downloads)
+![Discord](https://img.shields.io/discord/754465589958803548?logo=discord)
+
 
 ## Automatic Installation	
 

@@ -1,0 +1,77 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "varedz",
+      "name": "varedz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/56739551?v=4",
+      "profile": "https://github.com/varedz",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Wolfhound905",
+      "name": "Aiden",
+      "avatar_url": "https://avatars.githubusercontent.com/u/58155937?v=4",
+      "profile": "https://wolfhound.xyz",
+      "contributions": [
+        "design",
+        "ideas"
+      ]
+    },
+    {
+      "login": "CarbonNeuron",
+      "name": "CarbonNeuron",
+      "avatar_url": "https://avatars.githubusercontent.com/u/16768821?v=4",
+      "profile": "https://github.com/CarbonNeuron",
+      "contributions": [
+        "code",
+        "design",
+        "infra",
+        "security"
+      ]
+    },
+    {
+      "login": "ph0t0shop",
+      "name": "ph0t0shop",
+      "avatar_url": "https://avatars.githubusercontent.com/u/14372001?v=4",
+      "profile": "https://github.com/ph0t0shop",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    },
+    {
+      "login": "denverquane",
+      "name": "Denver Quane",
+      "avatar_url": "https://avatars.githubusercontent.com/u/9044037?v=4",
+      "profile": "http://automute.us",
+      "contributions": [
+        "ideas",
+        "infra",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "Aspen-Cyborg",
+      "name": "Aspen-Cyborg",
+      "avatar_url": "https://avatars.githubusercontent.com/u/78032877?v=4",
+      "profile": "https://github.com/Aspen-Cyborg",
+      "contributions": [
+        "design",
+        "content"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "amonguscapture",
+  "projectOwner": "automuteus",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}

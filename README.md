@@ -1,6 +1,6 @@
 <a href="https://automute.us">
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 <img alt="Banner" src="https://media.discordapp.net/attachments/759195945044017234/798382462157193246/banner.png?width=1440&height=274">
 </a>
@@ -68,6 +68,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://github.com/varedz"><img src="https://avatars.githubusercontent.com/u/56739551?v=4?s=100" width="100px;" alt=""/><br /><sub><b>varedz</b></sub></a><br /><a href="https://github.com/automuteus/amonguscapture/commits?author=varedz" title="Code">💻</a></td>
     <td align="center"><a href="https://wolfhound.xyz"><img src="https://avatars.githubusercontent.com/u/58155937?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Aiden</b></sub></a><br /><a href="#design-Wolfhound905" title="Design">🎨</a> <a href="#ideas-Wolfhound905" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/ph0t0shop"><img src="https://avatars.githubusercontent.com/u/14372001?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ph0t0shop</b></sub></a><br /><a href="https://github.com/automuteus/amonguscapture/commits?author=ph0t0shop" title="Code">💻</a> <a href="#ideas-ph0t0shop" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 

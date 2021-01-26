@@ -7,7 +7,7 @@
 
 #
 
-### ❌**Capture only works with the Official Steam Version of Among Us**❌
+### ✔️ Capture works with the latest Itch, Steam, and Epic version of Among us. ✔️
 
 AmongUsCapture reads game data of Among Us and communicates with 
 [Galactus](https://github.com/automuteus/galactus)

@@ -18,7 +18,7 @@ AmongUsCapture reads game data of Among Us and communicates with
 <a href="https://discord.gg/ZkqZSWF" alt="Discord Link">
     <img src="https://img.shields.io/discord/754465589958803548?logo=discord" />
 </a>
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
 
 ## Supported versions of Among Us
 | Platform        | Supported? |

@@ -1,6 +1,6 @@
 <a href="https://automute.us">
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 <img alt="Banner" src="https://media.discordapp.net/attachments/759195945044017234/798382462157193246/banner.png?width=1440&height=274">
 </a>
@@ -18,7 +18,7 @@ AmongUsCapture reads game data of Among Us and communicates with
 <a href="https://discord.gg/ZkqZSWF" alt="Discord Link">
     <img src="https://img.shields.io/discord/754465589958803548?logo=discord" />
 </a>
-
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 
 ## Automatic Installation	
 

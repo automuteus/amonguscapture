@@ -36,6 +36,24 @@ namespace AUCapture_WPF
             socket.Connect(token.Host, token.ConnectCode);
         }
 
+        public void PlaySound(string URL)
+        {
+            try
+            {
+                var req = System.Net.WebRequest.Create(URL);
+                using (Stream stream = req.GetResponse().GetResponseStream())
+                {
+                    SoundPlayer myNewSound = new SoundPlayer(stream);
+                    myNewSound.Load();
+                    myNewSound.Play();
+                }
+            }
+            catch (Exception errrr)
+            {
+                Console.WriteLine("Minor error");
+            }
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -64,8 +82,11 @@ namespace AUCapture_WPF
             }
             Console.WriteLine(string.Join(", ",Assembly.GetExecutingAssembly().GetManifestResourceNames())); //Gets all the embedded resources
             var r = new Random();
-            var goingToPop = r.Next(101) < 5;
-            if (!goingToPop)
+            var rValue = r.Next(101);
+            var goingToPop = rValue <= 3;
+            var goingToDouche = rValue == 4;
+            var goingToMonke = rValue <= 7 && rValue > 4;
+            if (!goingToPop && !goingToDouche && !goingToMonke)
             {
                 if (DateTime.Now.Month == 12)
                 {
@@ -77,24 +98,20 @@ namespace AUCapture_WPF
                 }
                 //Console.WriteLine(string.Join(", ",Assembly.GetExecutingAssembly().GetManifestResourceNames())); //Gets all the embedded resources
             }
-            else
+            else if(goingToPop)
             {
                 new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenPop.png").Show(true);
-                try
-                {
-                    var req = System.Net.WebRequest.Create(
-                        "https://github.com/denverquane/amonguscapture/raw/master/AUCapture-WPF/SplashScreens/popcat.wav");
-                    using (Stream stream = req.GetResponse().GetResponseStream())
-                    {
-                        SoundPlayer myNewSound = new SoundPlayer(stream);
-                        myNewSound.Load();
-                        myNewSound.Play();
-                    }
-                }
-                catch (Exception errrr)
-                {
-                    Console.WriteLine("Minor error");
-                }
+                PlaySound("https://github.com/automuteus/amonguscapture/raw/master/AUCapture-WPF/SplashScreens/popcat.wav");
+            }
+            else if(goingToDouche)
+            {
+                new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenDouche.png").Show(true);
+                PlaySound("https://github.com/automuteus/amonguscapture/raw/master/AUCapture-WPF/SplashScreens/douchebag.wav");
+            }
+            else
+            {
+                new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenMonke.png").Show(true);
+                PlaySound("https://github.com/automuteus/amonguscapture/raw/master/AUCapture-WPF/SplashScreens/stinky.wav");
             }
             
             var mainWindow = new MainWindow();

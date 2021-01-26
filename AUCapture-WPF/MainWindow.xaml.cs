@@ -36,6 +36,7 @@ using HandyControl.Tools;
 using HandyControl.Tools.Extension;
 using Humanizer;
 using PgpCore;
+using Microsoft.Win32;
 using Color = System.Drawing.Color;
 using PlayerColor = AmongUsCapture.PlayerColor;
 
@@ -573,6 +574,7 @@ namespace AUCapture_WPF
             AmongUsCapture.Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
         }
 
+        
         private void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
         {
             AmongUsCapture.Settings.conInterface.WriteModuleTextColored("CHAT", Color.DarkKhaki,
@@ -1013,5 +1015,11 @@ namespace AUCapture_WPF
             Contributors c = new Contributors(context.Settings.DarkMode);
             c.Show();
         }
+
+        private void PremiumButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            OpenBrowser("https://automute.us/premium");
+        }
+
     }
 }

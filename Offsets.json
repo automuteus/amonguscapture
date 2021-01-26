@@ -68,7 +68,7 @@
     "StringOffsets": [0x8, 0xC],
     "isEpic": false,
     "AddPlayerPtr": 4,
-    "PlayerListPtr": 0x20
+    "PlayerListPtr": 0x10
   },  
   "0B010BD3195D39C089DC018D834B2EBD26BA67D2F49C4EBEA608A804FC0975B7": {
     "Description": "v2020.12.9s",
@@ -98,7 +98,7 @@
     "StringOffsets": [0x8, 0xC],
     "isEpic": false,
     "AddPlayerPtr": 4,
-    "PlayerListPtr": 0x20
+    "PlayerListPtr": 0x10
   }
 }
 

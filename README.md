@@ -7,7 +7,7 @@
 
 #
 
-### ❌**Capture only works with the Official Steam Version of Among Us**❌
+
 
 AmongUsCapture reads game data of Among Us and communicates with 
 [Galactus](https://github.com/automuteus/galactus)
@@ -18,7 +18,14 @@ AmongUsCapture reads game data of Among Us and communicates with
 <a href="https://discord.gg/ZkqZSWF" alt="Discord Link">
     <img src="https://img.shields.io/discord/754465589958803548?logo=discord" />
 </a>
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+
+## Supported versions of Among Us
+| Platform        | Supported? |
+|-----------------|:------------:|
+| Steam           |      ✔️     |
+| Epic Games      |      ✔️     |
+| Itch.io         |      ✔️     |
+| Microsoft store |      ❌     |
 
 ## Automatic Installation	
 

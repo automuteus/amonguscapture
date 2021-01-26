@@ -1,4 +1,7 @@
 <a href="https://automute.us">
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 <img alt="Banner" src="https://media.discordapp.net/attachments/759195945044017234/798382462157193246/banner.png?width=1440&height=274">
 </a>
 
@@ -53,3 +56,23 @@ Then browse to the AmongUsCapture.exe file and confirm that you want to create t
 ### Ubuntu/Linux: 
 
 Follow instructions at https://github.com/TauAkiou/amonguscapture-gtk
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/varedz"><img src="https://avatars.githubusercontent.com/u/56739551?v=4?s=100" width="100px;" alt=""/><br /><sub><b>varedz</b></sub></a><br /><a href="https://github.com/automuteus/amonguscapture/commits?author=varedz" title="Code">💻</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

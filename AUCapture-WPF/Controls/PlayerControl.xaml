@@ -51,8 +51,8 @@
                     <Image Margin="0,0,0,0" Stretch="Uniform" VerticalAlignment="Bottom" Width="212" Panel.ZIndex="{Binding ElementName=PlayerControlWindow, Path=PlayerHatID, Converter={StaticResource HatToZ}}">
                         <Image.Source>
                             <MultiBinding Converter="{StaticResource HatToImage}">  
-                                <Binding ElementName="PlayerControlWindow" Path="PlayerHatID"></Binding>  
-                                <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
+                                <Binding IsAsync="True" ElementName="PlayerControlWindow" Path="PlayerHatID"></Binding>  
+                                <Binding IsAsync="True" ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
                             </MultiBinding>
                         </Image.Source>
                     </Image>

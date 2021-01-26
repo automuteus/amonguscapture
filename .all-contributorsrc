@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "varedz",
+      "name": "varedz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/56739551?v=4",
+      "profile": "https://github.com/varedz",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "amonguscapture",
+  "projectOwner": "automuteus",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}

@@ -259,7 +259,8 @@ namespace AmongUsCapture
 
                         for (var i = 0; i < playerCount; i++)
                         {
-                            var pi = ProcessMemory.getInstance().Read<PlayerInfo>(playerAddrPtr, 0, 0);
+                            // TODO: Actually implement this. Note the explicit types, also passed to ProcessMemory#Read()
+                            PlayerInfo pi = isSteam ? ProcessMemory.getInstance().Read<SteamPlayerInfo>(playerAddrPtr, 0, 0) : ProcessMemory.getInstance().Read<EpicPlayerInfo>(playerAddrPtr, 0, 0);
                             playerAddrPtr += 4;
 
                             if (pi.PlayerId == exiledPlayerId)
@@ -273,7 +274,7 @@ namespace AmongUsCapture
                                 });
 
                             // skip invalid, dead and exiled players
-                            if (pi.PlayerName == 0 || pi.PlayerId == exiledPlayerId || pi.IsDead == 1 ||
+                            if (pi.PlayerName == IntPtr.Zero || pi.PlayerId == exiledPlayerId || pi.IsDead == 1 ||
                                 pi.Disconnected == 1) continue;
 
                             if (pi.IsImpostor == 1)
@@ -368,9 +369,10 @@ namespace AmongUsCapture
 
                     for (var i = 0; i < playerCount; i++)
                     {
-                        var pi = ProcessMemory.getInstance().Read<PlayerInfo>(playerAddrPtr, 0, 0);
+                        // TODO: Actually implement this. Note the explicit types, also passed to ProcessMemory#Read()
+                        PlayerInfo pi = isSteam ? ProcessMemory.getInstance().Read<SteamPlayerInfo>(playerAddrPtr, 0, 0) : ProcessMemory.getInstance().Read<EpicPlayerInfo>(playerAddrPtr, 0, 0);
                         playerAddrPtr += 4;
-                        if (pi.PlayerName == 0) continue;
+                        if (pi.PlayerName == IntPtr.Zero) continue;
                         var playerName = pi.GetPlayerName();
                         if (playerName.Length == 0) continue;
 

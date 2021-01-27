@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -8,7 +7,9 @@ using System.Threading;
 using AmongUsCapture.Memory.Structs;
 using AmongUsCapture.TextColorLibrary;
 using AUOffsetManager;
+using Discord;
 using Newtonsoft.Json;
+using Color = System.Drawing.Color;
 
 namespace AmongUsCapture
 {
@@ -119,37 +120,43 @@ namespace AmongUsCapture
 
                                     using (SHA256Managed sha256 = new SHA256Managed())
                                     {
-                                        using (FileStream fs = new FileStream(module.FileName, FileMode.Open,
-                                            FileAccess.Read))
+                                        try
                                         {
-                                            using (var bs = new BufferedStream(fs))
+                                            using FileStream fs = new FileStream(module.FileName, FileMode.Open,
+                                                FileAccess.Read);
+                                            using var bs = new BufferedStream(fs);
+                                            var hash = sha256.ComputeHash(bs);
+                                            StringBuilder GameAssemblyhashSb = new StringBuilder(2 * hash.Length);
+                                            foreach (byte byt in hash)
                                             {
-                                                var hash = sha256.ComputeHash(bs);
-                                                StringBuilder GameAssemblyhashSb = new StringBuilder(2 * hash.Length);
-                                                foreach (byte byt in hash)
-                                                {
-                                                    GameAssemblyhashSb.AppendFormat("{0:X2}", byt);
-                                                }
-
-                                                Console.WriteLine(
-                                                    $"GameAssembly Hash: {GameAssemblyhashSb.ToString()}");
-                                                GameHash = GameAssemblyhashSb.ToString();
-                                                CurrentOffsets = offMan.FetchForHash(GameAssemblyhashSb.ToString());
-                                                if (CurrentOffsets is not null)
-                                                {
-                                                    Settings.conInterface.WriteModuleTextColored("GameMemReader",
-                                                        Color.Lime, $"Loaded offsets: {CurrentOffsets.Description}");
-                                                    ProcessHook?.Invoke(this, new ProcessHookArgs{PID = ProcessMemory.getInstance().process.Id});
-                                                }
-                                                else
-                                                {
-                                                    Settings.conInterface.WriteModuleTextColored("GameMemReader",
-                                                        Color.Lime,
-                                                        $"No offsets found for: {Color.Aqua.ToTextColor()}{GameAssemblyhashSb.ToString()}{Settings.conInterface.getNormalColor().ToTextColor()}.");
-
-                                                }
-
+                                                GameAssemblyhashSb.AppendFormat("{0:X2}", byt);
                                             }
+
+                                            Console.WriteLine(
+                                                $"GameAssembly Hash: {GameAssemblyhashSb.ToString()}");
+                                            GameHash = GameAssemblyhashSb.ToString();
+                                            CurrentOffsets = offMan.FetchForHash(GameAssemblyhashSb.ToString());
+                                            
+                                        }
+                                        catch (Exception e)
+                                        {
+                                            foundModule = true;
+                                            cracked = false;
+                                            GameHash = "windows_store";
+                                            CurrentOffsets = offMan.FetchForHash(GameHash);
+                                        }
+                                        if (CurrentOffsets is not null)
+                                        {
+                                            Settings.conInterface.WriteModuleTextColored("GameMemReader",
+                                                Color.Lime, $"Loaded offsets: {CurrentOffsets.Description}");
+                                            ProcessHook?.Invoke(this, new ProcessHookArgs{PID = ProcessMemory.getInstance().process.Id});
+                                        }
+                                        else
+                                        {
+                                            Settings.conInterface.WriteModuleTextColored("GameMemReader",
+                                                Color.Lime,
+                                                $"No offsets found for: {Color.Aqua.ToTextColor()}{GameHash}{Settings.conInterface.getNormalColor().ToTextColor()}.");
+
                                         }
                                     }
 

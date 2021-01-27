@@ -66,6 +66,15 @@
         "design",
         "content"
       ]
+    },
+    {
+      "login": "mtaku3",
+      "name": "mtaku3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/57391256?v=4",
+      "profile": "https://github.com/mtaku3",
+      "contributions": [
+        "data"
+      ]
     }
   ],
   "contributorsPerLine": 7,

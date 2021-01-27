@@ -24,7 +24,7 @@ AmongUsCapture reads game data of Among Us and communicates with
 | Steam           |      ✔️     |
 | Epic Games      |      ✔️     |
 | Itch.io         |      ✔️     |
-| Microsoft store |      ❌     |
+| Microsoft store |      ✔️     |
 
 ## Automatic Installation	
 

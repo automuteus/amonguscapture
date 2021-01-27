@@ -80,6 +80,7 @@ namespace AUCapture_WPF
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            Console.WriteLine(string.Join(", ",Assembly.GetExecutingAssembly().GetManifestResourceNames())); //Gets all the embedded resources
             var r = new Random();
             var rValue = r.Next(101);
             var goingToPop = rValue <= 3;

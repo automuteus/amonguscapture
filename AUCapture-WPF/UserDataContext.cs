@@ -31,6 +31,7 @@ namespace AUCapture_WPF
 
         public string Version { get; set; }
         public string LatestReleaseAssetURL { get; set; }
+        public string LatestReleaseAssetSignedHashURL { get; set; }
         public string LatestVersion { get; set; }
         private ICommand textBoxButtonCopyCmd;
         private ICommand textBoxButtonHelpCmd;
@@ -228,6 +229,17 @@ namespace AUCapture_WPF
             }
         }
 
+        private bool _autoUpdaterEnabled;
+
+        public bool AutoUpdaterEnabled
+        {
+            get => _autoUpdaterEnabled;
+            set
+            {
+                _autoUpdaterEnabled = value;
+                OnPropertyChanged();
+            }
+        }
         private static void Shuffle<T>(List<T> list)
         {
             Random rng = new Random(); 
@@ -271,7 +283,7 @@ namespace AUCapture_WPF
                 try
                 {
                     latest = client.Repository.Release.GetLatest("automuteus", "amonguscapture").Result;
-                    
+
                 }
                 catch (Exception e)
                 {
@@ -279,6 +291,9 @@ namespace AUCapture_WPF
                 }
                 
                 LatestReleaseAssetURL = latest.Assets.First(x => x.Name == "AmongUsCapture.zip").BrowserDownloadUrl;
+                if (latest.Assets.Any(x => x.Name == "AmongUsCapture.zip.sha256.pgp"))
+                    LatestReleaseAssetSignedHashURL = latest.Assets.First(x => x.Name == "AmongUsCapture.zip.sha256.pgp").BrowserDownloadUrl;
+
                 LatestVersion = $"{latest.TagName}";
             }
             catch (Exception e)

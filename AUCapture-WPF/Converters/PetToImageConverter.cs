@@ -17,12 +17,16 @@ namespace AUCapture_WPF.Converters
         {
             var petID = values[0] as uint? ?? 0;
             var alive = values[1] as bool? ?? false;
+            if (petID == 0)
+            {
+                return "";
+            }
             if (!alive)
             {
-                return new BitmapImage();
+                return "";
             }
 
-            return new BitmapImage(new Uri($"https://cdn.automute.us/Pets/{petID}.png"));
+            return $"https://cdn.automute.us/Pets/{petID}.png";
 
         }
 

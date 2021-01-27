@@ -118,16 +118,16 @@ namespace AUCapture_WPF.Converters
             var alive = values[1] as bool? ?? false;
             if (!alive)
             {
-                return new BitmapImage();
+                return "";
             }
 
             
             if (hatID == 0)
             {
-                return new BitmapImage();
+                return "";
             }
             var finalName = hatID + "-" + Hats[hatID.ToString()];
-            return new BitmapImage(new Uri($"https://cdn.automute.us/Hats/{finalName}.png"));
+            return $"https://cdn.automute.us/Hats/{finalName}.png";
 
 
         }

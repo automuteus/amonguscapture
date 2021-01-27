@@ -1,6 +1,6 @@
 <a href="https://automute.us">
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 <img alt="Banner" src="https://media.discordapp.net/attachments/759195945044017234/798382462157193246/banner.png?width=1440&height=274">
 </a>
@@ -79,6 +79,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/ph0t0shop"><img src="https://avatars.githubusercontent.com/u/14372001?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ph0t0shop</b></sub></a><br /><a href="https://github.com/automuteus/amonguscapture/commits?author=ph0t0shop" title="Code">💻</a> <a href="#ideas-ph0t0shop" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="http://automute.us"><img src="https://avatars.githubusercontent.com/u/9044037?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Denver Quane</b></sub></a><br /><a href="#ideas-denverquane" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-denverquane" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-denverquane" title="Maintenance">🚧</a></td>
     <td align="center"><a href="https://github.com/Aspen-Cyborg"><img src="https://avatars.githubusercontent.com/u/78032877?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Aspen-Cyborg</b></sub></a><br /><a href="#design-Aspen-Cyborg" title="Design">🎨</a> <a href="#content-Aspen-Cyborg" title="Content">🖋</a></td>
+    <td align="center"><a href="https://github.com/mtaku3"><img src="https://avatars.githubusercontent.com/u/57391256?v=4?s=100" width="100px;" alt=""/><br /><sub><b>mtaku3</b></sub></a><br /><a href="#data-mtaku3" title="Data">🔣</a></td>
   </tr>
 </table>
 

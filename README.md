@@ -12,12 +12,11 @@ AmongUsCapture reads game data of Among Us and communicates with
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/automuteus/amonguscapture/Beta%20releases/master?label=Beta%20Releases&logo=github) 
 ![GitHub all releases](https://img.shields.io/github/downloads/automuteus/amonguscapture/total?label=Total%20Downloads)
 ![GitHub release (by tag)](https://img.shields.io/github/downloads/automuteus/amonguscapture/latest/total?label=Latest%20Version%20Downloads)
-<a href="https://discord.gg/ZkqZSWF" alt="Discord Link">
-    <img src="https://img.shields.io/discord/754465589958803548?logo=discord" />
-</a>
+[![Discord](https://img.shields.io/discord/754465589958803548?logo=discord)](https://discord.gg/ZkqZSWF)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
+
 
 ## Supported versions of Among Us
 | Platform        | Supported? |

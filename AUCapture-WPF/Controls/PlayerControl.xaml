@@ -35,32 +35,32 @@
                     <Image Margin="0 0 0 0" Width="148" Height="198" Stretch="Uniform" VerticalAlignment="Bottom">
                         <Image.Source>
                             <MultiBinding Converter="{StaticResource PlayerToImage}">  
-                                <Binding IsAsync="True" ElementName="PlayerControlWindow" Path="Color"></Binding>  
-                                <Binding IsAsync="True" ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
+                                <Binding ElementName="PlayerControlWindow" Path="Color"></Binding>  
+                                <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
                             </MultiBinding>
                         </Image.Source>
                     </Image>
                     <Image Margin="0 0 0 0" Width="148" Height="198" Stretch="Uniform" VerticalAlignment="Bottom">
                         <Image.Source>
                             <MultiBinding Converter="{StaticResource PantsConverter}">  
-                                <Binding IsAsync="True" ElementName="PlayerControlWindow" Path="PlayerPantsID"></Binding>  
-                                <Binding IsAsync="True" ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
+                                <Binding ElementName="PlayerControlWindow" Path="PlayerPantsID" Delay="100"></Binding>  
+                                <Binding ElementName="PlayerControlWindow" Path="AliveStatus" Delay="100"></Binding>  
                             </MultiBinding>
                         </Image.Source>
                     </Image>
                     <Image Margin="0,0,0,0" Stretch="Uniform" VerticalAlignment="Bottom" Width="212" Panel.ZIndex="{Binding ElementName=PlayerControlWindow, Path=PlayerHatID, Converter={StaticResource HatToZ}}">
                         <Image.Source>
                             <MultiBinding Converter="{StaticResource HatToImage}">  
-                                <Binding IsAsync="True" ElementName="PlayerControlWindow" Path="PlayerHatID"></Binding>  
-                                <Binding IsAsync="True" ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
+                                <Binding ElementName="PlayerControlWindow" Path="PlayerHatID" Delay="100"></Binding>  
+                                <Binding ElementName="PlayerControlWindow" Path="AliveStatus" Delay="100"></Binding>  
                             </MultiBinding>
                         </Image.Source>
                     </Image>
                     <Image Margin="0,0,0,0" Stretch="Uniform" VerticalAlignment="Bottom" Width="212" Panel.ZIndex="0">
                         <Image.Source>
                             <MultiBinding Converter="{StaticResource PetToIm}">  
-                                <Binding IsAsync="True" ElementName="PlayerControlWindow" Path="PlayerPetID"></Binding>  
-                                <Binding IsAsync="True" ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
+                                <Binding ElementName="PlayerControlWindow" Path="PlayerPetID" Delay="100"></Binding>  
+                                <Binding ElementName="PlayerControlWindow" Path="AliveStatus" Delay="100"></Binding>  
                             </MultiBinding>
                         </Image.Source>
                     </Image>

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net.Cache;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace AUCapture_WPF.Converters
@@ -20,9 +22,10 @@ namespace AUCapture_WPF.Converters
                 return new BitmapImage();
             }
 
-            return new BitmapImage(new Uri($"https://automuteus.nyc3.cdn.digitaloceanspaces.com/Pets/{petID}.png"));
+            return new BitmapImage(new Uri($"https://cdn.automute.us/Pets/{petID}.png"));
 
         }
+
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {

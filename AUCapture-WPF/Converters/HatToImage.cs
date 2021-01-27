@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Cache;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -126,9 +127,9 @@ namespace AUCapture_WPF.Converters
                 return new BitmapImage();
             }
             var finalName = hatID + "-" + Hats[hatID.ToString()];
-            return new BitmapImage(new Uri($"https://automuteus.nyc3.cdn.digitaloceanspaces.com/Hats/{finalName}.png"));
+            return new BitmapImage(new Uri($"https://cdn.automute.us/Hats/{finalName}.png"));
 
-            
+
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

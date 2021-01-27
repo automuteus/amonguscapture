@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net.Cache;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -20,7 +21,7 @@ namespace AUCapture_WPF.Converters
                 var alive = values[1] as bool? ?? false;
                 return !alive
                     ? new BitmapImage()
-                    : new BitmapImage(new Uri($"https://automuteus.nyc3.cdn.digitaloceanspaces.com/Pants/{pantID}.png"));
+                    : new BitmapImage(new Uri($"https://cdn.automute.us/Pants/{pantID}.png"));
             } 
             
             return new BitmapImage();

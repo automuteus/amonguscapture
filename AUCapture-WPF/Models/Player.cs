@@ -77,13 +77,14 @@ namespace AUCapture_WPF.Models
             }
         }
 
-        public Player(string name, PlayerColor color, bool alive, uint PantsID, uint HatID)
+        public Player(string name, PlayerColor color, bool alive, uint PantsID, uint HatID, uint petId)
         {
             Name = name;
             Color = color;
             Alive = alive;
             this.PantsID = PantsID;
             this.HatID = HatID;
+            this.PetID = petId;
         }
 
 

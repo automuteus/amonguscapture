@@ -246,7 +246,7 @@ namespace AUCapture_WPF.Converters
                 return 0;
             }
 
-            if (Hats[(hatID%94).ToString()] == 1)
+            if (Hats[(hatID%95).ToString()] == 1)
             {
                 return 1;
             }

@@ -571,7 +571,7 @@ namespace AUCapture_WPF
                 {
                     if (e.Action == PlayerAction.Joined)
                     {
-                        Dispatcher.Invoke((Action) (() => { context.Players.Add(new Player(e.Name, e.Color, !e.IsDead, 0, 0)); }));
+                        Dispatcher.Invoke((Action) (() => { context.Players.Add(new Player(e.Name, e.Color, !e.IsDead, 0, 0, 0)); }));
                     }
                 }
             }
@@ -770,17 +770,47 @@ namespace AUCapture_WPF
             context.GameState = state;
         }
 
+        private void RandomizePlayers()
+        {
+            var dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            dispatcherTimer.Interval = new TimeSpan(0,0,0,0, 100);
+            dispatcherTimer.Start();
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            var r = new Random();
+            var playerToChange = context.Players[r.Next(context.Players.Count)];
+            var hatID = r.Next(94);
+            bool Alive = r.Next(0, 2) == 1;
+            var pantId = r.Next(0, 16);
+            var petID = r.Next(0, 12);
+            playerToChange.Alive = Alive;
+            playerToChange.HatID = (uint) hatID;
+            playerToChange.PantsID = (uint) pantId;
+            playerToChange.PetID = (uint) petID;
+        }
+
+        private void TestUsers()
+        {
+            context.Connected = true;
+            context.GameState = GameState.TASKS;
+            var numOfPlayers = 49;
+            for (uint i = 0; i < numOfPlayers; i++)
+            {
+                context.Players.Add(new Player($"", (PlayerColor) (i%12), true, i%10, i, 0));
+            }
+
+            RandomizePlayers();
+        }
+
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Task.Factory.StartNew(Update, TaskCreationOptions.LongRunning);
-            //context.Connected = true;
-            //context.GameState = GameState.TASKS;
-            //for (uint i = 0; i < 10; i++)
-            //{
-            //    context.Players.Add(new Player($"Test {i}", (PlayerColor) (i%12), true, i%10, i));
-            //}
             
+            //TestUsers();
             if (Updated)
             {
                 this.ShowMessageAsync("Update successful!", "The update was successful. Happy auto-muting",

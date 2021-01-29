@@ -17,6 +17,7 @@ namespace AUCapture_WPF.Converters
     {
         public Dictionary<string, int> Hats = new()
         {
+            {"0", 0},
             {"1", 1},
             {"2", 1},
             {"3", 1},
@@ -126,7 +127,7 @@ namespace AUCapture_WPF.Converters
             {
                 return "";
             }
-            var finalName = hatID + "-" + Hats[hatID.ToString()];
+            var finalName = hatID + "-" + Hats[(hatID%95).ToString()];
             return $"https://cdn.automute.us/Hats/{finalName}.png";
 
 
@@ -141,6 +142,7 @@ namespace AUCapture_WPF.Converters
     {
         public Dictionary<string, int> Hats = new()
         {
+            {"0", 0},
             {"1", 1},
             {"2", 1},
             {"3", 1},
@@ -244,7 +246,7 @@ namespace AUCapture_WPF.Converters
                 return 0;
             }
 
-            if (Hats[hatID.ToString()] == 1)
+            if (Hats[(hatID%94).ToString()] == 1)
             {
                 return 1;
             }

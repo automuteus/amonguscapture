@@ -1,0 +1,126 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls">
+
+    <ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary.MergedDictionaries>
+
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+    <Style x:Key="MahApps.Styles.CheckBox.DataGrid"
+           BasedOn="{StaticResource MahApps.Styles.CheckBox}"
+           TargetType="CheckBox">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.CheckBox.DataGrid.Win10"
+           BasedOn="{StaticResource MahApps.Styles.CheckBox.Win10}"
+           TargetType="CheckBox">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.ComboBox.DataGrid"
+           BasedOn="{StaticResource MahApps.Styles.ComboBox}"
+           TargetType="{x:Type ComboBox}">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.ComboBox.DataGrid.Editing"
+           BasedOn="{StaticResource MahApps.Styles.ComboBox.Virtualized}"
+           TargetType="{x:Type ComboBox}">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.TextBlock.DataGrid"
+           BasedOn="{StaticResource MahApps.Styles.TextBlock}"
+           TargetType="{x:Type TextBlock}">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.TextBox.DataGrid.Editing"
+           BasedOn="{StaticResource MahApps.Styles.TextBox}"
+           TargetType="{x:Type TextBox}">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.Hyperlink.DataGrid"
+           BasedOn="{StaticResource MahApps.Styles.TextBlock}"
+           TargetType="{x:Type TextBlock}">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.NumericUpDown.DataGrid"
+           BasedOn="{StaticResource {x:Type mah:NumericUpDown}}"
+           TargetType="{x:Type mah:NumericUpDown}">
+
+    </Style>
+
+    <Style x:Key="MahApps.Styles.NumericUpDown.DataGrid.Editing"
+           BasedOn="{StaticResource MahApps.Styles.NumericUpDown.DataGrid}"
+           TargetType="{x:Type mah:NumericUpDown}">
+
+    </Style>
+
+    <Style x:Key="{ComponentResourceKey ResourceId=MetroDataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.Thumb.ColumnHeaderGripper" TargetType="{x:Type Thumb}">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.Thumb.RowHeaderGripper" TargetType="{x:Type Thumb}">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.DataGridColumnHeader" TargetType="{x:Type DataGridColumnHeader}">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.DataGridRowHeader" TargetType="{x:Type DataGridRowHeader}">
+    </Style>
+
+    <!--  ____________________ Metro CellStyle ____________________  -->
+    <Style x:Key="MahApps.Styles.DataGridCell" TargetType="{x:Type DataGridCell}">
+    </Style>
+
+    <ControlTemplate x:Key="MahApps.Templates.DataGridRow.ValidationError">
+    </ControlTemplate>
+
+    <!--  ____________________ Metro RowStyle ____________________  -->
+    <!--  Don't set the MinHeight or Height property, use the MinRowHeight or RowHeight property on DataGrid style!  -->
+    <Style x:Key="MahApps.Styles.DataGridRow" TargetType="{x:Type DataGridRow}">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.DataGrid" TargetType="{x:Type DataGrid}">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.ToggleButton.ExpanderHeader.Down.DataGrid.GroupItem"
+           BasedOn="{StaticResource MahApps.Styles.ToggleButton.ExpanderHeader.Down}"
+           TargetType="{x:Type ToggleButton}">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.GroupItem.DataGrid" TargetType="{x:Type GroupItem}">
+    </Style>
+
+    <!--  ____________________ Azure CellStyle ____________________  -->
+
+    <Style x:Key="MahApps.Styles.DataGridColumnHeader.Azure"
+           BasedOn="{StaticResource MahApps.Styles.DataGridColumnHeader}"
+           TargetType="{x:Type DataGridColumnHeader}">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.DataGridRowHeader.Azure"
+           BasedOn="{StaticResource MahApps.Styles.DataGridRowHeader}"
+           TargetType="{x:Type DataGridRowHeader}">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.DataGridCell.Azure"
+           BasedOn="{StaticResource MahApps.Styles.DataGridCell}"
+           TargetType="{x:Type DataGridCell}">
+    </Style>
+
+    <!--  ____________________ Azure RowStyle ____________________  -->
+    <Style x:Key="MahApps.Styles.DataGridRow.Azure"
+           BasedOn="{StaticResource MahApps.Styles.DataGridRow}"
+           TargetType="{x:Type DataGridRow}" />
+    <Style x:Key="MahApps.Styles.DataGridRow.AzureWithMargin"
+           BasedOn="{StaticResource MahApps.Styles.DataGridRow.Azure}"
+           TargetType="{x:Type DataGridRow}">
+    </Style>
+
+    <Style x:Key="MahApps.Styles.DataGrid.Azure"
+           BasedOn="{StaticResource MahApps.Styles.DataGrid}"
+           TargetType="{x:Type DataGrid}">
+    </Style>
+
+</ResourceDictionary>

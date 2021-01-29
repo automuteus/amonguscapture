@@ -335,7 +335,7 @@
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid IsItemsHost="True" Rows="3"
+                        <UniformGrid IsItemsHost="True"  Margin="3" Rows="{Binding PlayerRows}" Columns="{Binding PlayerCols}"
                                      hc:PanelElement.FluidMoveBehavior="{StaticResource BehaviorXY400}" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>

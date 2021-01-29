@@ -217,6 +217,27 @@ namespace AUCapture_WPF
                 OnPropertyChanged();
             }
         }
+        private int _playerRows = 2;
+        public int PlayerRows
+        {
+            get => _playerRows;
+            set
+            {
+                _playerRows = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _playerCols = 2;
+        public int PlayerCols
+        {
+            get => _playerCols;
+            set
+            {
+                _playerCols = value;
+                OnPropertyChanged();
+            }
+        }
 
         private GameState? _gameState;
         public GameState? GameState

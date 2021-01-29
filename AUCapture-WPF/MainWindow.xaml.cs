@@ -123,6 +123,7 @@ namespace AUCapture_WPF
             App.socket.OnConnected += SocketOnOnConnected;
             App.socket.OnDisconnected += SocketOnOnDisconnected;
             context.Players.CollectionChanged += PlayersOnCollectionChanged;
+            
             IPCAdapter.getInstance().OnToken += (sender, token) =>
             {
                 this.BeginInvoke((w) =>
@@ -182,13 +183,17 @@ namespace AUCapture_WPF
             catch (Exception e)
             {
             }
-
+            context.Players.CollectionChanged += PlayersOnCollectionChanged;
             //ApplyDarkMode();
         }
 
+
         private void PlayersOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("Players", Color.Aqua, JsonConvert.SerializeObject(e, Formatting.None, new StringEnumConverter()));
+            context.PlayerRows = (int)Math.Ceiling(Math.Sqrt(context.Players.Count));
+            context.PlayerCols = (int)Math.Ceiling(context.Players.Count/Math.Ceiling(Math.Sqrt(context.Players.Count)));
+            System.Diagnostics.Trace.WriteLine(context.PlayerCols);
+            System.Diagnostics.Trace.WriteLine(context.PlayerRows);
         }
 
         private void OnPlayerCosmeticChanged(object? sender, PlayerCosmeticChangedEventArgs e)
@@ -765,9 +770,17 @@ namespace AUCapture_WPF
             context.GameState = state;
         }
 
+
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Task.Factory.StartNew(Update, TaskCreationOptions.LongRunning);
+            //context.Connected = true;
+            //context.GameState = GameState.TASKS;
+            //for (uint i = 0; i < 10; i++)
+            //{
+            //    context.Players.Add(new Player($"Test {i}", (PlayerColor) (i%12), true, i%10, i));
+            //}
+            
             if (Updated)
             {
                 this.ShowMessageAsync("Update successful!", "The update was successful. Happy auto-muting",

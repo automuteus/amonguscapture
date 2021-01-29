@@ -1,13 +1,14 @@
 ﻿<UserControl x:Class="AUCapture_WPF.Controls.PlayerControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:converters1="clr-namespace:AUCapture_WPF.Converters"
              xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:controls="clr-namespace:AUCapture_WPF.Controls"
-             mc:Ignorable="d" 
+             xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+             mc:Ignorable="d"
              x:Name="PlayerControlWindow"
              d:DesignHeight="212" d:DesignWidth="148">
     <UserControl.Resources>
@@ -16,67 +17,71 @@
         <converters1:HatToImage x:Key="HatToImage" />
         <converters1:HatToZ x:Key="HatToZ" />
         <converters1:PetToImageConverter x:Key="PetToIm" />
-        <converters1:BrushInverter x:Key="BrushInverter"/>
+        <converters1:BrushInverter x:Key="BrushInverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-
     </UserControl.Resources>
-    <Viewbox Stretch="Uniform" VerticalAlignment="Center" Margin="0,0,0,0">
-        <Grid Height="320">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" MinHeight="50"/>
-                <RowDefinition Height="277"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Viewbox Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2" VerticalAlignment="Center">
-                <Grid Width="211">
-                    <Image Margin="0 0 0 0" Width="148" Height="198" Stretch="Uniform" VerticalAlignment="Bottom">
-                        <Image.Source>
-                            <MultiBinding Converter="{StaticResource PlayerToImage}">  
-                                <Binding ElementName="PlayerControlWindow" Path="Color"></Binding>  
-                                <Binding ElementName="PlayerControlWindow" Path="AliveStatus"></Binding>  
-                            </MultiBinding>
-                        </Image.Source>
-                    </Image>
-                    <controls:CachedImage x:Name="Pants" Margin="0 0 0 0" Width="148" Height="198" Stretch="Uniform" VerticalAlignment="Bottom" Panel.ZIndex="1">
-                        <controls:CachedImage.ImageUrl>
-                            <MultiBinding Converter="{StaticResource PantsConverter}">  
-                                <Binding ElementName="PlayerControlWindow" Path="PlayerPantsID" Delay="100" IsAsync="True"></Binding>  
-                                <Binding ElementName="PlayerControlWindow" Path="AliveStatus" Delay="100" IsAsync="True"></Binding>  
-                            </MultiBinding>
-                        </controls:CachedImage.ImageUrl>
-                    </controls:CachedImage>
-                    <controls:CachedImage Margin="0,0,0,0" Stretch="Uniform" VerticalAlignment="Bottom" Width="212" Panel.ZIndex="{Binding ElementName=PlayerControlWindow, Path=PlayerHatID, Converter={StaticResource HatToZ}}">
-                        <controls:CachedImage.ImageUrl>
-                            <MultiBinding Converter="{StaticResource HatToImage}">  
-                                <Binding ElementName="PlayerControlWindow" Path="PlayerHatID" Delay="100" IsAsync="True"></Binding>  
-                                <Binding ElementName="PlayerControlWindow" Path="AliveStatus" Delay="100" IsAsync="True"></Binding>  
-                            </MultiBinding>
-                        </controls:CachedImage.ImageUrl>
-                    </controls:CachedImage>
-                    <controls:CachedImage Margin="0,0,0,0" Stretch="Uniform" VerticalAlignment="Bottom" Width="212" Panel.ZIndex="1">
-                        <controls:CachedImage.ImageUrl>
-                            <MultiBinding Converter="{StaticResource PetToIm}">  
-                                <Binding ElementName="PlayerControlWindow" Path="PlayerPetID" Delay="100" IsAsync="True"></Binding>  
-                                <Binding ElementName="PlayerControlWindow" Path="AliveStatus" Delay="100" IsAsync="True"></Binding>  
-                            </MultiBinding>
-                        </controls:CachedImage.ImageUrl>
-                    </controls:CachedImage>
-                </Grid>
-            </Viewbox>
-            <Viewbox Grid.ColumnSpan="2" Grid.Row="0" StretchDirection="DownOnly" Stretch="Uniform" VerticalAlignment="Center">
-                <Viewbox.Resources>
-                    <controls:BindingProxy x:Key="Proxy" Data="{DynamicResource MahApps.Brushes.Text}"/>
-                </Viewbox.Resources>
-                <hc:OutlineText Grid.RowSpan="2" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch" Fill="{DynamicResource MahApps.Brushes.Text}"
-                                Text="{Binding ElementName=PlayerControlWindow, Path=PlayerName}" FontSize="40"
-                                FontStyle="Normal" FontWeight="Bold" FontStretch="Condensed" StrokePosition="Outside" StrokeThickness="3" Stroke="{Binding Source={StaticResource Proxy}, Path=Data, Converter={StaticResource BrushInverter}}"/>
-            </Viewbox>
-            
-            
-        </Grid>
-    </Viewbox>
-    
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" MinHeight="50" />
+            <RowDefinition Height="3*" />
+        </Grid.RowDefinitions>
+
+        
+        <Viewbox Grid.Row="0" Grid.RowSpan="2" VerticalAlignment="Bottom" Stretch="Uniform">
+            <Grid>
+                
+                <Image Margin="0 0 0 0" Width="148" Height="198" Stretch="Uniform" VerticalAlignment="Bottom">
+                    <Image.Source>
+                        <MultiBinding Converter="{StaticResource PlayerToImage}">
+                            <Binding ElementName="PlayerControlWindow" Path="Color" />
+                            <Binding ElementName="PlayerControlWindow" Path="AliveStatus" />
+                        </MultiBinding>
+                    </Image.Source>
+                </Image>
+
+                <controls:CachedImage x:Name="Pants" Margin="0 0 0 0" Width="148" Height="198" Stretch="Uniform"
+                                      VerticalAlignment="Bottom" Panel.ZIndex="1">
+                    <controls:CachedImage.ImageUrl>
+                        <MultiBinding Converter="{StaticResource PantsConverter}">
+                            <Binding ElementName="PlayerControlWindow" Path="PlayerPantsID" Delay="100" IsAsync="True" />
+                            <Binding ElementName="PlayerControlWindow" Path="AliveStatus" Delay="100" IsAsync="True" />
+                        </MultiBinding>
+                    </controls:CachedImage.ImageUrl>
+                </controls:CachedImage>
+                <controls:CachedImage Margin="0,0,0,0" Stretch="Uniform" VerticalAlignment="Bottom" Width="212"
+                                      Panel.ZIndex="{Binding ElementName=PlayerControlWindow, Path=PlayerHatID, Converter={StaticResource HatToZ}}">
+                    <controls:CachedImage.ImageUrl>
+                        <MultiBinding Converter="{StaticResource HatToImage}">
+                            <Binding ElementName="PlayerControlWindow" Path="PlayerHatID" Delay="100" IsAsync="True" />
+                            <Binding ElementName="PlayerControlWindow" Path="AliveStatus" Delay="100" IsAsync="True" />
+                        </MultiBinding>
+                    </controls:CachedImage.ImageUrl>
+                </controls:CachedImage>
+                <controls:CachedImage Margin="0,0,0,0" Stretch="Uniform" VerticalAlignment="Bottom" Width="212"
+                                      Panel.ZIndex="1">
+                    <controls:CachedImage.ImageUrl>
+                        <MultiBinding Converter="{StaticResource PetToIm}">
+                            <Binding ElementName="PlayerControlWindow" Path="PlayerPetID" Delay="100" IsAsync="True" />
+                            <Binding ElementName="PlayerControlWindow" Path="AliveStatus" Delay="100" IsAsync="True" />
+                        </MultiBinding>
+                    </controls:CachedImage.ImageUrl>
+                </controls:CachedImage>
+            </Grid>
+        </Viewbox>
+        <Viewbox Grid.ColumnSpan="1" Grid.Row="0" StretchDirection="DownOnly" Stretch="Uniform" VerticalAlignment="Top" Panel.ZIndex="2">
+            <Viewbox.Resources>
+                <controls:BindingProxy x:Key="Proxy" Data="{DynamicResource MahApps.Brushes.Text}" />
+            </Viewbox.Resources>
+            <hc:OutlineText Grid.RowSpan="2" HorizontalAlignment="Stretch" Margin="4" VerticalAlignment="Stretch"
+                            Fill="White"
+                            Text="{Binding ElementName=PlayerControlWindow, Path=PlayerName}" FontSize="40"
+                            FontStyle="Normal" FontWeight="Bold" FontStretch="Normal" StrokePosition="Outside"
+                            StrokeThickness="3"
+                            Stroke="Black" Opacity="1"/>
+        </Viewbox>
+
+
+    </Grid>
+
 </UserControl>

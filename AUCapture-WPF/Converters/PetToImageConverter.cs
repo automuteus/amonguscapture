@@ -21,13 +21,9 @@ namespace AUCapture_WPF.Converters
             {
                 return "";
             }
-            if (!alive)
-            {
-                return "";
-            }
-
-            return $"https://cdn.automute.us/Pets/{petID}.png";
-
+            return !alive
+                ? ""
+                : $"https://cdn.automute.us/Pets/{petID}.png";
         }
 
 

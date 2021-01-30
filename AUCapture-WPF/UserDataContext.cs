@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using AmongUsCapture;
 using AUCapture_WPF.IPC;
 using AUCapture_WPF.Models;
@@ -217,6 +218,18 @@ namespace AUCapture_WPF
                 OnPropertyChanged();
             }
         }
+
+        private Brush _backgroundBrush = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Misc/AutoBG.png")));
+        public Brush BackgroundBrush
+        {
+            get => _backgroundBrush;
+            set
+            {
+                _backgroundBrush = value;
+                OnPropertyChanged();
+            }
+        }
+
         private int _playerRows = 2;
         public int PlayerRows
         {

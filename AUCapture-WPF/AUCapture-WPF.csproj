@@ -43,10 +43,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\audefault.svg" />
     <None Remove="Resources\AutoMuteUs_PK.asc" />
     <None Remove="Icon.ico" />
     <None Remove="Resources\Hats\103-1.png" />
+    <None Remove="Resources\Misc\AutoBG.png" />
     <None Remove="Resources\Misc\status-connected.png" />
     <None Remove="Resources\Misc\status-disconnected.png" />
     <None Remove="Resources\Misc\voteCancel.png" />
@@ -98,13 +98,10 @@
 
   <ItemGroup>
     <Resource Include="Icon.ico" />
-    <Resource Include="logo\Logo.png" />
-    <Resource Include="Resources\audefault.svg" />
     <Resource Include="Resources\AUFont.ttf" />
+    <Resource Include="Resources\Misc\AutoBG.png" />
     <Resource Include="Resources\Misc\status-connected.png" />
     <Resource Include="Resources\Misc\status-disconnected.png" />
-    <Resource Include="Resources\TestHats\48-1.png" />
-    <Resource Include="Resources\TestHats\49-1.png" />
     <Resource Include="SplashScreens\SplashScreenChristmas.png" />
     <Resource Include="SplashScreens\SplashScreenDouche.png" />
     <Resource Include="SplashScreens\SplashScreenMonke.png" />

@@ -29,6 +29,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using AUCapture_WPF.Models;
 using Discord;
@@ -40,66 +41,55 @@ using Microsoft.Win32;
 using Color = System.Drawing.Color;
 using PlayerColor = AmongUsCapture.PlayerColor;
 
-namespace AUCapture_WPF
-{
+namespace AUCapture_WPF {
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow
-    {
+    public partial class MainWindow {
         public Color NormalTextColor = Color.White;
 
         private readonly IAppSettings config;
 
         public UserDataContext context;
         private readonly bool connected;
-        private readonly object locker = new object();
-        private readonly Queue<Player> DeadMessages = new Queue<Player>();
+        private readonly object locker = new();
+        private readonly Queue<Player> DeadMessages = new();
         private Task ThemeGeneration;
-        private bool Updated = false;
+        private readonly bool Updated;
 
-        public MainWindow()
-        {
+        public MainWindow() {
             InitializeComponent();
-            string appFolder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
-            string appName = Path.GetFileNameWithoutExtension(Process.GetCurrentProcess().MainModule.FileName);
-            string appExtension = Path.GetExtension(Process.GetCurrentProcess().MainModule.FileName);
-            string archivePath = Path.Combine(appFolder, appName + "_Old" + appExtension);
-            if (File.Exists(archivePath))
-            {
+            var appFolder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+            var appName = Path.GetFileNameWithoutExtension(Process.GetCurrentProcess().MainModule.FileName);
+            var appExtension = Path.GetExtension(Process.GetCurrentProcess().MainModule.FileName);
+            var archivePath = Path.Combine(appFolder, appName + "_Old" + appExtension);
+            if (File.Exists(archivePath)) {
                 Updated = true;
-                try
-                {
+                try {
                     //Will wait for the other program to exit.
                     var me = Process.GetCurrentProcess();
-                    Process[] aProcs = Process.GetProcessesByName(me.ProcessName);
+                    var aProcs = Process.GetProcessesByName(me.ProcessName);
                     aProcs = aProcs.Where(x => x.Id != me.Id).ToArray();
-                    if (aProcs != null && aProcs.Length > 0)
-                    {
-                        aProcs[0].WaitForExit(1000);
-                    }
+                    if (aProcs != null && aProcs.Length > 0) aProcs[0].WaitForExit(1000);
 
                     File.Delete(archivePath);
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     Console.WriteLine("Could not delete old file.");
                 }
             }
-            else
-            {
+            else {
                 Updated = false;
             }
 
-            try
-            {
+            try {
                 config = new ConfigurationBuilder<IAppSettings>()
                     .UseJsonFile(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                         "\\AmongUsCapture\\AmongUsGUI", "Settings.json")).Build();
             }
-            catch (Newtonsoft.Json.JsonReaderException e) //Delete file and recreate config
+            catch (JsonReaderException e) //Delete file and recreate config
             {
-                Console.WriteLine($"Bad config. Clearing.");
+                Console.WriteLine("Bad config. Clearing.");
                 File.Delete(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "\\AmongUsCapture\\AmongUsGUI", "Settings.json"));
                 config = new ConfigurationBuilder<IAppSettings>()
                     .UseJsonFile(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -111,7 +101,7 @@ namespace AUCapture_WPF
             App.handler.OnReady += (sender, args) => { App.socket.AddHandler(App.handler); };
             context.ConnectionStatuses.Add(new ConnectionStatus {Connected = false, ConnectionName = "AutoMuteUs"});
             context.ConnectionStatuses.Add(new ConnectionStatus {Connected = false, ConnectionName = "User bot"});
-            window.Topmost = context.Settings.alwaysOnTop;
+            Window.Topmost = context.Settings.alwaysOnTop;
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().ProcessHook += OnProcessHook;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
@@ -123,20 +113,12 @@ namespace AUCapture_WPF
             App.socket.OnConnected += SocketOnOnConnected;
             App.socket.OnDisconnected += SocketOnOnDisconnected;
             context.Players.CollectionChanged += PlayersOnCollectionChanged;
-            
-            IPCAdapter.getInstance().OnToken += (sender, token) =>
-            {
-                this.BeginInvoke((w) =>
-                {
-                    if (!w.context.Settings.FocusOnToken)
-                    {
-                        return;
-                    }
 
-                    if (w.WindowState.Equals(WindowState.Minimized))
-                    {
-                        w.WindowState = WindowState.Normal;
-                    }
+            IPCAdapter.getInstance().OnToken += (sender, token) => {
+                this.BeginInvoke(w => {
+                    if (!w.context.Settings.FocusOnToken) return;
+
+                    if (w.WindowState.Equals(WindowState.Minimized)) w.WindowState = WindowState.Normal;
 
                     w.Show();
                     w.Activate();
@@ -150,175 +132,133 @@ namespace AUCapture_WPF
                 context.Settings.discordTokenEncrypted = true;
             }
 
-            byte[] encryptedBuff = JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken);
+            var encryptedBuff = JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken);
             discordTokenBox.Password = decryptToken(encryptedBuff);
 
+            try {
 
-            System.Windows.Media.Color savedColor;
-            try
-            {
-                savedColor = JsonConvert.DeserializeObject<System.Windows.Media.Color>(context.Settings.SelectedAccent);
-                AccentColorPicker.SelectedColor = savedColor;
-                string BaseColor;
-                if (context.Settings.DarkMode)
-                {
-                    BaseColor = ThemeManager.BaseColorDark;
-                }
-                else
-                {
-                    BaseColor = ThemeManager.BaseColorLight;
-                }
+                string BaseColor = ThemeManager.BaseColorDark;
 
-                Theme newTheme = new Theme(name: "CustomTheme",
-                    displayName: "CustomTheme",
-                    baseColorScheme: BaseColor,
-                    colorScheme: "CustomAccent",
-                    primaryAccentColor: savedColor,
-                    showcaseBrush: new SolidColorBrush(savedColor),
-                    isRuntimeGenerated: true,
-                    isHighContrast: false);
+                var newTheme2 = new Theme("CustomTheme",
+                    "CustomTheme",
+                    BaseColor,
+                    "CustomAccent",
+                    System.Windows.Media.Color.FromArgb(255,140,158,255),
+                    new SolidColorBrush(System.Windows.Media.Color.FromArgb(255,140,158,255)),
+                    true,
+                    false);
 
-                ThemeManager.Current.ChangeTheme(this, newTheme);
+                ThemeManager.Current.ChangeTheme(this, newTheme2);
             }
-            catch (Exception e)
-            {
-            }
+            catch (Exception e) { }
+
             context.Players.CollectionChanged += PlayersOnCollectionChanged;
+
             //ApplyDarkMode();
         }
 
 
-        private void PlayersOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            context.PlayerRows = (int)Math.Ceiling(Math.Sqrt(context.Players.Count));
-            context.PlayerCols = (int)Math.Ceiling(context.Players.Count/Math.Ceiling(Math.Sqrt(context.Players.Count)));
-            System.Diagnostics.Trace.WriteLine(context.PlayerCols);
-            System.Diagnostics.Trace.WriteLine(context.PlayerRows);
+        private void PlayersOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
+            context.PlayerRows = (int) Math.Ceiling(Math.Sqrt(context.Players.Count));
+            context.PlayerCols = (int) Math.Ceiling(context.Players.Count / Math.Ceiling(Math.Sqrt(context.Players.Count)));
+            Trace.WriteLine(context.PlayerCols);
+            Trace.WriteLine(context.PlayerRows);
         }
 
-        private void OnPlayerCosmeticChanged(object? sender, PlayerCosmeticChangedEventArgs e)
-        {
-            if (context.Players.Any(x => x.Name == e.Name))
-            {
+        private void OnPlayerCosmeticChanged(object? sender, PlayerCosmeticChangedEventArgs e) {
+            if (context.Players.Any(x => x.Name == e.Name)) {
                 var player = context.Players.First(x => x.Name == e.Name);
                 Console.WriteLine("Cosmetic change " + JsonConvert.SerializeObject(e));
-                Dispatcher.Invoke((Action) (() =>
-                {
+                Dispatcher.Invoke(() => {
                     player.HatID = e.HatId;
                     player.PantsID = e.SkinId;
                     player.PetID = e.PetId;
-                }));
+                });
             }
         }
 
-        private void SocketOnOnDisconnected(object? sender, EventArgs e)
-        {
+        private void SocketOnOnDisconnected(object? sender, EventArgs e) {
             context.ConnectionStatuses.First(x => x.ConnectionName == "AutoMuteUs").Connected = false;
         }
 
-        private void SocketOnOnConnected(object? sender, ClientSocket.ConnectedEventArgs e)
-        {
+        private void SocketOnOnConnected(object? sender, ClientSocket.ConnectedEventArgs e) {
             context.ConnectionStatuses.First(x => x.ConnectionName == "AutoMuteUs").Connected = true;
         }
 
-        private void HandlerOnOnReady(object? sender, DiscordHandler.ReadyEventArgs e)
-        {
+        private void HandlerOnOnReady(object? sender, DiscordHandler.ReadyEventArgs e) {
             context.ConnectionStatuses.First(x => x.ConnectionName == "User bot").Connected = true;
         }
 
 
-        private void OnProcessHook(object? sender, ProcessHookArgs e)
-        {
+        private void OnProcessHook(object? sender, ProcessHookArgs e) {
             context.Connected = true;
             //context.ConnectionStatuses.First(x => x.ConnectionName == "Among us").Connected = true;
             ProcessMemory.getInstance().process.Exited += ProcessOnExited;
         }
 
-        private void ProcessOnExited(object? sender, EventArgs e)
-        {
-            Dispatcher.Invoke((Action) (() =>
-            {
+        private void ProcessOnExited(object? sender, EventArgs e) {
+            Dispatcher.Invoke(() => {
                 context.Connected = false;
                 //context.ConnectionStatuses.First(x => x.ConnectionName == "Among us").Connected = false;
-            }));
+            });
             ProcessMemory.getInstance().process.Exited -= ProcessOnExited;
         }
 
-        public bool VerifySignature(string pathToSig)
-        {
-            try
-            {
-                Stream AutoMuteUsPublicKeyStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("AUCapture_WPF.Resources.AutoMuteUs_PK.asc");
-                using PGP pgp = new PGP();
+        public bool VerifySignature(string pathToSig) {
+            try {
+                var AutoMuteUsPublicKeyStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("AUCapture_WPF.Resources.AutoMuteUs_PK.asc");
+                using var pgp = new PGP();
                 // Verify clear stream
-                using FileStream inputFileStream = new FileStream(pathToSig, FileMode.Open);
+                using var inputFileStream = new FileStream(pathToSig, FileMode.Open);
                 return pgp.VerifyClearStream(inputFileStream, AutoMuteUsPublicKeyStream);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 return false;
             }
-            
         }
 
         public bool VerifyHashFromSig(string pathToFile, string pathToSignature) //Does not care if the signature is correct or not
         {
-            try
-            {
-                string HashInSig = File.ReadAllLines(pathToSignature).First(x => x.Length == 64); //First line with 64 characters in it
-                using SHA256Managed sha256 = new SHA256Managed();
-                using FileStream fs = new FileStream(pathToFile, FileMode.Open, FileAccess.Read);
+            try {
+                var HashInSig = File.ReadAllLines(pathToSignature).First(x => x.Length == 64); //First line with 64 characters in it
+                using var sha256 = new SHA256Managed();
+                using var fs = new FileStream(pathToFile, FileMode.Open, FileAccess.Read);
                 using var bs = new BufferedStream(fs);
                 var hash = sha256.ComputeHash(bs);
-                StringBuilder CaptureHashSB = new StringBuilder(2 * hash.Length);
-                foreach (byte byt in hash)
-                {
-                    CaptureHashSB.AppendFormat("{0:X2}", byt);
-                }
+                var CaptureHashSB = new StringBuilder(2 * hash.Length);
+                foreach (var byt in hash) CaptureHashSB.AppendFormat("{0:X2}", byt);
 
-                string CaptureHash = CaptureHashSB.ToString();
+                var CaptureHash = CaptureHashSB.ToString();
                 Console.WriteLine($"Got SigHash: {HashInSig}, Downloaded Hash: {CaptureHash}");
-                return String.Equals(HashInSig, CaptureHash, StringComparison.CurrentCultureIgnoreCase);
+                return string.Equals(HashInSig, CaptureHash, StringComparison.CurrentCultureIgnoreCase);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 return false;
             }
-
         }
 
-        public async void ShowErrorBox(string errorMessage, string title="ERROR")
-        {
+        public async void ShowErrorBox(string errorMessage, string title = "ERROR") {
             var errorBox = await context.DialogCoordinator.ShowMessageAsync(context, title,
                 errorMessage, MessageDialogStyle.AffirmativeAndNegative,
-                new MetroDialogSettings
-                {
+                new MetroDialogSettings {
                     AffirmativeButtonText = "retry",
                     NegativeButtonText = "cancel",
                     DefaultButtonFocus = MessageDialogResult.Affirmative,
                     AnimateShow = false
                 });
-            if (errorBox == MessageDialogResult.Affirmative)
-            {
-                await Task.Factory.StartNew(Update, TaskCreationOptions.LongRunning);
-            }
+            if (errorBox == MessageDialogResult.Affirmative) await Task.Factory.StartNew(Update, TaskCreationOptions.LongRunning);
         }
 
-        public async void Update()
-        {
-            Version version = new Version();
-            Version latestVersion = new Version();
+        public async void Update() {
+            var version = new Version();
+            var latestVersion = new Version();
             context.AutoUpdaterEnabled = false;
-            try
-            {
-               version = new Version(context.Version);
-               latestVersion = new Version(context.LatestVersion);
+            try {
+                version = new Version(context.Version);
+                latestVersion = new Version(context.LatestVersion);
             }
-            catch (Exception e)
-            {
-                return;
-            }
-            
+            catch (Exception e) { }
+
 
 #if PUBLISH
             try
@@ -508,49 +448,33 @@ namespace AUCapture_WPF
 #endif
         }
 
-        private string decryptToken(byte[] EncryptedBytes)
-        {
-            byte[] protectedBytes = ProtectedData.Unprotect(EncryptedBytes, null, DataProtectionScope.CurrentUser);
-            return System.Text.Encoding.UTF8.GetString(protectedBytes, 0, protectedBytes.Length);
+        private string decryptToken(byte[] EncryptedBytes) {
+            var protectedBytes = ProtectedData.Unprotect(EncryptedBytes, null, DataProtectionScope.CurrentUser);
+            return Encoding.UTF8.GetString(protectedBytes, 0, protectedBytes.Length);
         }
 
-        private byte[] encryptToken(string token)
-        {
-            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(token);
-            byte[] protectedBytes = ProtectedData.Protect(buffer, null, DataProtectionScope.CurrentUser);
+        private byte[] encryptToken(string token) {
+            var buffer = Encoding.UTF8.GetBytes(token);
+            var protectedBytes = ProtectedData.Protect(buffer, null, DataProtectionScope.CurrentUser);
             return protectedBytes;
         }
 
-        private void OnGameOver(object? sender, GameOverEventArgs e)
-        {
-            Dispatcher.Invoke((Action) (() =>
-            {
-                foreach (var player in context.Players)
-                {
-                    player.Alive = true;
-                }
-            }));
+        private void OnGameOver(object? sender, GameOverEventArgs e) {
+            Dispatcher.Invoke(() => {
+                foreach (var player in context.Players) player.Alive = true;
+            });
         }
 
 
-        private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e)
-        {
-            if (e.Action == PlayerAction.Died)
-            {
-                if (context.Players.Any(x => x.Name == e.Name))
-                {
-                    DeadMessages.Enqueue(context.Players.First(x => x.Name == e.Name));
-                }
+        private void UserForm_PlayerChanged(object sender, PlayerChangedEventArgs e) {
+            if (e.Action == PlayerAction.Died) {
+                if (context.Players.Any(x => x.Name == e.Name)) DeadMessages.Enqueue(context.Players.First(x => x.Name == e.Name));
             }
-            else
-            {
-                if (e.Action != PlayerAction.Joined && context.Players.Any(x => String.Equals(x.Name, e.Name, StringComparison.CurrentCultureIgnoreCase)))
-                {
-                    var player = context.Players.First(x => String.Equals(x.Name, e.Name, StringComparison.CurrentCultureIgnoreCase));
-                    Dispatcher.Invoke((Action) (() =>
-                    {
-                        switch (e.Action)
-                        {
+            else {
+                if (e.Action != PlayerAction.Joined && context.Players.Any(x => string.Equals(x.Name, e.Name, StringComparison.CurrentCultureIgnoreCase))) {
+                    var player = context.Players.First(x => string.Equals(x.Name, e.Name, StringComparison.CurrentCultureIgnoreCase));
+                    Dispatcher.Invoke(() => {
+                        switch (e.Action) {
                             case PlayerAction.ChangedColor:
                                 player.Color = e.Color;
                                 break;
@@ -565,47 +489,35 @@ namespace AUCapture_WPF
                                 player.Alive = false;
                                 break;
                         }
-                    }));
+                    });
                 }
-                else
-                {
-                    if (e.Action == PlayerAction.Joined)
-                    {
-                        Dispatcher.Invoke((Action) (() => { context.Players.Add(new Player(e.Name, e.Color, !e.IsDead, 0, 0, 0)); }));
-                    }
+                else {
+                    if (e.Action == PlayerAction.Joined) Dispatcher.Invoke(() => { context.Players.Add(new Player(e.Name, e.Color, !e.IsDead, 0, 0, 0)); });
                 }
             }
 
             AmongUsCapture.Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
         }
 
-        
-        private void OnChatMessageAdded(object sender, ChatMessageEventArgs e)
-        {
+
+        private void OnChatMessageAdded(object sender, ChatMessageEventArgs e) {
             AmongUsCapture.Settings.conInterface.WriteModuleTextColored("CHAT", Color.DarkKhaki,
                 $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Sender}{NormalTextColor.ToTextColor()}: {e.Message}");
             //WriteLineToConsole($"[CHAT] {e.Sender}: {e.Message}");
         }
 
 
-        private void OnJoinedLobby(object sender, LobbyEventArgs e)
-        {
+        private void OnJoinedLobby(object sender, LobbyEventArgs e) {
             context.GameCode = e.LobbyCode;
             context.GameMap = e.Map;
-            this.BeginInvoke(a =>
-            {
-                if (context.Settings.AlwaysCopyGameCode)
-                {
-                    Clipboard.SetText(e.LobbyCode);
-                }
+            this.BeginInvoke(a => {
+                if (context.Settings.AlwaysCopyGameCode) Clipboard.SetText(e.LobbyCode);
             });
         }
 
-        private Color PlayerColorToColorOBJ(PlayerColor pColor)
-        {
-            Color OutputCode = Color.White;
-            switch (pColor)
-            {
+        private Color PlayerColorToColorOBJ(PlayerColor pColor) {
+            var OutputCode = Color.White;
+            switch (pColor) {
                 case PlayerColor.Red:
                     OutputCode = Color.Red;
                     break;
@@ -647,215 +559,171 @@ namespace AUCapture_WPF
             return OutputCode;
         }
 
-        private void SetDefaultThemeColor()
-        {
-            if (config.ranBefore)
-            {
-                return;
-            }
+        private void SetDefaultThemeColor() {
+            if (config.ranBefore) return;
 
             config.ranBefore = true;
-            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncAll;
-            ThemeManager.Current.SyncTheme();
-            Theme newTheme = ThemeManager.Current.DetectTheme();
-            config.DarkMode = newTheme.BaseColorScheme == ThemeManager.BaseColorDark;
-            DarkMode_Toggleswitch.IsOn = config.DarkMode;
+            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.DoNotSync;
+
+            string BaseColor = ThemeManager.BaseColorDark;
+
+            var newTheme2 = new Theme("CustomTheme",
+                "CustomTheme",
+                BaseColor,
+                "CustomAccent",
+                System.Windows.Media.Color.FromArgb(255,140,158,255),
+                new SolidColorBrush(System.Windows.Media.Color.FromArgb(255,140,158,255)),
+                true,
+                false);
+            ThemeManager.Current.ChangeTheme(this, newTheme2);
         }
 
-        public static void OpenBrowser(string url)
-        {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
+        public static void OpenBrowser(string url) {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
                 Process.Start(new ProcessStartInfo(url) {UseShellExecute = true});
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
                 Process.Start("xdg-open", url);
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) {
                 Process.Start("open", url);
-            }
-            else
-            {
-                // throw 
             }
         }
 
-        private void ApplyDarkMode()
-        {
-            if (config.DarkMode)
-            {
+        private void ApplyDarkMode() {
+            if (config.DarkMode) {
+                context.BackgroundBrush = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Misc/AutoBG.png")));
                 ThemeManager.Current.ChangeThemeBaseColor(this, ThemeManager.BaseColorDark);
                 NormalTextColor = Color.White;
             }
-            else
-            {
+            else {
+                context.BackgroundBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255));
                 NormalTextColor = Color.Black;
                 ThemeManager.Current.ChangeThemeBaseColor(this, ThemeManager.BaseColorLight);
             }
         }
 
-        private void Settings(object sender, RoutedEventArgs e)
-        {
+        private void Settings(object sender, RoutedEventArgs e) {
             // Open up the settings flyout
             //Cracked();
             SettingsFlyout.IsOpen = true;
         }
 
-        private void Darkmode_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!(sender is ToggleSwitch toggleSwitch))
-            {
-                return;
-            }
+        private void Darkmode_Toggled(object sender, RoutedEventArgs e) {
+            if (!(sender is ToggleSwitch toggleSwitch)) return;
 
             ApplyDarkMode();
         }
 
-        private void ManualConnect_Click(object sender, RoutedEventArgs e)
-        {
+        private void ManualConnect_Click(object sender, RoutedEventArgs e) {
             //Open up the manual connection flyout.
             ManualConnectionFlyout.IsOpen = true;
         }
 
-        private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e)
-        {
+        private void GameStateChangedHandler(object sender, GameStateChangedEventArgs e) {
             setCurrentState(e.NewState);
-            while (DeadMessages.Count > 0)
-            {
+            while (DeadMessages.Count > 0) {
                 var playerToKill = DeadMessages.Dequeue();
-                if (context.Players.Contains(playerToKill))
-                {
-                    playerToKill.Alive = false;
-                }
+                if (context.Players.Contains(playerToKill)) playerToKill.Alive = false;
             }
 
             AmongUsCapture.Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
                 $"State changed to {Color.Cyan.ToTextColor()}{e.NewState}");
-            if (e.NewState == GameState.MENU)
-            {
+            if (e.NewState == GameState.MENU) {
                 setGameCode("");
-                Dispatcher.Invoke((Action) (() =>
-                {
+                Dispatcher.Invoke(() => {
                     context.GameState = e.NewState;
-                    foreach (var player in context.Players)
-                    {
-                        player.Alive = true;
-                    }
-                }));
+                    foreach (var player in context.Players) player.Alive = true;
+                });
             }
-            else if (e.NewState == GameState.LOBBY)
-            {
-                Dispatcher.Invoke((Action) (() =>
-                {
+            else if (e.NewState == GameState.LOBBY) {
+                Dispatcher.Invoke(() => {
                     context.GameState = e.NewState;
-                    foreach (var player in context.Players)
-                    {
-                        player.Alive = true;
-                    }
-                }));
+                    foreach (var player in context.Players) player.Alive = true;
+                });
             }
 
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
         }
 
-        public void setGameCode(string gamecode)
-        {
+        public void setGameCode(string gamecode) {
             context.GameCode = gamecode;
         }
 
-        public void setCurrentState(GameState state)
-        {
+        public void setCurrentState(GameState state) {
             context.GameState = state;
         }
 
-        private void RandomizePlayers()
-        {
-            var dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0,0,0,0, 100);
+        private void RandomizePlayers() {
+            var dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer.Tick += dispatcherTimer_Tick;
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
             dispatcherTimer.Start();
         }
 
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
-        {
+        private void dispatcherTimer_Tick(object sender, EventArgs e) {
             var r = new Random();
             var playerToChange = context.Players[r.Next(context.Players.Count)];
             var hatID = r.Next(94);
-            bool Alive = r.Next(0, 2) == 1;
+            var Alive = r.Next(0, 2) == 1;
             var pantId = r.Next(0, 16);
             var petID = r.Next(0, 12);
             playerToChange.Alive = Alive;
-            playerToChange.HatID = (uint) hatID;
-            playerToChange.PantsID = (uint) pantId;
-            playerToChange.PetID = (uint) petID;
+            if (!Alive) {
+                playerToChange.HatID = (uint) hatID;
+                playerToChange.PantsID = (uint) pantId;
+                playerToChange.PetID = (uint) petID;
+            }
+
+            
+
         }
 
-        private void TestUsers()
-        {
+        private void TestUsers() {
             context.Connected = true;
             context.GameState = GameState.TASKS;
-            var numOfPlayers = 49;
-            for (uint i = 0; i < numOfPlayers; i++)
-            {
-                context.Players.Add(new Player($"", (PlayerColor) (i%12), true, i%10, i, 0));
-            }
+            var numOfPlayers = 9;
+            for (uint i = 0; i < numOfPlayers; i++) context.Players.Add(new Player($"{i}Cool4u", (PlayerColor) (i % 12), true, i % 10, i, 0));
 
             RandomizePlayers();
         }
 
 
-        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
-        {
+        private void MetroWindow_Loaded(object sender, RoutedEventArgs e) {
             Task.Factory.StartNew(Update, TaskCreationOptions.LongRunning);
-            
+
             //TestUsers();
-            if (Updated)
-            {
-                this.ShowMessageAsync("Update successful!", "The update was successful. Happy auto-muting",
-                    MessageDialogStyle.Affirmative);
-            }
+            if (Updated) this.ShowMessageAsync("Update successful!", "The update was successful. Happy auto-muting");
         }
 
-        public void PlayGotEm()
-        {
-            this.BeginInvoke((win) =>
-            {
+        public void PlayGotEm() {
+            this.BeginInvoke(win => {
                 //win.MemeFlyout.IsOpen = true;
                 //win.MemePlayer.Position = TimeSpan.Zero;
             });
         }
 
-        private void MainWindow_OnContentRendered(object? sender, EventArgs e)
-        {
+        private void MainWindow_OnContentRendered(object? sender, EventArgs e) {
             //TestFillConsole(10);
             //setCurrentState("GAMESTATE");
             //setGameCode("GAMECODE");
             SetDefaultThemeColor();
 
             ApplyDarkMode();
-            byte[] encryptedBuff = JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken);
+            var encryptedBuff = JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken);
             if (decryptToken(encryptedBuff) != "")
-            {
                 App.handler.Init(decryptToken(encryptedBuff));
-            }
             else
-            {
                 AmongUsCapture.Settings.conInterface.WriteModuleTextColored("Discord", Color.Red, "You do not have a self-host discord token set. Enabling this in settings will increase performance.");
-            }
         }
 
-        private void SubmitConnectButton_OnClick(object sender, RoutedEventArgs e)
-        {
+        private void SubmitConnectButton_OnClick(object sender, RoutedEventArgs e) {
             IPCAdapter.getInstance().SendToken(config.host, config.connectCode);
             ManualConnectionFlyout.IsOpen = false;
         }
 
-        private void MemePlayer_OnMediaEnded(object sender, RoutedEventArgs e)
-        {
-            this.BeginInvoke((win) =>
-            {
+        private void MemePlayer_OnMediaEnded(object sender, RoutedEventArgs e) {
+            this.BeginInvoke(win => {
                 //win.MemeFlyout.IsOpen = false;
             });
         }
@@ -885,16 +753,13 @@ namespace AUCapture_WPF
         //    GC.Collect();
         // }
         //}
-        private async void SubmitDiscordButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (discordTokenBox.Password != "")
-            {
+        private async void SubmitDiscordButton_OnClick(object sender, RoutedEventArgs e) {
+            if (discordTokenBox.Password != "") {
                 var progressController = await context.DialogCoordinator.ShowProgressAsync(context, "Token Validation", "Validating discord token", false,
                     new MetroDialogSettings {AnimateShow = true, AnimateHide = false, NegativeButtonText = "OK"});
                 progressController.SetIndeterminate();
-                try
-                {
-                    Discord.TokenUtils.ValidateToken(TokenType.Bot, discordTokenBox.Password);
+                try {
+                    TokenUtils.ValidateToken(TokenType.Bot, discordTokenBox.Password);
                     progressController.SetMessage("Token validated.");
                     context.Settings.discordToken = JsonConvert.SerializeObject(encryptToken(discordTokenBox.Password));
                     App.handler.Close(); //Anytime we change the token we wanna close the connection. (Will not error if connection already closed)
@@ -902,21 +767,18 @@ namespace AUCapture_WPF
                         decryptToken(JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken)));
                     progressController.SetProgress(1);
                 }
-                catch (ArgumentException er)
-                {
+                catch (ArgumentException er) {
                     progressController.SetMessage(er.Message);
                     progressController.SetProgress(0);
                     discordTokenBox.Password = decryptToken(JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken)); //Roll back changes
                 }
 
                 progressController.SetCancelable(true);
-                progressController.Canceled += delegate(object? o, EventArgs args)
-                {
+                progressController.Canceled += delegate {
                     progressController.CloseAsync(); //Close the dialog. 
                 };
             }
-            else if (discordTokenBox.Password == string.Empty)
-            {
+            else if (discordTokenBox.Password == string.Empty) {
                 if (context.Settings.discordToken == "") //If we don't have any password in the config(meaning unencrypted)
                 {
                     context.Settings.discordTokenEncrypted = true;
@@ -927,104 +789,55 @@ namespace AUCapture_WPF
                 //No reason to open the box if it didn't change.
                 context.Settings.discordToken = JsonConvert.SerializeObject(encryptToken(discordTokenBox.Password));
                 App.handler.Close(); //Close connection because token cleared.
-                await this.ShowMessageAsync("Success!", "Discord token cleared!", MessageDialogStyle.Affirmative);
+                await this.ShowMessageAsync("Success!", "Discord token cleared!");
             }
         }
 
-        private async void ReloadOffsetsButton_OnClick(object sender, RoutedEventArgs e)
-        {
+        private async void ReloadOffsetsButton_OnClick(object sender, RoutedEventArgs e) {
             GameMemReader.getInstance().offMan.refreshLocal();
             await GameMemReader.getInstance().offMan.RefreshIndex();
             GameMemReader.getInstance().CurrentOffsets = GameMemReader.getInstance().offMan
                 .FetchForHash(GameMemReader.getInstance().GameHash);
-            if (GameMemReader.getInstance().CurrentOffsets is not null)
-            {
+            if (GameMemReader.getInstance().CurrentOffsets is not null) {
                 //WriteConsoleLineFormatted("GameMemReader", Color.Lime, $"Loaded offsets: {GameMemReader.getInstance().CurrentOffsets.Description}");
-            }
-            else
-            {
-                //WriteConsoleLineFormatted("GameMemReader", Color.Lime, $"No offsets found for: {Color.Aqua.ToTextColor()}{GameMemReader.getInstance().GameHash.ToString()}.");
             }
         }
 
-        private void HelpDiscordButton_OnClick(object sender, RoutedEventArgs e)
-        {
+        private void HelpDiscordButton_OnClick(object sender, RoutedEventArgs e) {
             OpenBrowser("https://www.youtube.com/watch?v=jKcEW5qpk8E");
         }
 
-        private void APIServerToggleSwitch_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!(sender is ToggleSwitch toggleSwitch))
-            {
-                return;
-            }
+        private void APIServerToggleSwitch_Toggled(object sender, RoutedEventArgs e) {
+            if (!(sender is ToggleSwitch toggleSwitch)) return;
 
-            if (config.ApiServer)
-            {
+            if (config.ApiServer) {
                 AmongUsCapture.Settings.conInterface.WriteModuleTextColored("APIServer", Color.Brown, "Starting server");
                 ServerSocket.instance.Start();
             }
-            else
-            {
+            else {
                 AmongUsCapture.Settings.conInterface.WriteModuleTextColored("APIServer", Color.Brown, "Stopping server");
                 ServerSocket.instance.Stop();
             }
         }
 
-        private async void AccentColorPicker_OnSelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
-        {
-            if (e.NewValue.HasValue)
-            {
-                string BaseColor;
-                if (context.Settings.DarkMode)
-                {
-                    BaseColor = ThemeManager.BaseColorDark;
-                }
-                else
-                {
-                    BaseColor = ThemeManager.BaseColorLight;
-                }
-
-                context.Settings.SelectedAccent = JsonConvert.SerializeObject(e.NewValue.Value);
-
-                Theme newTheme = new Theme(name: "CustomTheme",
-                    displayName: "CustomTheme",
-                    baseColorScheme: BaseColor,
-                    colorScheme: "CustomAccent",
-                    primaryAccentColor: e.NewValue.Value,
-                    showcaseBrush: new SolidColorBrush(e.NewValue.Value),
-                    isRuntimeGenerated: true,
-                    isHighContrast: false);
-
-                ThemeManager.Current.ChangeTheme(this, newTheme);
-            }
-        }
-
-
-        private async void ResetConfigButton_OnClick(object sender, RoutedEventArgs e)
-        {
+        private async void ResetConfigButton_OnClick(object sender, RoutedEventArgs e) {
             var result = await this.ShowMessageAsync("Are you sure?",
                 "This action will reset your config.\nThis cannot be undone.",
                 MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings {AnimateShow = true, AnimateHide = false});
-            if (result == MessageDialogResult.Affirmative)
-            {
-                var progressBar = await this.context.DialogCoordinator.ShowProgressAsync(context, "Resetting config",
+            if (result == MessageDialogResult.Affirmative) {
+                var progressBar = await context.DialogCoordinator.ShowProgressAsync(context, "Resetting config",
                     "Please wait....", false, new MetroDialogSettings {AnimateHide = false, AnimateShow = false});
                 progressBar.Minimum = 0;
                 progressBar.Maximum = 1;
                 if (File.Exists(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "\\AmongUsCapture\\AmongUsGUI", "Settings.json")))
-                {
                     File.Delete(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "\\AmongUsCapture\\AmongUsGUI", "Settings.json"));
-                }
 
                 if (File.Exists(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "AmongUsCapture", "Settings.json")))
-                {
                     File.Delete(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AmongUsCapture", "Settings.json"));
-                }
 
-                for (int i = 0; i < 100; i++) //Useless loading to make the user think we are doing a big task
+                for (var i = 0; i < 100; i++) //Useless loading to make the user think we are doing a big task
                 {
                     var currentPercent = i / 100d;
                     progressBar.SetProgress(currentPercent);
@@ -1035,14 +848,12 @@ namespace AUCapture_WPF
                 var selection = await this.ShowMessageAsync("Config reset",
                     "Your config was reset successfully.",
                     MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings {AnimateHide = true, AffirmativeButtonText = "Restart", NegativeButtonText = "Exit"});
-                if (selection == MessageDialogResult.Affirmative)
-                {
+                if (selection == MessageDialogResult.Affirmative) {
                     IPCAdapter.getInstance().mutex.ReleaseMutex(); //Release the mutex so the other app does not see us. 
                     Process.Start(Process.GetCurrentProcess().MainModule.FileName);
                     Application.Current.Shutdown(0);
                 }
-                else
-                {
+                else {
                     Application.Current.Shutdown(0);
                 }
             }
@@ -1050,7 +861,7 @@ namespace AUCapture_WPF
 
         private void AlwaysOnTopSwitch_OnToggled(object sender, RoutedEventArgs e)
         {
-            window.Topmost = context.Settings.alwaysOnTop;
+            Window.Topmost = context.Settings.alwaysOnTop;
         }
 
         private void ContributorsButton_OnClick(object sender, RoutedEventArgs e)
@@ -1063,6 +874,5 @@ namespace AUCapture_WPF
         {
             OpenBrowser("https://automute.us/premium");
         }
-
     }
 }

@@ -1,0 +1,149 @@
+﻿<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ConnectionStatus.AUTOMUTEUS" xml:space="preserve">
+    <value>AutoMuteUs</value>
+  </data>
+  <data name="ConnectionStatus.USER BOT" xml:space="preserve">
+    <value>Личный бот</value>
+  </data>
+  <data name="GameCodeTooltip" xml:space="preserve">
+    <value>Код игры</value>
+  </data>
+  <data name="GameCodeWatermark" xml:space="preserve">
+    <value>Код игры</value>
+  </data>
+  <data name="GameState.DISCUSSION" xml:space="preserve">
+    <value>ОБСУЖДЕНИЕ</value>
+  </data>
+  <data name="GameState.ENDED" xml:space="preserve">
+    <value>КОНЕЦ</value>
+  </data>
+  <data name="GameState.LOBBY" xml:space="preserve">
+    <value>ЛОББИ</value>
+  </data>
+  <data name="GameState.MENU" xml:space="preserve">
+    <value>МЕНЮ</value>
+  </data>
+  <data name="GameState.TASKS" xml:space="preserve">
+    <value>ЗАДАЧИ</value>
+  </data>
+  <data name="GameState.UNKNOWN" xml:space="preserve">
+    <value>НЕИЗВЕСТНО</value>
+  </data>
+  <data name="GameStateTooltip" xml:space="preserve">
+    <value>Текущий статус</value>
+  </data>
+  <data name="ManualConnectionCode" xml:space="preserve">
+    <value>Код:</value>
+  </data>
+  <data name="ManualConnectionHeader" xml:space="preserve">
+    <value>Ручное Подключение</value>
+  </data>
+  <data name="ManualConnectionHost" xml:space="preserve">
+    <value>Хост:</value>
+  </data>
+  <data name="ManualConnectionSubmitButton" xml:space="preserve">
+    <value>ОК</value>
+  </data>
+  <data name="ManualConnectTooltip" xml:space="preserve">
+    <value>Открыть окно ручного подключения</value>
+  </data>
+  <data name="MapTooltip" xml:space="preserve">
+    <value>Текущая карта</value>
+  </data>
+  <data name="MapWatermark" xml:space="preserve">
+    <value>Карта</value>
+  </data>
+  <data name="PremiumTooltip" xml:space="preserve">
+    <value>Получить AutoMuteUs премиум</value>
+  </data>
+  <data name="SettingsAboutTabAppVersion" xml:space="preserve">
+    <value>Версия приложения:</value>
+  </data>
+  <data name="SettingsAboutTabAutoUpdaterHeader" xml:space="preserve">
+    <value>Автообновление</value>
+  </data>
+  <data name="SettingsAboutTabContributorsButton" xml:space="preserve">
+    <value>Контрибьюторы:</value>
+  </data>
+  <data name="SettingsAboutTabContributorsButtonToolTip" xml:space="preserve">
+    <value>Показать контрибьюторов</value>
+  </data>
+  <data name="SettingsAboutTabHeader" xml:space="preserve">
+    <value>Справка</value>
+  </data>
+  <data name="SettingsAboutTabLatestVersion" xml:space="preserve">
+    <value>Последняя версия:</value>
+  </data>
+  <data name="SettingsDebugTabDebugModeSwitch" xml:space="preserve">
+    <value>Режим отладка</value>
+  </data>
+  <data name="SettingsDebugTabHeader" xml:space="preserve">
+    <value>Отладка</value>
+  </data>
+  <data name="SettingsDebugTabReloadOffsetsButton" xml:space="preserve">
+    <value>Перезагрузить данные</value>
+  </data>
+  <data name="SettingsDebugTabResetConfigButton" xml:space="preserve">
+    <value>Сброс Настроек</value>
+  </data>
+  <data name="SettingsDiscordTabHeader" xml:space="preserve">
+    <value>Дискорд</value>
+  </data>
+  <data name="SettingsDiscordTabSubmitButton" xml:space="preserve">
+    <value>ОК</value>
+  </data>
+  <data name="SettingsDiscordTabTokenWatermark" xml:space="preserve">
+    <value>Вставь токен сюда</value>
+  </data>
+  <data name="SettingsGeneralTabAlwaysCopyGameCode" xml:space="preserve">
+    <value>Копировать код игры</value>
+  </data>
+  <data name="SettingsGeneralTabAlwaysOnTop" xml:space="preserve">
+    <value>Поверх всех окон</value>
+  </data>
+  <data name="SettingsGeneralTabAPIServer" xml:space="preserve">
+    <value>API сервер</value>
+  </data>
+  <data name="SettingsGeneralTabFocusOnConnect" xml:space="preserve">
+    <value>Открыть при подключении</value>
+  </data>
+  <data name="SettingsGeneralTabHeader" xml:space="preserve">
+    <value>Общие</value>
+  </data>
+  <data name="SettingsGeneralTabLanguageHeader" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="SettingsHeader" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="SettingsTooltip" xml:space="preserve">
+    <value>Открыть окно настроек</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>AUCapture</value>
+  </data>
+  <data name="WaitingForAmongUs" xml:space="preserve">
+    <value>Ожидаю Among Us</value>
+  </data>
+  <data name="WaitingForLobby" xml:space="preserve">
+    <value>Ожидаю Лобби</value>
+  </data>
+  <data name="OffText" xml:space="preserve">
+    <value>Выкл</value>
+  </data>
+  <data name="OnText" xml:space="preserve">
+    <value>Вкл</value>
+  </data>
+</root>

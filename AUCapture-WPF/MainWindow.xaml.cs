@@ -14,6 +14,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -33,6 +34,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using AUCapture_WPF.Models;
 using Discord;
+using Gu.Localization;
 using HandyControl.Tools;
 using HandyControl.Tools.Extension;
 using Humanizer;
@@ -59,6 +61,7 @@ namespace AUCapture_WPF {
 
         public MainWindow() {
             InitializeComponent();
+            
             var appFolder = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
             var appName = Path.GetFileNameWithoutExtension(Process.GetCurrentProcess().MainModule.FileName);
             var appExtension = Path.GetExtension(Process.GetCurrentProcess().MainModule.FileName);
@@ -135,10 +138,15 @@ namespace AUCapture_WPF {
             var encryptedBuff = JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken);
             discordTokenBox.Password = decryptToken(encryptedBuff);
 
-
+            Translator.Culture = CultureInfo.GetCultureInfo(context.Settings.language);
+            Translator.CurrentCultureChanged += TranslatorOnCurrentCultureChanged; 
             context.Players.CollectionChanged += PlayersOnCollectionChanged;
 
             //ApplyDarkMode();
+        }
+
+        private void TranslatorOnCurrentCultureChanged(object? sender, CultureChangedEventArgs e) {
+            context.Settings.language = e.Culture.Name;
         }
 
 

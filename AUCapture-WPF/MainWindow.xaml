@@ -2,18 +2,24 @@
     x:Class="AUCapture_WPF.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:amonguscapture="clr-namespace:AmongUsCapture;assembly=AmongUsCapture"
     xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     xmlns:controls="clr-namespace:AUCapture_WPF.Controls"
     xmlns:converters="clr-namespace:AUCapture_WPF.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dialogs="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:globalization="clr-namespace:System.Globalization;assembly=mscorlib"
     xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:l="http://gu.se/Localization"
     xmlns:li="http://github.com/zeluisping/loadingIndicators/xaml/controls"
+    xmlns:localization="clr-namespace:Gu.Localization;assembly=Gu.Localization"
     xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="clr-namespace:Gu.Localization.Properties;assembly=Gu.Localization"
+    xmlns:properties="clr-namespace:AUCapture_WPF.Properties"
     xmlns:wpf="clr-namespace:LoadingIndicators.WPF;assembly=LoadingIndicators.WPF"
     Name="Window"
-    Title="AUCapture"
+    Title="{l:Static properties:Resources.Title}"
     Width="366"
     Height="544"
     MinWidth="366"
@@ -41,6 +47,8 @@
                 <ResourceDictionary Source="Resources/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <converters:PlayerToImage x:Key="PlayerToImage" />
+            <converters:ConnectionStateTranslator x:Key="ConnectionStateTranslator" />
+            <converters:GameStateTranslator x:Key="GameStateTranslator" />
             <converters:BoolToString x:Key="BoolToString" />
             <converters:EnumToStringConverter x:Key="EnumToStringConverter" />
             <converters:VisabilityInverterConverter x:Key="VisabilityInverterConverter" />
@@ -58,7 +66,7 @@
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
 
-            <Button Click="Settings" ToolTip="Open the settings window">
+            <Button Click="Settings" ToolTip="{l:Static properties:Resources.SettingsTooltip}">
                 <Button.ContentTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -80,7 +88,7 @@
             <Button
                 x:Name="ManualConnectButton"
                 Click="ManualConnect_Click"
-                ToolTip="Open the manual connection window">
+                ToolTip="{l:Static properties:Resources.ManualConnectTooltip}">
                 <Button.ContentTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -102,7 +110,7 @@
             <Button
                 x:Name="PremiumButton"
                 Click="PremiumButton_OnClick"
-                ToolTip="Get AutoMuteUs premium">
+                ToolTip="{l:Static properties:Resources.PremiumTooltip}">
                 <Button.ContentTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -129,11 +137,12 @@
                 x:Name="SettingsFlyout"
                 Width="275"
                 AnimateOpacity="True"
-                Header="Settings"
+                Header="{l:Static properties:Resources.SettingsHeader}"
                 IsAutoCloseEnabled="False"
                 Opacity="0.90"
                 Position="Left"
                 Theme="Adapt">
+
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel Orientation="Vertical">
                         <Grid>
@@ -143,41 +152,94 @@
                                 mah:TabControlHelper.Underlined="TabPanel"
                                 TabStripMargin="0 0 10 0"
                                 TabStripPlacement="Left">
-                                <mah:MetroTabItem Header="General">
-                                    <StackPanel Orientation="Vertical">
-                                        <mah:ToggleSwitch Header="Always copy game code" IsOn="{Binding Settings.AlwaysCopyGameCode, Mode=TwoWay}" />
-                                        <mah:ToggleSwitch Header="Focus window on connect" IsOn="{Binding Settings.FocusOnToken, Mode=TwoWay}" />
-                                        <mah:ToggleSwitch
-                                            Header="API Server"
-                                            IsOn="{Binding Settings.ApiServer, Mode=TwoWay}"
-                                            Toggled="APIServerToggleSwitch_Toggled" />
-                                        <mah:ToggleSwitch
-                                            x:Name="AlwaysOnTopSwitch"
-                                            Header="Always on top"
-                                            IsOn="{Binding Settings.alwaysOnTop, Mode=TwoWay}"
-                                            Toggled="AlwaysOnTopSwitch_OnToggled" />
-                                    </StackPanel>
-                                </mah:MetroTabItem>
-                                <mah:MetroTabItem x:Name="DebugTab" Header="Debug">
-                                    <Grid Margin="0,10,0,0">
+                                <mah:MetroTabItem Header="{l:Static properties:Resources.SettingsGeneralTabHeader}">
+                                    <Viewbox Margin="0,0,10,0">
                                         <StackPanel Orientation="Vertical">
-                                            <mah:ToggleSwitch Header="Debug mode" IsOn="{Binding Settings.debug, Mode=TwoWay}" />
+                                            <mah:MetroHeader Header="{l:Static properties:Resources.SettingsGeneralTabLanguageHeader}">
+
+                                                <ComboBox
+                                                    MinWidth="100"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Top"
+                                                    ItemsSource="{Binding Path=(localization:Translator.Cultures)}"
+                                                    SelectedItem="{Binding Path=(localization:Translator.Culture)}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate DataType="{x:Type globalization:CultureInfo}">
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <Image
+                                                                    Grid.Column="0"
+                                                                    Height="12"
+                                                                    VerticalAlignment="Center"
+                                                                    Source="{Binding Converter={x:Static l:CultureToFlagPathConverter.Default}}"
+                                                                    Stretch="Fill" />
+
+                                                                <TextBlock
+                                                                    Grid.Column="1"
+                                                                    Margin="10,0,0,0"
+                                                                    HorizontalAlignment="Left"
+                                                                    VerticalAlignment="Center"
+                                                                    Text="{Binding NativeName}" />
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </mah:MetroHeader>
+
+                                            <mah:ToggleSwitch
+                                                Header="{l:Static properties:Resources.SettingsGeneralTabAlwaysCopyGameCode}"
+                                                IsOn="{Binding Settings.AlwaysCopyGameCode, Mode=TwoWay}"
+                                                OffContent="{l:Static properties:Resources.OffText}"
+                                                OnContent="{l:Static properties:Resources.OnText}" />
+                                            <mah:ToggleSwitch
+                                                Header="{l:Static properties:Resources.SettingsGeneralTabFocusOnConnect}"
+                                                IsOn="{Binding Settings.FocusOnToken, Mode=TwoWay}"
+                                                OffContent="{l:Static properties:Resources.OffText}"
+                                                OnContent="{l:Static properties:Resources.OnText}" />
+                                            <mah:ToggleSwitch
+                                                Header="{l:Static properties:Resources.SettingsGeneralTabAPIServer}"
+                                                IsOn="{Binding Settings.ApiServer, Mode=TwoWay}"
+                                                OffContent="{l:Static properties:Resources.OffText}"
+                                                OnContent="{l:Static properties:Resources.OnText}"
+                                                Toggled="APIServerToggleSwitch_Toggled" />
+                                            <mah:ToggleSwitch
+                                                x:Name="AlwaysOnTopSwitch"
+                                                Header="{l:Static properties:Resources.SettingsGeneralTabAlwaysOnTop}"
+                                                IsOn="{Binding Settings.alwaysOnTop, Mode=TwoWay}"
+                                                OffContent="{l:Static properties:Resources.OffText}"
+                                                OnContent="{l:Static properties:Resources.OnText}"
+                                                Toggled="AlwaysOnTopSwitch_OnToggled" />
+                                        </StackPanel>
+                                    </Viewbox>
+                                </mah:MetroTabItem>
+                                <mah:MetroTabItem x:Name="DebugTab" Header="{l:Static properties:Resources.SettingsDebugTabHeader}">
+                                    <Grid Margin="0,10,10,0">
+                                        <StackPanel Orientation="Vertical">
+                                            <mah:ToggleSwitch
+                                                Header="{l:Static properties:Resources.SettingsDebugTabDebugModeSwitch}"
+                                                IsOn="{Binding Settings.debug, Mode=TwoWay}"
+                                                OffContent="{l:Static properties:Resources.OffText}"
+                                                OnContent="{l:Static properties:Resources.OnText}" />
                                             <Button
                                                 x:Name="ReloadOffsetsButton"
                                                 Click="ReloadOffsetsButton_OnClick"
-                                                Content="Reload offsets"
+                                                Content="{l:Static properties:Resources.SettingsDebugTabReloadOffsetsButton}"
                                                 Style="{StaticResource MahApps.Styles.Button.Square.Accent}" />
                                             <Button
-                                                Margin="0,10,0,0"
+                                                Margin="0,10,10,0"
                                                 Background="#FFDC3545"
                                                 Click="ResetConfigButton_OnClick"
-                                                Content="Reset Config"
+                                                Content="{l:Static properties:Resources.SettingsDebugTabResetConfigButton}"
                                                 Style="{StaticResource MahApps.Styles.Button.Square.Accent}" />
 
                                         </StackPanel>
                                     </Grid>
                                 </mah:MetroTabItem>
-                                <mah:MetroTabItem x:Name="DiscordTokenTab" Header="Discord">
+                                <mah:MetroTabItem x:Name="DiscordTokenTab" Header="{l:Static properties:Resources.SettingsDiscordTabHeader}">
                                     <Grid Margin="0,10,0,0">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" MinHeight="20" />
@@ -196,7 +258,7 @@
                                             mah:TextBoxHelper.ButtonCommand="{Binding TextBoxButtonHelpCmd, Mode=OneWay}"
                                             mah:TextBoxHelper.ButtonsAlignment="Right"
                                             mah:TextBoxHelper.SelectAllOnFocus="True"
-                                            mah:TextBoxHelper.Watermark="Paste token here"
+                                            mah:TextBoxHelper.Watermark="{l:Static properties:Resources.SettingsDiscordTabHeader}"
                                             Style="{DynamicResource MahApps.Styles.PasswordBox.Button}">
                                             <mah:TextBoxHelper.ButtonContent>
                                                 <Path
@@ -223,34 +285,34 @@
                                                 Margin="5,0,5,0"
                                                 HorizontalAlignment="Center"
                                                 Click="SubmitDiscordButton_OnClick"
-                                                Content="Submit"
+                                                Content="{l:Static properties:Resources.SettingsDiscordTabHeader}"
                                                 IsDefault="True"
                                                 Style="{DynamicResource MahApps.Styles.Button.Dialogs.Accent}" />
                                         </StackPanel>
                                     </Grid>
                                 </mah:MetroTabItem>
-                                <mah:MetroTabItem Header="About">
+                                <mah:MetroTabItem Header="{l:Static properties:Resources.SettingsAboutTabHeader}">
                                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                                         <StackPanel Orientation="Vertical">
-                                            <mah:MetroHeader Header="Auto updater">
+                                            <mah:MetroHeader Header="{l:Static properties:Resources.SettingsAboutTabAutoUpdaterHeader}">
                                                 <CheckBox IsChecked="{Binding AutoUpdaterEnabled, Mode=OneWay}" IsEnabled="False" />
                                             </mah:MetroHeader>
-                                            <mah:MetroHeader Header="App version:">
+                                            <mah:MetroHeader Header="{l:Static properties:Resources.SettingsAboutTabAutoUpdaterHeader}">
                                                 <TextBox
                                                     MinWidth="150"
                                                     VerticalAlignment="Center"
                                                     IsReadOnly="True"
                                                     Text="{Binding Version, Mode=OneWay}" />
                                             </mah:MetroHeader>
-                                            <mah:MetroHeader Header="Latest version:">
+                                            <mah:MetroHeader Header="{l:Static properties:Resources.SettingsAboutTabLatestVersion}">
                                                 <TextBox
                                                     MinWidth="150"
                                                     VerticalAlignment="Center"
                                                     IsReadOnly="True"
                                                     Text="{Binding LatestVersion, Mode=OneWay}" />
                                             </mah:MetroHeader>
-                                            <mah:MetroHeader Header="Contributors: ">
-                                                <Button Click="ContributorsButton_OnClick" ToolTip="Show contributors">
+                                            <mah:MetroHeader Header="{l:Static properties:Resources.SettingsAboutTabContributorsButton}">
+                                                <Button Click="ContributorsButton_OnClick" ToolTip="{l:Static properties:Resources.SettingsAboutTabContributorsButtonToolTip}">
                                                     <Button.ContentTemplate>
                                                         <DataTemplate>
                                                             <StackPanel Orientation="Horizontal">
@@ -283,13 +345,15 @@
 
                 </ScrollViewer>
 
+
+
             </mah:Flyout>
             <mah:Flyout
                 x:Name="ManualConnectionFlyout"
                 Width="{Binding ActualWidth, ElementName=Window, Converter={dialogs:MathDivideConverter}, ConverterParameter=1.5}"
                 AnimateOpacity="True"
                 ExternalCloseButton="Left"
-                Header="Manual Connection"
+                Header="{l:Static properties:Resources.ManualConnectionHeader}"
                 IsAutoCloseEnabled="False"
                 Position="Left"
                 Theme="Adapt">
@@ -305,7 +369,7 @@
                                 <TextBlock
                                     Margin="4,0,3,0"
                                     VerticalAlignment="Center"
-                                    Text="Host: " />
+                                    Text="{l:Static properties:Resources.ManualConnectionHost}" />
                                 <TextBox
                                     x:Name="Host"
                                     MinWidth="150"
@@ -316,7 +380,7 @@
                                 <TextBlock
                                     Margin="4,0,0,0"
                                     VerticalAlignment="Center"
-                                    Text="Code: " />
+                                    Text="{l:Static properties:Resources.ManualConnectionCode}" />
                                 <TextBox
                                     x:Name="Code"
                                     MinWidth="150"
@@ -327,7 +391,7 @@
                                 x:Name="SubmitConnectButton"
                                 Margin="20"
                                 Click="SubmitConnectButton_OnClick"
-                                Content="Submit" />
+                                Content="{l:Static properties:Resources.ManualConnectionSubmitButton}" />
                         </StackPanel>
                     </ScrollViewer>
                 </Grid>
@@ -362,7 +426,7 @@
                     Stroke="Black"
                     StrokePosition="Outside"
                     StrokeThickness="1.5"
-                    Text="Waiting for Among Us"
+                    Text="{l:Static properties:Resources.WaitingForAmongUs}"
                     Visibility="{Binding Connected, Converter={StaticResource BoolToVisibilityConverterInverted}}" />
 
                 <hc:LoadingCircle
@@ -419,7 +483,7 @@
                     Stroke="Black"
                     StrokePosition="Outside"
                     StrokeThickness="1.5"
-                    Text="Waiting for Lobby"
+                    Text="{l:Static properties:Resources.WaitingForLobby}"
                     Visibility="{Binding GameState, Converter={StaticResource GameStateToVisabilityI}}" />
                 <hc:LoadingCircle
                     Margin="15"
@@ -543,8 +607,14 @@
                                 <Label
                                     VerticalAlignment="Center"
                                     HorizontalContentAlignment="Right"
-                                    VerticalContentAlignment="Center"
-                                    Content="{Binding ConnectionName}" />
+                                    VerticalContentAlignment="Center">
+                                    <Label.Content>
+                                        <MultiBinding Converter="{StaticResource ConnectionStateTranslator}">
+                                            <Binding Path="ConnectionName" />
+                                            <l:CurrentCulture />
+                                        </MultiBinding>
+                                    </Label.Content>
+                                </Label>
 
                             </StackPanel>
 
@@ -578,8 +648,15 @@
                     IsHitTestVisible="True"
                     IsManipulationEnabled="False"
                     IsReadOnly="True"
-                    Text="{Binding GameState, Converter={StaticResource EnumToStringConverter}}"
-                    ToolTip="Current status" />
+                    ToolTip="{l:Static properties:Resources.GameStateTooltip}">
+                    <TextBox.Text>
+                        <MultiBinding Converter="{StaticResource GameStateTranslator}">
+                            <Binding Path="GameState" />
+                            <l:CurrentCulture />
+                        </MultiBinding>
+                    </TextBox.Text>
+                </TextBox>
+
                 <TextBox
                     x:Name="GameCodeBox"
                     Grid.Column="1"
@@ -590,7 +667,7 @@
                     dialogs:TextBoxHelper.AutoWatermark="True"
                     dialogs:TextBoxHelper.WatermarkAlignment="Right"
                     mah:TextBoxHelper.ButtonCommand="{Binding TextBoxButtonCopyCmd, Mode=OneWay}"
-                    mah:TextBoxHelper.Watermark="Game code"
+                    mah:TextBoxHelper.Watermark="{l:Static properties:Resources.GameCodeWatermark}"
                     AllowDrop="False"
                     Background="{DynamicResource MahApps.Brushes.Transparent}"
                     BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
@@ -599,7 +676,7 @@
                     IsManipulationEnabled="False"
                     Style="{DynamicResource MahApps.Styles.TextBox.Button}"
                     Text="{Binding GameCode}"
-                    ToolTip="Game code">
+                    ToolTip="{l:Static properties:Resources.GameCodeTooltip}">
                     <mah:TextBoxHelper.ButtonContent>
                         <Path
                             Width="22"
@@ -620,7 +697,7 @@
                     VerticalAlignment="Center"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
-                    mah:TextBoxHelper.Watermark="Map"
+                    mah:TextBoxHelper.Watermark="{l:Static properties:Resources.MapWatermark}"
                     AllowDrop="False"
                     Background="{DynamicResource MahApps.Brushes.Transparent}"
                     BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
@@ -629,7 +706,7 @@
                     IsManipulationEnabled="False"
                     IsReadOnly="True"
                     Text="{Binding GameMap, Converter={StaticResource EnumToStringConverter}}"
-                    ToolTip="Current map" />
+                    ToolTip="{l:Static properties:Resources.MapTooltip}" />
             </Grid>
 
         </StackPanel>

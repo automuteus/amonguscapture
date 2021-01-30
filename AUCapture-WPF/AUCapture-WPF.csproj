@@ -77,7 +77,6 @@
     <PackageReference Include="Octokit" Version="0.48.0" />
     <PackageReference Include="PgpCore" Version="4.0.1" />
     <PackageReference Include="SharedMemory" Version="2.2.3" />
-    <PackageReference Include="SharpVectors" Version="1.7.1" />
     <PackageReference Include="WpfScreenHelper" Version="1.0.0" />
   </ItemGroup>
 

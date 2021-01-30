@@ -59,8 +59,7 @@ namespace AUCapture_WPF
             base.OnStartup(e);
 
             var args = e.Args;
-            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncAll;
-            ThemeManager.Current.SyncTheme();
+
              // needs to be the first call in the program to prevent weird bugs
              if (Settings.PersistentSettings.debugConsole)
                  AllocConsole();

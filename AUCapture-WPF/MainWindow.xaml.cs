@@ -135,22 +135,6 @@ namespace AUCapture_WPF {
             var encryptedBuff = JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken);
             discordTokenBox.Password = decryptToken(encryptedBuff);
 
-            try {
-
-                string BaseColor = ThemeManager.BaseColorDark;
-
-                var newTheme2 = new Theme("CustomTheme",
-                    "CustomTheme",
-                    BaseColor,
-                    "CustomAccent",
-                    System.Windows.Media.Color.FromArgb(255,140,158,255),
-                    new SolidColorBrush(System.Windows.Media.Color.FromArgb(255,140,158,255)),
-                    true,
-                    false);
-
-                ThemeManager.Current.ChangeTheme(this, newTheme2);
-            }
-            catch (Exception e) { }
 
             context.Players.CollectionChanged += PlayersOnCollectionChanged;
 
@@ -560,9 +544,6 @@ namespace AUCapture_WPF {
         }
 
         private void SetDefaultThemeColor() {
-            if (config.ranBefore) return;
-
-            config.ranBefore = true;
             ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.DoNotSync;
 
             string BaseColor = ThemeManager.BaseColorDark;
@@ -597,9 +578,9 @@ namespace AUCapture_WPF {
                 NormalTextColor = Color.White;
             }
             else {
-                context.BackgroundBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255));
-                NormalTextColor = Color.Black;
-                ThemeManager.Current.ChangeThemeBaseColor(this, ThemeManager.BaseColorLight);
+                context.BackgroundBrush = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Misc/AutoBG.png")));
+                ThemeManager.Current.ChangeThemeBaseColor(this, ThemeManager.BaseColorDark);
+                NormalTextColor = Color.White;
             }
         }
 

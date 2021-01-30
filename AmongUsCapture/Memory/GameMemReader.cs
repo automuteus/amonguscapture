@@ -317,22 +317,26 @@ namespace AmongUsCapture {
                     #region Check if exile causes game end
 
                     if (oldState == GameState.DISCUSSION && state == GameState.TASKS) {
-                        int impostorCount = 0, innocentCount = 0;
-                        var ExiledPlayer = GetExiledPlayer(ProcessMemory.getInstance());
-                        PlayerChanged?.Invoke(this, new PlayerChangedEventArgs {
-                            Action = PlayerAction.Exiled,
-                            Name = ExiledPlayer.GetPlayerName(),
-                            IsDead = ExiledPlayer.GetIsDead(),
-                            Disconnected = ExiledPlayer.GetIsDisconnected(),
-                            Color = ExiledPlayer.GetPlayerColor()
-                        });
-                        impostorCount = GetPlayers(ProcessMemory.getInstance()).Count(x => x.GetIsImposter() && x.PlayerName != IntPtr.Zero && x.PlayerId != ExiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
-                        innocentCount = GetPlayers(ProcessMemory.getInstance()).Count(x => !x.GetIsImposter() && x.PlayerName != IntPtr.Zero && x.PlayerId != ExiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
+                        
+                        var exiledPlayer = GetExiledPlayer(ProcessMemory.getInstance());
+                        if (exiledPlayer is not null) {
+                            int impostorCount = 0, innocentCount = 0;
+                            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs {
+                                Action = PlayerAction.Exiled,
+                                Name = exiledPlayer.GetPlayerName(),
+                                IsDead = exiledPlayer.GetIsDead(),
+                                Disconnected = exiledPlayer.GetIsDisconnected(),
+                                Color = exiledPlayer.GetPlayerColor()
+                            });
+                            impostorCount = GetPlayers(ProcessMemory.getInstance()).Count(x => x.GetIsImposter() && x.PlayerName != IntPtr.Zero && x.PlayerId != exiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
+                            innocentCount = GetPlayers(ProcessMemory.getInstance()).Count(x => !x.GetIsImposter() && x.PlayerName != IntPtr.Zero && x.PlayerId != exiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
 
-                        if (impostorCount == 0 || impostorCount >= innocentCount) {
-                            exileCausesEnd = true;
-                            state = GameState.LOBBY;
+                            if (impostorCount == 0 || impostorCount >= innocentCount) {
+                                exileCausesEnd = true;
+                                state = GameState.LOBBY;
+                            }
                         }
+                        
                     }
 
                     #endregion

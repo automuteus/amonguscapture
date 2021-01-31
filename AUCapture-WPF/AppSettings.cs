@@ -11,7 +11,7 @@ namespace AUCapture_WPF
         [Option(DefaultValue = false)]
         bool discordTokenEncrypted { get; set; }
 
-        [Option(DefaultValue = "en-US")]
+        [Option(DefaultValue = "")]
         string language { get; set; }
 
         [Option(DefaultValue = false)]

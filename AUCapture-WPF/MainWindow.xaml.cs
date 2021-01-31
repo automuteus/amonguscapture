@@ -137,8 +137,16 @@ namespace AUCapture_WPF {
 
             var encryptedBuff = JsonConvert.DeserializeObject<byte[]>(context.Settings.discordToken);
             discordTokenBox.Password = decryptToken(encryptedBuff);
-
-            Translator.Culture = CultureInfo.GetCultureInfo(context.Settings.language);
+            if(context.Settings.language == "") {
+                var cultures = Translator.Cultures;
+                var ci = CultureInfo.CurrentUICulture;
+                if(cultures.Any(x=>x.Name == ci.Name)) {
+                    Translator.Culture = CultureInfo.GetCultureInfo(ci.Name);
+                }
+            }
+            else {
+                Translator.Culture = CultureInfo.GetCultureInfo(context.Settings.language);
+            }
             Translator.CurrentCultureChanged += TranslatorOnCurrentCultureChanged; 
             context.Players.CollectionChanged += PlayersOnCollectionChanged;
 

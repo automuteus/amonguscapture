@@ -61,6 +61,15 @@ namespace AUCapture_WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to cancel.
+        /// </summary>
+        public static string CancelText {
+            get {
+                return ResourceManager.GetString("CancelText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AutoMuteUs.
         /// </summary>
         public static string ConnectionStatus_AUTOMUTEUS {
@@ -246,6 +255,33 @@ namespace AUCapture_WPF.Properties {
         public static string PremiumTooltip {
             get {
                 return ResourceManager.GetString("PremiumTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We detected an update to {latestVersion}, But there is no public key in this capture so we will not be able to verify integrity. Please download the latest release off the github page..
+        /// </summary>
+        public static string PrivateKeyErrorMessage {
+            get {
+                return ResourceManager.GetString("PrivateKeyErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AutoUpdater failed.
+        /// </summary>
+        public static string PrivateKeyErrorTitle {
+            get {
+                return ResourceManager.GetString("PrivateKeyErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to retry.
+        /// </summary>
+        public static string RetryText {
+            get {
+                return ResourceManager.GetString("RetryText", resourceCulture);
             }
         }
         
@@ -444,6 +480,42 @@ namespace AUCapture_WPF.Properties {
         public static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string UpdateNotificationDecline {
+            get {
+                return ResourceManager.GetString("UpdateNotificationDecline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Caution.
+        /// </summary>
+        public static string UpdateNotificationHeader {
+            get {
+                return ResourceManager.GetString("UpdateNotificationHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We&apos;ve detected you&apos;re using an older version of AmongUsCapture!\nYour version: {version}\nLatest version: {latestVersion}.
+        /// </summary>
+        public static string UpdateNotificationMessage {
+            get {
+                return ResourceManager.GetString("UpdateNotificationMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        public static string UpdateNotificationUpdate {
+            get {
+                return ResourceManager.GetString("UpdateNotificationUpdate", resourceCulture);
             }
         }
         

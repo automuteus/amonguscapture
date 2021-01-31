@@ -15,161 +15,161 @@
     <value>AutoMuteUs</value>
   </data>
   <data name="ConnectionStatus.USER BOT" xml:space="preserve">
-    <value>Личный бот</value>
+    <value>ユーザーボット</value>
   </data>
   <data name="GameCodeTooltip" xml:space="preserve">
-    <value>Код игры</value>
+    <value>ゲームコード</value>
   </data>
   <data name="GameCodeWatermark" xml:space="preserve">
-    <value>Код игры</value>
+    <value>ゲームコード</value>
   </data>
   <data name="GameState.DISCUSSION" xml:space="preserve">
-    <value>ОБСУЖДЕНИЕ</value>
+    <value>会議</value>
   </data>
   <data name="GameState.ENDED" xml:space="preserve">
-    <value>КОНЕЦ</value>
+    <value>終了</value>
   </data>
   <data name="GameState.LOBBY" xml:space="preserve">
-    <value>ЛОББИ</value>
+    <value>ロビー</value>
   </data>
   <data name="GameState.MENU" xml:space="preserve">
-    <value>МЕНЮ</value>
+    <value>メニュー</value>
   </data>
   <data name="GameState.TASKS" xml:space="preserve">
-    <value>ЗАДАЧИ</value>
+    <value>タスク</value>
   </data>
   <data name="GameState.UNKNOWN" xml:space="preserve">
-    <value>НЕИЗВЕСТНО</value>
+    <value>不明</value>
   </data>
   <data name="GameStateTooltip" xml:space="preserve">
-    <value>Текущий статус</value>
+    <value>ステータス</value>
   </data>
   <data name="ManualConnectionCode" xml:space="preserve">
-    <value>Код:</value>
+    <value>コード:</value>
   </data>
   <data name="ManualConnectionHeader" xml:space="preserve">
-    <value>Ручное Подключение</value>
+    <value>手動接続</value>
   </data>
   <data name="ManualConnectionHost" xml:space="preserve">
-    <value>Хост:</value>
+    <value>ホスト:</value>
   </data>
   <data name="ManualConnectionSubmitButton" xml:space="preserve">
-    <value>ОК</value>
+    <value>登録</value>
   </data>
   <data name="ManualConnectTooltip" xml:space="preserve">
-    <value>Открыть окно ручного подключения</value>
+    <value>手動接続設定を開く</value>
   </data>
   <data name="MapTooltip" xml:space="preserve">
-    <value>Текущая карта</value>
+    <value>マップ</value>
   </data>
   <data name="MapWatermark" xml:space="preserve">
-    <value>Карта</value>
+    <value>マップ</value>
+  </data>
+  <data name="OffText" xml:space="preserve">
+    <value>オフ</value>
+  </data>
+  <data name="OnText" xml:space="preserve">
+    <value>オン</value>
   </data>
   <data name="PremiumTooltip" xml:space="preserve">
-    <value>Получить AutoMuteUs премиум</value>
+    <value>プレミアムを購入</value>
   </data>
   <data name="SettingsAboutTabAppVersion" xml:space="preserve">
-    <value>Версия приложения:</value>
+    <value>バージョン:</value>
   </data>
   <data name="SettingsAboutTabAutoUpdaterHeader" xml:space="preserve">
-    <value>Автообновление</value>
+    <value>自動更新</value>
   </data>
   <data name="SettingsAboutTabContributorsButton" xml:space="preserve">
-    <value>Отдельное спасибо:</value>
+    <value>コントリビューター:</value>
   </data>
   <data name="SettingsAboutTabContributorsButtonToolTip" xml:space="preserve">
-    <value>Показать людей, которые внесли свой вклад в создание</value>
+    <value>コントリビューターを表示</value>
   </data>
   <data name="SettingsAboutTabHeader" xml:space="preserve">
-    <value>Справка</value>
+    <value>詳細</value>
   </data>
   <data name="SettingsAboutTabLatestVersion" xml:space="preserve">
-    <value>Последняя версия:</value>
+    <value>最新バージョン:</value>
   </data>
   <data name="SettingsDebugTabDebugModeSwitch" xml:space="preserve">
-    <value>Режим отладки</value>
+    <value>デバッグモード</value>
   </data>
   <data name="SettingsDebugTabHeader" xml:space="preserve">
-    <value>Отладка</value>
+    <value>デバッグ</value>
   </data>
   <data name="SettingsDebugTabReloadOffsetsButton" xml:space="preserve">
-    <value>Перезагрузить данные</value>
+    <value>オフセットを再読み込み</value>
   </data>
   <data name="SettingsDebugTabResetConfigButton" xml:space="preserve">
-    <value>Сброс Настроек</value>
+    <value>設定をリセット</value>
   </data>
   <data name="SettingsDiscordTabHeader" xml:space="preserve">
-    <value>Дискорд</value>
+    <value>Discord</value>
   </data>
   <data name="SettingsDiscordTabSubmitButton" xml:space="preserve">
-    <value>ОК</value>
+    <value>登録</value>
   </data>
   <data name="SettingsDiscordTabTokenWatermark" xml:space="preserve">
-    <value>Вставь токен сюда</value>
+    <value>ここにトークンを入力</value>
   </data>
   <data name="SettingsGeneralTabAlwaysCopyGameCode" xml:space="preserve">
-    <value>Копировать код игры</value>
+    <value>常にゲームコードをコピー</value>
   </data>
   <data name="SettingsGeneralTabAlwaysOnTop" xml:space="preserve">
-    <value>Поверх всех окон</value>
+    <value>常に最前面に表示</value>
   </data>
   <data name="SettingsGeneralTabAPIServer" xml:space="preserve">
-    <value>API сервер</value>
+    <value>APIサーバー</value>
   </data>
   <data name="SettingsGeneralTabFocusOnConnect" xml:space="preserve">
-    <value>Открыть при подключении</value>
+    <value>接続時に画面をフォーカス</value>
   </data>
   <data name="SettingsGeneralTabHeader" xml:space="preserve">
-    <value>Общие</value>
+    <value>一般</value>
   </data>
   <data name="SettingsGeneralTabLanguageHeader" xml:space="preserve">
-    <value>Язык</value>
+    <value>言語</value>
   </data>
   <data name="SettingsHeader" xml:space="preserve">
-    <value>Настройки</value>
+    <value>設定</value>
   </data>
   <data name="SettingsTooltip" xml:space="preserve">
-    <value>Открыть окно настроек</value>
+    <value>設定を開く</value>
   </data>
   <data name="Title" xml:space="preserve">
     <value>AUCapture</value>
   </data>
   <data name="WaitingForAmongUs" xml:space="preserve">
-    <value>Ожидаю Among Us</value>
+    <value>Among Usを起動してください</value>
   </data>
   <data name="WaitingForLobby" xml:space="preserve">
-    <value>Ожидаю Лобби</value>
-  </data>
-  <data name="OffText" xml:space="preserve">
-    <value>Выкл</value>
-  </data>
-  <data name="OnText" xml:space="preserve">
-    <value>Вкл</value>
+    <value>ロビーに参加して下さい</value>
   </data>
   <data name="CancelText" xml:space="preserve">
-    <value>Отмена</value>
+    <value>キャンセル</value>
   </data>
   <data name="PrivateKeyErrorMessage" xml:space="preserve">
-    <value>Мы обнаружили обновление до {0}, но в нём нет публичного ключа. Таким образом мы не проверить совместимость. Пожалуйста, скачайте последнее обновление напрямую с Github.</value>
+    <value>新しいバージョン({0})があります。Githubから最新版をダウンロードしてください。</value>
   </data>
   <data name="PrivateKeyErrorTitle" xml:space="preserve">
-    <value>Ошибка при обновлении</value>
+    <value>自動更新に失敗</value>
   </data>
   <data name="RetryText" xml:space="preserve">
-    <value>Повтор</value>
+    <value>再試行</value>
   </data>
   <data name="UpdateNotificationDecline" xml:space="preserve">
-    <value>Нет, спасибо</value>
+    <value>今はしない</value>
   </data>
   <data name="UpdateNotificationHeader" xml:space="preserve">
-    <value>Внимание</value>
+    <value>警告</value>
   </data>
   <data name="UpdateNotificationMessage" xml:space="preserve">
-    <value>Мы заметили, что вы используете старую версию AmongUsCapture!
-Ваша версия: {0}
-Последняя версия: {1}</value>
+    <value>新しいバージョンがあります。
+現在のバージョン: {0}
+最新バージョン: {1}</value>
   </data>
   <data name="UpdateNotificationUpdate" xml:space="preserve">
-    <value>Обновить</value>
+    <value>更新</value>
   </data>
 </root>

@@ -233,4 +233,30 @@
   <data name="OffText" xml:space="preserve">
     <value>Off</value>
   </data>
+  <data name="PrivateKeyErrorMessage" xml:space="preserve">
+    <value>We detected an update to {0}, But there is no public key in this capture so we will not be able to verify integrity. Please download the latest release off the github page.</value>
+  </data>
+  <data name="PrivateKeyErrorTitle" xml:space="preserve">
+    <value>AutoUpdater failed</value>
+  </data>
+  <data name="RetryText" xml:space="preserve">
+    <value>retry</value>
+  </data>
+  <data name="CancelText" xml:space="preserve">
+    <value>cancel</value>
+  </data>
+  <data name="UpdateNotificationMessage" xml:space="preserve">
+    <value>We've detected you're using an older version of AmongUsCapture!
+Your version: {0}
+Latest version: {1}</value>
+  </data>
+  <data name="UpdateNotificationHeader" xml:space="preserve">
+    <value>Caution</value>
+  </data>
+  <data name="UpdateNotificationUpdate" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="UpdateNotificationDecline" xml:space="preserve">
+    <value>No thanks</value>
+  </data>
 </root>

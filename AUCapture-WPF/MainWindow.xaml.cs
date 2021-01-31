@@ -20,6 +20,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -33,6 +34,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using AUCapture_WPF.Models;
+using AUCapture_WPF.Properties;
 using Discord;
 using Gu.Localization;
 using HandyControl.Tools;
@@ -140,8 +142,8 @@ namespace AUCapture_WPF {
             if(context.Settings.language == "") {
                 var cultures = Translator.Cultures;
                 var ci = CultureInfo.CurrentUICulture;
-                if(cultures.Any(x=>x.Name == ci.Name)) {
-                    Translator.Culture = CultureInfo.GetCultureInfo(ci.Name);
+                if(cultures.Any(x=>x.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)) {
+                    Translator.Culture = CultureInfo.GetCultureInfo(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
                 }
             }
             else {
@@ -241,14 +243,14 @@ namespace AUCapture_WPF {
             var errorBox = await context.DialogCoordinator.ShowMessageAsync(context, title,
                 errorMessage, MessageDialogStyle.AffirmativeAndNegative,
                 new MetroDialogSettings {
-                    AffirmativeButtonText = "retry",
-                    NegativeButtonText = "cancel",
+                    AffirmativeButtonText = Translate.Key("RetryText"),
+                    NegativeButtonText = Translate.Key("CancelText"),
                     DefaultButtonFocus = MessageDialogResult.Affirmative,
                     AnimateShow = false
                 });
             if (errorBox == MessageDialogResult.Affirmative) await Task.Factory.StartNew(Update, TaskCreationOptions.LongRunning);
         }
-
+        
         public async void Update() {
             var version = new Version();
             var latestVersion = new Version();
@@ -283,29 +285,16 @@ namespace AUCapture_WPF {
                 {
                     if (Assembly.GetExecutingAssembly().GetManifestResourceNames().All(x => x != "AUCapture_WPF.Resources.AutoMuteUs_PK.asc"))
                     {
-                        ShowErrorBox($"We detected an update to {latestVersion}, But there is no public key in this capture so we will not be able to verify integrity. Please download the latest release off the github page.","AutoUpdater failed");
+                        ShowErrorBox(String.Format(Translate.Key("PrivateKeyErrorMessage"), latestVersion.ToString(3)),Translate.Key("PrivateKeyErrorMessage"));
                         return;
                     }
-                    var selection = await context.DialogCoordinator.ShowMessageAsync(context, "Caution",
-                        $"We've detected you're using an older version of AmongUsCapture!\nYour version: {version}\nLatest version: {latestVersion}",
+                    var selection = await context.DialogCoordinator.ShowMessageAsync(context, Translate.Key("UpdateNotificationHeader"),
+                        String.Format(Translate.Key("UpdateNotificationMessage"), version.ToString(3), latestVersion.ToString(3)),
                         MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings
                         {
-                            AffirmativeButtonText =
-                                "Update",
-                            NegativeButtonText = "No thanks", DefaultButtonFocus = MessageDialogResult.Affirmative
+                            AffirmativeButtonText = Translate.Key("UpdateNotificationUpdate"),
+                            NegativeButtonText = Translate.Key("UpdateNotificationDecline"), DefaultButtonFocus = MessageDialogResult.Affirmative
                         });
-                    if (selection == MessageDialogResult.Negative)
-                    {
-                        selection = await context.DialogCoordinator.ShowMessageAsync(context, "Warning",
-                            $"Having an older version could cause compatibility issues with AutoMuteUs.\nWe can automagically update you to {latestVersion}.",
-                            MessageDialogStyle.AffirmativeAndNegative, new MetroDialogSettings
-                            {
-                                AffirmativeButtonText =
-                                    "Update",
-                                NegativeButtonText = "no ty", DefaultButtonFocus = MessageDialogResult.Affirmative
-                            });
-                    }
-
                     if (selection == MessageDialogResult.Affirmative)
                     {
                         var DownloadProgress =

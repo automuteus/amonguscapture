@@ -258,7 +258,7 @@
                                             mah:TextBoxHelper.ButtonCommand="{Binding TextBoxButtonHelpCmd, Mode=OneWay}"
                                             mah:TextBoxHelper.ButtonsAlignment="Right"
                                             mah:TextBoxHelper.SelectAllOnFocus="True"
-                                            mah:TextBoxHelper.Watermark="{l:Static properties:Resources.SettingsDiscordTabHeader}"
+                                            mah:TextBoxHelper.Watermark="{l:Static properties:Resources.SettingsDiscordTabTokenWatermark}"
                                             Style="{DynamicResource MahApps.Styles.PasswordBox.Button}">
                                             <mah:TextBoxHelper.ButtonContent>
                                                 <Path
@@ -285,7 +285,7 @@
                                                 Margin="5,0,5,0"
                                                 HorizontalAlignment="Center"
                                                 Click="SubmitDiscordButton_OnClick"
-                                                Content="{l:Static properties:Resources.SettingsDiscordTabHeader}"
+                                                Content="{l:Static properties:Resources.SettingsDiscordTabSubmitButton}"
                                                 IsDefault="True"
                                                 Style="{DynamicResource MahApps.Styles.Button.Dialogs.Accent}" />
                                         </StackPanel>
@@ -297,7 +297,7 @@
                                             <mah:MetroHeader Header="{l:Static properties:Resources.SettingsAboutTabAutoUpdaterHeader}">
                                                 <CheckBox IsChecked="{Binding AutoUpdaterEnabled, Mode=OneWay}" IsEnabled="False" />
                                             </mah:MetroHeader>
-                                            <mah:MetroHeader Header="{l:Static properties:Resources.SettingsAboutTabAutoUpdaterHeader}">
+                                            <mah:MetroHeader Header="{l:Static properties:Resources.SettingsAboutTabAppVersion}">
                                                 <TextBox
                                                     MinWidth="150"
                                                     VerticalAlignment="Center"
@@ -384,7 +384,6 @@
                                 <TextBox
                                     x:Name="Code"
                                     MinWidth="150"
-                                    VerticalAlignment="Center"
                                     Text="{Binding Settings.connectCode, Mode=TwoWay}" />
                             </StackPanel>
                             <Button

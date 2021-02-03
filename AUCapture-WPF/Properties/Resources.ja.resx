@@ -169,4 +169,7 @@
   <data name="UpdateNotificationUpdate" xml:space="preserve">
     <value>更新</value>
   </data>
+  <data name="GameState.MENU" xml:space="preserve">
+    <value>メニュー</value>
+  </data>
 </root>

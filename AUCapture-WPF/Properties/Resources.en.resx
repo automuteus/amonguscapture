@@ -173,4 +173,7 @@ Latest version: {1}</value>
   <data name="SettingsDebugOpenLogsFolderButton" xml:space="preserve">
     <value>Open log folder</value>
   </data>
+  <data name="GameState.MENU" xml:space="preserve">
+    <value>MENU</value>
+  </data>
 </root>

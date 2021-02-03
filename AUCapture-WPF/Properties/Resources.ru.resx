@@ -172,4 +172,7 @@
   <data name="SettingsDebugOpenLogsFolderButton" xml:space="preserve">
     <value>Открыть папку логов</value>
   </data>
+  <data name="GameState.MENU" xml:space="preserve">
+    <value>МЕНЮ</value>
+  </data>
 </root>

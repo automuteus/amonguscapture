@@ -133,6 +133,15 @@ namespace AUCapture_WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string GameState_MENU {
+            get {
+                return ResourceManager.GetString("GameState.MENU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to TASKS.
         /// </summary>
         public static string GameState_TASKS {

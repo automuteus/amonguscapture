@@ -96,7 +96,7 @@
     <value>Сброс Настроек</value>
   </data>
   <data name="SettingsDiscordTabHeader" xml:space="preserve">
-    <value>Дискорд</value>
+    <value>Discord</value>
   </data>
   <data name="SettingsDiscordTabSubmitButton" xml:space="preserve">
     <value>ОК</value>
@@ -168,5 +168,8 @@
   </data>
   <data name="UpdateNotificationUpdate" xml:space="preserve">
     <value>Обновить</value>
+  </data>
+  <data name="SettingsDebugOpenLogsFolderButton" xml:space="preserve">
+    <value>Открыть папку логов</value>
   </data>
 </root>

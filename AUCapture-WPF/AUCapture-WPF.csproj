@@ -49,6 +49,7 @@
     <None Remove="Resources\Misc\AutoBG.png" />
     <None Remove="Resources\Misc\status-connected.png" />
     <None Remove="Resources\Misc\status-disconnected.png" />
+    <None Remove="Resources\Misc\Transparent_Nebula.png" />
     <None Remove="Resources\Misc\voteCancel.png" />
     <None Remove="Resources\Misc\voteConfirm.png" />
     <None Remove="SplashScreens\SplashScreenDouche.png" />

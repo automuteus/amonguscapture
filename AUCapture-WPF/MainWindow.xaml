@@ -225,7 +225,15 @@
                                                 OffContent="{l:Static properties:Resources.OffText}"
                                                 OnContent="{l:Static properties:Resources.OnText}" />
                                             <Button
+                                                x:Name="OpenLogsFolderButton"
+                                                Margin="0,10,10,0"
+                                                Background="#FFC107"
+                                                Click="OpenLogsFolderButton_OnClick"
+                                                Content="{l:Static properties:Resources.SettingsDebugOpenLogsFolderButton}"
+                                                Style="{StaticResource MahApps.Styles.Button.Square.Accent}" />
+                                            <Button
                                                 x:Name="ReloadOffsetsButton"
+                                                Margin="0,10,10,0"
                                                 Click="ReloadOffsetsButton_OnClick"
                                                 Content="{l:Static properties:Resources.SettingsDebugTabReloadOffsetsButton}"
                                                 Style="{StaticResource MahApps.Styles.Button.Square.Accent}" />

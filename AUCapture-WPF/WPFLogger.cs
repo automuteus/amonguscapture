@@ -16,6 +16,7 @@ namespace AUCapture_WPF
     class WPFLogger : IConsoleInterface
     {
         public MainWindow form;
+        public static string LogFolder = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AmongUsCapture", "logs");
         private static Logger logger = LogManager.GetLogger("WPFLogger");
 
         public WPFLogger(MainWindow userForm)

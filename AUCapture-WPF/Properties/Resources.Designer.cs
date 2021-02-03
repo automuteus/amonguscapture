@@ -133,15 +133,6 @@ namespace AUCapture_WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to MENU.
-        /// </summary>
-        public static string GameState_MENU {
-            get {
-                return ResourceManager.GetString("GameState.MENU", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to TASKS.
         /// </summary>
         public static string GameState_TASKS {
@@ -259,7 +250,7 @@ namespace AUCapture_WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to We detected an update to {latestVersion}, But there is no public key in this capture so we will not be able to verify integrity. Please download the latest release off the github page..
+        ///   Looks up a localized string similar to We detected an update to {0}, But there is no public key in this capture so we will not be able to verify integrity. Please download the latest release off the github page..
         /// </summary>
         public static string PrivateKeyErrorMessage {
             get {
@@ -336,6 +327,15 @@ namespace AUCapture_WPF.Properties {
         public static string SettingsAboutTabLatestVersion {
             get {
                 return ResourceManager.GetString("SettingsAboutTabLatestVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open log folder.
+        /// </summary>
+        public static string SettingsDebugOpenLogsFolderButton {
+            get {
+                return ResourceManager.GetString("SettingsDebugOpenLogsFolderButton", resourceCulture);
             }
         }
         
@@ -484,7 +484,7 @@ namespace AUCapture_WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to No thanks.
         /// </summary>
         public static string UpdateNotificationDecline {
             get {
@@ -502,7 +502,9 @@ namespace AUCapture_WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to We&apos;ve detected you&apos;re using an older version of AmongUsCapture!\nYour version: {version}\nLatest version: {latestVersion}.
+        ///   Looks up a localized string similar to We&apos;ve detected you&apos;re using an older version of AmongUsCapture!
+        ///Your version: {0}
+        ///Latest version: {1}.
         /// </summary>
         public static string UpdateNotificationMessage {
             get {

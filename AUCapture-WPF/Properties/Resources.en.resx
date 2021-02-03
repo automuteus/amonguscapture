@@ -1,4 +1,5 @@
-﻿<root>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -104,9 +105,6 @@
   <data name="GameStateTooltip" xml:space="preserve">
     <value>Current status</value>
   </data>
-  <data name="GameState.MENU" xml:space="preserve">
-    <value>MENU</value>
-  </data>
   <data name="GameState.LOBBY" xml:space="preserve">
     <value>LOBBY</value>
   </data>
@@ -168,5 +166,11 @@ Latest version: {1}</value>
   </data>
   <data name="UpdateNotificationUpdate" xml:space="preserve">
     <value>Update</value>
+  </data>
+  <data name="RetryText" xml:space="preserve">
+    <value>retry</value>
+  </data>
+  <data name="SettingsDebugOpenLogsFolderButton" xml:space="preserve">
+    <value>Open log folder</value>
   </data>
 </root>

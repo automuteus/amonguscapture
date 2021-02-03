@@ -32,9 +32,6 @@
   <data name="GameState.LOBBY" xml:space="preserve">
     <value>ЛОББИ</value>
   </data>
-  <data name="GameState.MENU" xml:space="preserve">
-    <value>МЕНЮ</value>
-  </data>
   <data name="GameState.TASKS" xml:space="preserve">
     <value>ЗАДАЧИ</value>
   </data>

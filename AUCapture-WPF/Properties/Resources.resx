@@ -191,9 +191,6 @@
   <data name="GameStateTooltip" xml:space="preserve">
     <value>Current status</value>
   </data>
-  <data name="GameState.MENU" xml:space="preserve">
-    <value>MENU</value>
-  </data>
   <data name="GameState.LOBBY" xml:space="preserve">
     <value>LOBBY</value>
   </data>
@@ -258,5 +255,8 @@ Latest version: {1}</value>
   </data>
   <data name="UpdateNotificationDecline" xml:space="preserve">
     <value>No thanks</value>
+  </data>
+  <data name="SettingsDebugOpenLogsFolderButton" xml:space="preserve">
+    <value>Open log folder</value>
   </data>
 </root>

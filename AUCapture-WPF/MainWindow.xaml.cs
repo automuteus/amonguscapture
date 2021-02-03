@@ -860,5 +860,18 @@ namespace AUCapture_WPF {
         {
             OpenBrowser("https://automute.us/premium");
         }
+
+        private void OpenLogsFolderButton_OnClick(object sender, RoutedEventArgs e) {
+            if (!Directory.Exists(WPFLogger.LogFolder)) return;
+            var startInfo = new ProcessStartInfo
+            {
+                Arguments = WPFLogger.LogFolder,
+                FileName = "explorer.exe"
+            };
+
+            Process.Start(startInfo);
+
+
+        }
     }
 }

@@ -82,9 +82,9 @@ namespace AUCapture_WPF
             Console.WriteLine(string.Join(", ",Assembly.GetExecutingAssembly().GetManifestResourceNames())); //Gets all the embedded resources
             var r = new Random();
             var rValue = r.Next(101);
-            var goingToPop = rValue <= 3;
-            var goingToDouche = rValue == 4;
-            var goingToMonke = rValue <= 7 && rValue > 4;
+            var goingToPop = rValue == 1;
+            var goingToDouche = rValue == 2;
+            var goingToMonke = rValue == 3;
             if (!goingToPop && !goingToDouche && !goingToMonke)
             {
                 if (DateTime.Now.Month == 12)

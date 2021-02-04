@@ -43,6 +43,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\1-1.png" />
+    <None Remove="Resources\1-1.svg" />
     <None Remove="Resources\AutoMuteUs_PK.asc" />
     <None Remove="Icon.ico" />
     <None Remove="Resources\Hats\103-1.png" />
@@ -79,6 +81,7 @@
     <PackageReference Include="Octokit" Version="0.48.0" />
     <PackageReference Include="PgpCore" Version="4.0.1" />
     <PackageReference Include="SharedMemory" Version="2.2.3" />
+    <PackageReference Include="SharpVectors" Version="1.7.1" />
     <PackageReference Include="WpfScreenHelper" Version="1.0.0" />
   </ItemGroup>
 
@@ -99,6 +102,7 @@
 
   <ItemGroup>
     <Resource Include="Icon.ico" />
+    <Resource Include="Resources\1-1.svg" />
     <Resource Include="Resources\AUFont.ttf" />
     <Resource Include="Resources\Misc\AutoBG.png" />
     <Resource Include="Resources\Misc\status-connected.png" />

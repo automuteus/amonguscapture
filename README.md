@@ -19,13 +19,16 @@ AmongUsCapture reads game data of Among Us and communicates with
 
 
 ## Supported versions of Among Us
-| Platform        | Supported? |
+| Version         | Supported? |
 |-----------------|:------------:|
 | Steam           |      ✔️     |
 | Epic Games      |      ✔️     |
 | Itch.io         |      ✔️     |
 | Microsoft store |      ✔️     |
+| Cracked         |     [❌](https://tryitands.ee/)    |
+| Beta            |     [❌](https://tryitands.ee/)    |
 
+> **NOTE:** If there has been a recent update, it *may* not be supported **yet**.
 ## Automatic Installation	
 
 1) Download the latest version of the CaptureInstaller here: <a href="https://github.com/automuteus/capture-install/releases/latest/download/CaptureInstaller.bat"><img alt="GitHub release" src="https://img.shields.io/github/v/release/automuteus/capture-install?color=blue&label=download&style=flat"></a>	

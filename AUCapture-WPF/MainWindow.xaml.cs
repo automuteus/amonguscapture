@@ -151,7 +151,7 @@ namespace AUCapture_WPF {
             }
             Translator.CurrentCultureChanged += TranslatorOnCurrentCultureChanged; 
             context.Players.CollectionChanged += PlayersOnCollectionChanged;
-
+            
             //ApplyDarkMode();
         }
 
@@ -701,6 +701,9 @@ namespace AUCapture_WPF {
                 App.handler.Init(decryptToken(encryptedBuff));
             else
                 AmongUsCapture.Settings.conInterface.WriteModuleTextColored("Discord", Color.Red, "You do not have a self-host discord token set. Enabling this in settings will increase performance.");
+            if (!config.startupMemes) {
+                AmongUsCapture.Settings.conInterface.WriteModuleTextColored("MemeModule", Color.Green, "Memes are disabled :(");
+            }
         }
 
         private void SubmitConnectButton_OnClick(object sender, RoutedEventArgs e) {
@@ -863,15 +866,7 @@ namespace AUCapture_WPF {
 
         private void OpenLogsFolderButton_OnClick(object sender, RoutedEventArgs e) {
             if (!Directory.Exists(WPFLogger.LogFolder)) return;
-            var startInfo = new ProcessStartInfo
-            {
-                Arguments = WPFLogger.LogFolder,
-                FileName = "explorer.exe"
-            };
-
-            Process.Start(startInfo);
-
-
+            Process.Start(new ProcessStartInfo(WPFLogger.LogFolder) {UseShellExecute = true});
         }
     }
 }

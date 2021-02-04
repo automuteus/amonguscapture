@@ -106,7 +106,7 @@ namespace AUCapture_WPF
 
         private void WriteLogLine(string ModuleName, string text)
         {
-            logger.Debug($"{StripColor(ModuleName).ToUpper()} | {StripColor(text)}");
+            logger.Debug($"{StripColor(ModuleName).ToUpper().PadRight(13)} | {StripColor(text)}");
         }
     }
 }

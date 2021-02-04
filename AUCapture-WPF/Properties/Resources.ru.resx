@@ -176,4 +176,7 @@
   <data name="GameState.MENU" xml:space="preserve">
     <value>МЕНЮ</value>
   </data>
+  <data name="SettingsGeneralTabStartupMemes" xml:space="preserve">
+    <value>Мемы при запуске</value>
+  </data>
 </root>

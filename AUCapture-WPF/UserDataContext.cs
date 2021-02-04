@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -37,6 +38,10 @@ namespace AUCapture_WPF
         private ICommand textBoxButtonCopyCmd;
         private ICommand textBoxButtonHelpCmd;
         private ICommand openAmongUsCMD;
+        private ICommand openLogFolderCMD;
+        private ICommand copyLatestLogCMD;
+        private ICommand commandsCMD;
+        private ICommand restartCMD;
         public List<AccentColorMenuData> AccentColors { get; set; }
         private bool? _connected = false;
         public bool? Connected
@@ -175,6 +180,56 @@ namespace AUCapture_WPF
                 }
             }
         };
+        public ICommand OpenLogFolderCmd => openLogFolderCMD ??= new SimpleCommand
+        {
+            CanExecuteDelegate = x => true,
+            ExecuteDelegate = x =>
+            {
+                if (!Directory.Exists(WPFLogger.LogFolder)) return;
+                Process.Start(new ProcessStartInfo(WPFLogger.LogFolder) {UseShellExecute = true});
+
+            }
+        };
+        public ICommand RestartCmd => restartCMD ??= new SimpleCommand
+        {
+            CanExecuteDelegate = x => true,
+            ExecuteDelegate = x =>
+            {
+                Application.Current.Invoke(()=>
+                {
+                    IPCAdapter.getInstance().mutex.ReleaseMutex(); //Release the mutex so the other app does not see us. 
+                    ProcessStartInfo startInfo = new ProcessStartInfo(Process.GetCurrentProcess().MainModule.FileName);
+                    if (StartToken.LastRawToken is not null) {
+                        startInfo.Arguments = $"\"{StartToken.LastRawToken}\"";
+                    }
+                    
+                    Process.Start(startInfo);
+                    Application.Current.Shutdown(0);
+                });
+            }
+        };
+        public ICommand CommandsCMD => commandsCMD ??= new SimpleCommand
+        {
+            CanExecuteDelegate = x => true,
+            ExecuteDelegate = x =>
+            {
+                OpenBrowser("https://automute.us/commands");
+            }
+        };
+        public ICommand CopyLatestLogCMD => copyLatestLogCMD ??= new SimpleCommand
+        {
+            CanExecuteDelegate = x => true,
+            ExecuteDelegate = x =>
+            {
+                if (!Directory.Exists(WPFLogger.LogFolder)) return;
+                if(!File.Exists(Path.Join(WPFLogger.LogFolder, "latest.log"))) return;
+                string logText = File.ReadAllText(Path.Join(WPFLogger.LogFolder, "latest.log"));
+                if (logText.Length <= 1994) {
+                    logText = $"```{logText}```";
+                }
+                Clipboard.SetText(logText);
+            }
+        };
         private ObservableCollection<Player> _players = new ObservableCollection<Player>();
         public ObservableCollection<Player> Players
         {
@@ -185,7 +240,17 @@ namespace AUCapture_WPF
                 OnPropertyChanged();
             }
         }
-
+        private static void OpenBrowser(string url) {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                Process.Start(new ProcessStartInfo(url) {UseShellExecute = true});
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+                Process.Start("xdg-open", url);
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) {
+                Process.Start("open", url);
+            }
+        }
         private ObservableCollection<ConnectionStatus> _connectionStatuses = new ObservableCollection<ConnectionStatus>();
         public ObservableCollection<ConnectionStatus> ConnectionStatuses
         {

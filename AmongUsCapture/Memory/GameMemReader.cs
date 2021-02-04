@@ -269,6 +269,7 @@ namespace AmongUsCapture {
 
                                 try {
                                     GameHash = GetSha256Hash(module.FileName);
+                                    Settings.conInterface.WriteModuleTextColored("OffsetLoader", Color.Red, $"GameAssembly Hash: {GameHash}");
                                     Console.WriteLine($"GameAssembly Hash: {GameHash}");
                                 }
                                 catch (Exception e) {

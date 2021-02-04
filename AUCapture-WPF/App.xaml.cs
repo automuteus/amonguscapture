@@ -12,7 +12,9 @@ using System.Windows.Threading;
 using AmongUsCapture;
 using AmongUsCapture.TextColorLibrary;
 using AUCapture_WPF.IPC;
+using Config.Net;
 using ControlzEx.Theming;
+using Newtonsoft.Json;
 using NLog;
 using NLog.Targets;
 using WpfScreenHelper;
@@ -28,6 +30,7 @@ namespace AUCapture_WPF
     {
         public static readonly ClientSocket socket = new ClientSocket();
         public static readonly DiscordHandler handler = new DiscordHandler();
+        private IAppSettings config;
         
         public void OnTokenHandler(object sender, StartToken token)
         {
@@ -41,12 +44,10 @@ namespace AUCapture_WPF
             try
             {
                 var req = System.Net.WebRequest.Create(URL);
-                using (Stream stream = req.GetResponse().GetResponseStream())
-                {
-                    SoundPlayer myNewSound = new SoundPlayer(stream);
-                    myNewSound.Load();
-                    myNewSound.Play();
-                }
+                using Stream stream = req.GetResponse().GetResponseStream();
+                var myNewSound = new SoundPlayer(stream);
+                myNewSound.Load();
+                myNewSound.Play();
             }
             catch (Exception errrr)
             {
@@ -80,12 +81,27 @@ namespace AUCapture_WPF
                     throw new ArgumentOutOfRangeException();
             }
             Console.WriteLine(string.Join(", ",Assembly.GetExecutingAssembly().GetManifestResourceNames())); //Gets all the embedded resources
+            
+            try {
+                config = new ConfigurationBuilder<IAppSettings>()
+                    .UseJsonFile(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                        "\\AmongUsCapture\\AmongUsGUI", "Settings.json")).Build();
+            }
+            catch (JsonReaderException) //Delete file and recreate config
+            {
+                Console.WriteLine("Bad config. Clearing.");
+                File.Delete(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "\\AmongUsCapture\\AmongUsGUI", "Settings.json"));
+                config = new ConfigurationBuilder<IAppSettings>()
+                    .UseJsonFile(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                        "\\AmongUsCapture\\AmongUsGUI", "Settings.json")).Build();
+            }
+            
             var r = new Random();
             var rValue = r.Next(101);
             var goingToPop = rValue == 1;
             var goingToDouche = rValue == 2;
             var goingToMonke = rValue == 3;
-            if (!goingToPop && !goingToDouche && !goingToMonke)
+            if (!config.startupMemes||(!goingToPop && !goingToDouche && !goingToMonke))
             {
                 if (DateTime.Now.Month == 12)
                 {

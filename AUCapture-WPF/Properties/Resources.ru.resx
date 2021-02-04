@@ -1,4 +1,5 @@
-﻿<root>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -42,13 +43,13 @@
     <value>Текущий статус</value>
   </data>
   <data name="ManualConnectionCode" xml:space="preserve">
-    <value>Код:</value>
+    <value>Код: </value>
   </data>
   <data name="ManualConnectionHeader" xml:space="preserve">
     <value>Ручное Подключение</value>
   </data>
   <data name="ManualConnectionHost" xml:space="preserve">
-    <value>Хост:</value>
+    <value>Хост: </value>
   </data>
   <data name="ManualConnectionSubmitButton" xml:space="preserve">
     <value>ОК</value>
@@ -72,7 +73,7 @@
     <value>Автообновление</value>
   </data>
   <data name="SettingsAboutTabContributorsButton" xml:space="preserve">
-    <value>Отдельное спасибо:</value>
+    <value>Отдельное спасибо: </value>
   </data>
   <data name="SettingsAboutTabContributorsButtonToolTip" xml:space="preserve">
     <value>Показать людей, которые внесли свой вклад в создание</value>

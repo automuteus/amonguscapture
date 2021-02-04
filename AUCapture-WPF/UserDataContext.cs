@@ -185,8 +185,8 @@ namespace AUCapture_WPF
             CanExecuteDelegate = x => true,
             ExecuteDelegate = x =>
             {
-                if (!Directory.Exists(WPFLogger.LogFolder)) return;
-                Process.Start(new ProcessStartInfo(WPFLogger.LogFolder) {UseShellExecute = true});
+                if (!Directory.Exists(App.LogFolder)) return;
+                Process.Start(new ProcessStartInfo(App.LogFolder) {UseShellExecute = true});
 
             }
         };
@@ -221,9 +221,9 @@ namespace AUCapture_WPF
             CanExecuteDelegate = x => true,
             ExecuteDelegate = x =>
             {
-                if (!Directory.Exists(WPFLogger.LogFolder)) return;
-                if(!File.Exists(Path.Join(WPFLogger.LogFolder, "latest.log"))) return;
-                string logText = File.ReadAllText(Path.Join(WPFLogger.LogFolder, "latest.log"));
+                if (!Directory.Exists(App.LogFolder)) return;
+                if(!File.Exists(Path.Join(App.LogFolder, "latest.log"))) return;
+                string logText = File.ReadAllText(Path.Join(App.LogFolder, "latest.log"));
                 if (logText.Length <= 1994) {
                     logText = $"```{logText}```";
                 }

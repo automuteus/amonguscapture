@@ -18,6 +18,7 @@ namespace AmongUsCapture.DBus
 {
     class IPCadapterDBus : IPCAdapter
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private CancellationTokenSource _cancellation = new CancellationTokenSource();
         private bool _serverIsStarted;
         private bool _isHostInstance;
@@ -307,9 +308,8 @@ namespace AmongUsCapture.DBus
 
         private void RespondToDbus(string signalresponse)
         {
-            Settings.conInterface.WriteModuleTextColored("DBus", Color.Silver,
-                $"Received DBus Method Call: \"{signalresponse}\"");
-            
+            Logger.Debug("Received DBus Method Call: {signalresponse}", signalresponse);
+
             var token = StartToken.FromString(signalresponse);
 
             OnTokenEvent(token);

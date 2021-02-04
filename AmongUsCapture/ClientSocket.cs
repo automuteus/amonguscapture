@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
-using AmongUsCapture.TextColorLibrary;
 using Newtonsoft.Json;
+using NLog.Fluent;
 using SocketIOClient;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -9,6 +9,7 @@ namespace AmongUsCapture
 {
     public class ClientSocket
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public event EventHandler<ConnectedEventArgs> OnConnected;
         public event EventHandler OnDisconnected;
 
@@ -34,17 +35,14 @@ namespace AmongUsCapture
             {
                 // Report the connection
                 //Settings.form.setConnectionStatus(true);
-                Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan, "Connected successfully!");
-
-
+                Logger.Info("Connected successfully");
+                
                 // Alert any listeners that the connection has occurred.
                 OnConnected?.Invoke(this, new ConnectedEventArgs() {Uri = socket.ServerUri.ToString()});
 
                 // On each (re)connection, send the connect code and then force-update everything.
-                socket.EmitAsync("connectCode", ConnectCode).ContinueWith((_) =>
-                {
-                    Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
-                        $"Connection code ({Color.Red.ToTextColor()}{ConnectCode}{Settings.conInterface.getNormalColor().ToTextColor()}) sent to server.");
+                socket.EmitAsync("connectCode", ConnectCode).ContinueWith((_) => {
+                    Logger.Debug("Connect code {ConnectCode} sent to server", ConnectCode);
                     GameMemReader.getInstance().ForceUpdatePlayers();
                     GameMemReader.getInstance().ForceTransmitState();
                     GameMemReader.getInstance().ForceTransmitLobby();
@@ -52,8 +50,7 @@ namespace AmongUsCapture
                 if (!(this.handler is null))
                 {
                     socket.EmitAsync("botID", handler.DClient.CurrentUser.Id);
-                    Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
-                        $"{Color.Red.ToTextColor()}Sending BotID: {Color.LightGreen.ToTextColor()}{handler.DClient.CurrentUser.Id}");
+                    Logger.Info("Sent BotID: {BotID} to server", handler.DClient.CurrentUser.Id);
                 }
             };
             socket.On("modify", response =>
@@ -67,15 +64,9 @@ namespace AmongUsCapture
                     return;
                 };
                 var paramString = "";
-                Settings.conInterface.WriteModuleTextColored("Discord", Color.Red,
-                    $"Galactus is asking me to update user {Color.LightGreen.ToTextColor()}{update.UserId}{Settings.conInterface.getNormalColor().ToTextColor()}" +
-                    $" in guild {Color.LightSkyBlue.ToTextColor()}{update.GuildId}{Settings.conInterface.getNormalColor().ToTextColor()}. Params: {JsonConvert.SerializeObject(update.Parameters)}.");
-                handler.UpdateUser(update.GuildId, update.UserId, update.Parameters.Mute, update.Parameters.Deaf).ContinueWith(x =>
-                {
-                    Settings.conInterface.WriteModuleTextColored("Discord", Color.Red,
-                        x.Result
-                            ? $"Telling Galactus Task: {Color.LightSkyBlue.ToTextColor()}{update.TaskId}{Color.LightGreen.ToTextColor()} worked!"
-                            : $"Telling Galactus Task: {Color.LightSkyBlue.ToTextColor()}{update.TaskId}{Color.LightCoral.ToTextColor()} failed!");
+                Logger.Debug("Recieved task: {task}", update);
+                handler.UpdateUser(update.GuildId, update.UserId, update.Parameters.Mute, update.Parameters.Deaf).ContinueWith(x => {
+                    Logger.Debug("Task {TaskID} {$result}", update.TaskId, x.Result ? "completed successfully" : "failed");
                     socket.EmitAsync(x.Result ? "taskComplete" : "taskFailed", update.TaskId);
                 }).Wait();
 
@@ -90,9 +81,8 @@ namespace AmongUsCapture
             {
                 //Settings.form.setConnectionStatus(false);
                 //Settings.conInterface.WriteTextFormatted($"[§bClientSocket§f] Lost connection!");
-                Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
-                    $"{Color.Red.ToTextColor()}Connection lost!");
-
+                Logger.Info("Connection lost");
+                
                 // Alert any listeners that the disconnection has occured.
                 OnDisconnected?.Invoke(this, EventArgs.Empty);
             };
@@ -125,8 +115,8 @@ namespace AmongUsCapture
                 try
                 {
                     socket.EmitAsync("botID", handler.DClient.CurrentUser.Id);
-                    Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
-                        $"{Color.Red.ToTextColor()}Sending BotID: {Color.LightGreen.ToTextColor()}{handler.DClient.CurrentUser.Id}");
+                    Logger.Info("Sent BotID: {BotID}", handler.DClient.CurrentUser.Id);
+                    
                 }
                 catch
                 {
@@ -138,8 +128,7 @@ namespace AmongUsCapture
         private void OnConnectionFailure(AggregateException e = null)
         {
             var message = e != null ? e.Message : "A generic connection error occured.";
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
-                $"{Color.Red.ToTextColor()}{message}");
+            Logger.Error(e.Message);
         }
 
         public void Connect(string url, string connectCode)
@@ -187,8 +176,7 @@ namespace AmongUsCapture
         {
             if (!socket.Connected) return;
             socket.EmitAsync("lobby", JsonSerializer.Serialize(e));
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
-                $"Room code ({Color.Yellow.ToTextColor()}{e.LobbyCode}{Settings.conInterface.getNormalColor().ToTextColor()}) sent to server.");
+            Logger.Debug("Room code {roomCode} sent to server", e.LobbyCode);
         }
 
         private void GameOverHandler(object sender, GameOverEventArgs e)

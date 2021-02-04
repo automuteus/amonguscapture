@@ -24,15 +24,17 @@ namespace AmongUsCapture
             EventData = JsonConvert.SerializeObject(eventData);
         }
     }
+    
     public class Regrets : WebSocketBehavior
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         protected override void OnOpen ()
         {
             GameMemReader.getInstance().GameStateChanged += GameStateChangedHandler;
             GameMemReader.getInstance().PlayerChanged += PlayerChangedHandler;
             GameMemReader.getInstance().JoinedLobby += JoinedLobbyHandler;
             GameMemReader.getInstance().GameOver += GameOverHandler;
-            Settings.conInterface.WriteModuleTextColored("APIServer", Color.Brown, "New connection");
+            Logger.Debug("New connection to API server");
         }
 
         private void GameOverHandler(object? sender, GameOverEventArgs e)
@@ -61,7 +63,7 @@ namespace AmongUsCapture
             GameMemReader.getInstance().PlayerChanged -= PlayerChangedHandler;
             GameMemReader.getInstance().JoinedLobby -= JoinedLobbyHandler;
             GameMemReader.getInstance().GameOver -= GameOverHandler;
-            Settings.conInterface.WriteModuleTextColored("APIServer", Color.Brown, "Connection terminated");
+            Logger.Info("Connection terminated on API server");
         }
     }
     public class ServerSocket

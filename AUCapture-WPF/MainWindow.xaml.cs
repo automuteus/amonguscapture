@@ -1,5 +1,4 @@
 ﻿using AmongUsCapture;
-using AmongUsCapture.TextColorLibrary;
 using AUCapture_WPF.IPC;
 using Config.Net;
 using ControlzEx.Theming;
@@ -42,6 +41,7 @@ using HandyControl.Tools.Extension;
 using Humanizer;
 using PgpCore;
 using Microsoft.Win32;
+using NLog;
 using Color = System.Drawing.Color;
 using PlayerColor = AmongUsCapture.PlayerColor;
 
@@ -51,7 +51,7 @@ namespace AUCapture_WPF {
     /// </summary>
     public partial class MainWindow {
         public Color NormalTextColor = Color.White;
-
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly IAppSettings config;
 
         public UserDataContext context;
@@ -111,8 +111,8 @@ namespace AUCapture_WPF {
             GameMemReader.getInstance().ProcessHook += OnProcessHook;
             GameMemReader.getInstance().PlayerChanged += UserForm_PlayerChanged;
             GameMemReader.getInstance().PlayerCosmeticChanged += OnPlayerCosmeticChanged;
+            GameMemReader.getInstance().CrackDetected += OnCrackDetected;
             App.handler.OnReady += HandlerOnOnReady;
-            GameMemReader.getInstance().ChatMessageAdded += OnChatMessageAdded;
             GameMemReader.getInstance().JoinedLobby += OnJoinedLobby;
             GameMemReader.getInstance().GameOver += OnGameOver;
             App.socket.OnConnected += SocketOnOnConnected;
@@ -151,8 +151,25 @@ namespace AUCapture_WPF {
             }
             Translator.CurrentCultureChanged += TranslatorOnCurrentCultureChanged; 
             context.Players.CollectionChanged += PlayersOnCollectionChanged;
-
+            
             //ApplyDarkMode();
+        }
+
+        private void OnCrackDetected(object? sender, EventArgs e) {
+            var x = context.DialogCoordinator.ShowMessageAsync(context, "Crack detected", "We have detected that you are running an unsupported version of the game. This may or may not work.",MessageDialogStyle.AffirmativeAndNegative,
+                new MetroDialogSettings
+                {
+                    AffirmativeButtonText = "Continue", NegativeButtonText = "Exit",
+                    ColorScheme = MetroDialogColorScheme.Theme,
+                    DefaultButtonFocus = MessageDialogResult.Negative
+                }).ConfigureAwait(false).GetAwaiter().GetResult();
+            if (x == MessageDialogResult.Negative) {
+                Environment.Exit(0);
+            }
+            else {
+                GameMemReader.getInstance().cracked = false;
+            }
+            
         }
 
         private void TranslatorOnCurrentCultureChanged(object? sender, CultureChangedEventArgs e) {
@@ -484,16 +501,10 @@ namespace AUCapture_WPF {
                     if (e.Action == PlayerAction.Joined) Dispatcher.Invoke(() => { context.Players.Add(new Player(e.Name, e.Color, !e.IsDead, 0, 0, 0)); });
                 }
             }
-
-            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
+            Logger.Debug("{@e}", e);
         }
 
 
-        private void OnChatMessageAdded(object sender, ChatMessageEventArgs e) {
-            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("CHAT", Color.DarkKhaki,
-                $"{PlayerColorToColorOBJ(e.Color).ToTextColor()}{e.Sender}{NormalTextColor.ToTextColor()}: {e.Message}");
-            //WriteLineToConsole($"[CHAT] {e.Sender}: {e.Message}");
-        }
 
 
         private void OnJoinedLobby(object sender, LobbyEventArgs e) {
@@ -612,9 +623,7 @@ namespace AUCapture_WPF {
                 var playerToKill = DeadMessages.Dequeue();
                 if (context.Players.Contains(playerToKill)) playerToKill.Alive = false;
             }
-
-            AmongUsCapture.Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime,
-                $"State changed to {Color.Cyan.ToTextColor()}{e.NewState}");
+            Logger.Info("State change: {@e}", e);
             if (e.NewState == GameState.MENU) {
                 setGameCode("");
                 Dispatcher.Invoke(() => {
@@ -700,7 +709,10 @@ namespace AUCapture_WPF {
             if (decryptToken(encryptedBuff) != "")
                 App.handler.Init(decryptToken(encryptedBuff));
             else
-                AmongUsCapture.Settings.conInterface.WriteModuleTextColored("Discord", Color.Red, "You do not have a self-host discord token set. Enabling this in settings will increase performance.");
+                Logger.Info("No discord token set");
+            if (!config.startupMemes) {
+                Logger.Info("Meme Module disabled :(");
+            }
         }
 
         private void SubmitConnectButton_OnClick(object sender, RoutedEventArgs e) {
@@ -797,11 +809,11 @@ namespace AUCapture_WPF {
             if (!(sender is ToggleSwitch toggleSwitch)) return;
 
             if (config.ApiServer) {
-                AmongUsCapture.Settings.conInterface.WriteModuleTextColored("APIServer", Color.Brown, "Starting server");
+                Logger.Info("API server starting");
                 ServerSocket.instance.Start();
             }
             else {
-                AmongUsCapture.Settings.conInterface.WriteModuleTextColored("APIServer", Color.Brown, "Stopping server");
+                Logger.Info("API server stopping");
                 ServerSocket.instance.Stop();
             }
         }
@@ -862,16 +874,8 @@ namespace AUCapture_WPF {
         }
 
         private void OpenLogsFolderButton_OnClick(object sender, RoutedEventArgs e) {
-            if (!Directory.Exists(WPFLogger.LogFolder)) return;
-            var startInfo = new ProcessStartInfo
-            {
-                Arguments = WPFLogger.LogFolder,
-                FileName = "explorer.exe"
-            };
-
-            Process.Start(startInfo);
-
-
+            if (!Directory.Exists(App.LogFolder)) return;
+            Process.Start(new ProcessStartInfo(App.LogFolder) {UseShellExecute = true});
         }
     }
 }

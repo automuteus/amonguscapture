@@ -133,7 +133,7 @@ namespace AUCapture_WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to MENU.
         /// </summary>
         public static string GameState_MENU {
             get {
@@ -462,6 +462,15 @@ namespace AUCapture_WPF.Properties {
         public static string SettingsGeneralTabLanguageHeader {
             get {
                 return ResourceManager.GetString("SettingsGeneralTabLanguageHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string SettingsGeneralTabStartupMemes {
+            get {
+                return ResourceManager.GetString("SettingsGeneralTabStartupMemes", resourceCulture);
             }
         }
         

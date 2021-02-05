@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using AmongUsCapture.Memory.Structs;
-using AmongUsCapture.TextColorLibrary;
 using AUOffsetManager;
+using Discord;
 using Newtonsoft.Json;
+using NLog.Fluent;
+using Color = System.Drawing.Color;
 
 namespace AmongUsCapture {
     public class GameMemReader {
         private static readonly GameMemReader instance = new();
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly Dictionary<string, ImmutablePlayer> CachedPlayerInfos = new();
 
-        private bool cracked;
+        public bool cracked;
         public GameOffsets CurrentOffsets;
         private bool exileCausesEnd;
         private IntPtr GameAssemblyPtr = IntPtr.Zero;
@@ -51,6 +53,8 @@ namespace AmongUsCapture {
         public event EventHandler<LobbyEventArgs> JoinedLobby;
         public event EventHandler<ProcessHookArgs> ProcessHook;
         public event EventHandler<ProcessHookArgs> ProcessUnHook;
+        
+        public event EventHandler CrackDetected;
         public event EventHandler<GameOverEventArgs> GameOver;
         public event EventHandler<PlayerCosmeticChangedEventArgs> PlayerCosmeticChanged;
         private GameState GetGameState(ProcessMemory memInstance) {
@@ -253,23 +257,21 @@ namespace AmongUsCapture {
                                 Thread.Sleep(1000);
                                 continue;
                             }
-
-                            Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"Connected to Among Us process ({Color.Red.ToTextColor()}{ProcessMemory.getInstance().process.Id}{Settings.conInterface.getNormalColor().ToTextColor()})");
-
+                            Logger.Info("Connected to Among Us process ({pid})", ProcessMemory.getInstance().process.Id);
                             foreach (var module in ProcessMemory.getInstance().modules.Where(module => module.Name.Equals("GameAssembly.dll", StringComparison.OrdinalIgnoreCase))) {
                                 GameAssemblyPtr = module.BaseAddress;
                                 if (!GameVerifier.VerifySteamHash(module.FileName)) {
                                     cracked = true;
-                                    Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red, $"Client verification: {Color.Red.ToTextColor()}FAIL{Settings.conInterface.getNormalColor().ToTextColor()}.");
+                                    Logger.Info("Client verification: {$status}", "FAIL");
                                 }
                                 else {
                                     cracked = false;
-                                    Settings.conInterface.WriteModuleTextColored("GameVerifier", Color.Red, $"Client verification: {Color.Lime.ToTextColor()}PASS{Settings.conInterface.getNormalColor().ToTextColor()}.");
+                                    Logger.Info("Client verification: {$status}", "PASS");
                                 }
 
                                 try {
                                     GameHash = GetSha256Hash(module.FileName);
-                                    Console.WriteLine($"GameAssembly Hash: {GameHash}");
+                                    Logger.Info("GameAssembly sha256: {GameHash}", GameHash);
                                 }
                                 catch (Exception e) {
                                     cracked = false;
@@ -278,14 +280,11 @@ namespace AmongUsCapture {
 
                                 CurrentOffsets = offMan.FetchForHash(GameHash);
                                 if (CurrentOffsets is not null) {
-                                    Settings.conInterface.WriteModuleTextColored("GameMemReader",
-                                        Color.Lime, $"Loaded offsets: {CurrentOffsets.Description}");
+                                    Logger.Info("Loaded offsets: {offsetDescription}", CurrentOffsets.Description);
                                     ProcessHook?.Invoke(this, new ProcessHookArgs {PID = ProcessMemory.getInstance().process.Id});
                                 }
                                 else {
-                                    Settings.conInterface.WriteModuleTextColored("GameMemReader",
-                                        Color.Lime,
-                                        $"No offsets found for: {Color.Aqua.ToTextColor()}{GameHash}{Settings.conInterface.getNormalColor().ToTextColor()}.");
+                                    Logger.Fatal("No offsets found for hash: {GameHash}", GameHash);
                                 }
 
                                 foundModule = true;
@@ -293,21 +292,16 @@ namespace AmongUsCapture {
                             }
 
                             if (foundModule) continue;
-                            Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, "Still looking for modules...");
+                            Logger.Info("Still looking for modules... (Failed hook)");
                             Thread.Sleep(500); // delay and try again
                             ProcessMemory.getInstance().LoadModules();
                         }
 
-                        if (CurrentOffsets is null) Settings.conInterface.WriteModuleTextColored("ERROR", Color.Red, "Outdated version of the game.");
+                        if (CurrentOffsets is null) Logger.Error("Outdated version of the game");
                     }
 
                     if (cracked && ProcessMemory.getInstance().IsHooked) {
-                        var result = Settings.conInterface.CrackDetected();
-                        if (!result)
-                            Environment.Exit(0);
-                        else
-                            cracked = false;
-                        continue;
+                        CrackDetected?.Invoke(this, EventArgs.Empty);
                     }
 
                     if (CurrentOffsets is null) continue;
@@ -455,8 +449,7 @@ namespace AmongUsCapture {
 
                     Thread.Sleep(250);
                 } catch (Exception e) {
-                    Settings.conInterface.WriteModuleTextColored("ERROR", Color.Red, $"Message: {e.Message} | stack: {e.StackTrace} | Retrying in 1000ms.");
-                    Console.WriteLine(e);
+                    Logger.Error(e);
                     Thread.Sleep(1000);
                 }
             }

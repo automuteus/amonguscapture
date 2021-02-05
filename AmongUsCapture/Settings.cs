@@ -9,8 +9,6 @@ namespace AmongUsCapture
     {
         public static string StorageLocation = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AmongUsCapture");
 
-        public static IConsoleInterface conInterface;
-
         //Global persistent settings that are saved to a json file. Limited Types
         public static IPersistentSettings PersistentSettings;
 

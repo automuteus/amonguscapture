@@ -63,13 +63,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TrimmerRootAssembly Include="System.Runtime" />
-    <TrimmerRootAssembly Include="System.Runtime.Extensions" />
-    <TrimmerRootAssembly Include="System.Windows.Forms" />
-    <TrimmerRootAssembly Include="System.Runtime.InteropServices" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Config.Net" Version="4.15.0" />
     <PackageReference Include="Config.Net.Json" Version="4.15.0" />
     <PackageReference Include="Gu.Wpf.Localization" Version="6.7.0" />
@@ -77,7 +70,7 @@
     <PackageReference Include="Humanizer.Core" Version="2.8.26" />
     <PackageReference Include="LoadingIndicators.WPF.Core" Version="1.0.1" />
     <PackageReference Include="MahApps.Metro" Version="2.4.3" />
-    <PackageReference Include="NLog" Version="4.7.6" />
+    <PackageReference Include="NLog" Version="4.7.7" />
     <PackageReference Include="Octokit" Version="0.48.0" />
     <PackageReference Include="PgpCore" Version="4.0.1" />
     <PackageReference Include="SharedMemory" Version="2.2.3" />

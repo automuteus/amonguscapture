@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Cache;
 using System.Runtime.CompilerServices;
@@ -9,7 +10,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using SharpVectors.Converters;
+using SharpVectors.Renderers;
+using SharpVectors.Renderers.Wpf;
 
 namespace AUCapture_WPF.Controls
 {

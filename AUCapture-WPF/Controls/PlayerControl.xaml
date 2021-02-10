@@ -17,6 +17,7 @@
     <UserControl.Resources>
         <converters1:PlayerToImage x:Key="PlayerToImage" />
         <converters1:PantsConverter x:Key="PantsConverter" />
+        <converters1:HatToStream x:Key="HatToStream" />
         <converters1:HatToImage x:Key="HatToImage" />
         <converters1:HatToZ x:Key="HatToZ" />
         <converters1:PetToImageConverter x:Key="PetToIm" />
@@ -56,7 +57,7 @@
                     </auCaptureWpf:BasePlayerGenerator.Alive>
                 </auCaptureWpf:BasePlayerGenerator>
 
-                <controls:CachedImage
+                <svgc:SvgViewbox
                     x:Name="Pants"
                     Width="148"
                     Height="198"
@@ -64,7 +65,7 @@
                     VerticalAlignment="Bottom"
                     Panel.ZIndex="1"
                     Stretch="Uniform">
-                    <controls:CachedImage.ImageUrl>
+                    <svgc:SvgViewbox.StreamSource>
                         <MultiBinding Converter="{StaticResource PantsConverter}">
                             <Binding
                                 Delay="100"
@@ -77,16 +78,16 @@
                                 IsAsync="True"
                                 Path="AliveStatus" />
                         </MultiBinding>
-                    </controls:CachedImage.ImageUrl>
-                </controls:CachedImage>
-                <controls:CachedImage
+                    </svgc:SvgViewbox.StreamSource>
+                </svgc:SvgViewbox>
+                <svgc:SvgViewbox
                     Width="212"
                     Margin="0,0,0,0"
                     VerticalAlignment="Bottom"
                     Panel.ZIndex="{Binding ElementName=PlayerControlWindow, Path=PlayerHatID, Converter={StaticResource HatToZ}}"
                     Stretch="Uniform">
-                    <controls:CachedImage.ImageUrl>
-                        <MultiBinding Converter="{StaticResource HatToImage}">
+                    <svgc:SvgViewbox.StreamSource>
+                        <MultiBinding Converter="{StaticResource HatToStream}">
                             <Binding
                                 Delay="100"
                                 ElementName="PlayerControlWindow"
@@ -98,15 +99,15 @@
                                 IsAsync="True"
                                 Path="AliveStatus" />
                         </MultiBinding>
-                    </controls:CachedImage.ImageUrl>
-                </controls:CachedImage>
-                <controls:CachedImage
+                    </svgc:SvgViewbox.StreamSource>
+                </svgc:SvgViewbox>
+                <svgc:SvgViewbox
                     Width="212"
                     Margin="0,0,0,0"
                     VerticalAlignment="Bottom"
                     Panel.ZIndex="1"
                     Stretch="Uniform">
-                    <controls:CachedImage.ImageUrl>
+                    <svgc:SvgViewbox.StreamSource>
                         <MultiBinding Converter="{StaticResource PetToIm}">
                             <Binding
                                 Delay="100"
@@ -119,8 +120,8 @@
                                 IsAsync="True"
                                 Path="AliveStatus" />
                         </MultiBinding>
-                    </controls:CachedImage.ImageUrl>
-                </controls:CachedImage>
+                    </svgc:SvgViewbox.StreamSource>
+                </svgc:SvgViewbox>
             </Grid>
         </Viewbox>
 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 using AmongUsCapture;
+using AUCapture_WPF.Controls;
 
 namespace AUCapture_WPF.Converters
 {
@@ -21,11 +22,15 @@ namespace AUCapture_WPF.Converters
                 var alive = values[1] as bool? ?? false;
                 if (pantID == 0)
                 {
-                    return "";
+                    return null;
+                }
+                if (pantID <= 0 || pantID > 15)
+                {
+                    return null;
                 }
                 return !alive
-                    ? ""
-                    : $"https://cdn.automute.us/Pants/{pantID}.png";
+                    ? null
+                    : FileCache.Hit($"https://CDN.automute.us/svg/Pants/{pantID}.svg");;
             } 
             
             return "";

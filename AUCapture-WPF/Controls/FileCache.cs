@@ -48,6 +48,90 @@ namespace AUCapture_WPF.Controls
         /// </summary>
         public static CacheMode AppCacheMode { get; set; }
 
+        public static MemoryStream Hit(string url)
+        {
+            if (!Directory.Exists(AppCacheDirectory))
+            {
+                Directory.CreateDirectory(AppCacheDirectory);
+            }
+
+            if (!Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
+            {
+                return null;
+            }
+
+            var fileNameBuilder = new StringBuilder();
+            using (var sha1 = new SHA1Managed())
+            {
+                var canonicalUrl = uri.ToString();
+                var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(canonicalUrl));
+                fileNameBuilder.Append(BitConverter.ToString(hash).Replace("-", "").ToLower());
+
+                if (Path.HasExtension(canonicalUrl))
+                {
+                    fileNameBuilder.Append(Path.GetExtension(canonicalUrl.Split('?')[0]));
+                }
+            }
+
+            var fileName = fileNameBuilder.ToString();
+            var localFile = Path.Combine(AppCacheDirectory, fileName);
+            var memoryStream = new MemoryStream();
+
+            FileStream fileStream = null;
+            if (!_isWritingFile.ContainsKey(fileName) && File.Exists(localFile))
+            {
+                using (fileStream = new FileStream(localFile, FileMode.Open, FileAccess.Read))
+                {
+                    fileStream.CopyTo(memoryStream);
+                }
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                return memoryStream;
+            }
+
+            try
+            {
+                var responseStream = _httpClient.GetStreamAsync(uri).Result;
+
+                if (responseStream == null)
+                {
+                    return null;
+                }
+
+                if (!_isWritingFile.ContainsKey(fileName))
+                {
+                    _isWritingFile[fileName] = true;
+                    fileStream = new FileStream(localFile, FileMode.Create, FileAccess.Write);
+                }
+
+                using (responseStream)
+                {
+                    var bytebuffer = new byte[1024];
+                    int bytesRead;
+                    do
+                    {
+                        bytesRead = responseStream.Read(bytebuffer, 0, 1024);
+                        if (fileStream != null)
+                        {
+                            fileStream.Write(bytebuffer, 0, bytesRead);
+                        }
+
+                        memoryStream.Write(bytebuffer, 0, bytesRead);
+                    } while (bytesRead > 0);
+                    if (fileStream != null)
+                    {
+                        fileStream.Flush();
+                        fileStream.Dispose();
+                        _isWritingFile.Remove(fileName);
+                    }
+                }
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                return memoryStream;
+            }
+            catch (HttpRequestException)
+            {
+                return null;
+            }
+        }
 
 
         public static async Task<MemoryStream> HitAsync(string url)

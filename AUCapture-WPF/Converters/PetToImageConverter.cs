@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using AUCapture_WPF.Controls;
 
 namespace AUCapture_WPF.Converters
 {
@@ -17,13 +18,16 @@ namespace AUCapture_WPF.Converters
         {
             var petID = values[0] as uint? ?? 0;
             var alive = values[1] as bool? ?? false;
-            if (petID == 0)
+            if (petID <= 0 || petID > 11)
             {
-                return "";
+                return null;
             }
             return !alive
-                ? ""
-                : $"https://cdn.automute.us/Pets/{petID}.png";
+                ? null
+                : FileCache.Hit($"https://CDN.automute.us/svg/Pets/{petID}.svg");
+            //return !alive
+            //    ? null
+            //    : $"https://cdn.automute.us/Pets/{petID}.png";
         }
 
 

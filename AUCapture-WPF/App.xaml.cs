@@ -120,11 +120,16 @@ namespace AUCapture_WPF
             var goingToPop = rValue == 1;
             var goingToDouche = rValue == 2;
             var goingToMonke = rValue == 3;
-            if (!config.startupMemes||(!goingToPop && !goingToDouche && !goingToMonke))
+            var Valentines = DateTime.UtcNow >= new DateTime(2021, 2, 7) && DateTime.UtcNow <= new DateTime(2021, 2, 20);  
+            if (!config.startupMemes||(!goingToPop && !goingToDouche && !goingToMonke)||Valentines)
             {
                 if (DateTime.Now.Month == 12)
                 {
                     new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenChristmas.png").Show(true);
+                }
+                else if (Valentines)
+                {
+                    new SplashScreen(Assembly.GetExecutingAssembly(), "SplashScreens\\SplashScreenLovely.png").Show(true);
                 }
                 else
                 {

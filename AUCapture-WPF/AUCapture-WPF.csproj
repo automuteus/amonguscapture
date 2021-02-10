@@ -52,7 +52,9 @@
     <None Remove="Resources\Misc\Transparent_Nebula.png" />
     <None Remove="Resources\Misc\voteCancel.png" />
     <None Remove="Resources\Misc\voteConfirm.png" />
+    <None Remove="SplashScreens\capture-splashscreen-lovely.png" />
     <None Remove="SplashScreens\SplashScreenDouche.png" />
+    <None Remove="SplashScreens\SplashScreenLovely.png" />
     <None Remove="SplashScreens\SplashScreenMonke.png" />
   </ItemGroup>
 
@@ -98,6 +100,7 @@
     <Resource Include="Resources\Misc\status-disconnected.png" />
     <Resource Include="SplashScreens\SplashScreenChristmas.png" />
     <Resource Include="SplashScreens\SplashScreenDouche.png" />
+    <Resource Include="SplashScreens\SplashScreenLovely.png" />
     <Resource Include="SplashScreens\SplashScreenMonke.png" />
     <Resource Include="SplashScreens\SplashScreenNormal.png" />
     <Resource Include="SplashScreens\SplashScreenPop.png" />

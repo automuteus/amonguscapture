@@ -253,7 +253,7 @@ namespace AUCapture_WPF.Converters
                 return null;
             }
             var finalName = hatID + "-" + Hats[(hatID%95).ToString()];
-            var stream = FileCache.Hit($"https://carbun.xyz/CDN/SVGHats/{finalName}.svg");
+            var stream = FileCache.Hit($"https://carbun.xyz/CDN/SVG/Hats/{finalName}.svg");
             return stream;
         }
 

@@ -24,7 +24,7 @@ namespace AUCapture_WPF.Converters
             }
             return !alive
                 ? null
-                : FileCache.Hit($"https://carbun.xyz/CDN/SVGPets/{petID}.svg");
+                : FileCache.Hit($"https://carbun.xyz/CDN/SVG/Pets/{petID}.svg");
             //return !alive
             //    ? null
             //    : $"https://cdn.automute.us/Pets/{petID}.png";

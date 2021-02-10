@@ -26,7 +26,7 @@ namespace AUCapture_WPF.Converters
                 }
                 return !alive
                     ? null
-                    : FileCache.Hit($"https://carbun.xyz/CDN/SVGPants/{pantID}.svg");;
+                    : FileCache.Hit($"https://carbun.xyz/CDN/SVG/Pants/{pantID}.svg");;
             } 
             
             return "";

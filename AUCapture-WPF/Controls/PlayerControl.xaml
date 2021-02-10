@@ -57,7 +57,7 @@
                     </auCaptureWpf:BasePlayerGenerator.Alive>
                 </auCaptureWpf:BasePlayerGenerator>
 
-                <controls:CachedImage
+                <svgc:SvgViewbox
                     x:Name="Pants"
                     Width="148"
                     Height="198"
@@ -65,7 +65,7 @@
                     VerticalAlignment="Bottom"
                     Panel.ZIndex="1"
                     Stretch="Uniform">
-                    <controls:CachedImage.ImageUrl>
+                    <svgc:SvgViewbox.StreamSource>
                         <MultiBinding Converter="{StaticResource PantsConverter}">
                             <Binding
                                 Delay="100"
@@ -78,8 +78,8 @@
                                 IsAsync="True"
                                 Path="AliveStatus" />
                         </MultiBinding>
-                    </controls:CachedImage.ImageUrl>
-                </controls:CachedImage>
+                    </svgc:SvgViewbox.StreamSource>
+                </svgc:SvgViewbox>
                 <svgc:SvgViewbox
                     Width="212"
                     Margin="0,0,0,0"
@@ -101,13 +101,13 @@
                         </MultiBinding>
                     </svgc:SvgViewbox.StreamSource>
                 </svgc:SvgViewbox>
-                <controls:CachedImage
+                <svgc:SvgViewbox
                     Width="212"
                     Margin="0,0,0,0"
                     VerticalAlignment="Bottom"
                     Panel.ZIndex="1"
                     Stretch="Uniform">
-                    <controls:CachedImage.ImageUrl>
+                    <svgc:SvgViewbox.StreamSource>
                         <MultiBinding Converter="{StaticResource PetToIm}">
                             <Binding
                                 Delay="100"
@@ -120,8 +120,8 @@
                                 IsAsync="True"
                                 Path="AliveStatus" />
                         </MultiBinding>
-                    </controls:CachedImage.ImageUrl>
-                </controls:CachedImage>
+                    </svgc:SvgViewbox.StreamSource>
+                </svgc:SvgViewbox>
             </Grid>
         </Viewbox>
 

@@ -172,4 +172,7 @@
   <data name="GameState.MENU" xml:space="preserve">
     <value>メニュー</value>
   </data>
+  <data name="SettingsDebugOpenLogsFolderButton" xml:space="preserve">
+    <value>ログ保存フォルダーを開く</value>
+  </data>
 </root>

@@ -129,7 +129,7 @@ namespace AUCapture_WPF.Converters
                 return "";
             }
             var finalName = hatID + "-" + Hats[(hatID%95).ToString()];
-            return $"https://carbun.xyz/CDN/1-1.svg";
+            return $"https://CDN.automute.us/SVG/Hats/1-1.svg";
 
 
         }
@@ -248,12 +248,13 @@ namespace AUCapture_WPF.Converters
             }
 
             
-            if (hatID == 0)
+            if (hatID <= 0 || hatID > 94)
             {
                 return null;
             }
-            var finalName = hatID + "-" + Hats[(hatID%95).ToString()];
-            var stream = FileCache.Hit($"https://carbun.xyz/CDN/SVG/Hats/{finalName}.svg");
+
+            var finalName = hatID + "-" + Hats[(hatID).ToString()];
+            var stream = FileCache.Hit($"https://CDN.automute.us/svg/Hats/{finalName}.svg");
             return stream;
         }
 

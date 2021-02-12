@@ -1,4 +1,5 @@
-﻿<root>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -42,13 +43,13 @@
     <value>ステータス</value>
   </data>
   <data name="ManualConnectionCode" xml:space="preserve">
-    <value>コード:</value>
+    <value>コード: </value>
   </data>
   <data name="ManualConnectionHeader" xml:space="preserve">
     <value>手動接続</value>
   </data>
   <data name="ManualConnectionHost" xml:space="preserve">
-    <value>ホスト:</value>
+    <value>ホスト: </value>
   </data>
   <data name="ManualConnectionSubmitButton" xml:space="preserve">
     <value>登録</value>
@@ -78,7 +79,7 @@
     <value>自動更新</value>
   </data>
   <data name="SettingsAboutTabContributorsButton" xml:space="preserve">
-    <value>コントリビューター:</value>
+    <value>コントリビューター: </value>
   </data>
   <data name="SettingsAboutTabContributorsButtonToolTip" xml:space="preserve">
     <value>コントリビューターを表示</value>

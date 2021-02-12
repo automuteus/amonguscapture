@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using AUCapture_WPF.IPC.RpcBuffer;
+using NLog;
 
 namespace AUCapture_WPF.IPC
 {
@@ -52,11 +53,12 @@ namespace AUCapture_WPF.IPC
     {
         public string Host { get; set; }
         public string ConnectCode { get; set; }
+        public static string LastRawToken { get; set; }
 
         public static StartToken FromString(string rawToken)
         {
-            try
-            {
+            try {
+                LastRawToken = rawToken;
                 rawToken = new string(rawToken.Where(c => !char.IsControl(c)).ToArray());
                 Uri uri = new Uri(rawToken);
                 NameValueCollection nvc = HttpUtility.ParseQueryString(uri.Query);

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Media;
+using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -10,9 +11,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using AmongUsCapture;
-using AmongUsCapture.TextColorLibrary;
 using AUCapture_WPF.IPC;
+using Config.Net;
 using ControlzEx.Theming;
+using Newtonsoft.Json;
 using NLog;
 using NLog.Targets;
 using WpfScreenHelper;
@@ -28,11 +30,31 @@ namespace AUCapture_WPF
     {
         public static readonly ClientSocket socket = new ClientSocket();
         public static readonly DiscordHandler handler = new DiscordHandler();
-        
+        private IAppSettings config;
+        public static string LogFolder = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AmongUsCapture", "logs");
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        public void SetupLoggingConfig() {
+            var LoggingConfig = new NLog.Config.LoggingConfiguration();
+            FileVersionInfo v = FileVersionInfo.GetVersionInfo(App.GetExecutablePath());
+            var logfile = new NLog.Targets.FileTarget("logfile")
+            {
+                FileName = "${specialfolder:folder=ApplicationData:cached=true}/AmongUsCapture/logs/latest.log",
+                ArchiveFileName= "${specialfolder:folder=ApplicationData:cached=true}/AmongUsCapture/logs/{#}.log",
+                ArchiveNumbering= ArchiveNumberingMode.Date,
+                Layout = "${time:universalTime=True}|${level:uppercase=true}|${logger}|${message}",
+                MaxArchiveFiles = 100,
+                ArchiveOldFileOnStartup = true,
+                ArchiveDateFormat= "yyyy-MM-dd HH_mm_ss",
+                Header = $"Capture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}\n",
+                Footer = $"\nCapture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}"
+            };
+            LoggingConfig.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
+            NLog.LogManager.Configuration = LoggingConfig;
+        }
         public void OnTokenHandler(object sender, StartToken token)
         {
-            Settings.conInterface.WriteModuleTextColored("ClientSocket", Color.Cyan,
-                $"Attempting to connect to host {Color.LimeGreen.ToTextColor()}{token.Host}{Color.White.ToTextColor()} with connect code {Color.Red.ToTextColor()}{token.ConnectCode}{Color.White.ToTextColor()}");
+            Logger.Info("Attempting to connect to host: {host} with connect code: {connectCode}", token.Host, token.ConnectCode);
             socket.Connect(token.Host, token.ConnectCode);
         }
 
@@ -40,13 +62,11 @@ namespace AUCapture_WPF
         {
             try
             {
-                var req = System.Net.WebRequest.Create(URL);
-                using (Stream stream = req.GetResponse().GetResponseStream())
-                {
-                    SoundPlayer myNewSound = new SoundPlayer(stream);
-                    myNewSound.Load();
-                    myNewSound.Play();
-                }
+                var req = WebRequest.Create(URL);
+                using Stream stream = req.GetResponse().GetResponseStream();
+                var myNewSound = new SoundPlayer(stream);
+                myNewSound.Load();
+                myNewSound.Play();
             }
             catch (Exception errrr)
             {
@@ -57,7 +77,7 @@ namespace AUCapture_WPF
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
+            SetupLoggingConfig();
             var args = e.Args;
 
              // needs to be the first call in the program to prevent weird bugs
@@ -80,12 +100,27 @@ namespace AUCapture_WPF
                     throw new ArgumentOutOfRangeException();
             }
             Console.WriteLine(string.Join(", ",Assembly.GetExecutingAssembly().GetManifestResourceNames())); //Gets all the embedded resources
+            
+            try {
+                config = new ConfigurationBuilder<IAppSettings>()
+                    .UseJsonFile(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                        "\\AmongUsCapture\\AmongUsGUI", "Settings.json")).Build();
+            }
+            catch (JsonReaderException) //Delete file and recreate config
+            {
+                Console.WriteLine("Bad config. Clearing.");
+                File.Delete(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "\\AmongUsCapture\\AmongUsGUI", "Settings.json"));
+                config = new ConfigurationBuilder<IAppSettings>()
+                    .UseJsonFile(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                        "\\AmongUsCapture\\AmongUsGUI", "Settings.json")).Build();
+            }
+            
             var r = new Random();
             var rValue = r.Next(101);
-            var goingToPop = rValue <= 3;
-            var goingToDouche = rValue == 4;
-            var goingToMonke = rValue <= 7 && rValue > 4;
-            if (!goingToPop && !goingToDouche && !goingToMonke)
+            var goingToPop = rValue == 1;
+            var goingToDouche = rValue == 2;
+            var goingToMonke = rValue == 3;
+            if (!config.startupMemes||(!goingToPop && !goingToDouche && !goingToMonke))
             {
                 if (DateTime.Now.Month == 12)
                 {
@@ -115,7 +150,6 @@ namespace AUCapture_WPF
             
             var mainWindow = new MainWindow();
             this.MainWindow = mainWindow;
-            Settings.conInterface = new WPFLogger(mainWindow);
             IPCAdapter.getInstance().OnToken += OnTokenHandler;
             socket.Init();
             IPCAdapter.getInstance().RegisterMinion();

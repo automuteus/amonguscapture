@@ -2,22 +2,23 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using AmongUsCapture.TextColorLibrary;
+
 using Discord;
 using Discord.WebSocket;
+using NLog.Fluent;
 using Color = System.Drawing.Color;
 
 namespace AmongUsCapture
 {
     public class DiscordHandler
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public DiscordSocketClient DClient;
         public event EventHandler<ReadyEventArgs> OnReady;
         
         public async void Init(string DiscordToken)
         {
-            Settings.conInterface.WriteModuleTextColored("DiscordHandler", Color.Red,
-                $"{Color.LawnGreen.ToTextColor()}Trying to connect to discord");
+            Logger.Info("Trying to connect to discord");
             try
             {
                 DClient = new DiscordSocketClient();
@@ -28,8 +29,7 @@ namespace AmongUsCapture
             }
             catch (Exception e)
             {
-                Settings.conInterface.WriteModuleTextColored("DiscordHandler", Color.Red,
-                    $"{Color.Red.ToTextColor()}Error: {e}");
+                Logger.Error(e);
             }
             
         }
@@ -37,20 +37,16 @@ namespace AmongUsCapture
         {
             if (DClient is not null && (DClient.ConnectionState == ConnectionState.Connected || DClient.ConnectionState == ConnectionState.Connecting))
             {
-                Settings.conInterface.WriteModuleTextColored("Discord.Net", Color.Red,
-                    $"{Color.LawnGreen.ToTextColor()}Disconnecting from discord");
-                Settings.conInterface.WriteModuleTextColored("WARNING", Color.Red,
-                    $"This {Color.Red.ToTextColor()}MAY{Settings.conInterface.getNormalColor().ToTextColor()} cause undesired behaviour if already connected to a server.");
+                Logger.Info("Disconnecting from discord, This may cause undesired behaviour if already connected to a server.");
+                
                 try
                 {
                     DClient.Log -= DClient_Log;
                     DClient.Ready -= DClient_Ready;
                     await DClient.StopAsync();
                 }
-                catch (Exception e)
-                {
-                    Settings.conInterface.WriteModuleTextColored("Discord.Net", Color.Red,
-                        $"{Color.Red.ToTextColor()}Error: {e}");
+                catch (Exception e) {
+                    Logger.Error(e);
                 }
 
             }
@@ -58,18 +54,15 @@ namespace AmongUsCapture
             
         }
 
-        private Task DClient_Ready()
-        {
-            Settings.conInterface.WriteModuleTextColored("Discord.Net", Color.Red,
-                $"{Color.Aqua.ToTextColor()}Connection successful! ID: {DClient.CurrentUser.Id}, name: {DClient.CurrentUser.Username}");
+        private Task DClient_Ready() {
+            Logger.Info("Discord connection successful. ID: {ID}, Name: {name}", DClient.CurrentUser.Id, DClient.CurrentUser.Username);
             var args = new ReadyEventArgs {BotID = DClient.CurrentUser.Id};
             OnReady?.Invoke(this, args);
             return Task.CompletedTask;
         }
 
-        private Task DClient_Log(LogMessage arg)
-        {
-            Settings.conInterface.WriteModuleTextColored("Discord.Net", Color.Red, $"{arg.ToString()}");
+        private Task DClient_Log(LogMessage arg) {
+            Logger.Info("{$arg}", arg);
             return Task.CompletedTask;
         }
 
@@ -94,10 +87,8 @@ namespace AmongUsCapture
                     return !x.IsFaulted;
                 });
             }
-            catch (Exception e)
-            {
-                Settings.conInterface.WriteModuleTextColored("Discord.Net", Color.Red,
-                    $"{Color.Red.ToTextColor()} Error: {e}");
+            catch (Exception e) {
+                Logger.Error(e);
                 return false;
             }
             

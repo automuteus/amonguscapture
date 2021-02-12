@@ -63,6 +63,19 @@
     <Window.Background>
         <Binding Path="BackgroundBrush" />
     </Window.Background>
+    <Window.InputBindings>
+        <KeyBinding
+            Key="L"
+            Command="{Binding OpenLogFolderCmd}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="R"
+            Command="{Binding RestartCmd}"
+            Modifiers="Ctrl" />
+        <KeyBinding Key="F1" Command="{Binding CommandsCMD}" />
+        <KeyBinding Key="F2" Command="{Binding CopyLatestLogCMD}" />
+    </Window.InputBindings>
+
     <mah:MetroWindow.LeftWindowCommands>
         <mah:WindowCommands>
 
@@ -193,6 +206,11 @@
                                             <mah:ToggleSwitch
                                                 Header="{l:Static properties:Resources.SettingsGeneralTabAlwaysCopyGameCode}"
                                                 IsOn="{Binding Settings.AlwaysCopyGameCode, Mode=TwoWay}"
+                                                OffContent="{l:Static properties:Resources.OffText}"
+                                                OnContent="{l:Static properties:Resources.OnText}" />
+                                            <mah:ToggleSwitch
+                                                Header="{l:Static properties:Resources.SettingsGeneralTabStartupMemes}"
+                                                IsOn="{Binding Settings.startupMemes, Mode=TwoWay}"
                                                 OffContent="{l:Static properties:Resources.OffText}"
                                                 OnContent="{l:Static properties:Resources.OnText}" />
                                             <mah:ToggleSwitch
@@ -418,7 +436,6 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
         <StackPanel
             Grid.RowSpan="4"
             Grid.ColumnSpan="3"

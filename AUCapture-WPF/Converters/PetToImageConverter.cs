@@ -18,13 +18,13 @@ namespace AUCapture_WPF.Converters
         {
             var petID = values[0] as uint? ?? 0;
             var alive = values[1] as bool? ?? false;
-            if (petID == 0)
+            if (petID <= 0 || petID > 11)
             {
                 return null;
             }
             return !alive
                 ? null
-                : FileCache.Hit($"https://carbun.xyz/CDN/SVG/Pets/{petID}.svg");
+                : FileCache.Hit($"https://CDN.automute.us/svg/Pets/{petID}.svg");
             //return !alive
             //    ? null
             //    : $"https://cdn.automute.us/Pets/{petID}.png";

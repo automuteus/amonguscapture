@@ -14,6 +14,9 @@ namespace AUCapture_WPF
         [Option(DefaultValue = "")]
         string language { get; set; }
 
+        [Option(DefaultValue = true)]
+        bool startupMemes { get; set; }
+
         [Option(DefaultValue = false)]
         bool alwaysOnTop { get; set; }
 

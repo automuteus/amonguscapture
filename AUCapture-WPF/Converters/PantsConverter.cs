@@ -24,9 +24,13 @@ namespace AUCapture_WPF.Converters
                 {
                     return null;
                 }
+                if (pantID <= 0 || pantID > 15)
+                {
+                    return null;
+                }
                 return !alive
                     ? null
-                    : FileCache.Hit($"https://carbun.xyz/CDN/SVG/Pants/{pantID}.svg");;
+                    : FileCache.Hit($"https://CDN.automute.us/svg/Pants/{pantID}.svg");;
             } 
             
             return "";

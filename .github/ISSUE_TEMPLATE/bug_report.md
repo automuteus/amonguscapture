@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Upload logs**
-Can be opened by pressing Ctrl+L when in capture, OR in Settings>Debug>Open logs folder>Latest.log OR %appdata%/AmongUsCapture/Logs/
+Can be opened by pressing Ctrl+L when in capture, or %appdata%/AmongUsCapture/Logs/
 
 **Describe the bug**
 A clear and concise description of what the bug is.

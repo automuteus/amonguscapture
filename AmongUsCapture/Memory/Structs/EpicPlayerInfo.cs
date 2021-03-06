@@ -12,7 +12,7 @@ namespace AmongUsCapture.Memory.Structs
     {
         [System.Runtime.InteropServices.FieldOffset(16)] public byte PlayerId;
         [System.Runtime.InteropServices.FieldOffset(24)] public long PlayerName;
-        [System.Runtime.InteropServices.FieldOffset(32)] public byte ColorId;
+        [System.Runtime.InteropServices.FieldOffset(33)] public byte ColorId;
         [System.Runtime.InteropServices.FieldOffset(36)] public uint HatId;
         [System.Runtime.InteropServices.FieldOffset(40)] public uint PetId;
         [System.Runtime.InteropServices.FieldOffset(44)] public uint SkinId;

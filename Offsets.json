@@ -358,6 +358,37 @@
     "isEpic": false,
     "AddPlayerPtr": 4,
     "PlayerListPtr": 16
+  },
+  "46610519EF9F9E121C44DEBFE30D3FE880D2613330996826DB4F32EE52B35C1D": {
+    "Description": "v2021.3.31.2s",
+    "AmongUsClientOffset": 0x28D2370,
+    "GameDataOffset": 0x28ED93C,
+    "MeetingHudOffset": 0x28CAEB8,
+    "GameStartManagerOffset": 0x2875E28,
+    "HudManagerOffset": 28186348,
+    "ServerManagerOffset": 0x2876398,
+    "TempDataOffset": 0x28C2E40,
+    "GameOptionsOffset": 0x28AA130,
+
+    "MeetingHudPtr": [0x28CAEB8, 92, 0],
+    "MeetingHudCachePtrOffsets": [8],
+    "MeetingHudStateOffsets": [132],
+    "GameStateOffsets": [0x28D2370, 92, 0, 112],
+    "AllPlayerPtrOffsets": [0x28ED93C, 92, 0, 36],
+    "AllPlayersOffsets": [8],
+    "PlayerCountOffsets": [12],
+    "ExiledPlayerIdOffsets": [0x28CAEB8, 92, 0, 148, 8],
+    "RawGameOverReasonOffsets": [0x28C2E40, 92, 4],
+    "WinningPlayersPtrOffsets": [0x28C2E40, 92, 12],
+    "WinningPlayersOffsets": [8],
+    "WinningPlayerCountOffsets": [12],
+    "GameCodeOffsets": [0x2875E28, 92, 0, 32, 40],
+    "PlayRegionOffsets": [0x2876398, 92, 0, 16, 8, 8],
+    "PlayMapOffsets": [0x28AA130, 92, 4, 16],
+    "StringOffsets": [8, 12],
+    "isEpic": false,
+    "AddPlayerPtr": 4,
+    "PlayerListPtr": 16
   }  
 }
 

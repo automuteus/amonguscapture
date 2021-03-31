@@ -506,7 +506,9 @@ namespace AmongUsCapture {
     public enum PlayMap {
         Skeld = 0,
         Mira = 1,
-        Polus = 2
+        Polus = 2,
+        dlekS = 3,
+        Airship = 4,
     }
 
     public enum GameState {

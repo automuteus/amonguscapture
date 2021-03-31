@@ -12,15 +12,15 @@ namespace AmongUsCapture.Memory.Structs
     {
         [System.Runtime.InteropServices.FieldOffset(8)] public byte PlayerId;
         [System.Runtime.InteropServices.FieldOffset(12)] public uint PlayerName;
-        [System.Runtime.InteropServices.FieldOffset(17)] public byte ColorId;
-        [System.Runtime.InteropServices.FieldOffset(20)] public uint HatId;
-        [System.Runtime.InteropServices.FieldOffset(24)] public uint PetId;
-        [System.Runtime.InteropServices.FieldOffset(28)] public uint SkinId;
-        [System.Runtime.InteropServices.FieldOffset(32)] public byte Disconnected;
-        [System.Runtime.InteropServices.FieldOffset(36)] public IntPtr Tasks;
-        [System.Runtime.InteropServices.FieldOffset(40)] public byte IsImpostor;
-        [System.Runtime.InteropServices.FieldOffset(41)] public byte IsDead;
-        [System.Runtime.InteropServices.FieldOffset(44)] public IntPtr _object;
+        [System.Runtime.InteropServices.FieldOffset(20)] public byte ColorId;
+        [System.Runtime.InteropServices.FieldOffset(24)] public uint HatId;
+        [System.Runtime.InteropServices.FieldOffset(28)] public uint PetId;
+        [System.Runtime.InteropServices.FieldOffset(32)] public uint SkinId;
+        [System.Runtime.InteropServices.FieldOffset(36)] public byte Disconnected;
+        [System.Runtime.InteropServices.FieldOffset(40)] public IntPtr Tasks;
+        [System.Runtime.InteropServices.FieldOffset(44)] public byte IsImpostor;
+        [System.Runtime.InteropServices.FieldOffset(45)] public byte IsDead;
+        [System.Runtime.InteropServices.FieldOffset(48)] public IntPtr _object;
 
         byte PlayerInfo.PlayerId => PlayerId;
 

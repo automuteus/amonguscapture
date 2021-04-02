@@ -112,7 +112,28 @@ namespace AUCapture_WPF.Converters
             {"91", 1},
             {"92", 1},
             {"93", 1},
-            {"94", 1}
+            {"94", 1},
+            {"95", 1},
+            {"96", 1},
+            {"97", 1},
+            {"98", 1},
+            {"99", 1},
+            {"100", 1},
+            {"101", 1},
+            {"102", 0},
+            {"103", 0},
+            {"104", 0},
+            {"105", 0},
+            {"106", 0},
+            {"107", 1},
+            {"108", 1},
+            {"109", 1},
+            {"110", 1},
+            {"111", 1},
+            {"112", 1},
+            {"113", 1},
+            {"114", 1}
+
         };
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -128,7 +149,7 @@ namespace AUCapture_WPF.Converters
             {
                 return "";
             }
-            var finalName = hatID + "-" + Hats[(hatID%95).ToString()];
+            var finalName = hatID + "-" + Hats[(hatID%115).ToString()];
             return $"https://CDN.automute.us/SVG/Hats/1-1.svg";
 
 
@@ -237,7 +258,28 @@ namespace AUCapture_WPF.Converters
             {"91", 1},
             {"92", 1},
             {"93", 1},
-            {"94", 1}
+            {"94", 1},
+            {"95", 1},
+            {"96", 1},
+            {"97", 1},
+            {"98", 1},
+            {"99", 1},
+            {"100", 1},
+            {"101", 1},
+            {"102", 0},
+            {"103", 0},
+            {"104", 0},
+            {"105", 0},
+            {"106", 0},
+            {"107", 1},
+            {"108", 1},
+            {"109", 1},
+            {"110", 1},
+            {"111", 1},
+            {"112", 1},
+            {"113", 1},
+            {"114", 1}
+
         };
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -248,7 +290,7 @@ namespace AUCapture_WPF.Converters
             }
 
             
-            if (hatID <= 0 || hatID > 94)
+            if (hatID <= 0 || hatID > 114)
             {
                 return null;
             }
@@ -366,7 +408,28 @@ namespace AUCapture_WPF.Converters
             {"91", 1},
             {"92", 1},
             {"93", 1},
-            {"94", 1}
+            {"94", 1},
+            {"95", 1},
+            {"96", 1},
+            {"97", 1},
+            {"98", 1},
+            {"99", 1},
+            {"100", 1},
+            {"101", 1},
+            {"102", 0},
+            {"103", 0},
+            {"104", 0},
+            {"105", 0},
+            {"106", 0},
+            {"107", 1},
+            {"108", 1},
+            {"109", 1},
+            {"110", 1},
+            {"111", 1},
+            {"112", 1},
+            {"113", 1},
+            {"114", 1}
+
         };
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -376,7 +439,7 @@ namespace AUCapture_WPF.Converters
                 return 0;
             }
 
-            if (Hats[(hatID%95).ToString()] == 1)
+            if (Hats[(hatID%115).ToString()] == 1)
             {
                 return 1;
             }

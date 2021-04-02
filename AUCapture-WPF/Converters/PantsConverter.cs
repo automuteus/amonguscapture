@@ -24,7 +24,7 @@ namespace AUCapture_WPF.Converters
                 {
                     return null;
                 }
-                if (pantID <= 0 || pantID > 15)
+                if (pantID <= 0 || pantID > 18)
                 {
                     return null;
                 }

@@ -506,7 +506,7 @@
     "WinningPlayersPtrOffsets": [0x28736EC, 92, 12],
     "WinningPlayersOffsets": [8],
     "WinningPlayerCountOffsets": [12],
-    "GameCodeOffsets": [0x2821D18, 92, 0, 32, 40],
+    "GameCodeOffsets": [0x2821D18, 92, 0, 0x20, 0x80],
     "PlayRegionOffsets": [0x2822270, 92, 0, 16, 8, 8],
     "PlayMapOffsets": [0x28801B8, 92, 4, 16],
     "StringOffsets": [8, 12],

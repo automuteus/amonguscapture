@@ -545,7 +545,7 @@
     "AddPlayerPtr": 4,
     "PlayerListPtr": 16
   },
-      "82AFE62243A08C455251849C345572943E836958133FD5FD5DD7C459C6BA81AF": {
+  "82AFE62243A08C455251849C345572943E836958133FD5FD5DD7C459C6BA81AF": {
     "Description": "v2021.4.14s",
     "AmongUsClientOffset": 0x28E98F4,
     "GameDataOffset": 0x290551C,
@@ -574,7 +574,20 @@
     "StringOffsets": [8, 12],
     "isEpic": false,
     "AddPlayerPtr": 4,
-    "PlayerListPtr": 16
+    "PlayerListPtr": 16,
+    "PlayerInfoStructOffsets": {
+      "PlayerIDOffset": 8,
+      "PlayerNameOffset": 12,
+      "ColorIDOffset": 20,
+      "HatIDOffset": 24,
+      "PetIDOffset": 28,
+      "SkinIDOffset": 32,
+      "DisconnectedOffset": 36,
+      "TasksOffset": 40,
+      "ImposterOffset": 44,
+      "DeadOffset": 45,
+      "ObjectOffset": 48
+    }
   },
   "2078D2FE5BB4C219570243AEA19B54DAE86B229EF83810C7F1DBE854058499F9": {
     "Description": "v2021.4.14e",

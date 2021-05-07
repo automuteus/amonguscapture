@@ -181,8 +181,8 @@ namespace AmongUsCapture
          * This is because to read and store, Linux uses 'iovec' C structs to provide the base pointer
          * and length of the information being read.
          * */
-        
-        private int OffsetAddress(ref IntPtr address, params int[] offsets)
+
+        public override int OffsetAddress(ref IntPtr address, params int[] offsets)
         {
             byte[] buffer = new byte[is64Bit ? 8 : 4];
             IntPtr buffer_marshal;
@@ -234,7 +234,7 @@ namespace AmongUsCapture
             return offsets.Length > 0 ? offsets[offsets.Length - 1] : 0;
         }
 
-        private byte[] Read(IntPtr address, int numBytes)
+        public override byte[] Read(IntPtr address, int numBytes)
         {
             byte[] buffer = new byte[numBytes];
 

@@ -103,7 +103,8 @@ namespace AmongUsCapture {
             var playerAddrPtr = allPlayers + CurrentOffsets.PlayerListPtr;
             var Players = new List<PlayerInfo>(playerCount);
             for (var i = 0; i < playerCount; i++) {
-                var pi = CurrentOffsets.isEpic ? (PlayerInfo) memInstance.Read<EpicPlayerInfo>(playerAddrPtr, 0, 0) : memInstance.Read<SteamPlayerInfo>(playerAddrPtr, 0, 0);
+                var pi = new PlayerInfo(playerAddrPtr, memInstance, CurrentOffsets);
+                //var pi = CurrentOffsets.isEpic ? (PlayerInfo) memInstance.Read<EpicPlayerInfo>(playerAddrPtr, 0, 0) : memInstance.Read<SteamPlayerInfo>(playerAddrPtr, 0, 0);
                 if(pi.GetPlayerName() is null || pi.GetPlayerName() == "") continue;
                 playerAddrPtr += CurrentOffsets.AddPlayerPtr;
                 Players.Add(pi);
@@ -137,7 +138,8 @@ namespace AmongUsCapture {
             var winnerAddrPtr = winningPlayers + CurrentOffsets.PlayerListPtr;
 
             for (var i = 0; i < winningPlayerCount; i++) {
-                var wpi = CurrentOffsets.isEpic ? (WinningPlayerData) memInstance.Read<EpicWinningPlayerData>(winnerAddrPtr, 0, 0) : memInstance.Read<SteamWinningPlayerData>(winnerAddrPtr, 0, 0);
+                var wpi = new WinningPlayerData(winnerAddrPtr, memInstance, CurrentOffsets);
+                //var wpi = CurrentOffsets.isEpic ? (WinningPlayerData) memInstance.Read<EpicWinningPlayerData>(winnerAddrPtr, 0, 0) : memInstance.Read<SteamWinningPlayerData>(winnerAddrPtr, 0, 0);
                 winnerAddrPtr += CurrentOffsets.AddPlayerPtr;
                 try {
                     OurPlayerInfos[wpi.GetPlayerName()].IsImpostor = wpi.IsImpostor;
@@ -323,8 +325,8 @@ namespace AmongUsCapture {
                                 Disconnected = exiledPlayer.GetIsDisconnected(),
                                 Color = exiledPlayer.GetPlayerColor()
                             });
-                            impostorCount = GetPlayers(ProcessMemory.getInstance()).Count(x => x.GetIsImposter() && x.PlayerName != IntPtr.Zero && x.PlayerId != exiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
-                            innocentCount = GetPlayers(ProcessMemory.getInstance()).Count(x => !x.GetIsImposter() && x.PlayerName != IntPtr.Zero && x.PlayerId != exiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
+                            impostorCount = GetPlayers(ProcessMemory.getInstance()).Count(x => x.GetIsImposter() && x.PlayerName != "" && x.PlayerId != exiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
+                            innocentCount = GetPlayers(ProcessMemory.getInstance()).Count(x => !x.GetIsImposter() && x.PlayerName != "" && x.PlayerId != exiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
 
                             if (impostorCount == 0 || impostorCount >= innocentCount) {
                                 exileCausesEnd = true;

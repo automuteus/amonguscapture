@@ -112,7 +112,7 @@ namespace AmongUsCapture
             return ints;
         }
 
-        private byte[] Read(IntPtr address, int numBytes)
+        public override byte[] Read(IntPtr address, int numBytes)
         {
             byte[] buffer = new byte[numBytes];
             if (process == null || address == IntPtr.Zero)
@@ -121,7 +121,7 @@ namespace AmongUsCapture
             WinAPI.ReadProcessMemory(process.Handle, address, buffer, numBytes, out int bytesRead);
             return buffer;
         }
-        private int OffsetAddress(ref IntPtr address, params int[] offsets)
+        public override int OffsetAddress(ref IntPtr address, params int[] offsets)
         {
             byte[] buffer = new byte[is64Bit ? 8 : 4];
             for (int i = 0; i < offsets.Length - 1; i++)

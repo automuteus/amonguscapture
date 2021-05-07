@@ -150,6 +150,34 @@ namespace AUOffsetManager
         public int AddPlayerPtr { get; set; }
         public int PlayerListPtr { get; set; }
         
+        public PlayerInfoStructOffsets PlayerInfoStructOffsets { get; set; }
+        public WinningPlayerDataStructOffsets WinningPlayerDataStructOffsets { get; set; }
+        
+    }
+
+    public class PlayerInfoStructOffsets {
+        public int PlayerIDOffset { get; set; }
+        public int PlayerNameOffset { get; set; }
+        public int ColorIDOffset { get; set; }
+        public int HatIDOffset { get; set; }
+        public int PetIDOffset { get; set; }
+        public int SkinIDOffset { get; set; }
+        public int DisconnectedOffset { get; set; }
+        public int TasksOffset { get; set; }
+        public int ImposterOffset { get; set; }
+        public int DeadOffset { get; set; }
+        public int ObjectOffset { get; set; }
+    }
+
+    public class WinningPlayerDataStructOffsets {
+        public int NameOffset { get; set; }
+        public int DeadOffset { get; set; }
+        public int ImposterOffset { get; set; }
+        public int ColorOffset { get; set; }
+        public int SkinOffset { get; set; }
+        public int HatOffset { get; set; }
+        public int PetOffset { get; set; }
+        public int IsYouOffset { get; set; }
     }
 
 }

@@ -59,12 +59,36 @@ namespace AUOffsetHelper
                 StringOffsets = new []{0x8, 0xC},
                 isEpic = false,
                 AddPlayerPtr = 4,
-                PlayerListPtr = 0x10
+                PlayerListPtr = 0x10,
+                PlayerInfoStructOffsets = new PlayerInfoStructOffsets() {
+                    PlayerIDOffset = 16,
+                    PlayerNameOffset = 24,
+                    ColorIDOffset = 36,
+                    HatIDOffset = 40,
+                    PetIDOffset = 44,
+                    SkinIDOffset = 48,
+                    DisconnectedOffset = 52,
+                    TasksOffset = 56,
+                    ImposterOffset = 64,
+                    DeadOffset = 65,
+                    ObjectOffset = 72
+                },
+                WinningPlayerDataStructOffsets = new WinningPlayerDataStructOffsets() {
+                    NameOffset = 0x8,
+                    DeadOffset = 0xC,
+                    ImposterOffset = 0xD,
+                    ColorOffset = 0x10,
+                    SkinOffset = 0x14,
+                    HatOffset = 0x18,
+                    PetOffset = 0x1C,
+                    IsYouOffset = 0x20
+                }
 
             };
+
             Console.Write(JsonConvert.SerializeObject(a, Formatting.Indented));
-            var b = new OffsetManager("");
-            b.AddToLocalIndex(hash, a);
+            //var b = new OffsetManager("");
+            //b.AddToLocalIndex(hash, a);
             Console.ReadLine();
 
             

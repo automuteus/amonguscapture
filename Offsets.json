@@ -618,7 +618,20 @@
     "StringOffsets": [0x8, 0xC],
     "isEpic": false,
     "AddPlayerPtr": 4,
-    "PlayerListPtr": 16
+    "PlayerListPtr": 16,
+    "PlayerInfoStructOffsets": {
+      "PlayerIDOffset": 8,
+      "PlayerNameOffset": 12,
+      "ColorIDOffset": 20,
+      "HatIDOffset": 24,
+      "PetIDOffset": 28,
+      "SkinIDOffset": 32,
+      "DisconnectedOffset": 36,
+      "TasksOffset": 40,
+      "ImposterOffset": 44,
+      "DeadOffset": 45,
+      "ObjectOffset": 48
+    }
   },
   "6C6E2914387B6D8594759F4864D976DF5625AF7F738F72C8525C4BF9E836ADE3": {
     "Description": "v2021.4.14m",
@@ -649,7 +662,21 @@
     "StringOffsets": [0x10, 0x14],
     "isEpic": true,
     "AddPlayerPtr": 0x8,
-    "PlayerListPtr": 0x20
+    "PlayerListPtr": 0x20,
+    "PlayerInfoStructOffsets": {
+      "PlayerIDOffset": 16,
+      "PlayerNameOffset": 24,
+      "ColorIDOffset": 36,
+      "HatIDOffset": 40,
+      "PetIDOffset": 44,
+      "SkinIDOffset": 48,
+      "DisconnectedOffset": 52,
+      "TasksOffset": 56,
+      "ImposterOffset": 64,
+      "DeadOffset": 65,
+      "ObjectOffset": 72
+    }
+
   }
 }
 

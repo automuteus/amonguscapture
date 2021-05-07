@@ -587,6 +587,16 @@
       "ImposterOffset": 44,
       "DeadOffset": 45,
       "ObjectOffset": 48
+    },
+    "WinningPlayerDataStructOffsets": {
+      "NameOffset": 8,
+      "DeadOffset": 12,
+      "ImposterOffset": 13,
+      "ColorOffset": 16,
+      "SkinOffset": 20,
+      "HatOffset": 24,
+      "PetOffset": 28,
+      "IsYouOffset": 32
     }
   },
   "2078D2FE5BB4C219570243AEA19B54DAE86B229EF83810C7F1DBE854058499F9": {
@@ -631,6 +641,16 @@
       "ImposterOffset": 44,
       "DeadOffset": 45,
       "ObjectOffset": 48
+    },
+    "WinningPlayerDataStructOffsets": {
+      "NameOffset": 8,
+      "DeadOffset": 12,
+      "ImposterOffset": 13,
+      "ColorOffset": 16,
+      "SkinOffset": 20,
+      "HatOffset": 24,
+      "PetOffset": 28,
+      "IsYouOffset": 32
     }
   },
   "6C6E2914387B6D8594759F4864D976DF5625AF7F738F72C8525C4BF9E836ADE3": {
@@ -675,6 +695,17 @@
       "ImposterOffset": 64,
       "DeadOffset": 65,
       "ObjectOffset": 72
+    },
+    ,
+    "WinningPlayerDataStructOffsets": {
+      "NameOffset": 16,
+      "DeadOffset": 24,
+      "ImposterOffset": 25,
+      "ColorOffset": 28,
+      "SkinOffset": 32,
+      "HatOffset": 36,
+      "PetOffset": 40,
+      "IsYouOffset": 44
     }
 
   }

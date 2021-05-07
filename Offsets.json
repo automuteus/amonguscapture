@@ -696,7 +696,6 @@
       "DeadOffset": 65,
       "ObjectOffset": 72
     },
-    ,
     "WinningPlayerDataStructOffsets": {
       "NameOffset": 16,
       "DeadOffset": 24,

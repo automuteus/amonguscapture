@@ -30,7 +30,7 @@ namespace AmongUsCapture
                 fixed (byte* ptr = buffer) {
                     var buffptr = (IntPtr) ptr;
                     PlayerId = Marshal.ReadByte(buffptr, pOf.PlayerIDOffset);
-                    var NamePTR = Marshal.ReadIntPtr(buffptr, pOf.PlayerNameOffset);
+                    var NamePTR = MemInstance.is64Bit ? (IntPtr) Marshal.ReadInt64(buffptr, pOf.PlayerNameOffset) : (IntPtr) Marshal.ReadInt32(buffptr, pOf.PlayerNameOffset);
                     PlayerName = NamePTR == IntPtr.Zero ? "" : MemInstance.ReadString(NamePTR, CurrentOffsets.StringOffsets[0], CurrentOffsets.StringOffsets[1]);
                     ColorId = (PlayerColor)(uint)Marshal.ReadInt32(buffptr, pOf.ColorIDOffset);
                     HatId = (uint) Marshal.ReadInt32(buffptr, pOf.HatIDOffset);

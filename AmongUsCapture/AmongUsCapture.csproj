@@ -25,7 +25,7 @@
   <ItemGroup>
     <PackageReference Include="Config.Net" Version="4.15.0" />
     <PackageReference Include="Config.Net.Json" Version="4.15.0" />
-    <PackageReference Include="Discord.Net" Version="2.3.1" />
+    <PackageReference Include="Discord.Net" Version="2.4.0" />
     <PackageReference Include="NLog" Version="4.7.9" />
     <PackageReference Include="SocketIOClient" Version="2.1.7" />
   </ItemGroup>

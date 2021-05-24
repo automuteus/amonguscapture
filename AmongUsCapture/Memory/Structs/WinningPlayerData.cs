@@ -35,7 +35,7 @@ namespace AmongUsCapture.Memory.Structs
 		        WinningPlayerDataStructOffsets pOf = CurrentOffsets.WinningPlayerDataStructOffsets;
 		        fixed (byte* ptr = buffer) {
 			        var buffptr = (IntPtr) ptr;
-			        var NamePTR = Marshal.ReadIntPtr(buffptr, pOf.NameOffset);
+			        var NamePTR = MemInstance.is64Bit ? (IntPtr) Marshal.ReadInt64(buffptr, pOf.NameOffset) : (IntPtr) Marshal.ReadInt32(buffptr, pOf.NameOffset);
 			        Name = NamePTR == IntPtr.Zero ? "" : MemInstance.ReadString(NamePTR, CurrentOffsets.StringOffsets[0], CurrentOffsets.StringOffsets[1]);
 			        ColorId = (int)Marshal.ReadInt32(buffptr, pOf.ColorOffset);
 			        HatId = (uint) Marshal.ReadInt32(buffptr, pOf.HatOffset);

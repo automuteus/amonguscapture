@@ -54,6 +54,8 @@
     <None Remove="Resources\Misc\Transparent_Nebula.png" />
     <None Remove="Resources\Misc\voteCancel.png" />
     <None Remove="Resources\Misc\voteConfirm.png" />
+    <None Remove="Resources\missingtex.png" />
+    <None Remove="Resources\rainbowtex.png" />
     <None Remove="SplashScreens\capture-splashscreen-lovely.png" />
     <None Remove="SplashScreens\SplashScreenDouche.png" />
     <None Remove="SplashScreens\SplashScreenLovely.png" />
@@ -62,6 +64,8 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\AutoMuteUs_PK.asc" />
+    <Resource Include="Resources\missingtex.png" />
+    <Resource Include="Resources\rainbowtex.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -77,6 +81,7 @@
     <PackageReference Include="PgpCore" Version="5.2.0" />
     <PackageReference Include="SharedMemory" Version="2.2.3" />
     <PackageReference Include="SharpVectors" Version="1.7.1" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
     <PackageReference Include="WpfScreenHelper" Version="1.0.0" />
   </ItemGroup>
 

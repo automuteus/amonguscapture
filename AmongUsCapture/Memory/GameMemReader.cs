@@ -175,7 +175,7 @@ namespace AmongUsCapture {
                 else {
                     // player was here before, we have an old playerInfo to compare against
                     var oldPlayerInfo = oldPlayers[player.GetPlayerName()];
-                    if (!oldPlayerInfo.GetIsDead() && player.GetIsDead()) // player just died
+                    if (oldPlayerInfo.GetIsDead() != player.GetIsDead()) // player just died
                         PlayerChanged?.Invoke(this, new PlayerChangedEventArgs {
                             Action = PlayerAction.Died,
                             Name = player.GetPlayerName(),
@@ -183,6 +183,7 @@ namespace AmongUsCapture {
                             Disconnected = player.GetIsDisconnected(),
                             Color = player.GetPlayerColor()
                         });
+
 
                     if (oldPlayerInfo.ColorId != player.ColorId)
                         PlayerChanged?.Invoke(this, new PlayerChangedEventArgs {

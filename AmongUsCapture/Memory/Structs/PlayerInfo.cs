@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AUOffsetManager;
 using Discord;
@@ -7,8 +8,8 @@ using NLog;
 namespace AmongUsCapture
 {
     
-    public class PlayerInfo
-    {
+    public class PlayerInfo {
+        private static List<uint> UnknownColors = new List<uint>();
         public byte PlayerId;
         public String PlayerName;
         public PlayerColor ColorId = PlayerColor.Unknown;
@@ -57,7 +58,10 @@ namespace AmongUsCapture
             }
 
             if (LogCastError) {
-                Logger.Debug($"CAST ERROR. NAME:{GetPlayerName()}, DEAD:{GetIsDead()}, IMPOSTER: {GetIsImposter()}, COLOR: {realColorID}");
+                if (!UnknownColors.Contains(realColorID)) {
+                    Logger.Debug($"UNKNOWN COLOR. NAME:{GetPlayerName()}, COLOR: {realColorID}");
+                    UnknownColors.Add(realColorID);
+                }
             }
         }
         public string GetPlayerName() {

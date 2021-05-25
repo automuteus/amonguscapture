@@ -498,6 +498,13 @@ namespace AmongUsCapture {
         Brown = 9,
         Cyan = 10,
         Lime = 11,
+        Watermelon = 12,
+        Chocolate = 13,
+        SkyBlue = 14,
+        Beige = 15,
+        HotPink = 16,
+        Turquoise = 17,
+        Lilac = 18,
         Rainbow = 19,
         Unknown = 999
     }

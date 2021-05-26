@@ -331,7 +331,7 @@ namespace AmongUsCapture {
 
                             if (impostorCount == 0 || impostorCount >= innocentCount) {
                                 exileCausesEnd = true;
-                                state = GameState.LOBBY;
+                                //state = GameState.LOBBY;
                             }
                         }
                         

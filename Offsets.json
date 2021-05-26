@@ -392,7 +392,7 @@
   },
   "3E01974A43431BF7BA7E88570DB8E19954D256C37DB9917C4905963CBD006099": {
     "Description": "v2021.3.31.3s",
-	  "AmongUsClientOffset": 0x28DFEB4,
+    "AmongUsClientOffset": 0x28DFEB4,
     "GameDataOffset": 0x28FB4D4,
     "MeetingHudOffset": 0x28D8948,
     "GameStartManagerOffset": 0x28836F0,

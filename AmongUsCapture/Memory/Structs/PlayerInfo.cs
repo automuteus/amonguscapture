@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AUOffsetManager;
 using Discord;
-using NLog;
 
 namespace AmongUsCapture
 {
     
-    public class PlayerInfo {
-        private static List<uint> UnknownColors = new List<uint>();
+    public class PlayerInfo
+    {
         public byte PlayerId;
         public String PlayerName;
-        public PlayerColor ColorId = PlayerColor.Unknown;
+        public PlayerColor ColorId;
         public uint HatId;
         public uint PetId;
         public uint SkinId;
@@ -20,11 +18,8 @@ namespace AmongUsCapture
         public IntPtr Tasks;
         public bool IsImpostor;
         public bool IsDead;
-        public uint realColorID;
         public IntPtr _object; //Assume this always has largest offset
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public PlayerInfo(IntPtr baseAddr, ProcessMemory MemInstance, GameOffsets CurrentOffsets) {
-            bool LogCastError = false;
             unsafe {
                 var baseAddrCopy = baseAddr;
                 int last = MemInstance.OffsetAddress(ref baseAddrCopy, 0, 0);
@@ -37,15 +32,7 @@ namespace AmongUsCapture
                     PlayerId = Marshal.ReadByte(buffptr, pOf.PlayerIDOffset);
                     var NamePTR = MemInstance.is64Bit ? (IntPtr) Marshal.ReadInt64(buffptr, pOf.PlayerNameOffset) : (IntPtr) Marshal.ReadInt32(buffptr, pOf.PlayerNameOffset);
                     PlayerName = NamePTR == IntPtr.Zero ? "" : MemInstance.ReadString(NamePTR, CurrentOffsets.StringOffsets[0], CurrentOffsets.StringOffsets[1]);
-                    var ColorIdNum = (PlayerColor)(uint)Marshal.ReadInt32(buffptr, pOf.ColorIDOffset);
-                    realColorID = (uint)Marshal.ReadInt32(buffptr, pOf.ColorIDOffset);;
-                    if (Enum.IsDefined(typeof(PlayerColor), ColorIdNum)) {
-                        ColorId = (PlayerColor) ColorIdNum;
-                    }
-                    else {
-                        LogCastError = true;
-                    }
-
+                    ColorId = (PlayerColor)(uint)Marshal.ReadInt32(buffptr, pOf.ColorIDOffset);
                     HatId = (uint) Marshal.ReadInt32(buffptr, pOf.HatIDOffset);
                     PetId = (uint) Marshal.ReadInt32(buffptr, pOf.PetIDOffset);
                     SkinId = (uint) Marshal.ReadInt32(buffptr, pOf.SkinIDOffset);
@@ -54,13 +41,6 @@ namespace AmongUsCapture
                     IsImpostor = Marshal.ReadByte(buffptr, pOf.ImposterOffset) == 1;
                     IsDead = Marshal.ReadByte(buffptr, pOf.DeadOffset) > 0;
                     _object = Marshal.ReadIntPtr(buffptr, pOf.ObjectOffset);
-                }
-            }
-
-            if (LogCastError) {
-                if (!UnknownColors.Contains(realColorID)) {
-                    Logger.Debug($"UNKNOWN COLOR. NAME:{GetPlayerName()}, COLOR: {realColorID}");
-                    UnknownColors.Add(realColorID);
                 }
             }
         }

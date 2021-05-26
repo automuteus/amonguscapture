@@ -49,13 +49,6 @@ namespace AUCapture_WPF
                 Header = $"Capture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}\n",
                 Footer = $"\nCapture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}"
             };
-            var consoleOutput = new NLog.Targets.ColoredConsoleTarget("Console") {
-                UseDefaultRowHighlightingRules = true,
-                DetectConsoleAvailable = true,
-                Header = $"Capture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}\n",
-                Footer = $"\nCapture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}"
-            };
-            LoggingConfig.AddRule(LogLevel.Debug, LogLevel.Fatal, consoleOutput);
             LoggingConfig.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
             NLog.LogManager.Configuration = LoggingConfig;
         }
@@ -84,13 +77,13 @@ namespace AUCapture_WPF
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            
+            SetupLoggingConfig();
             var args = e.Args;
 
              // needs to be the first call in the program to prevent weird bugs
-            if (Settings.PersistentSettings.debugConsole)
-                AllocConsole();
-            SetupLoggingConfig();
+             if (Settings.PersistentSettings.debugConsole)
+                 AllocConsole();
+
             var uriStart = IPCAdapter.getInstance().HandleURIStart(e.Args);
             
             switch (uriStart)

@@ -419,7 +419,7 @@
     "StringOffsets": [8, 12],
     "isEpic": false,
     "AddPlayerPtr": 4,
-    "PlayerListPtr": 16
+    "PlayerListPtr": 16,
     "PlayerInfoStructOffsets": {
       "PlayerIDOffset": 8,
       "PlayerNameOffset": 12,

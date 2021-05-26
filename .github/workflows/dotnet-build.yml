@@ -2,9 +2,9 @@ name: Beta releases
 
 on:
   push:
-    branches: [master]
+    branches: [master, TownOfUs]
   pull_request:
-    branches: [master]
+    branches: [master, TownOfUs]
 
 jobs:
   build:

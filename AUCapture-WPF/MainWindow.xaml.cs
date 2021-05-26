@@ -492,7 +492,7 @@ namespace AUCapture_WPF {
 
                             case PlayerAction.Exiled:
                             case PlayerAction.Died:
-                                player.Alive = false;
+                                player.Alive = !e.IsDead;
                                 break;
                         }
                     });

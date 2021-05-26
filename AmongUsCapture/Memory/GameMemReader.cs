@@ -175,7 +175,7 @@ namespace AmongUsCapture {
                 else {
                     // player was here before, we have an old playerInfo to compare against
                     var oldPlayerInfo = oldPlayers[player.GetPlayerName()];
-                    if (oldPlayerInfo.GetIsDead() != player.GetIsDead()) // player just died
+                    if (!oldPlayerInfo.GetIsDead() && player.GetIsDead()) // player just died
                         PlayerChanged?.Invoke(this, new PlayerChangedEventArgs {
                             Action = PlayerAction.Died,
                             Name = player.GetPlayerName(),
@@ -183,7 +183,6 @@ namespace AmongUsCapture {
                             Disconnected = player.GetIsDisconnected(),
                             Color = player.GetPlayerColor()
                         });
-
 
                     if (oldPlayerInfo.ColorId != player.ColorId)
                         PlayerChanged?.Invoke(this, new PlayerChangedEventArgs {
@@ -497,16 +496,7 @@ namespace AmongUsCapture {
         Purple = 8,
         Brown = 9,
         Cyan = 10,
-        Lime = 11,
-        Watermelon = 12,
-        Chocolate = 13,
-        SkyBlue = 14,
-        Beige = 15,
-        HotPink = 16,
-        Turquoise = 17,
-        Lilac = 18,
-        Rainbow = 19,
-        Unknown = 999
+        Lime = 11
     }
 
     public enum PlayRegion {

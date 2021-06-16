@@ -22,7 +22,13 @@ namespace AUCapture_WPF.Converters
             { PlayerColor.Purple,  new SolidColorBrush(Color.FromRgb(107, 47, 187))},
             { PlayerColor.Brown,   new SolidColorBrush(Color.FromRgb(113, 73, 30))},
             { PlayerColor.Cyan,    new SolidColorBrush(Color.FromRgb(56, 254, 220))},
-            { PlayerColor.Lime,     new SolidColorBrush(Color.FromRgb(80, 239, 57))}
+            { PlayerColor.Lime,    new SolidColorBrush(Color.FromRgb(80, 239, 57))},
+            { PlayerColor.Maroon,  new SolidColorBrush(Color.FromRgb(95, 29, 46))},
+            { PlayerColor.Rose,    new SolidColorBrush(Color.FromRgb(236, 192, 211))},
+            { PlayerColor.Banana,  new SolidColorBrush(Color.FromRgb(240, 231, 168))},
+            { PlayerColor.Gray,    new SolidColorBrush(Color.FromRgb(117, 133, 147))},
+            { PlayerColor.Tan,     new SolidColorBrush(Color.FromRgb(145, 136, 119))},
+            { PlayerColor.Sunset,  new SolidColorBrush(Color.FromRgb(215, 100, 100))}
 
         };
 
@@ -62,7 +68,13 @@ namespace AUCapture_WPF.Converters
             { PlayerColor.Purple,  new SolidColorBrush(Color.FromRgb(107, 47, 187))},
             { PlayerColor.Brown,   new SolidColorBrush(Color.FromRgb(113, 73, 30))},
             { PlayerColor.Cyan,    new SolidColorBrush(Color.FromRgb(56, 254, 220))},
-            { PlayerColor.Lime,     new SolidColorBrush(Color.FromRgb(80, 239, 57))}
+            { PlayerColor.Lime,    new SolidColorBrush(Color.FromRgb(80, 239, 57))},
+            { PlayerColor.Maroon,  new SolidColorBrush(Color.FromRgb(95, 29, 46))},
+            { PlayerColor.Rose,    new SolidColorBrush(Color.FromRgb(236, 192, 211))},
+            { PlayerColor.Banana,  new SolidColorBrush(Color.FromRgb(240, 231, 168))},
+            { PlayerColor.Gray,    new SolidColorBrush(Color.FromRgb(117, 133, 147))},
+            { PlayerColor.Tan,     new SolidColorBrush(Color.FromRgb(145, 136, 119))},
+            { PlayerColor.Sunset,  new SolidColorBrush(Color.FromRgb(215, 100, 100))}
 
         };
 

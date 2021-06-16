@@ -496,7 +496,13 @@ namespace AmongUsCapture {
         Purple = 8,
         Brown = 9,
         Cyan = 10,
-        Lime = 11
+        Lime = 11,
+        Maroon = 12,
+        Rose = 13,
+        Banana = 14,
+        Gray = 15,
+        Tan = 16,
+        Sunset = 17
     }
 
     public enum PlayRegion {

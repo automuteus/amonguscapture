@@ -26,11 +26,11 @@ namespace AmongUsCapture {
 
         private LobbyEventArgs latestLobbyEventArgs;
 
-        private Dictionary<string, PlayerInfo> newPlayerInfos = new(10); // container for new player infos. Also has capacity 10 already assigned so no internal resizing of the data structure is needed
+        private Dictionary<string, PlayerInfo> newPlayerInfos = new(15); // container for new player infos. Also has capacity 15 already assigned so no internal resizing of the data structure is needed
 
         public OffsetManager offMan = new(Settings.PersistentSettings.IndexURL);
 
-        private Dictionary<string, PlayerInfo> oldPlayerInfos = new(10); // Important: this is making the assumption that player names are unique. They are, but for better tracking of players and to eliminate any ambiguity the keys of this probably need to be the players' network IDs instead
+        private Dictionary<string, PlayerInfo> oldPlayerInfos = new(15); // Important: this is making the assumption that player names are unique. They are, but for better tracking of players and to eliminate any ambiguity the keys of this probably need to be the players' network IDs instead
 
         private GameState oldState = GameState.UNKNOWN;
         private int prevChatBubsVersion;

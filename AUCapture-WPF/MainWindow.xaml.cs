@@ -695,7 +695,7 @@ namespace AUCapture_WPF {
         private void TestUsers() {
             context.Connected = true;
             context.GameState = GameState.TASKS;
-            var numOfPlayers = 9;
+            var numOfPlayers = 14;
             for (uint i = 0; i < numOfPlayers; i++) context.Players.Add(new Player($"{i}Cool4u", (PlayerColor) (i % 12), true, i % 10, i, 0));
 
             RandomizePlayers();

@@ -502,7 +502,7 @@ namespace AmongUsCapture {
         Banana = 14,
         Gray = 15,
         Tan = 16,
-        Sunset = 17
+        Coral = 17
     }
 
     public enum PlayRegion {

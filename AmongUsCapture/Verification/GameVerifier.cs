@@ -39,8 +39,10 @@ namespace AmongUsCapture
                 {
                     baseDllFolder = Path.Join(Directory.GetParent(executablePath).FullName, "/Among Us_Data/Plugins/x86_64/");
                 }
-                var steam_apiCert = AuthenticodeTools.IsTrusted(Path.Join(baseDllFolder, "steam_api.dll"));
-                var steam_api64Cert = AuthenticodeTools.IsTrusted(Path.Join(baseDllFolder, "steam_api64.dll"));
+                var steam_apiCertPath = Path.Join(baseDllFolder, "steam_api.dll");
+                var steam_api64CertPath = Path.Join(baseDllFolder, "steam_api64.dll");
+                var steam_apiCert = !File.Exists(steam_apiCertPath) || AuthenticodeTools.IsTrusted(steam_apiCertPath);
+                var steam_api64Cert = !File.Exists(steam_api64CertPath) || AuthenticodeTools.IsTrusted(steam_api64CertPath);
                 //Settings.conInterface.WriteModuleTextColored("GameVerifier",Color.Yellow,$"steam_apiCert: {steam_apiCert}");
                 //Settings.conInterface.WriteModuleTextColored("GameVerifier",Color.Yellow,$"steam_api64Cert: {steam_api64Cert}");
                 return (steam_apiCert) && (steam_api64Cert);

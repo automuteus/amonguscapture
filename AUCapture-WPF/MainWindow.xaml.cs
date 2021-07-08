@@ -569,7 +569,7 @@ namespace AUCapture_WPF {
                 case PlayerColor.Tan:
                     OutputCode = Color.Tan;
                     break;
-                case PlayerColor.Sunset:
+                case PlayerColor.Coral:
                     OutputCode = Color.LightCoral;
                     break;
             }

@@ -28,7 +28,7 @@
     <PackageReference Include="Discord.Net" Version="2.4.0" />
     <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
     <PackageReference Include="NLog" Version="4.7.10" />
-    <PackageReference Include="SocketIOClient" Version="2.2.0" />
+    <PackageReference Include="SocketIOClient" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>

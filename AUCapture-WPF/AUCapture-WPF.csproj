@@ -66,7 +66,7 @@
 
   <ItemGroup>
     <PackageReference Include="Config.Net" Version="4.15.0" />
-    <PackageReference Include="Config.Net.Json" Version="4.15.0" />
+    <PackageReference Include="Config.Net.Json" Version="4.17.0" />
     <PackageReference Include="Gu.Wpf.Localization" Version="6.7.0" />
     <PackageReference Include="HandyControl" Version="3.0.0" />
     <PackageReference Include="Humanizer.Core" Version="2.10.1" />

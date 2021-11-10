@@ -23,11 +23,11 @@ namespace AUOffsetManager
             this.indexURL = indexURL;
             if (File.Exists(StorageLocation))
             {
-                 LocalOffsetIndex = JsonConvert.DeserializeObject<Dictionary<string, GameOffsets>>(File.ReadAllText(StorageLocation));
-                 if (LocalOffsetIndex is null)
-                 {
-                     LocalOffsetIndex = new Dictionary<string, GameOffsets>();
-                 }
+                LocalOffsetIndex = JsonConvert.DeserializeObject<Dictionary<string, GameOffsets>>(File.ReadAllText(StorageLocation));
+                if (LocalOffsetIndex is null)
+                {
+                    LocalOffsetIndex = new Dictionary<string, GameOffsets>();
+                }
             }
 
             indexTask = RefreshIndex();
@@ -59,7 +59,7 @@ namespace AUOffsetManager
                     await sw.WriteAsync(JsonConvert.SerializeObject(OffsetIndex, Formatting.Indented));
                     Console.WriteLine(e);
                 }
-                
+
             }
             catch (Exception e)
             {
@@ -70,7 +70,7 @@ namespace AUOffsetManager
                 }
                 Console.WriteLine("If you are reading this that means that the site is down, and you have never used our program before. If github still exists in the future, try again in 30 minutes. - Carbon ");
             }
-            
+
         }
 
         public GameOffsets FetchForHash(string sha256Hash)
@@ -90,7 +90,7 @@ namespace AUOffsetManager
                 }
                 return offsets;
             }
-                
+
         }
 
         public void refreshLocal()
@@ -100,7 +100,7 @@ namespace AUOffsetManager
                 LocalOffsetIndex = JsonConvert.DeserializeObject<Dictionary<string, GameOffsets>>(File.ReadAllText(StorageLocation));
             }
         }
-        public void AddToLocalIndex(string gameHash,GameOffsets offset)
+        public void AddToLocalIndex(string gameHash, GameOffsets offset)
         {
             using StreamWriter sw = File.CreateText(StorageLocation);
             LocalOffsetIndex[gameHash] = offset;
@@ -127,7 +127,7 @@ namespace AUOffsetManager
         public int ServerManagerOffset { get; set; }
 
         public int TempDataOffset { get; set; }
-        
+
         public int GameOptionsOffset { get; set; }
 
         public int[] MeetingHudPtr { get; set; }
@@ -149,35 +149,43 @@ namespace AUOffsetManager
         public bool isEpic { get; set; }
         public int AddPlayerPtr { get; set; }
         public int PlayerListPtr { get; set; }
-        
+
         public PlayerInfoStructOffsets PlayerInfoStructOffsets { get; set; }
         public WinningPlayerDataStructOffsets WinningPlayerDataStructOffsets { get; set; }
-        
+        public PlayerOutfitStructOffsets PlayerOutfitStructOffsets { get; set; }
     }
 
-    public class PlayerInfoStructOffsets {
+    public class PlayerInfoStructOffsets
+    {
         public int PlayerIDOffset { get; set; }
-        public int PlayerNameOffset { get; set; }
+        public int[] OutfitsOffset { get; set; }
+        public int PlayerLevelOffset { get; set; }
+        public int DisconnectedOffset { get; set; }
+        public int[] RoleTypeOffset { get; set; }
+        public int[] RoleTeamTypeOffset { get; set; }
+        public int TasksOffset { get; set; }
+        public int IsDeadOffset { get; set; }
+        public int ObjectOffset { get; set; }
+    }
+
+    public class WinningPlayerDataStructOffsets
+    {
+        public int IsYouOffset { get; set; }
+        public int IsImposterOffset { get; set; }
+        public int IsDeadOffset { get; set; }
+    }
+
+    public class PlayerOutfitStructOffsets
+    {
+        public int dontCensorNameOffset { get; set; }
         public int ColorIDOffset { get; set; }
         public int HatIDOffset { get; set; }
         public int PetIDOffset { get; set; }
         public int SkinIDOffset { get; set; }
-        public int DisconnectedOffset { get; set; }
-        public int TasksOffset { get; set; }
-        public int ImposterOffset { get; set; }
-        public int DeadOffset { get; set; }
-        public int ObjectOffset { get; set; }
+        public int VisorIDOffset { get; set; }
+        public int NamePlateIDOffset { get; set; }
+        public int PlayerNameOffset { get; set; }
+        public int PreCensorNameOffset { get; set; }
+        public int PostCensorNameOffset { get; set; }
     }
-
-    public class WinningPlayerDataStructOffsets {
-        public int NameOffset { get; set; }
-        public int DeadOffset { get; set; }
-        public int ImposterOffset { get; set; }
-        public int ColorOffset { get; set; }
-        public int SkinOffset { get; set; }
-        public int HatOffset { get; set; }
-        public int PetOffset { get; set; }
-        public int IsYouOffset { get; set; }
-    }
-
 }

@@ -20,7 +20,7 @@ jobs:
           go-version: 1.15
 
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1.8.0
+        uses: actions/setup-dotnet@v2.0.0
         with:
           dotnet-version: 5.0.100
 

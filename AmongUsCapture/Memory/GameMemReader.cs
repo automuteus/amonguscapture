@@ -225,8 +225,7 @@ namespace AmongUsCapture {
         private string? GetGameCode(ProcessMemory memInstance) {
             var gameCode = memInstance.ReadString(ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr, CurrentOffsets.GameCodeOffsets), CurrentOffsets.StringOffsets[0], CurrentOffsets.StringOffsets[1]);
             if (string.IsNullOrEmpty(gameCode)) return null;
-            var split = gameCode.Split("\n");
-            return split.Length == 2 ? split[1] : null;
+            return gameCode;
         }
 
         private PlayRegion GetPlayRegion(ProcessMemory memInstance) {

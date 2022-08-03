@@ -65,7 +65,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Config.Net" Version="4.15.0" />
+    <PackageReference Include="Config.Net" Version="5.1.1" />
     <PackageReference Include="Config.Net.Json" Version="4.15.0" />
     <PackageReference Include="Gu.Wpf.Localization" Version="6.7.0" />
     <PackageReference Include="HandyControl" Version="3.0.0" />

@@ -3214,5 +3214,63 @@
       "PreCensorNameOffset": 0x24,
       "PostCensorNameOffset": 0x28
     }
+  },
+  "34D0FB783A147D38551E14DB85C33A74E4C9F782B39D92C5E1ACFF69BEB106B2": {
+    "Description": "v2022.8.23m (build num: 2202)",
+    "AmongUsClientOffset": 0x2678908,
+    "GameDataOffset": 0x2636FC8,
+    "MeetingHudOffset": 0x266C250,
+    "GameStartManagerOffset": 0x2607858,
+    "HudManagerOffset": 0x2607E48,
+    "ServerManagerOffset": 0x2609268,
+    "TempDataOffset": 0x2637250,
+    "GameOptionsOffset": 0x2688638,
+
+    "MeetingHudPtr": [0x266C250, 0xB8, 0x0],
+    "MeetingHudCachePtrOffsets": [0x10],
+    "MeetingHudStateOffsets": [0xC0],
+    "GameStateOffsets": [0x2678908, 0xB8, 0x0, 0xDC],
+    "AllPlayerPtrOffsets": [0x2636FC8, 0xB8, 0x0, 0x30],
+    "AllPlayersOffsets": [0x10],
+    "PlayerCountOffsets": [0x18],
+    "ExiledPlayerIdOffsets": [0x266C250, 0xB8, 0x0, 0xD8, 0x10],
+    "RawGameOverReasonOffsets": [0x2637250, 0xB8, 0x4],
+    "WinningPlayersPtrOffsets": [0x2637250, 0xB8, 0x10],
+    "WinningPlayersOffsets": [0x10],
+    "WinningPlayerCountOffsets": [0x18],
+    "GameCodeOffsets": [0x2607858, 0xB8, 0x0, 0x50, 0xD8],
+    "PlayRegionOffsets": [0x2609268, 0xB8, 0x0, 0x20, 0x10, 0x10],
+    "PlayMapOffsets": [0x2688638, 0xB8, 0x8, 0x38],
+    "StringOffsets": [0x10, 0x14],
+    "AddPlayerPtr": 0x8,
+    "PlayerListPtr": 0x20,
+    "PlayerInfoStructOffsets": {
+      "PlayerIDOffset": 0x10,
+      "OutfitsOffset": [0x30, 0x18, 0x30],
+      "PlayerLevelOffset": 0x38,
+      "DisconnectedOffset": 0x3C,
+      "RoleTypeOffset": [0x40, 0x18],
+      "RoleTeamTypeOffset": [0x40, 0x48],
+      "TasksOffset": 0x48,
+      "IsDeadOffset": 0x50,
+      "ObjectOffset": 0x58
+    },
+    "WinningPlayerDataStructOffsets": {
+      "IsYouOffset": 0x50,
+      "IsImposterOffset": 0x51,
+      "IsDeadOffset": 0x52
+    },
+    "PlayerOutfitStructOffsets": {
+      "dontCensorNameOffset": 0x10,
+      "ColorIDOffset": 0x14,
+      "HatIDOffset": 0x18,
+      "PetIDOffset": 0x20,
+      "SkinIDOffset": 0x28,
+      "VisorIDOffset": 0x30,
+      "NamePlateIDOffset": 0x38,
+      "PlayerNameOffset": 0x40,
+      "PreCensorNameOffset": 0x40,
+      "PostCensorNameOffset": 0x48,
+    }
   }
 }

@@ -20,7 +20,7 @@ jobs:
         uses: "WyriHaximus/github-action-get-previous-tag@master"
 
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1.8.0
+        uses: actions/setup-dotnet@v3.0.1
         with:
           dotnet-version: 5.0.100
 

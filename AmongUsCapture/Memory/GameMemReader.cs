@@ -327,7 +327,7 @@ namespace AmongUsCapture {
                             impostorCount = GetPlayers(ProcessMemory.getInstance()).Count(x => x.GetIsImposter() && x.PlayerName != "" && x.PlayerId != exiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
                             innocentCount = GetPlayers(ProcessMemory.getInstance()).Count(x => !x.GetIsImposter() && x.PlayerName != "" && x.PlayerId != exiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
 
-                            if (impostorCount == 0 || impostorCount >= innocentCount) {
+                            if ((impostorCount == 0 || impostorCount >= innocentCount) && !Settings.PersistentSettings.noEndJudgmentByExile) {
                                 exileCausesEnd = true;
                                 state = GameState.LOBBY;
                             }

@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using AmongUsCapture.Memory.Structs;
 using AUOffsetManager;
@@ -350,7 +351,7 @@ namespace AmongUsCapture {
 
                     if (state != oldState && state == GameState.LOBBY || shouldReadLobby) {
                         var gameCode = GetGameCode(ProcessMemory.getInstance());
-                        if (!string.IsNullOrEmpty(gameCode)) {
+                        if (!string.IsNullOrEmpty(gameCode) && Regex.IsMatch(gameCode, "^[A-Z]{4}$|^[A-Z]{6}$|^\\*{6}$")) {
                             latestLobbyEventArgs = new LobbyEventArgs {
                                 LobbyCode = gameCode,
                                 Region = GetPlayRegion(ProcessMemory.getInstance()),

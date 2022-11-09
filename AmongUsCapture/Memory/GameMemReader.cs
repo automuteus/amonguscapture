@@ -105,7 +105,7 @@ namespace AmongUsCapture {
             for (var i = 0; i < playerCount; i++) {
                 var pi = new PlayerInfo(playerAddrPtr, memInstance, CurrentOffsets);
                 //var pi = CurrentOffsets.isEpic ? (PlayerInfo) memInstance.Read<EpicPlayerInfo>(playerAddrPtr, 0, 0) : memInstance.Read<SteamPlayerInfo>(playerAddrPtr, 0, 0);
-                if(pi.GetPlayerName() is null || pi.GetPlayerName() == "") continue;
+                if(pi.GetPlayerName() is null || pi.GetPlayerName() == "" || !Enum.IsDefined(typeof(PlayerColor), pi.GetPlayerColor())) continue;
                 playerAddrPtr += CurrentOffsets.AddPlayerPtr;
                 Players.Add(pi);
             }

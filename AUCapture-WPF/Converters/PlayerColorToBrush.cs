@@ -28,7 +28,7 @@ namespace AUCapture_WPF.Converters
             { PlayerColor.Banana,  new SolidColorBrush(Color.FromRgb(240, 231, 168))},
             { PlayerColor.Gray,    new SolidColorBrush(Color.FromRgb(117, 133, 147))},
             { PlayerColor.Tan,     new SolidColorBrush(Color.FromRgb(145, 136, 119))},
-            { PlayerColor.Sunset,  new SolidColorBrush(Color.FromRgb(215, 100, 100))}
+            { PlayerColor.Coral,   new SolidColorBrush(Color.FromRgb(215, 100, 100))}
 
         };
 
@@ -74,7 +74,7 @@ namespace AUCapture_WPF.Converters
             { PlayerColor.Banana,  new SolidColorBrush(Color.FromRgb(240, 231, 168))},
             { PlayerColor.Gray,    new SolidColorBrush(Color.FromRgb(117, 133, 147))},
             { PlayerColor.Tan,     new SolidColorBrush(Color.FromRgb(145, 136, 119))},
-            { PlayerColor.Sunset,  new SolidColorBrush(Color.FromRgb(215, 100, 100))}
+            { PlayerColor.Coral,   new SolidColorBrush(Color.FromRgb(215, 100, 100))}
 
         };
 

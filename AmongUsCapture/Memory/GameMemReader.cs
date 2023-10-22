@@ -517,6 +517,7 @@ namespace AmongUsCapture {
         Polus = 2,
         dlekS = 3,
         Airship = 4,
+        Fungle = 5,
     }
 
     public enum GameState {

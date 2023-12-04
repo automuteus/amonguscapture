@@ -410,6 +410,10 @@ namespace AUCapture_WPF
 
         private void SettingsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (e.PropertyName == nameof(Settings.NoEndJudgmentByExile)) 
+            { 
+                AmongUsCapture.Settings.PersistentSettings.noEndJudgmentByExile = Settings.NoEndJudgmentByExile; 
+            }
             if (e.PropertyName == nameof(Settings.debug))
             {
                 AmongUsCapture.Settings.PersistentSettings.debugConsole = Settings.debug;

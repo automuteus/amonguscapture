@@ -45,6 +45,9 @@ namespace AmongUsCapture
         [Option(Alias = "DebugConsole", DefaultValue = false)]
         bool debugConsole { get; set; }
 
+        [Option(Alias = "NoEndJudgmentByExile", DefaultValue = false)]
+        bool noEndJudgmentByExile { get; set; }
+
         [Option(Alias = "IndexURL", DefaultValue = "https://raw.githubusercontent.com/automuteus/amonguscapture/master/Offsets.json")]
         string IndexURL { get; set; }
         

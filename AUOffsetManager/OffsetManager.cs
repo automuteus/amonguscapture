@@ -170,6 +170,8 @@ namespace AUOffsetManager
 
     public class WinningPlayerDataStructOffsets
     {
+        public int PlayerNameOffset { get; set; }
+        public int OutfitOffset { get; set; }
         public int IsYouOffset { get; set; }
         public int IsImposterOffset { get; set; }
         public int IsDeadOffset { get; set; }
@@ -177,7 +179,6 @@ namespace AUOffsetManager
 
     public class PlayerOutfitStructOffsets
     {
-        public int dontCensorNameOffset { get; set; }
         public int ColorIDOffset { get; set; }
         public int HatIDOffset { get; set; }
         public int PetIDOffset { get; set; }
@@ -185,7 +186,5 @@ namespace AUOffsetManager
         public int VisorIDOffset { get; set; }
         public int NamePlateIDOffset { get; set; }
         public int PlayerNameOffset { get; set; }
-        public int PreCensorNameOffset { get; set; }
-        public int PostCensorNameOffset { get; set; }
     }
 }

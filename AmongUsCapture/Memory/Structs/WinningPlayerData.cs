@@ -29,8 +29,8 @@ namespace AmongUsCapture.Memory.Structs
                 WinningPlayerDataStructOffsets pOf = CurrentOffsets.WinningPlayerDataStructOffsets;
                 fixed (byte* ptr = buffer) {
                     var buffptr = (IntPtr) ptr;
-                    Name = MemInstance.ReadString(MemInstance.Read<IntPtr>(baseAddrCopy, oOf.PlayerNameOffset), CurrentOffsets.StringOffsets[0], CurrentOffsets.StringOffsets[1]);
-                    ColorId = (int)Marshal.ReadInt32(buffptr, oOf.ColorIDOffset);
+                    Name = MemInstance.ReadString(MemInstance.Read<IntPtr>(baseAddrCopy, pOf.PlayerNameOffset), CurrentOffsets.StringOffsets[0], CurrentOffsets.StringOffsets[1]);
+                    ColorId = MemInstance.Read<int>(MemInstance.Read<IntPtr>(baseAddrCopy, pOf.OutfitOffset), oOf.ColorIDOffset);
                     // TODO: Since IDs are changed from enum to string like "hat_police", renaming or mapping existing svgs to string is required
                     // TODO: As a workaround just fill with 0 as IDs
                     HatId = 0;

@@ -1,5 +1,5 @@
 <a href="https://automute.us">
-<img alt="Banner" src="https://media.discordapp.net/attachments/759195945044017234/798382462157193246/banner.png?width=1440&height=274">
+<img alt="Banner" src="https://github.com/user-attachments/assets/9efffc77-a45c-4a42-9a94-717468fc474e">
 </a>
 
 #
@@ -32,7 +32,7 @@ AmongUsCapture reads game data of Among Us and communicates with
 ## Automatic Installation	
 
 1) Download the latest version of the CaptureInstaller here: <a href="https://github.com/automuteus/capture-install/releases/latest/download/CaptureInstaller.bat"><img alt="GitHub release" src="https://img.shields.io/github/v/release/automuteus/capture-install?color=blue&label=download&style=flat"></a>	
-2) Once you have the CaptureInstaller.bat run the file and a Windows Smart Screen message may pop up, if so click `More Info` and `Run Anyway` [example](https://media.discordapp.net/attachments/780435741650059268/798023233186168863/smartscreen.png)	
+2) Once you have the CaptureInstaller.bat run the file and a Windows Smart Screen message may pop up, if so click `More Info` and `Run Anyway` [example](https://github.com/user-attachments/assets/9fe3966b-b8be-4693-9b9f-45dcbae06fff)
 3) NET 5 Desktop Runtime will start to install and you will be prompted to press `Allow` once it has been installed. Then the rest is done for you!
 
 
@@ -50,7 +50,7 @@ AmongUsCapture reads game data of Among Us and communicates with
 ## Troubleshooting 
 <a href="https://download.visualstudio.microsoft.com/download/pr/c6a74d6b-576c-4ab0-bf55-d46d45610730/f70d2252c9f452c2eb679b8041846466/windowsdesktop-runtime-5.0.1-win-x64.exe"><img alt="GitHub release" src="https://img.shields.io/badge/Requires-.NET%205%20Desktop%20Runtime-purple"></a>	
 
-![Image1](https://cdn.discordapp.com/attachments/759195945044017234/800786824502575124/unknown.png)
+![Image1](https://github.com/user-attachments/assets/7e5e1be7-7721-46fd-8195-3e97e75ede10)
 
 This is caused by not having dotnet 5 installed, You can install it [here](https://download.visualstudio.microsoft.com/download/pr/c6a74d6b-576c-4ab0-bf55-d46d45610730/f70d2252c9f452c2eb679b8041846466/windowsdesktop-runtime-5.0.1-win-x64.exe)
 ## Note

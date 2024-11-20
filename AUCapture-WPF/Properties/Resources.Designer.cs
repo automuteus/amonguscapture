@@ -421,6 +421,15 @@ namespace AUCapture_WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No end judgment by exile.
+        /// </summary>
+        public static string SettingsGeneralTabNoEndJudgmentByExile {
+            get {
+                return ResourceManager.GetString("SettingsGeneralTabNoEndJudgmentByExile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Always on top.
         /// </summary>
         public static string SettingsGeneralTabAlwaysOnTop {

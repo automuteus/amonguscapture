@@ -209,6 +209,11 @@
                                                 OffContent="{l:Static properties:Resources.OffText}"
                                                 OnContent="{l:Static properties:Resources.OnText}" />
                                             <mah:ToggleSwitch
+                                                Header="{l:Static properties:Resources.SettingsGeneralTabNoEndJudgmentByExile}"
+                                                IsOn="{Binding Settings.NoEndJudgmentByExile, Mode=TwoWay}"
+                                                OffContent="{l:Static properties:Resources.OffText}"
+                                                OnContent="{l:Static properties:Resources.OnText}" />
+                                            <mah:ToggleSwitch
                                                 Header="{l:Static properties:Resources.SettingsGeneralTabStartupMemes}"
                                                 IsOn="{Binding Settings.startupMemes, Mode=TwoWay}"
                                                 OffContent="{l:Static properties:Resources.OffText}"

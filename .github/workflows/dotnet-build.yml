@@ -11,16 +11,17 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v2.3.4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: "Get Previous tag"
+      - name: Get previous tag
         id: previoustag
-        uses: "WyriHaximus/github-action-get-previous-tag@master"
+        uses: WyriHaximus/github-action-get-previous-tag@v1
 
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1.8.0
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 5.0.100
 
@@ -40,7 +41,7 @@ jobs:
           7z a AmongUsCapture-Beta.zip ..\AmongUsCapture-Beta.exe -mx=9
       
       - name: AmongUsCapture-beta
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: AmongUsCapture-beta
           path: AmongUsCapture-Beta.zip

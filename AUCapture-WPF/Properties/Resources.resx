@@ -122,6 +122,9 @@
   <data name="SettingsGeneralTabAlwaysCopyGameCode" xml:space="preserve">
     <value>Always copy game code</value>
   </data>
+  <data name="SettingsGeneralTabNoEndJudgmentByExile" xml:space="preserve">
+    <value>No end judgment by exile</value>
+  </data>
   <data name="SettingsGeneralTabFocusOnConnect" xml:space="preserve">
     <value>Focus window on connect</value>
   </data>

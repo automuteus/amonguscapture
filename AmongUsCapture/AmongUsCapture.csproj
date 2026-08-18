@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Config.Net" Version="4.15.0" />
+    <PackageReference Include="Config.Net" Version="5.1.5" />
     <PackageReference Include="Config.Net.Json" Version="4.15.0" />
     <PackageReference Include="Discord.Net" Version="2.4.0" />
     <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />

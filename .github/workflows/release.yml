@@ -39,7 +39,7 @@ jobs:
           7z a ..\AmongUsCapture.zip ..\AmongUsCapture.exe -mx=9
 
       - name: Sign
-        uses: carbonneuron/GHActionSignHash@v4
+        uses: carbonneuron/GHActionSignHash@v5
         env: 
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         id: sign

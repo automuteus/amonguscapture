@@ -114,6 +114,9 @@
   <data name="SettingsGeneralTabAlwaysCopyGameCode" xml:space="preserve">
     <value>常にゲームコードをコピー</value>
   </data>
+  <data name="SettingsGeneralTabNoEndJudgmentByExile" xml:space="preserve">
+    <value>追放で終了判定を行わない</value>
+  </data>
   <data name="SettingsGeneralTabAlwaysOnTop" xml:space="preserve">
     <value>常に最前面に表示</value>
   </data>

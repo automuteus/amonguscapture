@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>AUCapture</value>
+  </data>
+  <data name="SettingsTooltip" xml:space="preserve">
+    <value>Ouvrir la fenêtre des paramètres</value>
+  </data>
+  <data name="ManualConnectTooltip" xml:space="preserve">
+    <value>Ouvrir la fenêtre de connexion manuelle</value>
+  </data>
+  <data name="PremiumTooltip" xml:space="preserve">
+    <value>Obtenir AutoMuteUs premium</value>
+  </data>
+  <data name="SettingsHeader" xml:space="preserve">
+    <value>Réglages</value>
+  </data>
+  <data name="SettingsGeneralTabHeader" xml:space="preserve">
+    <value>Générale</value>
+  </data>
+  <data name="SettingsGeneralTabLanguageHeader" xml:space="preserve">
+    <value>Langue</value>
+  </data>
+  <data name="SettingsGeneralTabAlwaysCopyGameCode" xml:space="preserve">
+    <value>Toujours copier le code</value>
+  </data>
+  <data name="SettingsGeneralTabFocusOnConnect" xml:space="preserve">
+    <value>Focus sur la connexion</value>
+  </data>
+  <data name="SettingsGeneralTabAPIServer" xml:space="preserve">
+    <value>API Serveur</value>
+  </data>
+  <data name="SettingsGeneralTabAlwaysOnTop" xml:space="preserve">
+    <value>Toujours au-dessus</value>
+  </data>
+  <data name="SettingsDebugTabHeader" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="SettingsDebugTabDebugModeSwitch" xml:space="preserve">
+    <value>Mode debug</value>
+  </data>
+  <data name="SettingsDebugTabResetConfigButton" xml:space="preserve">
+    <value>Réinitialiser la config</value>
+  </data>
+  <data name="SettingsDebugTabReloadOffsetsButton" xml:space="preserve">
+    <value>Recharger les offsets</value>
+  </data>
+  <data name="SettingsDiscordTabHeader" xml:space="preserve">
+    <value>Discord</value>
+  </data>
+  <data name="SettingsDiscordTabTokenWatermark" xml:space="preserve">
+    <value>Collez le token ici</value>
+  </data>
+  <data name="SettingsDiscordTabSubmitButton" xml:space="preserve">
+    <value>Envoyer</value>
+  </data>
+  <data name="SettingsAboutTabHeader" xml:space="preserve">
+    <value>À propos</value>
+  </data>
+  <data name="SettingsAboutTabAutoUpdaterHeader" xml:space="preserve">
+    <value>Mise à jour automatique</value>
+  </data>
+  <data name="SettingsAboutTabAppVersion" xml:space="preserve">
+    <value>App version:</value>
+  </data>
+  <data name="SettingsAboutTabLatestVersion" xml:space="preserve">
+    <value>Dernière version:</value>
+  </data>
+  <data name="SettingsAboutTabContributorsButton" xml:space="preserve">
+    <value>Contributeurs: </value>
+  </data>
+  <data name="SettingsAboutTabContributorsButtonToolTip" xml:space="preserve">
+    <value>Voir les contributeurs</value>
+  </data>
+  <data name="ManualConnectionHeader" xml:space="preserve">
+    <value>Connexion Manuelle</value>
+  </data>
+  <data name="ManualConnectionHost" xml:space="preserve">
+    <value>Hôte:</value>
+  </data>
+  <data name="ManualConnectionCode" xml:space="preserve">
+    <value>Code: </value>
+  </data>
+  <data name="ManualConnectionSubmitButton" xml:space="preserve">
+    <value>Envoyer</value>
+  </data>
+  <data name="WaitingForAmongUs" xml:space="preserve">
+    <value>En attente d'Among Us</value>
+  </data>
+  <data name="WaitingForLobby" xml:space="preserve">
+    <value>En attente de partie</value>
+  </data>
+  <data name="GameStateTooltip" xml:space="preserve">
+    <value>Statut actuel</value>
+  </data>
+  <data name="GameState.LOBBY" xml:space="preserve">
+    <value>LOBBY</value>
+  </data>
+  <data name="GameState.DISCUSSION" xml:space="preserve">
+    <value>DISCUSSION</value>
+  </data>
+  <data name="GameState.ENDED" xml:space="preserve">
+    <value>TERMINÉ</value>
+  </data>
+  <data name="GameState.UNKNOWN" xml:space="preserve">
+    <value>INCONNUE</value>
+  </data>
+  <data name="GameState.TASKS" xml:space="preserve">
+    <value>TÂCHES</value>
+  </data>
+  <data name="ConnectionStatus.AUTOMUTEUS" xml:space="preserve">
+    <value>AutoMuteUs</value>
+  </data>
+  <data name="ConnectionStatus.USER BOT" xml:space="preserve">
+    <value>Bot Utilisateur</value>
+  </data>
+  <data name="MapTooltip" xml:space="preserve">
+    <value>Carte actuelle</value>
+  </data>
+  <data name="GameCodeTooltip" xml:space="preserve">
+    <value>Code du jeu</value>
+  </data>
+  <data name="GameCodeWatermark" xml:space="preserve">
+    <value>Code du jeu</value>
+  </data>
+  <data name="MapWatermark" xml:space="preserve">
+    <value>Carte</value>
+  </data>
+  <data name="OnText" xml:space="preserve">
+    <value>Activé</value>
+  </data>
+  <data name="OffText" xml:space="preserve">
+    <value>Désactiver</value>
+  </data>
+  <data name="PrivateKeyErrorMessage" xml:space="preserve">
+    <value>Nous avons détecté une mise à jour de {0}, mais il n'y a pas de clé publique dans cette capture, nous ne pourrons donc pas vérifier l'intégrité. Veuillez télécharger la dernière version à partir de la page github.</value>
+  </data>
+  <data name="PrivateKeyErrorTitle" xml:space="preserve">
+    <value>Échec de la mise à jour automatique</value>
+  </data>
+  <data name="CancelText" xml:space="preserve">
+    <value>annuler</value>
+  </data>
+  <data name="UpdateNotificationMessage" xml:space="preserve">
+    <value>Nous avons détecté que vous utilisez une ancienne version de AmongUsCapture !
+Votre version : {0}
+Dernière version : {1}</value>
+  </data>
+  <data name="UpdateNotificationHeader" xml:space="preserve">
+    <value>Avertissement</value>
+  </data>
+  <data name="UpdateNotificationDecline" xml:space="preserve">
+    <value>Non merci</value>
+  </data>
+  <data name="UpdateNotificationUpdate" xml:space="preserve">
+    <value>Mise à jour</value>
+  </data>
+  <data name="RetryText" xml:space="preserve">
+    <value>recommencez</value>
+  </data>
+  <data name="SettingsDebugOpenLogsFolderButton" xml:space="preserve">
+    <value>Ouvrir le dossier de log</value>
+  </data>
+  <data name="GameState.MENU" xml:space="preserve">
+    <value>MENU</value>
+  </data>
+  <data name="SettingsGeneralTabStartupMemes" xml:space="preserve">
+    <value>Mèmes de démarrage</value>
+  </data>
+</root>

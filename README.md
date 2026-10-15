@@ -37,8 +37,7 @@ AmongUsCapture reads game data of Among Us and communicates with
 
 
 ## Manual Installation
-1) Download [.NET Desktop Runtime 5.0.1](https://download.visualstudio.microsoft.com/download/pr/c6a74d6b-576c-4ab0-bf55-d46d45610730/f70d2252c9f452c2eb679b8041846466/windowsdesktop-runtime-5.0.1-win-x64.exe)
-2) Download the latest version of AmongUsCapture here: <a href="https://capture.automute.us"><img src="https://img.shields.io/github/v/release/automuteus/amonguscapture?label=Download"></a>
+1) Download the latest version of AmongUsCapture here: <a href="https://capture.automute.us"><img src="https://img.shields.io/github/v/release/automuteus/amonguscapture?label=Download"></a>
 
 
 ## Usage
@@ -47,12 +46,10 @@ AmongUsCapture reads game data of Among Us and communicates with
 2) Extract the zip file after the download
 3) Run AmongUsCapture
 
-## Troubleshooting 
-<a href="https://download.visualstudio.microsoft.com/download/pr/c6a74d6b-576c-4ab0-bf55-d46d45610730/f70d2252c9f452c2eb679b8041846466/windowsdesktop-runtime-5.0.1-win-x64.exe"><img alt="GitHub release" src="https://img.shields.io/badge/Requires-.NET%205%20Desktop%20Runtime-purple"></a>	
+## Troubleshooting
 
-![Image1](https://github.com/user-attachments/assets/7e5e1be7-7721-46fd-8195-3e97e75ede10)
+Since 6.0.0 the capture includes its own .NET runtime, so there is nothing else to install. Versions before 6.0.0 needed the [.NET 5 Desktop Runtime](https://download.visualstudio.microsoft.com/download/pr/c6a74d6b-576c-4ab0-bf55-d46d45610730/f70d2252c9f452c2eb679b8041846466/windowsdesktop-runtime-5.0.1-win-x64.exe); updating fixes a capture that won't open for lack of it.
 
-This is caused by not having dotnet 5 installed, You can install it [here](https://download.visualstudio.microsoft.com/download/pr/c6a74d6b-576c-4ab0-bf55-d46d45610730/f70d2252c9f452c2eb679b8041846466/windowsdesktop-runtime-5.0.1-win-x64.exe)
 ## Note
 
 Windows Defender may flag this executable as Trojan:Win32/Emali.A!cl, you can make an exception for this file depending on your version of Windows

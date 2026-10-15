@@ -385,7 +385,8 @@ namespace AmongUsCapture {
 
                         var humansWon = gameOverReason == GameOverReason.HumansByTask ||
                                         gameOverReason == GameOverReason.ImpostorDisconnect ||
-                                        gameOverReason == GameOverReason.HumansByVote;
+                                        gameOverReason == GameOverReason.HumansByVote ||
+                                        gameOverReason == GameOverReason.HideAndSeekCrewmatesByTimer;
                         if (humansWon) // we will be reading humans data, so set all to simps
                             foreach (var playerName in CachedPlayerInfos.Keys)
                                 try {

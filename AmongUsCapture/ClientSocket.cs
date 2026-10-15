@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection;
 using Newtonsoft.Json;
 using NLog.Fluent;
 using SocketIOClient;
@@ -18,8 +20,13 @@ namespace AmongUsCapture
         private DiscordHandler handler;
         public void Init()
         {
-            // Initialize a socket.io connection.
+            // Initialize a socket.io connection. Galactus records which kind of capture, and which version, each match used.
             socket = new SocketIO();
+            var version = Assembly.GetEntryAssembly()?.GetName().Version;
+            socket.Options.Query = new Dictionary<string, string> {
+                {"kind", "capture-app"},
+                {"version", version is null ? "" : version.ToString(3)}
+            };
             // Handle tokens from protocol links.
 
             // Register handlers for game-state change events.

@@ -29,6 +29,8 @@
     <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
     <PackageReference Include="NLog" Version="4.7.10" />
     <PackageReference Include="SocketIOClient" Version="2.2.0" />
+    <!-- Config.Net's own 4.7.0 dependency pulls in System.Drawing.Common 4.7.0, which has a critical vulnerability -->
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.13" />
   </ItemGroup>
 
   <ItemGroup>

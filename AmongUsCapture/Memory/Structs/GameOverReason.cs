@@ -13,6 +13,7 @@ namespace AmongUsCapture.Memory.Structs
 		ImpostorBySabotage,
 		ImpostorDisconnect,
 		HumansDisconnect,
-		Unknown
+		HideAndSeekCrewmatesByTimer,
+		HideAndSeekImpostorsByKills
 	}
 }

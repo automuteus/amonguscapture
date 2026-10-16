@@ -34,6 +34,9 @@ namespace AmongUsCapture {
         private Dictionary<string, PlayerInfo> oldPlayerInfos = new(15); // Important: this is making the assumption that player names are unique. They are, but for better tracking of players and to eliminate any ambiguity the keys of this probably need to be the players' network IDs instead
 
         private GameState oldState = GameState.UNKNOWN;
+        // Who the vote is exiling, read while the meeting shows its results. By the time the game is back to tasks the
+        // meeting may be gone, and with it the exiled player.
+        private PlayerInfo? pendingExile;
         private int prevChatBubsVersion;
         private bool shouldForceTransmitState;
         private bool shouldForceUpdatePlayers;
@@ -62,7 +65,7 @@ namespace AmongUsCapture {
             GameState state;
             var meetingHud = memInstance.Read<IntPtr>(GameAssemblyPtr, CurrentOffsets.MeetingHudPtr);
             var meetingHud_cachePtr = meetingHud == IntPtr.Zero ? 0 : memInstance.Read<uint>(meetingHud, CurrentOffsets.MeetingHudCachePtrOffsets);
-            var meetingHudState = meetingHud_cachePtr == 0 ? 4 : memInstance.ReadWithDefault(meetingHud, 4, CurrentOffsets.MeetingHudStateOffsets); // 0 = Discussion, 1 = NotVoted, 2 = Voted, 3 = Results, 4 = Proceeding
+            var meetingHudState = meetingHud_cachePtr == 0 ? 5 : memInstance.ReadWithDefault(meetingHud, 5, CurrentOffsets.MeetingHudStateOffsets); // 0 = Animating, 1 = Discussion, 2 = NotVoted, 3 = Voted, 4 = Results, 5 = Proceeding
             var gameState = memInstance.Read<int>(GameAssemblyPtr, CurrentOffsets.GameStateOffsets); // 0 = NotJoined, 1 = Joined, 2 = Started, 3 = ENDED (during "defeat" or "victory" screen only)
 
             switch (gameState) {
@@ -81,7 +84,7 @@ namespace AmongUsCapture {
                 default: {
                     if (exileCausesEnd)
                         state = GameState.LOBBY;
-                    else if (meetingHudState < 4)
+                    else if (meetingHudState < 5)
                         state = GameState.DISCUSSION;
                     else
                         state = GameState.TASKS;
@@ -311,11 +314,14 @@ namespace AmongUsCapture {
 
                     #endregion
                     var state = GetGameState(ProcessMemory.getInstance());
+                    if (state == GameState.DISCUSSION) {
+                        pendingExile = GetExiledPlayer(ProcessMemory.getInstance()) ?? pendingExile;
+                    }
                     #region Check if exile causes game end
 
                     if (oldState == GameState.DISCUSSION && state == GameState.TASKS) {
                         
-                        var exiledPlayer = GetExiledPlayer(ProcessMemory.getInstance());
+                        var exiledPlayer = pendingExile ?? GetExiledPlayer(ProcessMemory.getInstance());
                         if (exiledPlayer is not null) {
                             int impostorCount = 0, innocentCount = 0;
                             PlayerChanged?.Invoke(this, new PlayerChangedEventArgs {
@@ -337,6 +343,10 @@ namespace AmongUsCapture {
                     }
 
                     #endregion
+
+                    if (state != GameState.DISCUSSION) {
+                        pendingExile = null;
+                    }
 
                     #region State change checking
 

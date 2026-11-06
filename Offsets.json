@@ -3342,6 +3342,7 @@
     "PlayerListPtr": 0x20,
     "PlayerInfoStructOffsets": {
       "PlayerIDOffset": 0x38,
+      "FriendCodeOffset": 0x40,
       "OutfitsOffset": [0x58, 0x18, 0x30],
       "PlayerLevelOffset": 0x60,
       "DisconnectedOffset": 0x64,
@@ -3399,6 +3400,7 @@
     "PlayerListPtr": 0x20,
     "PlayerInfoStructOffsets": {
       "PlayerIDOffset": 0x38,
+      "FriendCodeOffset": 0x40,
       "OutfitsOffset": [0x58, 0x18, 0x30],
       "PlayerLevelOffset": 0x60,
       "DisconnectedOffset": 0x64,
@@ -3456,6 +3458,7 @@
     "PlayerListPtr": 0x20,
     "PlayerInfoStructOffsets": {
       "PlayerIDOffset": 0x38,
+      "FriendCodeOffset": 0x40,
       "OutfitsOffset": [0x58, 0x18, 0x30],
       "PlayerLevelOffset": 0x60,
       "DisconnectedOffset": 0x64,
@@ -3513,6 +3516,7 @@
     "PlayerListPtr": 0x20,
     "PlayerInfoStructOffsets": {
       "PlayerIDOffset": 0x38,
+      "FriendCodeOffset": 0x40,
       "OutfitsOffset": [0x58, 0x18, 0x30],
       "PlayerLevelOffset": 0x60,
       "DisconnectedOffset": 0x64,
@@ -3570,6 +3574,7 @@
     "PlayerListPtr": 0x20,
     "PlayerInfoStructOffsets": {
       "PlayerIDOffset": 0x38,
+      "FriendCodeOffset": 0x40,
       "OutfitsOffset": [0x58, 0x18, 0x30],
       "PlayerLevelOffset": 0x60,
       "DisconnectedOffset": 0x64,

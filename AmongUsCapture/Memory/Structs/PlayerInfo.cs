@@ -11,6 +11,7 @@ namespace AmongUsCapture
         public byte PlayerId;
 
         public string PlayerName;
+        public string FriendCode; // the account's Friend Code, like "coolbean#1234"; empty if unknown
         public PlayerColor ColorId;
         public uint HatId;
         public uint PetId;
@@ -41,6 +42,13 @@ namespace AmongUsCapture
                 fixed (byte* ptr = buffer) {
                     var buffptr = (IntPtr) ptr;
                     PlayerId = Marshal.ReadByte(buffptr, pOf.PlayerIDOffset);
+                    FriendCode = "";
+                    if (pOf.FriendCodeOffset > 0 && pOf.FriendCodeOffset + intPtrSize <= size) {
+                        var friendCodePtr = MemInstance.is64Bit
+                            ? (IntPtr) Marshal.ReadInt64(buffptr, pOf.FriendCodeOffset)
+                            : (IntPtr) Marshal.ReadInt32(buffptr, pOf.FriendCodeOffset);
+                        FriendCode = MemInstance.ReadString(friendCodePtr, CurrentOffsets.StringOffsets[0], CurrentOffsets.StringOffsets[1]) ?? "";
+                    }
                     Disconnected = Marshal.ReadByte(buffptr, pOf.DisconnectedOffset) > 0;
                     Tasks = Marshal.ReadIntPtr(buffptr, pOf.TasksOffset);
                     IsDead = Marshal.ReadByte(buffptr, pOf.IsDeadOffset) > 0;

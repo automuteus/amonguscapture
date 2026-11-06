@@ -179,6 +179,10 @@ namespace AmongUsCapture {
                 if (oldPlayerInfo.ColorId != player.ColorId)
                     PlayerChanged?.Invoke(this, NewPlayerChangedEventArgs(PlayerAction.ChangedColor, player));
 
+                // the game can fill in a Friend Code after the player first appears; resend them so the bot learns it
+                if (oldPlayerInfo.FriendCode != player.FriendCode)
+                    PlayerChanged?.Invoke(this, NewPlayerChangedEventArgs(PlayerAction.ForceUpdated, player));
+
                 if (!oldPlayerInfo.GetIsDisconnected() && player.GetIsDisconnected())
                     PlayerChanged?.Invoke(this, NewPlayerChangedEventArgs(PlayerAction.Disconnected, player));
 
@@ -211,6 +215,7 @@ namespace AmongUsCapture {
                 Action = action,
                 PlayerId = player.PlayerId,
                 Name = player.GetPlayerName(),
+                FriendCode = player.FriendCode,
                 IsDead = player.GetIsDead(),
                 Disconnected = player.GetIsDisconnected(),
                 Color = player.GetPlayerColor()
@@ -525,6 +530,7 @@ namespace AmongUsCapture {
         public PlayerAction Action { get; set; }
         public byte PlayerId { get; set; } // in-game ID; stays the same across name and color changes
         public string Name { get; set; }
+        public string FriendCode { get; set; } // the account's Friend Code; empty if unknown
         public bool IsDead { get; set; }
         public bool Disconnected { get; set; }
         public PlayerColor Color { get; set; }

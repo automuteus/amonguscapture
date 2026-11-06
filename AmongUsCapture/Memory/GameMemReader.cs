@@ -27,11 +27,12 @@ namespace AmongUsCapture {
 
         private LobbyEventArgs latestLobbyEventArgs;
 
-        private Dictionary<string, PlayerInfo> newPlayerInfos = new(15); // container for new player infos. Also has capacity 15 already assigned so no internal resizing of the data structure is needed
+        // Players are keyed by their in-game PlayerId, which stays the same if they change their name or color.
+        private Dictionary<byte, PlayerInfo> newPlayerInfos = new(15); // container for new player infos. Also has capacity 15 already assigned so no internal resizing of the data structure is needed
 
         public OffsetManager offMan = new(Settings.PersistentSettings.IndexURL);
 
-        private Dictionary<string, PlayerInfo> oldPlayerInfos = new(15); // Important: this is making the assumption that player names are unique. They are, but for better tracking of players and to eliminate any ambiguity the keys of this probably need to be the players' network IDs instead
+        private Dictionary<byte, PlayerInfo> oldPlayerInfos = new(15);
 
         private GameState oldState = GameState.UNKNOWN;
         private int prevChatBubsVersion;
@@ -106,8 +107,9 @@ namespace AmongUsCapture {
             for (var i = 0; i < playerCount; i++) {
                 var pi = new PlayerInfo(playerAddrPtr, memInstance, CurrentOffsets);
                 //var pi = CurrentOffsets.isEpic ? (PlayerInfo) memInstance.Read<EpicPlayerInfo>(playerAddrPtr, 0, 0) : memInstance.Read<SteamPlayerInfo>(playerAddrPtr, 0, 0);
-                if(pi.GetPlayerName() is null || pi.GetPlayerName() == "" || !Enum.IsDefined(typeof(PlayerColor), pi.GetPlayerColor())) continue;
+                // Advance before any skip, so one unreadable slot doesn't hide every player after it.
                 playerAddrPtr += CurrentOffsets.AddPlayerPtr;
+                if(pi.GetPlayerName() is null || pi.GetPlayerName() == "" || !Enum.IsDefined(typeof(PlayerColor), pi.GetPlayerColor())) continue;
                 Players.Add(pi);
             }
             return Players;
@@ -155,72 +157,64 @@ namespace AmongUsCapture {
             return endingPlayerInfos;
         }
 
-        private void DetectPlayerChanges(ProcessMemory memInstance, Dictionary<string, PlayerInfo> nowPlayers, Dictionary<string, PlayerInfo> oldPlayers) {
-            foreach (var player in nowPlayers.Values)
-                if (!oldPlayers.ContainsKey(player.GetPlayerName())) // player wasn't here before, they just joined
-                {
-                    PlayerChanged?.Invoke(this, new PlayerChangedEventArgs {
-                        Action = PlayerAction.Joined,
-                        Name = player.GetPlayerName(),
-                        IsDead = player.GetIsDead(),
-                        Disconnected = player.GetIsDisconnected(),
-                        Color = player.GetPlayerColor()
-                    });
-                    PlayerCosmeticChanged?.Invoke(this, new PlayerCosmeticChangedEventArgs {
-                        Name = player.GetPlayerName(),
-                        HatId = player.HatId,
-                        SkinId = player.SkinId,
-                        PetId = player.PetId
-                    });
-                }
-                else {
-                    // player was here before, we have an old playerInfo to compare against
-                    var oldPlayerInfo = oldPlayers[player.GetPlayerName()];
-                    if (!oldPlayerInfo.GetIsDead() && player.GetIsDead()) // player just died
-                        PlayerChanged?.Invoke(this, new PlayerChangedEventArgs {
-                            Action = PlayerAction.Died,
-                            Name = player.GetPlayerName(),
-                            IsDead = player.GetIsDead(),
-                            Disconnected = player.GetIsDisconnected(),
-                            Color = player.GetPlayerColor()
-                        });
-
-                    if (oldPlayerInfo.ColorId != player.ColorId)
-                        PlayerChanged?.Invoke(this, new PlayerChangedEventArgs {
-                            Action = PlayerAction.ChangedColor,
-                            Name = player.GetPlayerName(),
-                            IsDead = player.GetIsDead(),
-                            Disconnected = player.GetIsDisconnected(),
-                            Color = player.GetPlayerColor()
-                        });
-
-                    if (!oldPlayerInfo.GetIsDisconnected() && player.GetIsDisconnected())
-                        PlayerChanged?.Invoke(this, new PlayerChangedEventArgs {
-                            Action = PlayerAction.Disconnected,
-                            Name = player.GetPlayerName(),
-                            IsDead = player.GetIsDead(),
-                            Disconnected = player.GetIsDisconnected(),
-                            Color = player.GetPlayerColor()
-                        });
-
-                    if (oldPlayerInfo.HatId != player.HatId || oldPlayerInfo.SkinId != player.SkinId || oldPlayerInfo.PetId != player.PetId)
-                        PlayerCosmeticChanged?.Invoke(this, new PlayerCosmeticChangedEventArgs {
-                            Name = player.GetPlayerName(),
-                            HatId = player.HatId,
-                            SkinId = player.SkinId,
-                            PetId = player.PetId
-                        });
+        private void DetectPlayerChanges(ProcessMemory memInstance, Dictionary<byte, PlayerInfo> nowPlayers, Dictionary<byte, PlayerInfo> oldPlayers) {
+            foreach (var player in nowPlayers.Values) {
+                if (!oldPlayers.TryGetValue(player.PlayerId, out var oldPlayerInfo)) {
+                    // player wasn't here before, they just joined
+                    EmitJoined(player);
+                    continue;
                 }
 
-            foreach (var (playerName, pi) in oldPlayers)
-                if (!newPlayerInfos.ContainsKey(playerName)) // player was here before, isn't now, so they left
-                    PlayerChanged?.Invoke(this, new PlayerChangedEventArgs {
-                        Action = PlayerAction.Left,
-                        Name = playerName,
-                        IsDead = pi.GetIsDead(),
-                        Disconnected = pi.GetIsDisconnected(),
-                        Color = pi.GetPlayerColor()
-                    });
+                // Same ID, different name: either a rename, or a new player reusing the ID of one who left.
+                // Report it as Left + Joined, which is what consumers that track players by name expect.
+                if (oldPlayerInfo.GetPlayerName() != player.GetPlayerName()) {
+                    PlayerChanged?.Invoke(this, NewPlayerChangedEventArgs(PlayerAction.Left, oldPlayerInfo));
+                    EmitJoined(player);
+                    continue;
+                }
+
+                if (!oldPlayerInfo.GetIsDead() && player.GetIsDead()) // player just died
+                    PlayerChanged?.Invoke(this, NewPlayerChangedEventArgs(PlayerAction.Died, player));
+
+                if (oldPlayerInfo.ColorId != player.ColorId)
+                    PlayerChanged?.Invoke(this, NewPlayerChangedEventArgs(PlayerAction.ChangedColor, player));
+
+                if (!oldPlayerInfo.GetIsDisconnected() && player.GetIsDisconnected())
+                    PlayerChanged?.Invoke(this, NewPlayerChangedEventArgs(PlayerAction.Disconnected, player));
+
+                if (oldPlayerInfo.HatId != player.HatId || oldPlayerInfo.SkinId != player.SkinId || oldPlayerInfo.PetId != player.PetId)
+                    EmitCosmeticChanged(player);
+            }
+
+            foreach (var (playerId, pi) in oldPlayers)
+                if (!nowPlayers.ContainsKey(playerId)) // player was here before, isn't now, so they left
+                    PlayerChanged?.Invoke(this, NewPlayerChangedEventArgs(PlayerAction.Left, pi));
+        }
+
+        private void EmitJoined(PlayerInfo player) {
+            PlayerChanged?.Invoke(this, NewPlayerChangedEventArgs(PlayerAction.Joined, player));
+            EmitCosmeticChanged(player);
+        }
+
+        private void EmitCosmeticChanged(PlayerInfo player) {
+            PlayerCosmeticChanged?.Invoke(this, new PlayerCosmeticChangedEventArgs {
+                PlayerId = player.PlayerId,
+                Name = player.GetPlayerName(),
+                HatId = player.HatId,
+                SkinId = player.SkinId,
+                PetId = player.PetId
+            });
+        }
+
+        private static PlayerChangedEventArgs NewPlayerChangedEventArgs(PlayerAction action, PlayerInfo player) {
+            return new PlayerChangedEventArgs {
+                Action = action,
+                PlayerId = player.PlayerId,
+                Name = player.GetPlayerName(),
+                IsDead = player.GetIsDead(),
+                Disconnected = player.GetIsDisconnected(),
+                Color = player.GetPlayerColor()
+            };
         }
 
         private string? GetGameCode(ProcessMemory memInstance) {
@@ -318,13 +312,7 @@ namespace AmongUsCapture {
                         var exiledPlayer = GetExiledPlayer(ProcessMemory.getInstance());
                         if (exiledPlayer is not null) {
                             int impostorCount = 0, innocentCount = 0;
-                            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs {
-                                Action = PlayerAction.Exiled,
-                                Name = exiledPlayer.GetPlayerName(),
-                                IsDead = exiledPlayer.GetIsDead(),
-                                Disconnected = exiledPlayer.GetIsDisconnected(),
-                                Color = exiledPlayer.GetPlayerColor()
-                            });
+                            PlayerChanged?.Invoke(this, NewPlayerChangedEventArgs(PlayerAction.Exiled, exiledPlayer));
                             impostorCount = GetPlayers(ProcessMemory.getInstance()).Count(x => x.GetIsImposter() && x.PlayerName != "" && x.PlayerId != exiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
                             innocentCount = GetPlayers(ProcessMemory.getInstance()).Count(x => !x.GetIsImposter() && x.PlayerName != "" && x.PlayerId != exiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
 
@@ -406,8 +394,9 @@ namespace AmongUsCapture {
 
                     #region Read player information
 
-                    newPlayerInfos.Clear();
-                    newPlayerInfos = GetPlayers(ProcessMemory.getInstance()).ToDictionary(x => x.GetPlayerName(), x => x);
+                    newPlayerInfos = new Dictionary<byte, PlayerInfo>(15);
+                    foreach (var player in GetPlayers(ProcessMemory.getInstance()))
+                        newPlayerInfos[player.PlayerId] = player;
                     DetectPlayerChanges(ProcessMemory.getInstance(), newPlayerInfos, oldPlayerInfos);
 
                     #endregion
@@ -416,13 +405,7 @@ namespace AmongUsCapture {
 
                     if (shouldForceUpdatePlayers) {
                         foreach (var player in newPlayerInfos.Values)
-                            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs {
-                                Action = PlayerAction.ForceUpdated,
-                                Name = player.GetPlayerName(),
-                                IsDead = player.GetIsDead(),
-                                Disconnected = player.GetIsDisconnected(),
-                                Color = player.GetPlayerColor()
-                            });
+                            PlayerChanged?.Invoke(this, NewPlayerChangedEventArgs(PlayerAction.ForceUpdated, player));
 
                         shouldForceUpdatePlayers = false;
                     }
@@ -434,9 +417,9 @@ namespace AmongUsCapture {
                     if (state != oldState && (state == GameState.DISCUSSION || state == GameState.TASKS)) // game started, or at least we're still in game
                     {
                         CachedPlayerInfos.Clear();
-                        foreach (var (playerName, pi) in newPlayerInfos)
-                            CachedPlayerInfos[playerName] = new ImmutablePlayer {
-                                Name = playerName,
+                        foreach (var pi in newPlayerInfos.Values)
+                            CachedPlayerInfos[pi.GetPlayerName()] = new ImmutablePlayer {
+                                Name = pi.GetPlayerName(),
                                 IsImpostor = false
                             };
                     }
@@ -445,7 +428,7 @@ namespace AmongUsCapture {
 
                     #region Cache previous states to prime the state machine
 
-                    oldPlayerInfos = new Dictionary<string, PlayerInfo>(newPlayerInfos);
+                    oldPlayerInfos = new Dictionary<byte, PlayerInfo>(newPlayerInfos);
                     oldState = state;
 
                     #endregion
@@ -531,6 +514,7 @@ namespace AmongUsCapture {
     }
 
     public class PlayerCosmeticChangedEventArgs : EventArgs {
+        public byte PlayerId { get; set; }
         public string Name { get; set; }
         public uint HatId { get; set; }
         public uint SkinId { get; set; }
@@ -539,6 +523,7 @@ namespace AmongUsCapture {
 
     public class PlayerChangedEventArgs : EventArgs {
         public PlayerAction Action { get; set; }
+        public byte PlayerId { get; set; } // in-game ID; stays the same across name and color changes
         public string Name { get; set; }
         public bool IsDead { get; set; }
         public bool Disconnected { get; set; }

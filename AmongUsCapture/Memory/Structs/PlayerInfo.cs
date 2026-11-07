@@ -42,13 +42,7 @@ namespace AmongUsCapture
                 fixed (byte* ptr = buffer) {
                     var buffptr = (IntPtr) ptr;
                     PlayerId = Marshal.ReadByte(buffptr, pOf.PlayerIDOffset);
-                    FriendCode = "";
-                    if (pOf.FriendCodeOffset > 0 && pOf.FriendCodeOffset + intPtrSize <= size) {
-                        var friendCodePtr = MemInstance.is64Bit
-                            ? (IntPtr) Marshal.ReadInt64(buffptr, pOf.FriendCodeOffset)
-                            : (IntPtr) Marshal.ReadInt32(buffptr, pOf.FriendCodeOffset);
-                        FriendCode = MemInstance.ReadString(friendCodePtr, CurrentOffsets.StringOffsets[0], CurrentOffsets.StringOffsets[1]) ?? "";
-                    }
+                    FriendCode = ReadFriendCode(MemInstance, CurrentOffsets, buffptr, size);
                     Disconnected = Marshal.ReadByte(buffptr, pOf.DisconnectedOffset) > 0;
                     Tasks = Marshal.ReadIntPtr(buffptr, pOf.TasksOffset);
                     IsDead = Marshal.ReadByte(buffptr, pOf.IsDeadOffset) > 0;
@@ -73,6 +67,28 @@ namespace AmongUsCapture
                 }
             }
         }
+
+        // Friend Codes are a name plus a short tag, so anything this long is a misread.
+        private const int MaxFriendCodeLength = 64;
+
+        // Reads the Friend Code from the player's buffered struct. A wrong offset, for example after a game update,
+        // would point at garbage. So every step is checked and nothing throws: the worst case is an empty Friend Code,
+        // never a failed read of the whole player list.
+        private static string ReadFriendCode(ProcessMemory mem, GameOffsets offsets, IntPtr buffer, int bufferSize) {
+            var offset = offsets.PlayerInfoStructOffsets.FriendCodeOffset;
+            var pointerSize = mem.is64Bit ? 8 : 4;
+            if (offset <= 0 || offset + pointerSize > bufferSize) return "";
+            try {
+                var str = mem.is64Bit ? (IntPtr) Marshal.ReadInt64(buffer, offset) : (IntPtr) Marshal.ReadInt32(buffer, offset);
+                if (str == IntPtr.Zero) return "";
+                var length = mem.Read<int>(str + offsets.StringOffsets[0]);
+                if (length <= 0 || length > MaxFriendCodeLength) return "";
+                return mem.ReadString(str, offsets.StringOffsets[0], offsets.StringOffsets[1]) ?? "";
+            } catch (Exception) {
+                return "";
+            }
+        }
+
         public string GetPlayerName() {
             return PlayerName;
         }

@@ -158,6 +158,7 @@ namespace AUOffsetManager
     public class PlayerInfoStructOffsets
     {
         public int PlayerIDOffset { get; set; }
+        public int FriendCodeOffset { get; set; } // 0 when the index doesn't give one; the Friend Code is then not read
         public int[] OutfitsOffset { get; set; }
         public int PlayerLevelOffset { get; set; }
         public int DisconnectedOffset { get; set; }
